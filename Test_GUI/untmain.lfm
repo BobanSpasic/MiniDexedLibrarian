@@ -1,0 +1,2035 @@
+object frmMain: TfrmMain
+  Left = 293
+  Height = 936
+  Top = 72
+  Width = 1522
+  Caption = 'Test GUI'
+  ClientHeight = 936
+  ClientWidth = 1522
+  Color = 2966078
+  OnClose = FormClose
+  OnCreate = FormCreate
+  Position = poScreenCenter
+  LCLVersion = '2.2.2.0'
+  object pcMain: TcyPageControl
+    Left = 0
+    Height = 936
+    Top = 0
+    Width = 1522
+    ActivePage = tsLibrarian
+    Align = alClient
+    Style = tsButton
+    TabIndex = 0
+    TabOrder = 0
+    ActiveTabColors.FromColor = 2900284
+    ActiveTabColors.SpeedPercent = 100
+    ActiveTabColors.ToColor = 5162664
+    InactiveTabColors.FromColor = 5162664
+    InactiveTabColors.SpeedPercent = 100
+    InactiveTabColors.ToColor = 2900284
+    object tsLibrarian: TTabSheet
+      Caption = 'Librarian'
+      ClientHeight = 915
+      ClientWidth = 1522
+      object pnExplorer: TPanel
+        Left = 0
+        Height = 915
+        Top = 0
+        Width = 680
+        Align = alLeft
+        BevelOuter = bvNone
+        ClientHeight = 915
+        ClientWidth = 680
+        TabOrder = 0
+        object pnFileManager: TPanel
+          Left = 0
+          Height = 915
+          Top = 0
+          Width = 280
+          Align = alLeft
+          BevelColor = clBlack
+          ChildSizing.LeftRightSpacing = 10
+          ChildSizing.TopBottomSpacing = 5
+          ClientHeight = 915
+          ClientWidth = 280
+          Color = 3163457
+          ParentColor = False
+          TabOrder = 0
+          object lbFiles: TListBox
+            Left = 11
+            Height = 868
+            Top = 41
+            Width = 258
+            Align = alClient
+            BorderStyle = bsNone
+            Color = 2900284
+            DragMode = dmAutomatic
+            ExtendedSelect = False
+            Font.Color = 5162664
+            Font.Height = -16
+            Font.Name = 'Consolas'
+            Font.Pitch = fpFixed
+            ItemHeight = 0
+            OnClick = lbFilesClick
+            OnStartDrag = lbFilesStartDrag
+            Options = []
+            ParentFont = False
+            TabOrder = 0
+          end
+          object edbtSelDir: TECEditBtn
+            Left = 11
+            Height = 15
+            Hint = 'Select directory'
+            Top = 16
+            Width = 237
+            Button.Width = 21
+            Button.GlyphColor = 2900284
+            Button.GlyphDesign = egdList
+            Button.Spacing = 0
+            Button.OnClick = btSelectDirClick
+            Indent = 10
+            Align = alTop
+            AutoSelect = False
+            AutoSize = False
+            BorderStyle = bsNone
+            Font.Color = 5162664
+            Font.Name = 'Consolas'
+            Font.Pitch = fpFixed
+            ParentColor = True
+            ParentFont = False
+            ParentShowHint = False
+            ReadOnly = True
+            ShowHint = True
+            TabOrder = 1
+          end
+          object sl3: TShapeLine
+            Left = 11
+            Height = 10
+            Top = 31
+            Width = 258
+            Align = alTop
+            LineColor = clBlack
+            ArrowColor = clBlack
+            LineWidth = 1
+          end
+          object sl4: TShapeLine
+            Left = 11
+            Height = 10
+            Top = 6
+            Width = 258
+            Align = alTop
+            LineColor = clBlack
+            ArrowColor = clBlack
+            LineWidth = 1
+          end
+        end
+        object Splitter1: TSplitter
+          Left = 280
+          Height = 915
+          Top = 0
+          Width = 8
+        end
+        object pnVoiceManager: TPanel
+          Left = 288
+          Height = 915
+          Top = 0
+          Width = 392
+          Align = alClient
+          BevelColor = clBlack
+          ChildSizing.LeftRightSpacing = 10
+          ChildSizing.TopBottomSpacing = 5
+          ClientHeight = 915
+          ClientWidth = 392
+          Color = 3163457
+          ParentColor = False
+          TabOrder = 2
+          object lbVoices: TListBox
+            Left = 11
+            Height = 813
+            Top = 6
+            Width = 370
+            Align = alClient
+            BorderStyle = bsNone
+            Color = 2900284
+            DragMode = dmAutomatic
+            ExtendedSelect = False
+            Font.Color = 5162664
+            Font.Height = -16
+            Font.Name = 'Consolas'
+            Font.Pitch = fpFixed
+            ItemHeight = 0
+            OnStartDrag = lbVoicesStartDrag
+            Options = []
+            ParentFont = False
+            TabOrder = 0
+          end
+          object mmLog: TMemo
+            Left = 11
+            Height = 90
+            Top = 819
+            Width = 370
+            Align = alBottom
+            BorderStyle = bsNone
+            Color = 2900284
+            Font.Color = 5162664
+            Font.Name = 'Consolas'
+            Font.Pitch = fpFixed
+            ParentFont = False
+            TabOrder = 1
+          end
+        end
+      end
+      object pnBankEditor: TPanel
+        Left = 688
+        Height = 915
+        Top = 0
+        Width = 834
+        Align = alClient
+        BevelColor = clBlack
+        ClientHeight = 915
+        ClientWidth = 834
+        TabOrder = 1
+        object pnSlot01: TPanel
+          Left = 50
+          Height = 20
+          Top = 20
+          Width = 160
+          BevelColor = clBlack
+          ClientHeight = 20
+          ClientWidth = 160
+          TabOrder = 0
+          object edSlot01: TJppEdit
+            Left = 70
+            Height = 14
+            Top = 3
+            Width = 80
+            AutoSize = False
+            BorderStyle = bsNone
+            DragMode = dmAutomatic
+            Font.Color = 3163457
+            Font.Name = 'Consolas'
+            Font.Pitch = fpFixed
+            ParentFont = False
+            TabOrder = 0
+            TextHint = 'Slot empty'
+            OnDragDrop = edSlotDragDrop
+            OnDragOver = edSlotDragOver
+            Appearance.NormalBgColor = 5162664
+            Appearance.NormalTextColor = 3163457
+            Appearance.FocusedBgColor = 3163457
+            Appearance.FocusedTextColor = 5162664
+            Appearance.HotBgColor = 3163457
+            Appearance.HotTextColor = 5162664
+            Appearance.DisabledBgColor = 3163457
+            Appearance.DisabledTextColor = 5162664
+            TabOnEnter = False
+            BoundLabel.Height = 14
+            BoundLabel.Width = 49
+            BoundLabel.Caption = 'Slot 01'
+            BoundLabel.Font.Color = 5162664
+            BoundLabel.Font.Name = 'Consolas'
+            BoundLabel.Font.Pitch = fpFixed
+            BoundLabel.ParentColor = False
+            BoundLabel.ParentFont = False
+            BoundLabel.FocusControl = edSlot01
+            BoundLabelSpacing = 8
+          end
+        end
+        object pnSlot02: TPanel
+          Left = 50
+          Height = 20
+          Top = 50
+          Width = 160
+          BevelColor = clBlack
+          ClientHeight = 20
+          ClientWidth = 160
+          TabOrder = 1
+          object edSlot02: TJppEdit
+            Tag = 1
+            Left = 70
+            Height = 14
+            Top = 3
+            Width = 80
+            AutoSize = False
+            BorderStyle = bsNone
+            Font.Color = 3163457
+            Font.Name = 'Consolas'
+            Font.Pitch = fpFixed
+            ParentFont = False
+            TabOrder = 0
+            TextHint = 'Slot empty'
+            OnDragDrop = edSlotDragDrop
+            OnDragOver = edSlotDragOver
+            Appearance.NormalBgColor = 5162664
+            Appearance.NormalTextColor = 3163457
+            Appearance.FocusedBgColor = 3163457
+            Appearance.FocusedTextColor = 5162664
+            Appearance.HotBgColor = 3163457
+            Appearance.HotTextColor = 5162664
+            Appearance.DisabledBgColor = 3163457
+            Appearance.DisabledTextColor = 5162664
+            TabOnEnter = False
+            BoundLabel.Height = 14
+            BoundLabel.Width = 49
+            BoundLabel.Caption = 'Slot 02'
+            BoundLabel.Font.Color = 5162664
+            BoundLabel.Font.Name = 'Consolas'
+            BoundLabel.Font.Pitch = fpFixed
+            BoundLabel.ParentColor = False
+            BoundLabel.ParentFont = False
+            BoundLabel.FocusControl = edSlot02
+            BoundLabelSpacing = 8
+          end
+        end
+        object pnSlot03: TPanel
+          Left = 50
+          Height = 20
+          Top = 80
+          Width = 160
+          BevelColor = clBlack
+          ClientHeight = 20
+          ClientWidth = 160
+          TabOrder = 2
+          object edSlot03: TJppEdit
+            Tag = 2
+            Left = 70
+            Height = 14
+            Top = 3
+            Width = 80
+            AutoSize = False
+            BorderStyle = bsNone
+            DragMode = dmAutomatic
+            Font.Color = 3163457
+            Font.Name = 'Consolas'
+            Font.Pitch = fpFixed
+            ParentFont = False
+            TabOrder = 0
+            TextHint = 'Slot empty'
+            OnDragDrop = edSlotDragDrop
+            OnDragOver = edSlotDragOver
+            Appearance.NormalBgColor = 5162664
+            Appearance.NormalTextColor = 3163457
+            Appearance.FocusedBgColor = 3163457
+            Appearance.FocusedTextColor = 5162664
+            Appearance.HotBgColor = 3163457
+            Appearance.HotTextColor = 5162664
+            Appearance.DisabledBgColor = 3163457
+            Appearance.DisabledTextColor = 5162664
+            TabOnEnter = False
+            BoundLabel.Height = 14
+            BoundLabel.Width = 49
+            BoundLabel.Caption = 'Slot 03'
+            BoundLabel.Font.Color = 5162664
+            BoundLabel.Font.Name = 'Consolas'
+            BoundLabel.Font.Pitch = fpFixed
+            BoundLabel.ParentColor = False
+            BoundLabel.ParentFont = False
+            BoundLabel.FocusControl = edSlot03
+            BoundLabelSpacing = 8
+          end
+        end
+        object pnSlot04: TPanel
+          Left = 50
+          Height = 20
+          Top = 110
+          Width = 160
+          BevelColor = clBlack
+          ClientHeight = 20
+          ClientWidth = 160
+          TabOrder = 3
+          object edSlot04: TJppEdit
+            Tag = 3
+            Left = 70
+            Height = 14
+            Top = 3
+            Width = 80
+            AutoSize = False
+            BorderStyle = bsNone
+            DragMode = dmAutomatic
+            Font.Color = 3163457
+            Font.Name = 'Consolas'
+            Font.Pitch = fpFixed
+            ParentFont = False
+            TabOrder = 0
+            TextHint = 'Slot empty'
+            OnDragDrop = edSlotDragDrop
+            OnDragOver = edSlotDragOver
+            Appearance.NormalBgColor = 5162664
+            Appearance.NormalTextColor = 3163457
+            Appearance.FocusedBgColor = 3163457
+            Appearance.FocusedTextColor = 5162664
+            Appearance.HotBgColor = 3163457
+            Appearance.HotTextColor = 5162664
+            Appearance.DisabledBgColor = 3163457
+            Appearance.DisabledTextColor = 5162664
+            TabOnEnter = False
+            BoundLabel.Height = 14
+            BoundLabel.Width = 49
+            BoundLabel.Caption = 'Slot 04'
+            BoundLabel.Font.Color = 5162664
+            BoundLabel.Font.Name = 'Consolas'
+            BoundLabel.Font.Pitch = fpFixed
+            BoundLabel.ParentColor = False
+            BoundLabel.ParentFont = False
+            BoundLabel.FocusControl = edSlot04
+            BoundLabelSpacing = 8
+          end
+        end
+        object pnSlot05: TPanel
+          Left = 50
+          Height = 20
+          Top = 140
+          Width = 160
+          BevelColor = clBlack
+          ClientHeight = 20
+          ClientWidth = 160
+          TabOrder = 4
+          object edSlot05: TJppEdit
+            Tag = 4
+            Left = 70
+            Height = 14
+            Top = 3
+            Width = 80
+            AutoSize = False
+            BorderStyle = bsNone
+            DragMode = dmAutomatic
+            Font.Color = 3163457
+            Font.Name = 'Consolas'
+            Font.Pitch = fpFixed
+            ParentFont = False
+            TabOrder = 0
+            TextHint = 'Slot empty'
+            OnDragDrop = edSlotDragDrop
+            OnDragOver = edSlotDragOver
+            Appearance.NormalBgColor = 5162664
+            Appearance.NormalTextColor = 3163457
+            Appearance.FocusedBgColor = 3163457
+            Appearance.FocusedTextColor = 5162664
+            Appearance.HotBgColor = 3163457
+            Appearance.HotTextColor = 5162664
+            Appearance.DisabledBgColor = 3163457
+            Appearance.DisabledTextColor = 5162664
+            TabOnEnter = False
+            BoundLabel.Height = 14
+            BoundLabel.Width = 49
+            BoundLabel.Caption = 'Slot 05'
+            BoundLabel.Font.Color = 5162664
+            BoundLabel.Font.Name = 'Consolas'
+            BoundLabel.Font.Pitch = fpFixed
+            BoundLabel.ParentColor = False
+            BoundLabel.ParentFont = False
+            BoundLabel.FocusControl = edSlot05
+            BoundLabelSpacing = 8
+          end
+        end
+        object pnSlot06: TPanel
+          Left = 50
+          Height = 20
+          Top = 170
+          Width = 160
+          BevelColor = clBlack
+          ClientHeight = 20
+          ClientWidth = 160
+          TabOrder = 5
+          object edSlot06: TJppEdit
+            Tag = 5
+            Left = 70
+            Height = 14
+            Top = 3
+            Width = 80
+            AutoSize = False
+            BorderStyle = bsNone
+            DragMode = dmAutomatic
+            Font.Color = 3163457
+            Font.Name = 'Consolas'
+            Font.Pitch = fpFixed
+            ParentFont = False
+            TabOrder = 0
+            TextHint = 'Slot empty'
+            OnDragDrop = edSlotDragDrop
+            OnDragOver = edSlotDragOver
+            Appearance.NormalBgColor = 5162664
+            Appearance.NormalTextColor = 3163457
+            Appearance.FocusedBgColor = 3163457
+            Appearance.FocusedTextColor = 5162664
+            Appearance.HotBgColor = 3163457
+            Appearance.HotTextColor = 5162664
+            Appearance.DisabledBgColor = 3163457
+            Appearance.DisabledTextColor = 5162664
+            TabOnEnter = False
+            BoundLabel.Height = 14
+            BoundLabel.Width = 49
+            BoundLabel.Caption = 'Slot 06'
+            BoundLabel.Font.Color = 5162664
+            BoundLabel.Font.Name = 'Consolas'
+            BoundLabel.Font.Pitch = fpFixed
+            BoundLabel.ParentColor = False
+            BoundLabel.ParentFont = False
+            BoundLabel.FocusControl = edSlot06
+            BoundLabelSpacing = 8
+          end
+        end
+        object pnSlot07: TPanel
+          Left = 50
+          Height = 20
+          Top = 200
+          Width = 160
+          BevelColor = clBlack
+          ClientHeight = 20
+          ClientWidth = 160
+          TabOrder = 6
+          object edSlot07: TJppEdit
+            Tag = 6
+            Left = 70
+            Height = 14
+            Top = 3
+            Width = 80
+            AutoSize = False
+            BorderStyle = bsNone
+            DragMode = dmAutomatic
+            Font.Color = 3163457
+            Font.Name = 'Consolas'
+            Font.Pitch = fpFixed
+            ParentFont = False
+            TabOrder = 0
+            TextHint = 'Slot empty'
+            OnDragDrop = edSlotDragDrop
+            OnDragOver = edSlotDragOver
+            Appearance.NormalBgColor = 5162664
+            Appearance.NormalTextColor = 3163457
+            Appearance.FocusedBgColor = 3163457
+            Appearance.FocusedTextColor = 5162664
+            Appearance.HotBgColor = 3163457
+            Appearance.HotTextColor = 5162664
+            Appearance.DisabledBgColor = 3163457
+            Appearance.DisabledTextColor = 5162664
+            TabOnEnter = False
+            BoundLabel.Height = 14
+            BoundLabel.Width = 49
+            BoundLabel.Caption = 'Slot 07'
+            BoundLabel.Font.Color = 5162664
+            BoundLabel.Font.Name = 'Consolas'
+            BoundLabel.Font.Pitch = fpFixed
+            BoundLabel.ParentColor = False
+            BoundLabel.ParentFont = False
+            BoundLabel.FocusControl = edSlot07
+            BoundLabelSpacing = 8
+          end
+        end
+        object pnSlot08: TPanel
+          Left = 50
+          Height = 20
+          Top = 230
+          Width = 160
+          BevelColor = clBlack
+          ClientHeight = 20
+          ClientWidth = 160
+          TabOrder = 7
+          object edSlot08: TJppEdit
+            Tag = 7
+            Left = 70
+            Height = 14
+            Top = 3
+            Width = 80
+            AutoSize = False
+            BorderStyle = bsNone
+            DragMode = dmAutomatic
+            Font.Color = 3163457
+            Font.Name = 'Consolas'
+            Font.Pitch = fpFixed
+            ParentFont = False
+            TabOrder = 0
+            TextHint = 'Slot empty'
+            OnDragDrop = edSlotDragDrop
+            OnDragOver = edSlotDragOver
+            Appearance.NormalBgColor = 5162664
+            Appearance.NormalTextColor = 3163457
+            Appearance.FocusedBgColor = 3163457
+            Appearance.FocusedTextColor = 5162664
+            Appearance.HotBgColor = 3163457
+            Appearance.HotTextColor = 5162664
+            Appearance.DisabledBgColor = 3163457
+            Appearance.DisabledTextColor = 5162664
+            TabOnEnter = False
+            BoundLabel.Height = 14
+            BoundLabel.Width = 49
+            BoundLabel.Caption = 'Slot 08'
+            BoundLabel.Font.Color = 5162664
+            BoundLabel.Font.Name = 'Consolas'
+            BoundLabel.Font.Pitch = fpFixed
+            BoundLabel.ParentColor = False
+            BoundLabel.ParentFont = False
+            BoundLabel.FocusControl = edSlot08
+            BoundLabelSpacing = 8
+          end
+        end
+        object pnSlot09: TPanel
+          Left = 50
+          Height = 20
+          Top = 260
+          Width = 160
+          BevelColor = clBlack
+          ClientHeight = 20
+          ClientWidth = 160
+          TabOrder = 8
+          object edSlot09: TJppEdit
+            Tag = 8
+            Left = 70
+            Height = 14
+            Top = 3
+            Width = 80
+            AutoSize = False
+            BorderStyle = bsNone
+            DragMode = dmAutomatic
+            Font.Color = 3163457
+            Font.Name = 'Consolas'
+            Font.Pitch = fpFixed
+            ParentFont = False
+            TabOrder = 0
+            TextHint = 'Slot empty'
+            OnDragDrop = edSlotDragDrop
+            OnDragOver = edSlotDragOver
+            Appearance.NormalBgColor = 5162664
+            Appearance.NormalTextColor = 3163457
+            Appearance.FocusedBgColor = 3163457
+            Appearance.FocusedTextColor = 5162664
+            Appearance.HotBgColor = 3163457
+            Appearance.HotTextColor = 5162664
+            Appearance.DisabledBgColor = 3163457
+            Appearance.DisabledTextColor = 5162664
+            TabOnEnter = False
+            BoundLabel.Height = 14
+            BoundLabel.Width = 49
+            BoundLabel.Caption = 'Slot 09'
+            BoundLabel.Font.Color = 5162664
+            BoundLabel.Font.Name = 'Consolas'
+            BoundLabel.Font.Pitch = fpFixed
+            BoundLabel.ParentColor = False
+            BoundLabel.ParentFont = False
+            BoundLabel.FocusControl = edSlot09
+            BoundLabelSpacing = 8
+          end
+        end
+        object pnSlot10: TPanel
+          Left = 50
+          Height = 20
+          Top = 290
+          Width = 160
+          BevelColor = clBlack
+          ClientHeight = 20
+          ClientWidth = 160
+          TabOrder = 9
+          object edSlot10: TJppEdit
+            Tag = 9
+            Left = 70
+            Height = 14
+            Top = 3
+            Width = 80
+            AutoSize = False
+            BorderStyle = bsNone
+            DragMode = dmAutomatic
+            Font.Color = 3163457
+            Font.Name = 'Consolas'
+            Font.Pitch = fpFixed
+            ParentFont = False
+            TabOrder = 0
+            TextHint = 'Slot empty'
+            OnDragDrop = edSlotDragDrop
+            OnDragOver = edSlotDragOver
+            Appearance.NormalBgColor = 5162664
+            Appearance.NormalTextColor = 3163457
+            Appearance.FocusedBgColor = 3163457
+            Appearance.FocusedTextColor = 5162664
+            Appearance.HotBgColor = 3163457
+            Appearance.HotTextColor = 5162664
+            Appearance.DisabledBgColor = 3163457
+            Appearance.DisabledTextColor = 5162664
+            TabOnEnter = False
+            BoundLabel.Height = 14
+            BoundLabel.Width = 49
+            BoundLabel.Caption = 'Slot 10'
+            BoundLabel.Font.Color = 5162664
+            BoundLabel.Font.Name = 'Consolas'
+            BoundLabel.Font.Pitch = fpFixed
+            BoundLabel.ParentColor = False
+            BoundLabel.ParentFont = False
+            BoundLabel.FocusControl = edSlot10
+            BoundLabelSpacing = 8
+          end
+        end
+        object pnSlot11: TPanel
+          Left = 50
+          Height = 20
+          Top = 320
+          Width = 160
+          BevelColor = clBlack
+          ClientHeight = 20
+          ClientWidth = 160
+          TabOrder = 10
+          object edSlot11: TJppEdit
+            Tag = 10
+            Left = 70
+            Height = 14
+            Top = 3
+            Width = 80
+            AutoSize = False
+            BorderStyle = bsNone
+            DragMode = dmAutomatic
+            Font.Color = 3163457
+            Font.Name = 'Consolas'
+            Font.Pitch = fpFixed
+            ParentFont = False
+            TabOrder = 0
+            TextHint = 'Slot empty'
+            OnDragDrop = edSlotDragDrop
+            OnDragOver = edSlotDragOver
+            Appearance.NormalBgColor = 5162664
+            Appearance.NormalTextColor = 3163457
+            Appearance.FocusedBgColor = 3163457
+            Appearance.FocusedTextColor = 5162664
+            Appearance.HotBgColor = 3163457
+            Appearance.HotTextColor = 5162664
+            Appearance.DisabledBgColor = 3163457
+            Appearance.DisabledTextColor = 5162664
+            TabOnEnter = False
+            BoundLabel.Height = 14
+            BoundLabel.Width = 49
+            BoundLabel.Caption = 'Slot 11'
+            BoundLabel.Font.Color = 5162664
+            BoundLabel.Font.Name = 'Consolas'
+            BoundLabel.Font.Pitch = fpFixed
+            BoundLabel.ParentColor = False
+            BoundLabel.ParentFont = False
+            BoundLabel.FocusControl = edSlot11
+            BoundLabelSpacing = 8
+          end
+        end
+        object pnSlot12: TPanel
+          Left = 50
+          Height = 20
+          Top = 350
+          Width = 160
+          BevelColor = clBlack
+          ClientHeight = 20
+          ClientWidth = 160
+          TabOrder = 11
+          object edSlot12: TJppEdit
+            Tag = 11
+            Left = 70
+            Height = 14
+            Top = 3
+            Width = 80
+            AutoSize = False
+            BorderStyle = bsNone
+            DragMode = dmAutomatic
+            Font.Color = 3163457
+            Font.Name = 'Consolas'
+            Font.Pitch = fpFixed
+            ParentFont = False
+            TabOrder = 0
+            TextHint = 'Slot empty'
+            OnDragDrop = edSlotDragDrop
+            OnDragOver = edSlotDragOver
+            Appearance.NormalBgColor = 5162664
+            Appearance.NormalTextColor = 3163457
+            Appearance.FocusedBgColor = 3163457
+            Appearance.FocusedTextColor = 5162664
+            Appearance.HotBgColor = 3163457
+            Appearance.HotTextColor = 5162664
+            Appearance.DisabledBgColor = 3163457
+            Appearance.DisabledTextColor = 5162664
+            TabOnEnter = False
+            BoundLabel.Height = 14
+            BoundLabel.Width = 49
+            BoundLabel.Caption = 'Slot 12'
+            BoundLabel.Font.Color = 5162664
+            BoundLabel.Font.Name = 'Consolas'
+            BoundLabel.Font.Pitch = fpFixed
+            BoundLabel.ParentColor = False
+            BoundLabel.ParentFont = False
+            BoundLabel.FocusControl = edSlot12
+            BoundLabelSpacing = 8
+          end
+        end
+        object pnSlot13: TPanel
+          Left = 50
+          Height = 20
+          Top = 380
+          Width = 160
+          BevelColor = clBlack
+          ClientHeight = 20
+          ClientWidth = 160
+          TabOrder = 12
+          object edSlot13: TJppEdit
+            Tag = 12
+            Left = 70
+            Height = 14
+            Top = 3
+            Width = 80
+            AutoSize = False
+            BorderStyle = bsNone
+            DragMode = dmAutomatic
+            Font.Color = 3163457
+            Font.Name = 'Consolas'
+            Font.Pitch = fpFixed
+            ParentFont = False
+            TabOrder = 0
+            TextHint = 'Slot empty'
+            OnDragDrop = edSlotDragDrop
+            OnDragOver = edSlotDragOver
+            Appearance.NormalBgColor = 5162664
+            Appearance.NormalTextColor = 3163457
+            Appearance.FocusedBgColor = 3163457
+            Appearance.FocusedTextColor = 5162664
+            Appearance.HotBgColor = 3163457
+            Appearance.HotTextColor = 5162664
+            Appearance.DisabledBgColor = 3163457
+            Appearance.DisabledTextColor = 5162664
+            TabOnEnter = False
+            BoundLabel.Height = 14
+            BoundLabel.Width = 49
+            BoundLabel.Caption = 'Slot 13'
+            BoundLabel.Font.Color = 5162664
+            BoundLabel.Font.Name = 'Consolas'
+            BoundLabel.Font.Pitch = fpFixed
+            BoundLabel.ParentColor = False
+            BoundLabel.ParentFont = False
+            BoundLabel.FocusControl = edSlot13
+            BoundLabelSpacing = 8
+          end
+        end
+        object pnSlot14: TPanel
+          Left = 50
+          Height = 20
+          Top = 410
+          Width = 160
+          BevelColor = clBlack
+          ClientHeight = 20
+          ClientWidth = 160
+          TabOrder = 13
+          object edSlot14: TJppEdit
+            Tag = 13
+            Left = 70
+            Height = 14
+            Top = 3
+            Width = 80
+            AutoSize = False
+            BorderStyle = bsNone
+            DragMode = dmAutomatic
+            Font.Color = 3163457
+            Font.Name = 'Consolas'
+            Font.Pitch = fpFixed
+            ParentFont = False
+            TabOrder = 0
+            TextHint = 'Slot empty'
+            OnDragDrop = edSlotDragDrop
+            OnDragOver = edSlotDragOver
+            Appearance.NormalBgColor = 5162664
+            Appearance.NormalTextColor = 3163457
+            Appearance.FocusedBgColor = 3163457
+            Appearance.FocusedTextColor = 5162664
+            Appearance.HotBgColor = 3163457
+            Appearance.HotTextColor = 5162664
+            Appearance.DisabledBgColor = 3163457
+            Appearance.DisabledTextColor = 5162664
+            TabOnEnter = False
+            BoundLabel.Height = 14
+            BoundLabel.Width = 49
+            BoundLabel.Caption = 'Slot 14'
+            BoundLabel.Font.Color = 5162664
+            BoundLabel.Font.Name = 'Consolas'
+            BoundLabel.Font.Pitch = fpFixed
+            BoundLabel.ParentColor = False
+            BoundLabel.ParentFont = False
+            BoundLabel.FocusControl = edSlot14
+            BoundLabelSpacing = 8
+          end
+        end
+        object pnSlot15: TPanel
+          Left = 50
+          Height = 20
+          Top = 440
+          Width = 160
+          BevelColor = clBlack
+          ClientHeight = 20
+          ClientWidth = 160
+          TabOrder = 14
+          object edSlot15: TJppEdit
+            Tag = 14
+            Left = 70
+            Height = 14
+            Top = 3
+            Width = 80
+            AutoSize = False
+            BorderStyle = bsNone
+            DragMode = dmAutomatic
+            Font.Color = 3163457
+            Font.Name = 'Consolas'
+            Font.Pitch = fpFixed
+            ParentFont = False
+            TabOrder = 0
+            TextHint = 'Slot empty'
+            OnDragDrop = edSlotDragDrop
+            OnDragOver = edSlotDragOver
+            Appearance.NormalBgColor = 5162664
+            Appearance.NormalTextColor = 3163457
+            Appearance.FocusedBgColor = 3163457
+            Appearance.FocusedTextColor = 5162664
+            Appearance.HotBgColor = 3163457
+            Appearance.HotTextColor = 5162664
+            Appearance.DisabledBgColor = 3163457
+            Appearance.DisabledTextColor = 5162664
+            TabOnEnter = False
+            BoundLabel.Height = 14
+            BoundLabel.Width = 49
+            BoundLabel.Caption = 'Slot 15'
+            BoundLabel.Font.Color = 5162664
+            BoundLabel.Font.Name = 'Consolas'
+            BoundLabel.Font.Pitch = fpFixed
+            BoundLabel.ParentColor = False
+            BoundLabel.ParentFont = False
+            BoundLabel.FocusControl = edSlot15
+            BoundLabelSpacing = 8
+          end
+        end
+        object pnSlot16: TPanel
+          Left = 50
+          Height = 20
+          Top = 470
+          Width = 160
+          BevelColor = clBlack
+          ClientHeight = 20
+          ClientWidth = 160
+          TabOrder = 15
+          object edSlot16: TJppEdit
+            Tag = 15
+            Left = 70
+            Height = 14
+            Top = 3
+            Width = 80
+            AutoSize = False
+            BorderStyle = bsNone
+            DragMode = dmAutomatic
+            Font.Color = 3163457
+            Font.Name = 'Consolas'
+            Font.Pitch = fpFixed
+            ParentFont = False
+            TabOrder = 0
+            TextHint = 'Slot empty'
+            OnDragDrop = edSlotDragDrop
+            OnDragOver = edSlotDragOver
+            Appearance.NormalBgColor = 5162664
+            Appearance.NormalTextColor = 3163457
+            Appearance.FocusedBgColor = 3163457
+            Appearance.FocusedTextColor = 5162664
+            Appearance.HotBgColor = 3163457
+            Appearance.HotTextColor = 5162664
+            Appearance.DisabledBgColor = 3163457
+            Appearance.DisabledTextColor = 5162664
+            TabOnEnter = False
+            BoundLabel.Height = 14
+            BoundLabel.Width = 49
+            BoundLabel.Caption = 'Slot 16'
+            BoundLabel.Font.Color = 5162664
+            BoundLabel.Font.Name = 'Consolas'
+            BoundLabel.Font.Pitch = fpFixed
+            BoundLabel.ParentColor = False
+            BoundLabel.ParentFont = False
+            BoundLabel.FocusControl = edSlot16
+            BoundLabelSpacing = 8
+          end
+        end
+        object imLogo: TImage
+          Left = 552
+          Height = 62
+          Top = 840
+          Width = 270
+          Anchors = [akRight, akBottom]
+          Picture.Data = {
+            1754506F727461626C654E6574776F726B47726170686963EF1E000089504E47
+            0D0A1A0A0000000D494844520000010E0000003E080200000055DE62EB00001E
+            B649444154789CED7D69705DE779DEF3BDDF7796BBE2620708820BB842DC294B
+            A4A8CD5A3CB11DD97262A7719CC58ED5A67193B13B9376C6AE9B368D276D679C
+            34B6D3A633EDD4338E5D4B6EECDA962C6BB164ED946C4A94448A1205525C0182
+            D8818BBB9CE55BFAE35C82B817FB7245B9739F5FC0B9673FDF7B9E7779BEF7B0
+            070E7F1435D450C342A06B7D0235D4F0AB819AA9D450C3A25033951A6A5814C4
+            3CBF1953B984B145AD307DF9D426B32E9CE7A779D6AFA186771F739A8A311082
+            B8280D59C6A0A4561298366A2D9BA60F6225B5D6808110440230301A526A0060
+            B02D02031854A8959A36FA0D38071714FD1D4A0D030096452C5A36B5931A6AB8
+            7698DD548C0117343CE00D5CCC0B8B0390A16AED8835B6BB4A8231C08038CEF7
+            E47259C9390CA015D66F89C7130284E1016FA0D7630CA93AB1B62BAE35B4C4DB
+            27C695825258BBD14D37B84A6AC6600C38472127CF9F2A1081736CD896260E22
+            5C389D9B9C90C0959DA8322BADA186771973B20A17B87436FF952FF4EDDE6129
+            E0C489F0BE3F6BFCE06F77001A068C10F8FAE16FF7F73C2AEBB601C089B7C3FF
+            FA83CD89944D54DA10C0A73FDFD8B939C98CD64A3FFC9DA1FED372B237BCFB8F
+            321FFBC3B553AC429C7213F2DF7FEE42D75AAB7DB3F8DC5F24B92046F4FA4B13
+            DFFAC6C8D44E8CD2354BA9E11A62EE58C5C0B2F9EE1D56DB7A21351A5AC550AF
+            EF17A56593D6109C4646BDC2B8DCFE41A1358890AA0751E43AC1B2F9FEFD562C
+            86789CE34AC8D1D8CC8910DB2B8E3D93DF7143AE7B7F3A286A4404453878B3E5
+            C644BA914F1D3D1EE7076FB600C4E37CB6F3ABA1867715F365C00CE017114884
+            0138A1F7943F361C7041468311860782B141688D50424A0441F9863E82006A5A
+            88210DC21081874C8B78F6C7C39363920B9A32A420402821D5D5F59546504450
+            2CDB490D355C2B2C9C2C26820E01203F8ECB178B8C45213ECE9FCE2732D01A7A
+            8943D949A0EF947FE4E961AAB1450DBF3A58D854C2008D6BB99BE44E12FDE73C
+            25351728E6E5F993BE9D10C2452CBED8173F079484EFA179BD78EEC1B1BE7305
+            CB263D23E35C430DEF412C602A22868961B9F750C39A0D8E52E83DE317F25A58
+            343E128C0EF88551B9FFD6CCB6EB5313C392F3F94A3411821089065EDFCCC322
+            9C380E3F3A1C869AAE7A6135D4F0DEC502A6C2013F875882DAD7BB9018EEF587
+            FB3D2E68B0AF280B5040FBBA98105C296011DE940A642A2DEEB8B7250891CA88
+            D79ECABF7164CCB2686629B3861ADE6B5894B0C5183477C400488981DEA256BA
+            EFAC271C34B48AFA665B868A2F2EEAE05C4C8ECBB59BE2B7DD93E9EB911D9BC5
+            933F181D1B0E8445D25FC955D45043D5B1B0A9080B5AA3A1C9CEB40821307829
+            181F092EF414C0D1B6C189A76C19422CEC7C5D391E41867ACFA1FAF53B9D5062
+            7250BEFAFC18D112F650430DD7040B9B0A1750522752A27D932325C606FC736F
+            170A79C8023ABB62964D5AA9057732FD804A21951177FE66D3E039D9BA511C7D
+            76FCE4D1C9749350E1F22FA3861AAA8D4539605AC3B2696D574CF9C84DA85F3C
+            31EA3A5012AD6B9DE51C9221F075D7B6E4C17BD2C397241778EEE171E89ACAB9
+            86F73416373C0D00B4AF7300688DFCB8521A9976D1D8E21AAD9721FB3500E374
+            F0EE46270E682492580A31D550C335C0A24C8531288D86163BD32E9404B7E115
+            B0A6CB49A48552005B7229910019E89635EE077EBBA5FF8C2401D44AF235BCB7
+            B1385661D05A2752F69A2EC72B8008853119052A66A9B5FA69FB94A1BEEEFABA
+            6D079CC224165195A9A1866B89794DC500129000000DCBA1CE8DB1C2A02440E6
+            D1D6192BA9E2A3D5D48C0D15CA8A8B1A5057D98331688D585CDCFAE196B1F392
+            34A0CBB965EAE8B5AA4B0DEF01CC6B2A0C2201910063A5E1DABE21C633D084F6
+            EB4443ABAD950623C6C1E3E06ED9863C011E2B73CDC8024F802C4C191863087C
+            BD615BF2EE3FAC9FCC493786E9AA30C6C153E0A965F87735D4B0FA6073353762
+            0C61A0035F03B06DB21C3206C6C02BC8E857372EA23FBCA2565233C089110962
+            286DC80012E4C40806C6C02FCA4892ECC4C4F429908CA0A4F68A3A1262967E65
+            F08B5A490D800B7263B58A7E0DD718F34D18B66DB29DD23CDE48D4488444AAB4
+            4914A41883589C22768A6CC960DA865756630CF164D9862530180D2E28992E5B
+            1FD3765BB9490D355C0BCC174DAB6971450463AE8EDAA9855315C8AB4BA68DEC
+            7956BBF27F9925CC5C7F964D6AA8E15DC77CA632EB009DB970314BE65AB8BCF5
+            6BA8E1DDC7BC39DA6A0E5673C5317BD730D57AA6AA8798BEFF523A64FE28CBC0
+            ACDE59190386851E1C032BEF1D55F53BB3986BACEAD1CD2A5CDDBC7DC0AA1721
+            98A89B517997A36A22EA41C31874D5E61F33062292A19E1A1661A83927E2F359
+            0BE3E04461B83A6765DBA4B49EFFC119032975A99BD4953B0320EAA1B3FA3020
+            0E220AC3F9F65FBDC146042E48857A85D638677323DBA6D32772479E1E4DA4B9
+            5E5DD909C148A41BF9C13B9B12692143AD75150D267AD1DA2E8D0F072F3C3274
+            E99C6F3BD5CA13DCF69196AEEEA4925AABA8E54DE1A527C683A204C3ECF75043
+            C470CB079B3A3727A305CBBB0F258A30387F2A77F891D1DC84247B160144948B
+            27C2A10F357575279504036C87C686835F3E39343AA4B8B5FAB2096DE03878DF
+            1D4D9D1BE352563E6B63202C1A19F09EF8FE25DB15D5C8737281837737B5AE8D
+            AB9575939B3D591CB5E79A180D4607A510AB5F036480943A9E124E8CE209613B
+            54257A31065C80013DC772FFF09FFA76DD96B8F18ECCAA3F0F037081BEB3FED7
+            FEBCFF4FFEBCE5965F6BB16C0A03CD2D0CF679A78EE719C171E9EAAC9E6927A0
+            0D8CD15B76D535B5DA4A5EED18B804305882B8C0F04070EAF8046344ACECD708
+            4A21F475186063776CEDC6B892E01660D0733CF7C4F70646FB653C2596A4115F
+            3C948294F2D77EA769FF6D8D964561A0D9B47A5E5496989C9055795B32180561
+            23911206889AA86059AFA4394DC5B2E9ECC9DCEB874763495E8D7730312809AF
+            88F675F6BE9BEB630931F395B31244646239941D0D7EFEE3A1A7FE5BF6335F6B
+            D975A0DEB2AB56A261E87DA770FFD7FB92F5F8F83FED68ED8CFB9EE6029645F9
+            9CEC796DA290D78CC144D7587E99BEA76480B55DF18DDB938C16EB5B47AB198D
+            B32773BD670AC286E396D76B23379D00033B465B77D7A533220CB592B01D1A1F
+            095E786CE8851F655BD6093E1B0BAD1A08D0183A2377DF95B8FDDE96E67637F4
+            4A6E6AF4529E1C97275E9E10D62CAD7D578E481722258CC6EE8375992657855A
+            2F7D4CCF5782F48ABA9897D5738D1800829200400437466E5C445D245778D012
+            9930F41CCB7DF7AB7D5B6E703EF4C9354D6D6E186AADC04CB504FF964DC5BC7C
+            FAA18107FF66E48FBFDEB1EB403D8030841018EAF7DE7C390B06DBE5462959DE
+            D2965F399F2DBBD2EDEB5CC648A9059E266310828CD1FD17BC53C7B3D14255AE
+            0C12028CF3C05300AEDB9F6E6C738D86B000E0D41BB9471F189818940D6D227A
+            04D58665637C10B1343EFC7BAD5B76260144AE44C42AD9B12A8E340051C73930
+            700EE248A6ECC82A177FD06BC62A5388BC853040A6C93E7057A31BA3305C7EF0
+            7D954CC682A71F1C7AF2EF463EFDB58EDD07EA89930CA2DA3F3827559DE05E1B
+            084E6078FBF5EC0FFEBE6FDFFBD3B7DFD39AAC1381AFB9202110FABAE778EECC
+            89C920508C71632A3D9EC2248250EE3958B77D5F9DED909ECD5B30064450529F
+            7C6DE2E8B313B62BE2C9CA3389766EDBBC6B476AEBAEA4E55018424B6D393431
+            1ABCF0D8D0F33F2C91C9743BE154F559434A62B047DEF907F5873ED0144B8A30
+            D042D0D8B077F8B111DBA90AAB54406B188D037737B676C6435F2F3E80993B56
+            11181D0806FB0261553ACF0BA723170353B95B25351131868656BBBEC9367AC9
+            F4324526A78EE7FEF77FE9DBB4C7F9F0EFAC695EE38681D60A44B06C2AE4E4AB
+            CF8DF51C9BAC52702F1504219E16174FF9CFFDBC78F39DB17B7EAF75E3F6A431
+            2515CFC468F0D6ABE38107C6206C5E711718010C41516DDC9EDCB82DCE182905
+            ADAE666F88409C00DD7BD63B753C6BD91C33D3470C3250C6C076D1BD2F53D760
+            2B05EB0A99FCEC8181D1196412194976187EBE6A1423906910E0B06C0CF5C9F6
+            8DE2237FD0D1D6E93286424E5E7CC79BB52FDCAA504D85054E852B89B468ED70
+            A37BBBE081E634156151DFB9C2D9B7B2B6C32BBEDF1004087DB5C26BE09CDB6E
+            D992A86BB85648A469C70DF5B643526291463F452693E3C1530F0EFDF41B23FF
+            EC6F3B761FA81782C24083C1B2486BFDCE89DC8FBF39906EE43B6F88CBB08AB9
+            7CA3C16D2E38A444E0AB7D3797C62B63E01CC2222F2F5FFAF9F0605F20048019
+            F4C278E8A97C566EDA95DA774B5D2C2E22AB2642E8EB63BF9C78E3A589445A38
+            718E191B322829D1D2611FBCB3C94D8830D04AC1B6293B161C7E7CE8F0FFCD36
+            CC241301AF88C94179F3BDF59B77CE60A8D5B923601CF50D76C45A57B2F694AC
+            135C50762C78E3C8845511AB306809DF5B8554831BE3AC9C2D4B412361C70D75
+            750DB6925052CFCF69F365C0B263C1F8B09CFA6E44740029D1D46A679AEDE5B7
+            A6372042212F877A3D73E570D3A13582406B8574BD68697717F429A7C8E4F41B
+            B9EF7CAD6FD38E1299C8B094B4E59C86FABD277F34F8CA37F3FFE4AF5B761FA8
+            77E314B15615513A6F0090E1B4C760600C88A398973DC72647063C70B88E3D93
+            BB39C1F755FB3A77EBEE74C4B74AE977DECCF59E29380ED77A86BBC210044A2B
+            954CDBBB6EAC8B25849410025CD0F99EDCC3DFEA1FBE3C834C0494C6E845D9B1
+            CDB9FBE34D1BBBD354CD7B3243F1A495043178453D74C92B1BCD0C5A2191126D
+            9DAE5EE19332B87CB1E0174B5F5E28FBC594469AE352FBFA385D31E359316709
+            9211E526F4F9B773B6CBA79B4AE02B4BA413695BC915D57418283B21CF9FF61C
+            07AECB2B7645046350980C9BDB6C372194849CAD4857AA993834391E3CFDD0D0
+            C35F1FB9EF6F3AF6DE542F04459A68CBA66241BEF6C2C8F7BE3C7CC79FA4FFCD
+            239BEA9B6D196ABFB8C493372B7A5A65779F957232F1A478DFED8D32D4C77E31
+            76E6CD3C171C4005BD30C64707B2CF3F3EB4E5BA94EDF2B78E8EA7D28E1DE3C6
+            0415AB0190A1EADC1C7BDFAD2DC2A630D05AC38D5121278F3C36F8E4FD639976
+            31D3E9CA0E4BCEC5873EDDB4E7A6FA785204C1925DD25528847304813E7FBA38
+            9D55184318A0A9DD6A6CB1D54ABE1762401C81A74FBE96630437C62B1A7145E6
+            610C324DA2B92D2E432DE7A097855865A4F4F994D2DA8052C8348A74BDBDC24A
+            4894C021818951D9F3DA8436200635C3A70C7C1D06E8DA165BBB296ECA150A11
+            9910C3E913B9EFFE6DDFBA6EE7D77F774D4B872B8352EE485874E95CE1E1EF5C
+            0E0AEA9ECFB4777527A3AF1A2D27A74ED00AAB5C2ABD92C9D54ABFF56A6EA037
+            CF883B2E0714CAFD10C6B8D1CA1844A51933BD9CC900F030505AA1BEC5DAB1BF
+            CE76494A581638A70BA7733FFBC7C1F327FCE6F595692E4EF08AD87E7DFCC0DD
+            8DAD1DAE945A2FEB8112875A812B5B4A164FC893AF4EF2725391211A9AADCD3B
+            922BAFB9451FD50A7CFDD6D16C31AF3887AE08950D425FFB3E5AD6585B7626B9
+            A099CF7A2156393983553C2576A5EB1A69851DEA23EE4300DBA6865667725C02
+            7045E5F931B28C4128B50CB565131129A523DF292293677F32F4D0D746EEFBEB
+            8EBD87EA85A0C02BCD7B31266276F9F883A31FFC68C36B2F8C3EFFD3410D8825
+            667888C1F3B0756FEAE05D8D44AB6A2D53E72968EF4D19469993AF66DF78659C
+            0B0E5DA1855157E6C3554426204218045B7625761F6804217A4DB82E15F2F2E5
+            67069FF83F63A90631D34E00280D4E087C75F4D9917C568161A9DDD619835794
+            7B6E6AE8DE9709FC1589623847B28E4F57003106A5E0C608ABE12687A10E4330
+            86A6367BE872108D10AA885EC88AFEF08B3A5947519AB42C4A9F27ACBF7CA170
+            BE276F3B573B70477D89D66F4DB4AD8BCB79253D4B00832548D8D47B26F7DAF3
+            636CB6A16C348A05E517E48E1B1BBAF7A7235FFFECC9DCF7FFFB40E31A7EEFA7
+            D7B4AC2D91C9F44963C4E11775EFD9020CA4D48C969E07356004DFD3DFF9CFFD
+            BFFED9FA5B3FDC52A5BC79E4491AE09D13D90BA73CCBC5FCCAB1085A43FAE8E8
+            72375D97E49C4C54371074E95CEEF1EF95C8047ABE779A3709BF20457CB9E7CD
+            911FC4EF7FA9A37B6F3A0896D5BBC740081A1FF65E7C7CC472CA58C5F755C7C6
+            C49E9BEA4B1F8A5B0D704196857C4E1E7E7C3828CE9E9AF20B28E4FCEEF7D575
+            EFAF2F13BFCE9D2CA691CBDEE58B7961F1725A546D9D89C6367715D575E6CABC
+            B15C56CEF57E8AC24D2575A6C9258E677E32F8F77F35F82FFFB2FDD60F351B83
+            C0D7B3BC140D18E1CA24B3E5D70BB8C0B99EDCE73F71FACFFE63FB4D1F680E97
+            35261683A89CC5187EF9D4C8B99EBCEBCE59D12242E061ED26F7E05D8D00C240
+            03308065D1EB2F8E7CE50B7DB7DE19B36C84C1EC9B4F81AFB88A42023D8FCA2F
+            7CBBB36B7B7279D6C218C2504F8E579620A3BB91AA5B4D61582965CFE1177521
+            377BD19331104318E854BD6D3B57B51D733A60C4909F94E77A3C37CEA7D2F68C
+            E015542AE334B7AF5AE7AE293BF18AFAAD572686FA036155160A4AD5060F1BB6
+            BA99669701DBF7A63FF1E9E08D97C6D76C70366E4B0A0B4AA2929118B4C6C448
+            5012772C179CE3424F7EF70E6BEDC65815D5D6D16768817C562AA99BDAEC0592
+            510661A027B3412A6D5B3649A9A1A194DEB423F52FBEDCF2CCFD639975C2B111
+            CE5B26511A5CCCF916D158C0CBE684F111B9F7B79CFA267B7955DDE8A55C1809
+            0E3F3A62BB983ED2FCA25ABB39B1FF967ABD7AAC12ED9901177A723DC7F3B633
+            8BA29971C81075F57CCFA106C7BD1AB4CC216C29E57375212F2305D195DDC068
+            C413144F8895A6F0A2E318704E8C608CF60A3A37212B1D8F884C42CD18812195
+            11510DDBB629F0F5D1E747BEFAC5FEFBFE55E36D1F6E4DA64594F58A2E6C4AB2
+            FAC0D72F0A1BA343F0B3922FA31BA680F221253EF797EBD76D8EFBDEEA53CAD4
+            2493FEF385979E180D7DB8291EBDEFA93C7F3A7567A6666B172695E5E2FA5B32
+            9D9B93D12C146E11034EBF997DECFEE1D13EBFA943E8B97D30AD317C418693B0
+            52B3FC2A624865E6FE5A28A198C7DA2DCE6FDCD796AEB7974729985B2E690C2C
+            67D558A5E49D1294020CC686BD99D979068A66BC332096A0445A4CAF88CC2D6C
+            B1E85C4FEEF82F2766B2CAAE1BEB366C4DCE3FFD6031A71E75F5CE8EC9A3CF8F
+            8E0D2B2706212ACB9D522919A0AB3BD1BD2FCD3949598AE94B9B5B3470D17BF0
+            DB97062FFA9FFCD3CEAEEB925A95E6C01803DBA19ED7B35FBAEFDC273E93D97F
+            4BC676C9F7F452A5068C414934B488D68EF8B247C33C3781112C41063AF0F485
+            770A4A224A1E446FA5C1DE82D1579472A6A405D60A4D6B5C27464697B2EA00D6
+            6E8C476D0FC25047D79E1D0D0EFF6CF4D91F8CCD14B000E0847C0E5BF6387B0F
+            651851E4F796C9E3356C97EA1AE61EA951E92329DC845876E05A8A5546BC179F
+            18AF4816FBBEEAD890D87330BD2AAA73223086336FE57ACFF896056ED3747D28
+            63A49596219C18EDBCA12E9E144A564EA69A2F593C3E128C0C04624609B2A1C5
+            AE6F5C856C77E8EB30D0F94999CB4A21481B3D2D014260504AC753C2B290CED8
+            C29A257F17CDAB09027DF4B991AF7EB1FF8FFE75E32D1F6A4DA44AF50146D052
+            F7BC917BF207436BBB9CF77FB4A5BD33AE225B5AD2D9326805B982B941B33EE9
+            E8266B850BA772AF3C37CE3962490E0639BDCDB929D96A32C385C0F8B0E202CA
+            A02231C4807C4EA910FB6F4B6FDE9126820C212C6284D3C7B38FDD3F303A2A9B
+            5AC4CCD08513761C48BDEFF6A6C6567B66BED82CD80084C1A895E9C1A36A6C41
+            5FBEE0D18C12643C492D1DEE0A5329918EBB9893DA20F44AFAFFE9F64F0C4AC1
+            76C8710914093B669B063F0FAB9CEFC91D3F32114B5C9DDA451C859CDA77A8AE
+            AB3B1D0946960303E2F00AFA173F1F191908DC18275199EDF13DE517B17EABBB
+            FFE67A2E681E7DFE14BD5CBE5878E85B9707FBFC4F7DA1B3AB3B2903AD148843
+            5834311ABCF8B3D1FFF9D5C17FFEC5969BEE6E48A697E3582F7B343046C694C9
+            84A7CE3928EAB161EFFCE96254178B5E6389B4C5AEA89294D451D5A275AD4D82
+            FACF799117C1677CBF89082AC46436DCB0259669721D97A6D3CB733F1D7AFAFB
+            D98EED825325BD8C0E48C7C1DD9F6CD975635D2C2E965A772AC99196359A1941
+            6B4472C9E77E3A62BBE5AC5254EBB624AEBFB5798509246278F3D5EC9B2F8F0B
+            0BC4CB33250423E1FBAABE91DFF481E6544628093D4751753E56191D0A86FBCB
+            5805000C48D0CCC1BD24300629B59210027A5A0D21B278ADD1DEE93A31128234
+            AE4CF09817257AF1F52BCF8D7CEB4BFD9FFA0FED07EE6C74DC52CD9E5BC409BD
+            670B8F3C70F9D2DBFE273EDFB1715B7CF9C29CC5C0C018CD1831421868DB26DB
+            A528FD6200CEA1244E1DCFFEFC87436180BA263EE50B10476BA7C33994E63254
+            E90CDF73A8A1A9D50E0318A36D8726C7E52BCF8F8D0D06C2E19CA9B2B1E5A981
+            3E991F573AC45DBFD5B07D5FBDB02043089B8CD6275E1E7BE4815115C84C6319
+            BD70820206CFC82DD73BEFBFB7A56DAD2B9712461B0321E02CBD511B63141135
+            D19C53BB1881AF3849670CC24052C57E584906E6C6C872887322C2FC43623E56
+            B978A6D0732CEBC4F8CC2CC14CF5F852C1A222748510D353A18F4CB3B5E7509D
+            6D53C9535ADC63BB4A2F170A3FFCE66529D56FDED7D1B1311E29C1C060DB1486
+            FAC491B147BF336ABB20A75A9399B486E3C28DF320C0E8257FC74DE93BEE6D4E
+            A6855251784681A74787BD736F171D178CA1E2C3B14A21286ACBA17892B7AF73
+            EB1AAECAEDA62642F59D2B14722AF4B51DA3AB91242BC9178C41E063CD46A7A9
+            D58DC585925A69D80E0D5FF69E7968F0959FE5DBBB04CAE9C51298CC4A15A069
+            8D581245688D788AB774388BFFFC2D31288D4256ED3994DEBC334D84DC847CFB
+            F5493EE3FDAB67E80397074EA8C8158521425FDB0EAEDB5F178FBAD42FA4D099
+            3B03C631392127C7245B442D6C8528B98F1A2D1DAEED120C54A897F7E5E1A9E8
+            E5E5A747FEE1CBFDBFFB95F61BDFDFE8B814043ABA2861D1E484ACDE9435A361
+            391414E5530F0DBFF278FEE37FDAB4FF96462EA024B84010E8E3BF9838FCC828
+            80BA462ECB5F3882432AC800EDEB9DDBEF696C6E8FFB9EAC082E236BB11D313E
+            E23DFD93A1DE1EDF8E837869EEFED428171CB90995CFE2F68F66761DAC8F2548
+            06B01C524A9F3832F6E87747A1646A06BD000B249767855208162DDDE7B618E9
+            95997671EF679BB7EF4D474A25DFD32397BDEA4EED8AC0104D9B6B68B253195B
+            1B18AD17E95FCCC72A174EE7DE7A75C28D57776A170C024F85013A3727B6ED49
+            0A412B6CF633452FFDE70B3FFA5F9735D4C73EDBD1B1E12ABD44E9E95547F4D4
+            6D9B862E790F7EAB373BA63EF6D98ECE2DF1D0D7442022DFD32303DE85D37937
+            5E6A4E7B150C007C4FDB36C5927CDDE6782C2EA4AC145F4C2172F18B0579E174
+            CE2B28DFD38E5BEA037A75970C8C50CCEBB6CE58FBBAB8E392D63A8A5F87FABD
+            671E1A3CFAC42CF4B23C2CCA4B221061F8A2DC794BE2CEDF686B68B6035F4775
+            95EC88F7CAF3E39522FC2A20F0E17BAAA1D9DE79635D2225B45E82DBB210AB8C
+            5791554A9A67A0798D2B6C822917ABAF0C53D1CB91A747BEFD6FFB7FFFAFDA6F
+            B8ADD176290A5BAB34871B8C4E1E1DFF779FBBF0992F34DEF5B1D65842048116
+            16BCBC7EF999E1177F3A59D7C8DD5465F716E2902164804DBBE207EF6EC834DA
+            81BF705A297A23D80EE5B3F28547874F1D2B081BC29AB1730B5E1EB961B5EFFD
+            A91BEE6848654414BD28A94F1C197BF4FE59E8A51AB06CF8798C8FCA8F7CB665
+            EFA17A4E24C352328A22561908AA370193018C60341A5BEC784A1883A8ABCED2
+            CA06F3C52AEFE44EBE56565759451803AFA88A79D5755DBA7B5FBA7436AB5DB5
+            88E8E5D2F9C2037FD7178BF38FDDD756DF6CEB9576849A0D0C52EAA77E3CF4E4
+            37B27FFC3F3AB6EE49477560C610F8FAF245EFF2453F16879EAD1F8B5FD4B138
+            C59356E796B86D0B29F5E2D56A5A43080481BE78AA50C88585BC76635471790C
+            2042B180A6366B6D57DCB20523A8505B0E0D5EF29E7D68F0E893F9960D62E522
+            973941183A2FD7EF703EF8A9B68EF5F12835577AD6264AABCADEB3DE62646FCB
+            4318E8C8FF5CBF35EEB8B48C09B6984F2E2968A0AFD07B366F57E3BBF20664F1
+            ADBBD3B13869BDF004B4151DCAC0B6A99897BF7C7AF8FEBF18DB7473555AF870
+            8EB161D97DA5DF45E0EB285A3DFCF8D04B8F155A3B6027B99ED5CFD1D8792075
+            E39D8DB64B41A01793EEAB4054C7B46DF23DFDEAF363C75E9C98D5612601E9A9
+            C15EEC3CE8DCF69196FA265B2B5836C950BF7164EC897F1C545522160E55C0C1
+            8FD41FBCAB292A79CD0CBDF259F9CE9B8515A655E782D1D8D81D6F68B6958292
+            CB68D552C2BCCAE28B858BEFE46D9B56F7FC1920251A9AADCE4DC9454E6B5E21
+            22F90C112EBE939B189BA19D59253086AEEEB41BA3A800CA397ACF1646077C27
+            3667B067349C186DD8966404A3562454331A8C830117DF294C8ECBB914F54408
+            7C24D2B4616B1257351334361C2CBF50B610184343B30D46332B2491A9E4B2B2
+            E7D82C19B095C3683871DED59D14166165236DCEE64691B5541655560F462FAB
+            3DDCB20F6700C0B62B9D93D54559A74C036111F1856EA04118EA15CEB29CDA55
+            D44560FE5D45F584E9AD5F2327A2AA2FACE9FD692B1165266DAADE6090C13213
+            AAD331F7D42E06196A59CD6FC9BF1BC9C1F2632D6342EC528F72F5A218C25063
+            113730525EACC6E181455F6399BA8941AEAC49E9620E37E72532280555ACE209
+            ACCA485BF247237EA5F12E5FD135B981CB96F75E43FC4A8CB42A3748ABA186FF
+            5F5033951A6A58146AA652430D8B42CD546AA86151F87F96FDE55200C671FF00
+            00000049454E44AE426082
+          }
+        end
+        object pnSlot17: TPanel
+          Left = 250
+          Height = 20
+          Top = 20
+          Width = 160
+          BevelColor = clBlack
+          ClientHeight = 20
+          ClientWidth = 160
+          TabOrder = 16
+          object edSlot17: TJppEdit
+            Tag = 16
+            Left = 70
+            Height = 14
+            Top = 3
+            Width = 80
+            AutoSize = False
+            BorderStyle = bsNone
+            DragMode = dmAutomatic
+            Font.Color = 3163457
+            Font.Name = 'Consolas'
+            Font.Pitch = fpFixed
+            ParentFont = False
+            TabOrder = 0
+            TextHint = 'Slot empty'
+            OnDragDrop = edSlotDragDrop
+            OnDragOver = edSlotDragOver
+            Appearance.NormalBgColor = 5162664
+            Appearance.NormalTextColor = 3163457
+            Appearance.FocusedBgColor = 3163457
+            Appearance.FocusedTextColor = 5162664
+            Appearance.HotBgColor = 3163457
+            Appearance.HotTextColor = 5162664
+            Appearance.DisabledBgColor = 3163457
+            Appearance.DisabledTextColor = 5162664
+            TabOnEnter = False
+            BoundLabel.Height = 14
+            BoundLabel.Width = 49
+            BoundLabel.Caption = 'Slot 17'
+            BoundLabel.Font.Color = 5162664
+            BoundLabel.Font.Name = 'Consolas'
+            BoundLabel.Font.Pitch = fpFixed
+            BoundLabel.ParentColor = False
+            BoundLabel.ParentFont = False
+            BoundLabel.FocusControl = edSlot17
+            BoundLabelSpacing = 8
+          end
+        end
+        object pnSlot18: TPanel
+          Left = 250
+          Height = 20
+          Top = 50
+          Width = 160
+          BevelColor = clBlack
+          ClientHeight = 20
+          ClientWidth = 160
+          TabOrder = 17
+          object edSlot18: TJppEdit
+            Tag = 17
+            Left = 70
+            Height = 14
+            Top = 3
+            Width = 80
+            AutoSize = False
+            BorderStyle = bsNone
+            DragMode = dmAutomatic
+            Font.Color = 3163457
+            Font.Name = 'Consolas'
+            Font.Pitch = fpFixed
+            ParentFont = False
+            TabOrder = 0
+            TextHint = 'Slot empty'
+            OnDragDrop = edSlotDragDrop
+            OnDragOver = edSlotDragOver
+            Appearance.NormalBgColor = 5162664
+            Appearance.NormalTextColor = 3163457
+            Appearance.FocusedBgColor = 3163457
+            Appearance.FocusedTextColor = 5162664
+            Appearance.HotBgColor = 3163457
+            Appearance.HotTextColor = 5162664
+            Appearance.DisabledBgColor = 3163457
+            Appearance.DisabledTextColor = 5162664
+            TabOnEnter = False
+            BoundLabel.Height = 14
+            BoundLabel.Width = 49
+            BoundLabel.Caption = 'Slot 18'
+            BoundLabel.Font.Color = 5162664
+            BoundLabel.Font.Name = 'Consolas'
+            BoundLabel.Font.Pitch = fpFixed
+            BoundLabel.ParentColor = False
+            BoundLabel.ParentFont = False
+            BoundLabel.FocusControl = edSlot18
+            BoundLabelSpacing = 8
+          end
+        end
+        object pnSlot19: TPanel
+          Left = 250
+          Height = 20
+          Top = 80
+          Width = 160
+          BevelColor = clBlack
+          ClientHeight = 20
+          ClientWidth = 160
+          TabOrder = 18
+          object edSlot19: TJppEdit
+            Tag = 18
+            Left = 70
+            Height = 14
+            Top = 3
+            Width = 80
+            AutoSize = False
+            BorderStyle = bsNone
+            DragMode = dmAutomatic
+            Font.Color = 3163457
+            Font.Name = 'Consolas'
+            Font.Pitch = fpFixed
+            ParentFont = False
+            TabOrder = 0
+            TextHint = 'Slot empty'
+            OnDragDrop = edSlotDragDrop
+            OnDragOver = edSlotDragOver
+            Appearance.NormalBgColor = 5162664
+            Appearance.NormalTextColor = 3163457
+            Appearance.FocusedBgColor = 3163457
+            Appearance.FocusedTextColor = 5162664
+            Appearance.HotBgColor = 3163457
+            Appearance.HotTextColor = 5162664
+            Appearance.DisabledBgColor = 3163457
+            Appearance.DisabledTextColor = 5162664
+            TabOnEnter = False
+            BoundLabel.Height = 14
+            BoundLabel.Width = 49
+            BoundLabel.Caption = 'Slot 19'
+            BoundLabel.Font.Color = 5162664
+            BoundLabel.Font.Name = 'Consolas'
+            BoundLabel.Font.Pitch = fpFixed
+            BoundLabel.ParentColor = False
+            BoundLabel.ParentFont = False
+            BoundLabel.FocusControl = edSlot19
+            BoundLabelSpacing = 8
+          end
+        end
+        object pnSlot20: TPanel
+          Left = 250
+          Height = 20
+          Top = 110
+          Width = 160
+          BevelColor = clBlack
+          ClientHeight = 20
+          ClientWidth = 160
+          TabOrder = 19
+          object edSlot20: TJppEdit
+            Tag = 19
+            Left = 70
+            Height = 14
+            Top = 3
+            Width = 80
+            AutoSize = False
+            BorderStyle = bsNone
+            DragMode = dmAutomatic
+            Font.Color = 3163457
+            Font.Name = 'Consolas'
+            Font.Pitch = fpFixed
+            ParentFont = False
+            TabOrder = 0
+            TextHint = 'Slot empty'
+            OnDragDrop = edSlotDragDrop
+            OnDragOver = edSlotDragOver
+            Appearance.NormalBgColor = 5162664
+            Appearance.NormalTextColor = 3163457
+            Appearance.FocusedBgColor = 3163457
+            Appearance.FocusedTextColor = 5162664
+            Appearance.HotBgColor = 3163457
+            Appearance.HotTextColor = 5162664
+            Appearance.DisabledBgColor = 3163457
+            Appearance.DisabledTextColor = 5162664
+            TabOnEnter = False
+            BoundLabel.Height = 14
+            BoundLabel.Width = 49
+            BoundLabel.Caption = 'Slot 20'
+            BoundLabel.Font.Color = 5162664
+            BoundLabel.Font.Name = 'Consolas'
+            BoundLabel.Font.Pitch = fpFixed
+            BoundLabel.ParentColor = False
+            BoundLabel.ParentFont = False
+            BoundLabel.FocusControl = edSlot20
+            BoundLabelSpacing = 8
+          end
+        end
+        object pnSlot21: TPanel
+          Left = 250
+          Height = 20
+          Top = 140
+          Width = 160
+          BevelColor = clBlack
+          ClientHeight = 20
+          ClientWidth = 160
+          TabOrder = 20
+          object edSlot21: TJppEdit
+            Tag = 20
+            Left = 70
+            Height = 14
+            Top = 3
+            Width = 80
+            AutoSize = False
+            BorderStyle = bsNone
+            DragMode = dmAutomatic
+            Font.Color = 3163457
+            Font.Name = 'Consolas'
+            Font.Pitch = fpFixed
+            ParentFont = False
+            TabOrder = 0
+            TextHint = 'Slot empty'
+            OnDragDrop = edSlotDragDrop
+            OnDragOver = edSlotDragOver
+            Appearance.NormalBgColor = 5162664
+            Appearance.NormalTextColor = 3163457
+            Appearance.FocusedBgColor = 3163457
+            Appearance.FocusedTextColor = 5162664
+            Appearance.HotBgColor = 3163457
+            Appearance.HotTextColor = 5162664
+            Appearance.DisabledBgColor = 3163457
+            Appearance.DisabledTextColor = 5162664
+            TabOnEnter = False
+            BoundLabel.Height = 14
+            BoundLabel.Width = 49
+            BoundLabel.Caption = 'Slot 21'
+            BoundLabel.Font.Color = 5162664
+            BoundLabel.Font.Name = 'Consolas'
+            BoundLabel.Font.Pitch = fpFixed
+            BoundLabel.ParentColor = False
+            BoundLabel.ParentFont = False
+            BoundLabel.FocusControl = edSlot21
+            BoundLabelSpacing = 8
+          end
+        end
+        object pnSlot22: TPanel
+          Left = 250
+          Height = 20
+          Top = 170
+          Width = 160
+          BevelColor = clBlack
+          ClientHeight = 20
+          ClientWidth = 160
+          TabOrder = 21
+          object edSlot22: TJppEdit
+            Tag = 21
+            Left = 70
+            Height = 14
+            Top = 3
+            Width = 80
+            AutoSize = False
+            BorderStyle = bsNone
+            DragMode = dmAutomatic
+            Font.Color = 3163457
+            Font.Name = 'Consolas'
+            Font.Pitch = fpFixed
+            ParentFont = False
+            TabOrder = 0
+            TextHint = 'Slot empty'
+            OnDragDrop = edSlotDragDrop
+            OnDragOver = edSlotDragOver
+            Appearance.NormalBgColor = 5162664
+            Appearance.NormalTextColor = 3163457
+            Appearance.FocusedBgColor = 3163457
+            Appearance.FocusedTextColor = 5162664
+            Appearance.HotBgColor = 3163457
+            Appearance.HotTextColor = 5162664
+            Appearance.DisabledBgColor = 3163457
+            Appearance.DisabledTextColor = 5162664
+            TabOnEnter = False
+            BoundLabel.Height = 14
+            BoundLabel.Width = 49
+            BoundLabel.Caption = 'Slot 22'
+            BoundLabel.Font.Color = 5162664
+            BoundLabel.Font.Name = 'Consolas'
+            BoundLabel.Font.Pitch = fpFixed
+            BoundLabel.ParentColor = False
+            BoundLabel.ParentFont = False
+            BoundLabel.FocusControl = edSlot22
+            BoundLabelSpacing = 8
+          end
+        end
+        object pnSlot23: TPanel
+          Left = 250
+          Height = 20
+          Top = 200
+          Width = 160
+          BevelColor = clBlack
+          ClientHeight = 20
+          ClientWidth = 160
+          TabOrder = 22
+          object edSlot23: TJppEdit
+            Tag = 22
+            Left = 70
+            Height = 14
+            Top = 3
+            Width = 80
+            AutoSize = False
+            BorderStyle = bsNone
+            DragMode = dmAutomatic
+            Font.Color = 3163457
+            Font.Name = 'Consolas'
+            Font.Pitch = fpFixed
+            ParentFont = False
+            TabOrder = 0
+            TextHint = 'Slot empty'
+            OnDragDrop = edSlotDragDrop
+            OnDragOver = edSlotDragOver
+            Appearance.NormalBgColor = 5162664
+            Appearance.NormalTextColor = 3163457
+            Appearance.FocusedBgColor = 3163457
+            Appearance.FocusedTextColor = 5162664
+            Appearance.HotBgColor = 3163457
+            Appearance.HotTextColor = 5162664
+            Appearance.DisabledBgColor = 3163457
+            Appearance.DisabledTextColor = 5162664
+            TabOnEnter = False
+            BoundLabel.Height = 14
+            BoundLabel.Width = 49
+            BoundLabel.Caption = 'Slot 23'
+            BoundLabel.Font.Color = 5162664
+            BoundLabel.Font.Name = 'Consolas'
+            BoundLabel.Font.Pitch = fpFixed
+            BoundLabel.ParentColor = False
+            BoundLabel.ParentFont = False
+            BoundLabel.FocusControl = edSlot23
+            BoundLabelSpacing = 8
+          end
+        end
+        object pnSlot24: TPanel
+          Left = 250
+          Height = 20
+          Top = 230
+          Width = 160
+          BevelColor = clBlack
+          ClientHeight = 20
+          ClientWidth = 160
+          TabOrder = 23
+          object edSlot24: TJppEdit
+            Tag = 23
+            Left = 70
+            Height = 14
+            Top = 3
+            Width = 80
+            AutoSize = False
+            BorderStyle = bsNone
+            DragMode = dmAutomatic
+            Font.Color = 3163457
+            Font.Name = 'Consolas'
+            Font.Pitch = fpFixed
+            ParentFont = False
+            TabOrder = 0
+            TextHint = 'Slot empty'
+            OnDragDrop = edSlotDragDrop
+            OnDragOver = edSlotDragOver
+            Appearance.NormalBgColor = 5162664
+            Appearance.NormalTextColor = 3163457
+            Appearance.FocusedBgColor = 3163457
+            Appearance.FocusedTextColor = 5162664
+            Appearance.HotBgColor = 3163457
+            Appearance.HotTextColor = 5162664
+            Appearance.DisabledBgColor = 3163457
+            Appearance.DisabledTextColor = 5162664
+            TabOnEnter = False
+            BoundLabel.Height = 14
+            BoundLabel.Width = 49
+            BoundLabel.Caption = 'Slot 24'
+            BoundLabel.Font.Color = 5162664
+            BoundLabel.Font.Name = 'Consolas'
+            BoundLabel.Font.Pitch = fpFixed
+            BoundLabel.ParentColor = False
+            BoundLabel.ParentFont = False
+            BoundLabel.FocusControl = edSlot24
+            BoundLabelSpacing = 8
+          end
+        end
+        object pnSlot25: TPanel
+          Left = 250
+          Height = 20
+          Top = 260
+          Width = 160
+          BevelColor = clBlack
+          ClientHeight = 20
+          ClientWidth = 160
+          TabOrder = 24
+          object edSlot25: TJppEdit
+            Tag = 24
+            Left = 70
+            Height = 14
+            Top = 3
+            Width = 80
+            AutoSize = False
+            BorderStyle = bsNone
+            DragMode = dmAutomatic
+            Font.Color = 3163457
+            Font.Name = 'Consolas'
+            Font.Pitch = fpFixed
+            ParentFont = False
+            TabOrder = 0
+            TextHint = 'Slot empty'
+            OnDragDrop = edSlotDragDrop
+            OnDragOver = edSlotDragOver
+            Appearance.NormalBgColor = 5162664
+            Appearance.NormalTextColor = 3163457
+            Appearance.FocusedBgColor = 3163457
+            Appearance.FocusedTextColor = 5162664
+            Appearance.HotBgColor = 3163457
+            Appearance.HotTextColor = 5162664
+            Appearance.DisabledBgColor = 3163457
+            Appearance.DisabledTextColor = 5162664
+            TabOnEnter = False
+            BoundLabel.Height = 14
+            BoundLabel.Width = 49
+            BoundLabel.Caption = 'Slot 25'
+            BoundLabel.Font.Color = 5162664
+            BoundLabel.Font.Name = 'Consolas'
+            BoundLabel.Font.Pitch = fpFixed
+            BoundLabel.ParentColor = False
+            BoundLabel.ParentFont = False
+            BoundLabel.FocusControl = edSlot25
+            BoundLabelSpacing = 8
+          end
+        end
+        object pnSlot26: TPanel
+          Left = 250
+          Height = 20
+          Top = 290
+          Width = 160
+          BevelColor = clBlack
+          ClientHeight = 20
+          ClientWidth = 160
+          TabOrder = 25
+          object edSlot26: TJppEdit
+            Tag = 25
+            Left = 70
+            Height = 14
+            Top = 3
+            Width = 80
+            AutoSize = False
+            BorderStyle = bsNone
+            DragMode = dmAutomatic
+            Font.Color = 3163457
+            Font.Name = 'Consolas'
+            Font.Pitch = fpFixed
+            ParentFont = False
+            TabOrder = 0
+            TextHint = 'Slot empty'
+            OnDragDrop = edSlotDragDrop
+            OnDragOver = edSlotDragOver
+            Appearance.NormalBgColor = 5162664
+            Appearance.NormalTextColor = 3163457
+            Appearance.FocusedBgColor = 3163457
+            Appearance.FocusedTextColor = 5162664
+            Appearance.HotBgColor = 3163457
+            Appearance.HotTextColor = 5162664
+            Appearance.DisabledBgColor = 3163457
+            Appearance.DisabledTextColor = 5162664
+            TabOnEnter = False
+            BoundLabel.Height = 14
+            BoundLabel.Width = 49
+            BoundLabel.Caption = 'Slot 26'
+            BoundLabel.Font.Color = 5162664
+            BoundLabel.Font.Name = 'Consolas'
+            BoundLabel.Font.Pitch = fpFixed
+            BoundLabel.ParentColor = False
+            BoundLabel.ParentFont = False
+            BoundLabel.FocusControl = edSlot26
+            BoundLabelSpacing = 8
+          end
+        end
+        object pnSlot27: TPanel
+          Left = 250
+          Height = 20
+          Top = 320
+          Width = 160
+          BevelColor = clBlack
+          ClientHeight = 20
+          ClientWidth = 160
+          TabOrder = 26
+          object edSlot27: TJppEdit
+            Tag = 26
+            Left = 70
+            Height = 14
+            Top = 3
+            Width = 80
+            AutoSize = False
+            BorderStyle = bsNone
+            DragMode = dmAutomatic
+            Font.Color = 3163457
+            Font.Name = 'Consolas'
+            Font.Pitch = fpFixed
+            ParentFont = False
+            TabOrder = 0
+            TextHint = 'Slot empty'
+            OnDragDrop = edSlotDragDrop
+            OnDragOver = edSlotDragOver
+            Appearance.NormalBgColor = 5162664
+            Appearance.NormalTextColor = 3163457
+            Appearance.FocusedBgColor = 3163457
+            Appearance.FocusedTextColor = 5162664
+            Appearance.HotBgColor = 3163457
+            Appearance.HotTextColor = 5162664
+            Appearance.DisabledBgColor = 3163457
+            Appearance.DisabledTextColor = 5162664
+            TabOnEnter = False
+            BoundLabel.Height = 14
+            BoundLabel.Width = 49
+            BoundLabel.Caption = 'Slot 27'
+            BoundLabel.Font.Color = 5162664
+            BoundLabel.Font.Name = 'Consolas'
+            BoundLabel.Font.Pitch = fpFixed
+            BoundLabel.ParentColor = False
+            BoundLabel.ParentFont = False
+            BoundLabel.FocusControl = edSlot27
+            BoundLabelSpacing = 8
+          end
+        end
+        object pnSlot28: TPanel
+          Left = 250
+          Height = 20
+          Top = 350
+          Width = 160
+          BevelColor = clBlack
+          ClientHeight = 20
+          ClientWidth = 160
+          TabOrder = 27
+          object edSlot28: TJppEdit
+            Tag = 27
+            Left = 70
+            Height = 14
+            Top = 3
+            Width = 80
+            AutoSize = False
+            BorderStyle = bsNone
+            DragMode = dmAutomatic
+            Font.Color = 3163457
+            Font.Name = 'Consolas'
+            Font.Pitch = fpFixed
+            ParentFont = False
+            TabOrder = 0
+            TextHint = 'Slot empty'
+            OnDragDrop = edSlotDragDrop
+            OnDragOver = edSlotDragOver
+            Appearance.NormalBgColor = 5162664
+            Appearance.NormalTextColor = 3163457
+            Appearance.FocusedBgColor = 3163457
+            Appearance.FocusedTextColor = 5162664
+            Appearance.HotBgColor = 3163457
+            Appearance.HotTextColor = 5162664
+            Appearance.DisabledBgColor = 3163457
+            Appearance.DisabledTextColor = 5162664
+            TabOnEnter = False
+            BoundLabel.Height = 14
+            BoundLabel.Width = 49
+            BoundLabel.Caption = 'Slot 28'
+            BoundLabel.Font.Color = 5162664
+            BoundLabel.Font.Name = 'Consolas'
+            BoundLabel.Font.Pitch = fpFixed
+            BoundLabel.ParentColor = False
+            BoundLabel.ParentFont = False
+            BoundLabel.FocusControl = edSlot28
+            BoundLabelSpacing = 8
+          end
+        end
+        object pnSlot29: TPanel
+          Left = 250
+          Height = 20
+          Top = 380
+          Width = 160
+          BevelColor = clBlack
+          ClientHeight = 20
+          ClientWidth = 160
+          TabOrder = 28
+          object edSlot29: TJppEdit
+            Tag = 28
+            Left = 70
+            Height = 14
+            Top = 3
+            Width = 80
+            AutoSize = False
+            BorderStyle = bsNone
+            DragMode = dmAutomatic
+            Font.Color = 3163457
+            Font.Name = 'Consolas'
+            Font.Pitch = fpFixed
+            ParentFont = False
+            TabOrder = 0
+            TextHint = 'Slot empty'
+            OnDragDrop = edSlotDragDrop
+            OnDragOver = edSlotDragOver
+            Appearance.NormalBgColor = 5162664
+            Appearance.NormalTextColor = 3163457
+            Appearance.FocusedBgColor = 3163457
+            Appearance.FocusedTextColor = 5162664
+            Appearance.HotBgColor = 3163457
+            Appearance.HotTextColor = 5162664
+            Appearance.DisabledBgColor = 3163457
+            Appearance.DisabledTextColor = 5162664
+            TabOnEnter = False
+            BoundLabel.Height = 14
+            BoundLabel.Width = 49
+            BoundLabel.Caption = 'Slot 29'
+            BoundLabel.Font.Color = 5162664
+            BoundLabel.Font.Name = 'Consolas'
+            BoundLabel.Font.Pitch = fpFixed
+            BoundLabel.ParentColor = False
+            BoundLabel.ParentFont = False
+            BoundLabel.FocusControl = edSlot29
+            BoundLabelSpacing = 8
+          end
+        end
+        object pnSlot30: TPanel
+          Left = 250
+          Height = 20
+          Top = 410
+          Width = 160
+          BevelColor = clBlack
+          ClientHeight = 20
+          ClientWidth = 160
+          TabOrder = 29
+          object edSlot30: TJppEdit
+            Tag = 29
+            Left = 70
+            Height = 14
+            Top = 3
+            Width = 80
+            AutoSize = False
+            BorderStyle = bsNone
+            DragMode = dmAutomatic
+            Font.Color = 3163457
+            Font.Name = 'Consolas'
+            Font.Pitch = fpFixed
+            ParentFont = False
+            TabOrder = 0
+            TextHint = 'Slot empty'
+            OnDragDrop = edSlotDragDrop
+            OnDragOver = edSlotDragOver
+            Appearance.NormalBgColor = 5162664
+            Appearance.NormalTextColor = 3163457
+            Appearance.FocusedBgColor = 3163457
+            Appearance.FocusedTextColor = 5162664
+            Appearance.HotBgColor = 3163457
+            Appearance.HotTextColor = 5162664
+            Appearance.DisabledBgColor = 3163457
+            Appearance.DisabledTextColor = 5162664
+            TabOnEnter = False
+            BoundLabel.Height = 14
+            BoundLabel.Width = 49
+            BoundLabel.Caption = 'Slot 30'
+            BoundLabel.Font.Color = 5162664
+            BoundLabel.Font.Name = 'Consolas'
+            BoundLabel.Font.Pitch = fpFixed
+            BoundLabel.ParentColor = False
+            BoundLabel.ParentFont = False
+            BoundLabel.FocusControl = edSlot30
+            BoundLabelSpacing = 8
+          end
+        end
+        object pnSlot31: TPanel
+          Left = 250
+          Height = 20
+          Top = 440
+          Width = 160
+          BevelColor = clBlack
+          ClientHeight = 20
+          ClientWidth = 160
+          TabOrder = 30
+          object edSlot31: TJppEdit
+            Tag = 30
+            Left = 70
+            Height = 14
+            Top = 3
+            Width = 80
+            AutoSize = False
+            BorderStyle = bsNone
+            DragMode = dmAutomatic
+            Font.Color = 3163457
+            Font.Name = 'Consolas'
+            Font.Pitch = fpFixed
+            ParentFont = False
+            TabOrder = 0
+            TextHint = 'Slot empty'
+            OnDragDrop = edSlotDragDrop
+            OnDragOver = edSlotDragOver
+            Appearance.NormalBgColor = 5162664
+            Appearance.NormalTextColor = 3163457
+            Appearance.FocusedBgColor = 3163457
+            Appearance.FocusedTextColor = 5162664
+            Appearance.HotBgColor = 3163457
+            Appearance.HotTextColor = 5162664
+            Appearance.DisabledBgColor = 3163457
+            Appearance.DisabledTextColor = 5162664
+            TabOnEnter = False
+            BoundLabel.Height = 14
+            BoundLabel.Width = 49
+            BoundLabel.Caption = 'Slot 31'
+            BoundLabel.Font.Color = 5162664
+            BoundLabel.Font.Name = 'Consolas'
+            BoundLabel.Font.Pitch = fpFixed
+            BoundLabel.ParentColor = False
+            BoundLabel.ParentFont = False
+            BoundLabel.FocusControl = edSlot31
+            BoundLabelSpacing = 8
+          end
+        end
+        object pnSlot32: TPanel
+          Left = 250
+          Height = 20
+          Top = 470
+          Width = 160
+          BevelColor = clBlack
+          ClientHeight = 20
+          ClientWidth = 160
+          TabOrder = 31
+          object edSlot32: TJppEdit
+            Tag = 31
+            Left = 70
+            Height = 14
+            Top = 3
+            Width = 80
+            AutoSize = False
+            BorderStyle = bsNone
+            DragMode = dmAutomatic
+            Font.Color = 3163457
+            Font.Name = 'Consolas'
+            Font.Pitch = fpFixed
+            ParentFont = False
+            TabOrder = 0
+            TextHint = 'Slot empty'
+            OnDragDrop = edSlotDragDrop
+            OnDragOver = edSlotDragOver
+            Appearance.NormalBgColor = 5162664
+            Appearance.NormalTextColor = 3163457
+            Appearance.FocusedBgColor = 3163457
+            Appearance.FocusedTextColor = 5162664
+            Appearance.HotBgColor = 3163457
+            Appearance.HotTextColor = 5162664
+            Appearance.DisabledBgColor = 3163457
+            Appearance.DisabledTextColor = 5162664
+            TabOnEnter = False
+            BoundLabel.Height = 14
+            BoundLabel.Width = 49
+            BoundLabel.Caption = 'Slot 32'
+            BoundLabel.Font.Color = 5162664
+            BoundLabel.Font.Name = 'Consolas'
+            BoundLabel.Font.Pitch = fpFixed
+            BoundLabel.ParentColor = False
+            BoundLabel.ParentFont = False
+            BoundLabel.FocusControl = edSlot32
+            BoundLabelSpacing = 8
+          end
+        end
+      end
+      object Splitter2: TSplitter
+        Left = 680
+        Height = 915
+        Top = 0
+        Width = 8
+      end
+    end
+    object tsPerformanceEdit: TTabSheet
+      Caption = 'Performance Edit'
+      ClientHeight = 915
+      ClientWidth = 1522
+      object ECSwitch1: TECSwitch
+        Left = 248
+        Height = 54
+        Top = 136
+        Width = 64
+        BevelOuter = bvNone
+        BevelWidth = 0
+        Caption = 'Switch'
+        CaptionPos = eopBottom
+        Color3DDark = clBlack
+        Color3DLight = 2438181
+        Font.Color = 5162664
+        GrooveCheckedClr = 5162664
+        GrooveUncheckedClr = 2900284
+        Knob.BevelWidth = 1
+        Knob.Color = 2900284
+        Knob.Style = eosFinePanel
+        ParentFont = False
+        Style = eosFinePanel
+        SwitchColor = 2900284
+        TabOrder = 0
+      end
+      object ECSlider1: TECSlider
+        Left = 128
+        Height = 200
+        Top = 16
+        Width = 82
+        BevelOuter = bvNone
+        Caption = 'Slider'
+        CaptionPos = eopBottom
+        Color = 2900284
+        Color3DDark = clBlack
+        Color3DLight = 2438181
+        DiscreteChange = 1
+        Font.Color = 5162664
+        Font.Name = 'Consolas'
+        GrooveColor = 2900284
+        GrooveWidth = 30
+        Increment = 1
+        Mode = eimDiscrete
+        Knob.BevelWidth = 1
+        Knob.Color = 2900284
+        Knob.Height = 15
+        Knob.Style = eosFinePanel
+        Knob.Width = 30
+        PageSize = 10
+        ParentColor = False
+        ParentFont = False
+        ProgressColor = 5162664
+        ProgressColor2 = 5162664
+        RelativeScaleLength = -1
+        Reversed = True
+        Scale.Max = 99
+        Scale.TickColor = 5162664
+        Scale.TickLongValue = 10
+        Scale.TickMiddleValue = 5
+        Scale.TickShortValue = 1
+        Scale.TickVisible = etvLongShort
+        ScaleFontOptions.FontColor = 5162664
+        ScaleFontOptions.FontSize = 7
+        Style = eosPanel
+        TabOrder = 1
+      end
+    end
+    object tsSettings: TTabSheet
+      Caption = 'Settings'
+    end
+  end
+  object SelectDirectoryDialog1: TSelectDirectoryDialog
+    Left = 344
+  end
+end

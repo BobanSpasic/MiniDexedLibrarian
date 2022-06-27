@@ -314,10 +314,14 @@ type
   public
     function LoadPackedVoice(aPar: TDX7PackedVoiceDump): boolean;
     function LoadExpandedVoice(aPar: TDX7ExpandedVoiceDump): boolean;
-    procedure LoadPackedVoiceFromStream(var aStream: TMemoryStream; Position: integer);
-    procedure LoadExpandedVoiceFromStream(var aStream: TMemoryStream;
-      Position: integer);
+    function LoadPackedVoiceFromStream(var aStream: TMemoryStream;
+      Position: integer): boolean;
+    function LoadExpandedVoiceFromStream(var aStream: TMemoryStream;
+      Position: integer): boolean;
+    procedure InitVoice; //set defaults
     function GetVoiceName: string;
+    function GetVoiceParams: TDX7PackedVoiceParams;
+    function SetVoiceParams(aParams: TDX7PackedVoiceParams): Boolean;
   end;
 
 function Expanded2PackedVoice(aPar: TDX7ExpandedVoiceParams): TDX7PackedVoiceParams;
@@ -512,7 +516,7 @@ begin
   t.OP6_KBD_RATE_SCALING := aPar.OP6_OSC_DET_RS and 7;
   t.OP6_KEY_VEL_SENSITIVITY := aPar.OP6_KVS_AMS shr 2;
   t.OP6_AMP_MOD_SENSITIVITY := aPar.OP6_KVS_AMS and 3;
-  t.OP6_OSC_FREQ_COARSE := aPAr.OP6_FC_M shr 1;
+  t.OP6_OSC_FREQ_COARSE := aPar.OP6_FC_M shr 1;
   t.OP6_OSC_MODE := aPar.OP6_FC_M and 1;
 
   //ToDo OP5 to OP1
@@ -537,7 +541,7 @@ begin
   t.OP5_KBD_RATE_SCALING := aPar.OP5_OSC_DET_RS and 7;
   t.OP5_KEY_VEL_SENSITIVITY := aPar.OP5_KVS_AMS shr 2;
   t.OP5_AMP_MOD_SENSITIVITY := aPar.OP5_KVS_AMS and 3;
-  t.OP5_OSC_FREQ_COARSE := aPAr.OP5_FC_M shr 1;
+  t.OP5_OSC_FREQ_COARSE := aPar.OP5_FC_M shr 1;
   t.OP5_OSC_MODE := aPar.OP5_FC_M and 1;
 
   //first the parameters without conversion
@@ -561,7 +565,7 @@ begin
   t.OP4_KBD_RATE_SCALING := aPar.OP4_OSC_DET_RS and 7;
   t.OP4_KEY_VEL_SENSITIVITY := aPar.OP4_KVS_AMS shr 2;
   t.OP4_AMP_MOD_SENSITIVITY := aPar.OP4_KVS_AMS and 3;
-  t.OP4_OSC_FREQ_COARSE := aPAr.OP4_FC_M shr 1;
+  t.OP4_OSC_FREQ_COARSE := aPar.OP4_FC_M shr 1;
   t.OP4_OSC_MODE := aPar.OP4_FC_M and 1;
 
   //first the parameters without conversion
@@ -585,7 +589,7 @@ begin
   t.OP3_KBD_RATE_SCALING := aPar.OP3_OSC_DET_RS and 7;
   t.OP3_KEY_VEL_SENSITIVITY := aPar.OP3_KVS_AMS shr 2;
   t.OP3_AMP_MOD_SENSITIVITY := aPar.OP3_KVS_AMS and 3;
-  t.OP3_OSC_FREQ_COARSE := aPAr.OP3_FC_M shr 1;
+  t.OP3_OSC_FREQ_COARSE := aPar.OP3_FC_M shr 1;
   t.OP3_OSC_MODE := aPar.OP3_FC_M and 1;
 
   //first the parameters without conversion
@@ -609,7 +613,7 @@ begin
   t.OP2_KBD_RATE_SCALING := aPar.OP2_OSC_DET_RS and 7;
   t.OP2_KEY_VEL_SENSITIVITY := aPar.OP2_KVS_AMS shr 2;
   t.OP2_AMP_MOD_SENSITIVITY := aPar.OP2_KVS_AMS and 3;
-  t.OP2_OSC_FREQ_COARSE := aPAr.OP2_FC_M shr 1;
+  t.OP2_OSC_FREQ_COARSE := aPar.OP2_FC_M shr 1;
   t.OP2_OSC_MODE := aPar.OP2_FC_M and 1;
 
   //first the parameters without conversion
@@ -633,7 +637,7 @@ begin
   t.OP1_KBD_RATE_SCALING := aPar.OP1_OSC_DET_RS and 7;
   t.OP1_KEY_VEL_SENSITIVITY := aPar.OP1_KVS_AMS shr 2;
   t.OP1_AMP_MOD_SENSITIVITY := aPar.OP1_KVS_AMS and 3;
-  t.OP1_OSC_FREQ_COARSE := aPAr.OP1_FC_M shr 1;
+  t.OP1_OSC_FREQ_COARSE := aPar.OP1_FC_M shr 1;
   t.OP1_OSC_MODE := aPar.OP1_FC_M and 1;
 
   //global parameters
@@ -698,8 +702,8 @@ begin
   end;
 end;
 
-procedure TDX7VoiceContainer.LoadPackedVoiceFromStream(var aStream: TMemoryStream;
-  Position: integer);
+function TDX7VoiceContainer.LoadPackedVoiceFromStream(var aStream: TMemoryStream;
+  Position: integer): boolean;
 begin
   if Position < aStream.Size then
     aStream.Position := Position;
@@ -836,16 +840,19 @@ begin
       VOICE_NAME_CHAR_10 := aStream.ReadByte;
     end;
     FDX7ExpandedVoiceParams := Packed2ExpandedVoice(FDX7PackedVoiceParams);
+    Result := True;
   except
-
+    Result := False;
   end;
 end;
 
-procedure TDX7VoiceContainer.LoadExpandedVoiceFromStream(var aStream: TMemoryStream;
-  Position: integer);
+function TDX7VoiceContainer.LoadExpandedVoiceFromStream(var aStream: TMemoryStream;
+  Position: integer): boolean;
 begin
   if (Position < aStream.Size) and ((aStream.Size - Position) > 155) then
-    aStream.Position := Position else Exit;
+    aStream.Position := Position
+  else
+    Exit;
   try
     with FDX7ExpandedVoiceParams do
     begin
@@ -1012,9 +1019,191 @@ begin
       VOICE_NAME_CHAR_10 := aStream.ReadByte;
     end;
     FDX7PackedVoiceParams := Expanded2PackedVoice(FDX7ExpandedVoiceParams);
+    Result := True;
   except
-
+    Result := True;
   end;
+end;
+
+procedure TDX7VoiceContainer.InitVoice;
+begin
+  with FDX7ExpandedVoiceParams do
+  begin
+    OP6_EG_rate_1 := 99;
+    OP6_EG_rate_2 := 99;
+    OP6_EG_rate_3 := 99;
+    OP6_EG_rate_4 := 99;
+    OP6_EG_level_1 := 99;
+    OP6_EG_level_2 := 99;
+    OP6_EG_level_3 := 99;
+    OP6_EG_level_4 := 00;
+    OP6_KBD_LEV_SCL_BRK_PT := 39;
+    OP6_KBD_LEV_SCL_LFT_DEPTH := 0;
+    OP6_KBD_LEV_SCL_RHT_DEPTH := 0;
+    OP6_KBD_LEV_SCL_LFT_CURVE := 0;
+    OP6_KBD_LEV_SCL_RHT_CURVE := 0;
+    OP6_KBD_RATE_SCALING := 0;
+    OP6_AMP_MOD_SENSITIVITY := 0;
+    OP6_KEY_VEL_SENSITIVITY := 0;
+    OP6_OPERATOR_OUTPUT_LEVEL := 0;
+    OP6_OSC_MODE := 0;
+    OP6_OSC_FREQ_COARSE := 1;
+    OP6_OSC_FREQ_FINE := 0;
+    OP6_OSC_DETUNE := 7;
+
+    OP5_EG_rate_1 := 99;
+    OP5_EG_rate_2 := 99;
+    OP5_EG_rate_3 := 99;
+    OP5_EG_rate_4 := 99;
+    OP5_EG_level_1 := 99;
+    OP5_EG_level_2 := 99;
+    OP5_EG_level_3 := 99;
+    OP5_EG_level_4 := 00;
+    OP5_KBD_LEV_SCL_BRK_PT := 39;
+    OP5_KBD_LEV_SCL_LFT_DEPTH := 0;
+    OP5_KBD_LEV_SCL_RHT_DEPTH := 0;
+    OP5_KBD_LEV_SCL_LFT_CURVE := 0;
+    OP5_KBD_LEV_SCL_RHT_CURVE := 0;
+    OP5_KBD_RATE_SCALING := 0;
+    OP5_AMP_MOD_SENSITIVITY := 0;
+    OP5_KEY_VEL_SENSITIVITY := 0;
+    OP5_OPERATOR_OUTPUT_LEVEL := 0;
+    OP5_OSC_MODE := 0;
+    OP5_OSC_FREQ_COARSE := 1;
+    OP5_OSC_FREQ_FINE := 0;
+    OP5_OSC_DETUNE := 7;
+
+    OP4_EG_rate_1 := 99;
+    OP4_EG_rate_2 := 99;
+    OP4_EG_rate_3 := 99;
+    OP4_EG_rate_4 := 99;
+    OP4_EG_level_1 := 99;
+    OP4_EG_level_2 := 99;
+    OP4_EG_level_3 := 99;
+    OP4_EG_level_4 := 00;
+    OP4_KBD_LEV_SCL_BRK_PT := 39;
+    OP4_KBD_LEV_SCL_LFT_DEPTH := 0;
+    OP4_KBD_LEV_SCL_RHT_DEPTH := 0;
+    OP4_KBD_LEV_SCL_LFT_CURVE := 0;
+    OP4_KBD_LEV_SCL_RHT_CURVE := 0;
+    OP4_KBD_RATE_SCALING := 0;
+    OP4_AMP_MOD_SENSITIVITY := 0;
+    OP4_KEY_VEL_SENSITIVITY := 0;
+    OP4_OPERATOR_OUTPUT_LEVEL := 0;
+    OP4_OSC_MODE := 0;
+    OP4_OSC_FREQ_COARSE := 1;
+    OP4_OSC_FREQ_FINE := 0;
+    OP4_OSC_DETUNE := 7;
+
+    OP3_EG_rate_1 := 99;
+    OP3_EG_rate_2 := 99;
+    OP3_EG_rate_3 := 99;
+    OP3_EG_rate_4 := 99;
+    OP3_EG_level_1 := 99;
+    OP3_EG_level_2 := 99;
+    OP3_EG_level_3 := 99;
+    OP3_EG_level_4 := 0;
+    OP3_KBD_LEV_SCL_BRK_PT := 39;
+    OP3_KBD_LEV_SCL_LFT_DEPTH := 0;
+    OP3_KBD_LEV_SCL_RHT_DEPTH := 0;
+    OP3_KBD_LEV_SCL_LFT_CURVE := 0;
+    OP3_KBD_LEV_SCL_RHT_CURVE := 0;
+    OP3_KBD_RATE_SCALING := 0;
+    OP3_AMP_MOD_SENSITIVITY := 0;
+    OP3_KEY_VEL_SENSITIVITY := 0;
+    OP3_OPERATOR_OUTPUT_LEVEL := 0;
+    OP3_OSC_MODE := 0;
+    OP3_OSC_FREQ_COARSE := 1;
+    OP3_OSC_FREQ_FINE := 0;
+    OP3_OSC_DETUNE := 7;
+
+    OP2_EG_rate_1 := 99;
+    OP2_EG_rate_2 := 99;
+    OP2_EG_rate_3 := 99;
+    OP2_EG_rate_4 := 99;
+    OP2_EG_level_1 := 99;
+    OP2_EG_level_2 := 99;
+    OP2_EG_level_3 := 99;
+    OP2_EG_level_4 := 00;
+    OP2_KBD_LEV_SCL_BRK_PT := 39;
+    OP2_KBD_LEV_SCL_LFT_DEPTH := 0;
+    OP2_KBD_LEV_SCL_RHT_DEPTH := 0;
+    OP2_KBD_LEV_SCL_LFT_CURVE := 0;
+    OP2_KBD_LEV_SCL_RHT_CURVE := 0;
+    OP2_KBD_RATE_SCALING := 0;
+    OP2_AMP_MOD_SENSITIVITY := 0;
+    OP2_KEY_VEL_SENSITIVITY := 0;
+    OP2_OPERATOR_OUTPUT_LEVEL := 0;
+    OP2_OSC_MODE := 0;
+    OP2_OSC_FREQ_COARSE := 1;
+    OP2_OSC_FREQ_FINE := 0;
+    OP2_OSC_DETUNE := 7;
+
+    OP1_EG_rate_1 := 99;
+    OP1_EG_rate_2 := 99;
+    OP1_EG_rate_3 := 99;
+    OP1_EG_rate_4 := 99;
+    OP1_EG_level_1 := 99;
+    OP1_EG_level_2 := 99;
+    OP1_EG_level_3 := 99;
+    OP1_EG_level_4 := 00;
+    OP1_KBD_LEV_SCL_BRK_PT := 39;
+    OP1_KBD_LEV_SCL_LFT_DEPTH := 0;
+    OP1_KBD_LEV_SCL_RHT_DEPTH := 0;
+    OP1_KBD_LEV_SCL_LFT_CURVE := 0;
+    OP1_KBD_LEV_SCL_RHT_CURVE := 0;
+    OP1_KBD_RATE_SCALING := 0;
+    OP1_AMP_MOD_SENSITIVITY := 0;
+    OP1_KEY_VEL_SENSITIVITY := 0;
+    OP1_OPERATOR_OUTPUT_LEVEL := 99;
+    OP1_OSC_MODE := 0;
+    OP1_OSC_FREQ_COARSE := 1;
+    OP1_OSC_FREQ_FINE := 0;
+    OP1_OSC_DETUNE := 7;
+
+    PITCH_EG_RATE_1 := 99;
+    PITCH_EG_RATE_2 := 99;
+    PITCH_EG_RATE_3 := 99;
+    PITCH_EG_RATE_4 := 99;
+    PITCH_EG_LEVEL_1 := 50;
+    PITCH_EG_LEVEL_2 := 50;
+    PITCH_EG_LEVEL_3 := 50;
+    PITCH_EG_LEVEL_4 := 50;
+    ALGORITHM := 0;
+    FEEDBACK := 0;
+    OSCILLATOR_SYNC := 1;
+    LFO_SPEED := 35;
+    LFO_DELAY := 0;
+    LFO_PITCH_MOD_DEPTH := 0;
+    LFO_AMP_MOD_DEPTH := 0;
+    LFO_SYNC := 0;
+    LFO_WAVEFORM := 1;
+    PITCH_MOD_SENSITIVITY := 3;
+    TRANSPOSE := 24;
+    VOICE_NAME_CHAR_1 := 73;
+    VOICE_NAME_CHAR_2 := 78;
+    VOICE_NAME_CHAR_3 := 73;
+    VOICE_NAME_CHAR_4 := 84;
+    VOICE_NAME_CHAR_5 := 32;
+    VOICE_NAME_CHAR_6 := 86;
+    VOICE_NAME_CHAR_7 := 79;
+    VOICE_NAME_CHAR_8 := 73;
+    VOICE_NAME_CHAR_9 := 67;
+    VOICE_NAME_CHAR_10 := 69;
+  end;
+  FDX7PackedVoiceParams := Expanded2PackedVoice(FDX7ExpandedVoiceParams);
+end;
+
+function TDX7VoiceContainer.GetVoiceParams: TDX7PackedVoiceParams;
+begin
+  Result := FDX7PackedVoiceParams;
+end;
+
+function TDX7VoiceContainer.SetVoiceParams(aParams: TDX7PackedVoiceParams): boolean;
+begin
+  FDX7PackedVoiceParams := aParams;
+  FDX7ExpandedVoiceParams := Packed2ExpandedVoice(FDX7PackedVoiceParams);
+  Result := True;
 end;
 
 function TDX7VoiceContainer.GetVoiceName: string;

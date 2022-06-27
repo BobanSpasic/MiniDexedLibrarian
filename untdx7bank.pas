@@ -22,6 +22,8 @@ type
     function LoadPackedBank(aPar: TDX7PackedBankDump): boolean;
     procedure LoadBankFromStream(var aStream: TMemoryStream; Position: integer);
     function GetVoiceName(aVoiceNr: integer): string;
+    function GetVoice(aVoiceNr: integer; var FDX7Voice: TDX7VoiceContainer): boolean;
+    function SetVoice(aVoiceNr: integer; var FDX7Voice: TDX7VoiceContainer): boolean;
   end;
 
 implementation
@@ -32,7 +34,10 @@ var
 begin
   inherited;
   for i := 0 to 31 do
+  begin
     FDX7BankParams[i] := TDX7VoiceContainer.Create;
+    FDX7BankParams[i].InitVoice;
+  end;
 end;
 
 destructor TDX7BankContainer.Destroy;
@@ -43,6 +48,33 @@ begin
     if Assigned(FDX7BankParams[i]) then
       FDX7BankParams[i].Destroy;
   inherited;
+end;
+
+function TDX7BankContainer.GetVoice(aVoiceNr: integer;
+  var FDX7Voice: TDX7VoiceContainer): boolean;
+begin
+  if (aVoiceNr > 0) and (aVoiceNr < 33) then
+  begin
+    if Assigned(FDX7BankParams[aVoiceNr - 1]) then
+    begin
+      FDX7Voice.SetVoiceParams(FDX7BankParams[aVoiceNr - 1].GetVoiceParams);
+      Result := True;
+    end;
+  end
+  else
+    Result := False;
+end;
+
+function TDX7BankContainer.SetVoice(aVoiceNr: integer;
+  var FDX7Voice: TDX7VoiceContainer): boolean;
+begin
+  if (aVoiceNr > 0) and (aVoiceNr < 33) then
+  begin
+    FDX7BankParams[aVoiceNr - 1].SetVoiceParams(FDX7Voice.GetVoiceParams);
+    Result := True;
+  end
+  else
+    Result := False;
 end;
 
 function TDX7BankContainer.LoadPackedBank(aPar: TDX7PackedBankDump): boolean;
@@ -65,7 +97,9 @@ var
   j: integer;
 begin
   if (Position < aStream.Size) and ((aStream.Size - Position) > 4096) then
-    aStream.Position := Position else Exit;
+    aStream.Position := Position
+  else
+    Exit;
   try
     for  j := 0 to 31 do
     begin
