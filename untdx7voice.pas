@@ -321,7 +321,9 @@ type
     procedure InitVoice; //set defaults
     function GetVoiceName: string;
     function GetVoiceParams: TDX7PackedVoiceParams;
-    function SetVoiceParams(aParams: TDX7PackedVoiceParams): Boolean;
+    function SetVoiceParams(aParams: TDX7PackedVoiceParams): boolean;
+    function SavePackedVoiceToStream(var aStream: TMemoryStream): boolean;
+    function GetChecksumPart: integer;
   end;
 
 function Expanded2PackedVoice(aPar: TDX7ExpandedVoiceParams): TDX7PackedVoiceParams;
@@ -1222,6 +1224,163 @@ begin
   s := s + Printable(chr(FDX7PackedVoiceParams.VOICE_NAME_CHAR_9));
   s := s + Printable(chr(FDX7PackedVoiceParams.VOICE_NAME_CHAR_10));
   Result := s;
+end;
+
+function TDX7VoiceContainer.SavePackedVoiceToStream(var aStream: TMemoryStream): boolean;
+begin
+  if Assigned(aStream) then
+  begin
+    with FDX7PackedVoiceParams do
+    begin
+      aStream.WriteByte(OP6_EG_rate_1);
+      aStream.WriteByte(OP6_EG_rate_2);
+      aStream.WriteByte(OP6_EG_rate_3);
+      aStream.WriteByte(OP6_EG_rate_4);
+      aStream.WriteByte(OP6_EG_level_1);
+      aStream.WriteByte(OP6_EG_level_2);
+      aStream.WriteByte(OP6_EG_level_3);
+      aStream.WriteByte(OP6_EG_level_4);
+      aStream.WriteByte(OP6_KBD_LEV_SCL_BRK_PT);
+      aStream.WriteByte(OP6_KBD_LEV_SCL_LFT_DEPTH);
+      aStream.WriteByte(OP6_KBD_LEV_SCL_RHT_DEPTH);
+      aStream.WriteByte(OP6_KBD_LEV_SCL_RC_LC);
+      aStream.WriteByte(OP6_OSC_DET_RS);
+      aStream.WriteByte(OP6_KVS_AMS);
+      aStream.WriteByte(OP6_OPERATOR_OUTPUT_LEVEL);
+      aStream.WriteByte(OP6_FC_M);
+      aStream.WriteByte(OP6_OSC_FREQ_FINE);
+      aStream.WriteByte(OP5_EG_rate_1);
+      aStream.WriteByte(OP5_EG_rate_2);
+      aStream.WriteByte(OP5_EG_rate_3);
+      aStream.WriteByte(OP5_EG_rate_4);
+      aStream.WriteByte(OP5_EG_level_1);
+      aStream.WriteByte(OP5_EG_level_2);
+      aStream.WriteByte(OP5_EG_level_3);
+      aStream.WriteByte(OP5_EG_level_4);
+      aStream.WriteByte(OP5_KBD_LEV_SCL_BRK_PT);
+      aStream.WriteByte(OP5_KBD_LEV_SCL_LFT_DEPTH);
+      aStream.WriteByte(OP5_KBD_LEV_SCL_RHT_DEPTH);
+      aStream.WriteByte(OP5_KBD_LEV_SCL_RC_LC);
+      aStream.WriteByte(OP5_OSC_DET_RS);
+      aStream.WriteByte(OP5_KVS_AMS);
+      aStream.WriteByte(OP5_OPERATOR_OUTPUT_LEVEL);
+      aStream.WriteByte(OP5_FC_M);
+      aStream.WriteByte(OP5_OSC_FREQ_FINE);
+      aStream.WriteByte(OP4_EG_rate_1);
+      aStream.WriteByte(OP4_EG_rate_2);
+      aStream.WriteByte(OP4_EG_rate_3);
+      aStream.WriteByte(OP4_EG_rate_4);
+      aStream.WriteByte(OP4_EG_level_1);
+      aStream.WriteByte(OP4_EG_level_2);
+      aStream.WriteByte(OP4_EG_level_3);
+      aStream.WriteByte(OP4_EG_level_4);
+      aStream.WriteByte(OP4_KBD_LEV_SCL_BRK_PT);
+      aStream.WriteByte(OP4_KBD_LEV_SCL_LFT_DEPTH);
+      aStream.WriteByte(OP4_KBD_LEV_SCL_RHT_DEPTH);
+      aStream.WriteByte(OP4_KBD_LEV_SCL_RC_LC);
+      aStream.WriteByte(OP4_OSC_DET_RS);
+      aStream.WriteByte(OP4_KVS_AMS);
+      aStream.WriteByte(OP4_OPERATOR_OUTPUT_LEVEL);
+      aStream.WriteByte(OP4_FC_M);
+      aStream.WriteByte(OP4_OSC_FREQ_FINE);
+      aStream.WriteByte(OP3_EG_rate_1);
+      aStream.WriteByte(OP3_EG_rate_2);
+      aStream.WriteByte(OP3_EG_rate_3);
+      aStream.WriteByte(OP3_EG_rate_4);
+      aStream.WriteByte(OP3_EG_level_1);
+      aStream.WriteByte(OP3_EG_level_2);
+      aStream.WriteByte(OP3_EG_level_3);
+      aStream.WriteByte(OP3_EG_level_4);
+      aStream.WriteByte(OP3_KBD_LEV_SCL_BRK_PT);
+      aStream.WriteByte(OP3_KBD_LEV_SCL_LFT_DEPTH);
+      aStream.WriteByte(OP3_KBD_LEV_SCL_RHT_DEPTH);
+      aStream.WriteByte(OP3_KBD_LEV_SCL_RC_LC);
+      aStream.WriteByte(OP3_OSC_DET_RS);
+      aStream.WriteByte(OP3_KVS_AMS);
+      aStream.WriteByte(OP3_OPERATOR_OUTPUT_LEVEL);
+      aStream.WriteByte(OP3_FC_M);
+      aStream.WriteByte(OP3_OSC_FREQ_FINE);
+      aStream.WriteByte(OP2_EG_rate_1);
+      aStream.WriteByte(OP2_EG_rate_2);
+      aStream.WriteByte(OP2_EG_rate_3);
+      aStream.WriteByte(OP2_EG_rate_4);
+      aStream.WriteByte(OP2_EG_level_1);
+      aStream.WriteByte(OP2_EG_level_2);
+      aStream.WriteByte(OP2_EG_level_3);
+      aStream.WriteByte(OP2_EG_level_4);
+      aStream.WriteByte(OP2_KBD_LEV_SCL_BRK_PT);
+      aStream.WriteByte(OP2_KBD_LEV_SCL_LFT_DEPTH);
+      aStream.WriteByte(OP2_KBD_LEV_SCL_RHT_DEPTH);
+      aStream.WriteByte(OP2_KBD_LEV_SCL_RC_LC);
+      aStream.WriteByte(OP2_OSC_DET_RS);
+      aStream.WriteByte(OP2_KVS_AMS);
+      aStream.WriteByte(OP2_OPERATOR_OUTPUT_LEVEL);
+      aStream.WriteByte(OP2_FC_M);
+      aStream.WriteByte(OP2_OSC_FREQ_FINE);
+      aStream.WriteByte(OP1_EG_rate_1);
+      aStream.WriteByte(OP1_EG_rate_2);
+      aStream.WriteByte(OP1_EG_rate_3);
+      aStream.WriteByte(OP1_EG_rate_4);
+      aStream.WriteByte(OP1_EG_level_1);
+      aStream.WriteByte(OP1_EG_level_2);
+      aStream.WriteByte(OP1_EG_level_3);
+      aStream.WriteByte(OP1_EG_level_4);
+      aStream.WriteByte(OP1_KBD_LEV_SCL_BRK_PT);
+      aStream.WriteByte(OP1_KBD_LEV_SCL_LFT_DEPTH);
+      aStream.WriteByte(OP1_KBD_LEV_SCL_RHT_DEPTH);
+      aStream.WriteByte(OP1_KBD_LEV_SCL_RC_LC);
+      aStream.WriteByte(OP1_OSC_DET_RS);
+      aStream.WriteByte(OP1_KVS_AMS);
+      aStream.WriteByte(OP1_OPERATOR_OUTPUT_LEVEL);
+      aStream.WriteByte(OP1_FC_M);
+      aStream.WriteByte(OP1_OSC_FREQ_FINE);
+      aStream.WriteByte(PITCH_EG_RATE_1);
+      aStream.WriteByte(PITCH_EG_RATE_2);
+      aStream.WriteByte(PITCH_EG_RATE_3);
+      aStream.WriteByte(PITCH_EG_RATE_4);
+      aStream.WriteByte(PITCH_EG_LEVEL_1);
+      aStream.WriteByte(PITCH_EG_LEVEL_2);
+      aStream.WriteByte(PITCH_EG_LEVEL_3);
+      aStream.WriteByte(PITCH_EG_LEVEL_4);
+      aStream.WriteByte(ALGORITHM);
+      aStream.WriteByte(OSCSYNC_FEEDBACK);
+      aStream.WriteByte(LFO_SPEED);
+      aStream.WriteByte(LFO_DELAY);
+      aStream.WriteByte(LFO_PITCH_MOD_DEPTH);
+      aStream.WriteByte(LFO_AMP_MOD_DEPTH);
+      aStream.WriteByte(PMS_WAVE_SYNC);
+      aStream.WriteByte(TRANSPOSE);
+      aStream.WriteByte(VOICE_NAME_CHAR_1);
+      aStream.WriteByte(VOICE_NAME_CHAR_2);
+      aStream.WriteByte(VOICE_NAME_CHAR_3);
+      aStream.WriteByte(VOICE_NAME_CHAR_4);
+      aStream.WriteByte(VOICE_NAME_CHAR_5);
+      aStream.WriteByte(VOICE_NAME_CHAR_6);
+      aStream.WriteByte(VOICE_NAME_CHAR_7);
+      aStream.WriteByte(VOICE_NAME_CHAR_8);
+      aStream.WriteByte(VOICE_NAME_CHAR_9);
+      aStream.WriteByte(VOICE_NAME_CHAR_10);
+      Result := True;
+    end;
+  end
+  else
+    Result := False;
+end;
+
+function TDX7VoiceContainer.GetChecksumPart: integer;
+var
+  checksum: integer;
+  i: integer;
+  tmpStream: TMemoryStream;
+begin
+  checksum := 0;
+  tmpStream := TMemoryStream.Create;
+  SavePackedVoiceToStream(tmpStream);
+  tmpStream.Position := 0;
+  for i := 0 to tmpStream.Size - 1 do
+    checksum := checksum + tmpStream.ReadByte;
+  Result := checksum;
+  tmpStream.Free;
 end;
 
 end.

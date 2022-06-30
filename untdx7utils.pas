@@ -84,6 +84,7 @@ function ContainsDX7BankDump(dmp: TMemoryStream;
 function ContainsDXData(dmp: TMemoryStream; var StartPos: integer;
   const Report: TStrings): boolean;
 function Printable(c: char): char;
+function ExpandedHexToStream(aHex: string; var aStream: TMemoryStream): boolean;
 
 implementation
 
@@ -189,7 +190,7 @@ var
   rHeader: TDXSysExHeader;
   fValues: array [0..7] of byte = ($00, $03, $04, $05, $06, $09, $0A, $7E);
   tmpPosition: int64;
-  tmpList : TStringList;
+  tmpList: TStringList;
 begin
   Result := False;
   if StartPos <= dmp.Size then
@@ -202,8 +203,8 @@ begin
       rHeader.id := 0;
       rHeader.f := $FF;
       tmpList := TStringList.Create;
-      tmpList.Sorted:=true;
-      tmpList.Duplicates:=dupIgnore;
+      tmpList.Sorted := True;
+      tmpList.Duplicates := dupIgnore;
       while dmp.Position < dmp.Size do
       begin
         if dmp.Position = dmp.Size - 1 then break;
@@ -282,7 +283,7 @@ begin
         end;
       end;
       Report.Add(tmpList.Text);
-    tmpList.Free;
+      tmpList.Free;
     end;
   end
   else
@@ -297,6 +298,28 @@ begin
   if (Ord(c) > 31) and (Ord(c) < 127) then Result := c
   else
     Result := #32;
+end;
+
+function ExpandedHexToStream(aHex: string; var aStream: TMemoryStream): boolean;
+var
+  s: string;
+  partS: string;
+  buffer: array [0..155] of byte;
+  i: integer;
+begin
+  try
+    s := ReplaceStr(aHex, ' ', '');
+    aStream.Clear;
+    for i := 0 to 155 do
+    begin
+      partS := '$' + Copy(s, i * 2, 2);
+      buffer[i] := byte(Hex2Dec(partS));
+      aStream.WriteByte(buffer[i]);
+    end;
+    Result := True;
+  except
+    on e: Exception do Result := False;
+  end;
 end;
 
 end.
