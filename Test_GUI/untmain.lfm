@@ -2191,7 +2191,6 @@ object frmMain: TfrmMain
             PageSize = 10
             ParentColor = False
             ParentFont = False
-            ParentShowHint = False
             Position = 100
             PositionToHint = True
             ProgressColor = 5162664
@@ -2208,9 +2207,10 @@ object frmMain: TfrmMain
             Scale.ValueVisible = evvBounds
             ScaleFontOptions.FontColor = 5162664
             ScaleFontOptions.FontSize = 7
-            ShowHint = True
             Style = eosFinePanel
             TabOrder = 0
+            OnChange = slSliderChange
+            OnMouseUp = slSliderMouseUp
           end
           object slPan1: TECSlider
             AnchorSideLeft.Control = slVolume1
@@ -2243,7 +2243,6 @@ object frmMain: TfrmMain
             PageSize = 10
             ParentColor = False
             ParentFont = False
-            ParentShowHint = False
             Position = 64
             PositionToHint = True
             ProgressColor = 5162664
@@ -2263,9 +2262,10 @@ object frmMain: TfrmMain
             Scale.ValueVisible = evvBounds
             ScaleFontOptions.FontColor = 5162664
             ScaleFontOptions.FontSize = 7
-            ShowHint = True
             Style = eosFinePanel
             TabOrder = 1
+            OnChange = slSliderChange
+            OnMouseUp = slSliderMouseUp
           end
           object slDetune1: TECSlider
             AnchorSideLeft.Control = slPan1
@@ -2298,7 +2298,6 @@ object frmMain: TfrmMain
             PageSize = 10
             ParentColor = False
             ParentFont = False
-            ParentShowHint = False
             PositionToHint = True
             ProgressColor = 5162664
             ProgressColor2 = 5162664
@@ -2317,9 +2316,10 @@ object frmMain: TfrmMain
             Scale.ValueVisible = evvBounds
             ScaleFontOptions.FontColor = 5162664
             ScaleFontOptions.FontSize = 7
-            ShowHint = True
             Style = eosFinePanel
             TabOrder = 2
+            OnChange = slSliderChange
+            OnMouseUp = slSliderMouseUp
           end
           object slCutoff1: TECSlider
             AnchorSideLeft.Control = slDetune1
@@ -2352,7 +2352,6 @@ object frmMain: TfrmMain
             PageSize = 10
             ParentColor = False
             ParentFont = False
-            ParentShowHint = False
             Position = 99
             PositionToHint = True
             ProgressColor = 5162664
@@ -2369,9 +2368,10 @@ object frmMain: TfrmMain
             Scale.ValueVisible = evvBounds
             ScaleFontOptions.FontColor = 5162664
             ScaleFontOptions.FontSize = 7
-            ShowHint = True
             Style = eosFinePanel
             TabOrder = 3
+            OnChange = slSliderChange
+            OnMouseUp = slSliderMouseUp
           end
           object slResonance1: TECSlider
             AnchorSideLeft.Control = slCutoff1
@@ -2404,7 +2404,6 @@ object frmMain: TfrmMain
             PageSize = 10
             ParentColor = False
             ParentFont = False
-            ParentShowHint = False
             PositionToHint = True
             ProgressColor = 5162664
             ProgressColor2 = 5162664
@@ -2420,9 +2419,10 @@ object frmMain: TfrmMain
             Scale.ValueVisible = evvBounds
             ScaleFontOptions.FontColor = 5162664
             ScaleFontOptions.FontSize = 7
-            ShowHint = True
             Style = eosFinePanel
             TabOrder = 4
+            OnChange = slSliderChange
+            OnMouseUp = slSliderMouseUp
           end
           object slLoNote1: TECSlider
             AnchorSideLeft.Control = slResonance1
@@ -2455,7 +2455,6 @@ object frmMain: TfrmMain
             PageSize = 10
             ParentColor = False
             ParentFont = False
-            ParentShowHint = False
             PositionToHint = True
             ProgressColor = 5162664
             ProgressColor2 = 5162664
@@ -2471,9 +2470,10 @@ object frmMain: TfrmMain
             Scale.ValueVisible = evvBounds
             ScaleFontOptions.FontColor = 5162664
             ScaleFontOptions.FontSize = 7
-            ShowHint = True
             Style = eosFinePanel
             TabOrder = 5
+            OnChange = slSliderChange
+            OnMouseUp = slSliderMouseUp
           end
           object slHiNote1: TECSlider
             AnchorSideLeft.Control = slLoNote1
@@ -2506,7 +2506,6 @@ object frmMain: TfrmMain
             PageSize = 10
             ParentColor = False
             ParentFont = False
-            ParentShowHint = False
             Position = 127
             PositionToHint = True
             ProgressColor = 5162664
@@ -2523,9 +2522,10 @@ object frmMain: TfrmMain
             Scale.ValueVisible = evvBounds
             ScaleFontOptions.FontColor = 5162664
             ScaleFontOptions.FontSize = 7
-            ShowHint = True
             Style = eosFinePanel
             TabOrder = 6
+            OnChange = slSliderChange
+            OnMouseUp = slSliderMouseUp
           end
           object slTranspose1: TECSlider
             AnchorSideLeft.Control = slHiNote1
@@ -2558,7 +2558,6 @@ object frmMain: TfrmMain
             PageSize = 10
             ParentColor = False
             ParentFont = False
-            ParentShowHint = False
             PositionToHint = True
             ProgressColor = 5162664
             ProgressColor2 = 5162664
@@ -2577,9 +2576,10 @@ object frmMain: TfrmMain
             Scale.ValueVisible = evvBounds
             ScaleFontOptions.FontColor = 5162664
             ScaleFontOptions.FontSize = 7
-            ShowHint = True
             Style = eosFinePanel
             TabOrder = 7
+            OnChange = slSliderChange
+            OnMouseUp = slSliderMouseUp
           end
           object slReverbSend1: TECSlider
             AnchorSideLeft.Control = slTranspose1
@@ -2612,7 +2612,6 @@ object frmMain: TfrmMain
             PageSize = 10
             ParentColor = False
             ParentFont = False
-            ParentShowHint = False
             PositionToHint = True
             ProgressColor = 5162664
             ProgressColor2 = 5162664
@@ -2628,9 +2627,10 @@ object frmMain: TfrmMain
             Scale.ValueVisible = evvBounds
             ScaleFontOptions.FontColor = 5162664
             ScaleFontOptions.FontSize = 7
-            ShowHint = True
             Style = eosFinePanel
             TabOrder = 8
+            OnChange = slSliderChange
+            OnMouseUp = slSliderMouseUp
           end
           object slPitchBendRange1: TECSlider
             AnchorSideLeft.Control = slReverbSend1
@@ -2663,7 +2663,6 @@ object frmMain: TfrmMain
             PageSize = 10
             ParentColor = False
             ParentFont = False
-            ParentShowHint = False
             Position = 2
             PositionToHint = True
             ProgressColor = 5162664
@@ -2680,9 +2679,10 @@ object frmMain: TfrmMain
             Scale.ValueVisible = evvBounds
             ScaleFontOptions.FontColor = 5162664
             ScaleFontOptions.FontSize = 7
-            ShowHint = True
             Style = eosFinePanel
             TabOrder = 9
+            OnChange = slSliderChange
+            OnMouseUp = slSliderMouseUp
           end
           object slPitchBendStep1: TECSlider
             AnchorSideLeft.Control = slPitchBendRange1
@@ -2715,7 +2715,6 @@ object frmMain: TfrmMain
             PageSize = 10
             ParentColor = False
             ParentFont = False
-            ParentShowHint = False
             PositionToHint = True
             ProgressColor = 5162664
             ProgressColor2 = 5162664
@@ -2731,9 +2730,10 @@ object frmMain: TfrmMain
             Scale.ValueVisible = evvBounds
             ScaleFontOptions.FontColor = 5162664
             ScaleFontOptions.FontSize = 7
-            ShowHint = True
             Style = eosFinePanel
             TabOrder = 10
+            OnChange = slSliderChange
+            OnMouseUp = slSliderMouseUp
           end
           object slPortaTime1: TECSlider
             AnchorSideLeft.Control = slPitchBendStep1
@@ -2766,7 +2766,6 @@ object frmMain: TfrmMain
             PageSize = 10
             ParentColor = False
             ParentFont = False
-            ParentShowHint = False
             PositionToHint = True
             ProgressColor = 5162664
             ProgressColor2 = 5162664
@@ -2782,9 +2781,10 @@ object frmMain: TfrmMain
             Scale.ValueVisible = evvBounds
             ScaleFontOptions.FontColor = 5162664
             ScaleFontOptions.FontSize = 7
-            ShowHint = True
             Style = eosFinePanel
             TabOrder = 11
+            OnChange = slSliderChange
+            OnMouseUp = slSliderMouseUp
           end
           object swPortaMode1: TECSwitch
             AnchorSideLeft.Control = slPortaTime1
@@ -3079,7 +3079,6 @@ object frmMain: TfrmMain
             PageSize = 10
             ParentColor = False
             ParentFont = False
-            ParentShowHint = False
             Position = 100
             PositionToHint = True
             ProgressColor = 5162664
@@ -3096,9 +3095,10 @@ object frmMain: TfrmMain
             Scale.ValueVisible = evvBounds
             ScaleFontOptions.FontColor = 5162664
             ScaleFontOptions.FontSize = 7
-            ShowHint = True
             Style = eosFinePanel
             TabOrder = 0
+            OnChange = slSliderChange
+            OnMouseUp = slSliderMouseUp
           end
           object slPan2: TECSlider
             AnchorSideLeft.Control = slVolume2
@@ -3131,7 +3131,6 @@ object frmMain: TfrmMain
             PageSize = 10
             ParentColor = False
             ParentFont = False
-            ParentShowHint = False
             Position = 64
             PositionToHint = True
             ProgressColor = 5162664
@@ -3151,9 +3150,10 @@ object frmMain: TfrmMain
             Scale.ValueVisible = evvBounds
             ScaleFontOptions.FontColor = 5162664
             ScaleFontOptions.FontSize = 7
-            ShowHint = True
             Style = eosFinePanel
             TabOrder = 1
+            OnChange = slSliderChange
+            OnMouseUp = slSliderMouseUp
           end
           object slDetune2: TECSlider
             AnchorSideLeft.Control = slPan2
@@ -3186,7 +3186,6 @@ object frmMain: TfrmMain
             PageSize = 10
             ParentColor = False
             ParentFont = False
-            ParentShowHint = False
             PositionToHint = True
             ProgressColor = 5162664
             ProgressColor2 = 5162664
@@ -3205,9 +3204,10 @@ object frmMain: TfrmMain
             Scale.ValueVisible = evvBounds
             ScaleFontOptions.FontColor = 5162664
             ScaleFontOptions.FontSize = 7
-            ShowHint = True
             Style = eosFinePanel
             TabOrder = 2
+            OnChange = slSliderChange
+            OnMouseUp = slSliderMouseUp
           end
           object slCutoff2: TECSlider
             AnchorSideLeft.Control = slDetune2
@@ -3240,7 +3240,6 @@ object frmMain: TfrmMain
             PageSize = 10
             ParentColor = False
             ParentFont = False
-            ParentShowHint = False
             Position = 99
             PositionToHint = True
             ProgressColor = 5162664
@@ -3257,9 +3256,10 @@ object frmMain: TfrmMain
             Scale.ValueVisible = evvBounds
             ScaleFontOptions.FontColor = 5162664
             ScaleFontOptions.FontSize = 7
-            ShowHint = True
             Style = eosFinePanel
             TabOrder = 3
+            OnChange = slSliderChange
+            OnMouseUp = slSliderMouseUp
           end
           object slResonance2: TECSlider
             AnchorSideLeft.Control = slCutoff2
@@ -3292,7 +3292,6 @@ object frmMain: TfrmMain
             PageSize = 10
             ParentColor = False
             ParentFont = False
-            ParentShowHint = False
             PositionToHint = True
             ProgressColor = 5162664
             ProgressColor2 = 5162664
@@ -3308,9 +3307,10 @@ object frmMain: TfrmMain
             Scale.ValueVisible = evvBounds
             ScaleFontOptions.FontColor = 5162664
             ScaleFontOptions.FontSize = 7
-            ShowHint = True
             Style = eosFinePanel
             TabOrder = 4
+            OnChange = slSliderChange
+            OnMouseUp = slSliderMouseUp
           end
           object slLoNote2: TECSlider
             AnchorSideLeft.Control = slResonance2
@@ -3343,7 +3343,6 @@ object frmMain: TfrmMain
             PageSize = 10
             ParentColor = False
             ParentFont = False
-            ParentShowHint = False
             PositionToHint = True
             ProgressColor = 5162664
             ProgressColor2 = 5162664
@@ -3359,9 +3358,10 @@ object frmMain: TfrmMain
             Scale.ValueVisible = evvBounds
             ScaleFontOptions.FontColor = 5162664
             ScaleFontOptions.FontSize = 7
-            ShowHint = True
             Style = eosFinePanel
             TabOrder = 5
+            OnChange = slSliderChange
+            OnMouseUp = slSliderMouseUp
           end
           object slHiNote2: TECSlider
             AnchorSideLeft.Control = slLoNote2
@@ -3394,7 +3394,6 @@ object frmMain: TfrmMain
             PageSize = 10
             ParentColor = False
             ParentFont = False
-            ParentShowHint = False
             Position = 127
             PositionToHint = True
             ProgressColor = 5162664
@@ -3411,9 +3410,10 @@ object frmMain: TfrmMain
             Scale.ValueVisible = evvBounds
             ScaleFontOptions.FontColor = 5162664
             ScaleFontOptions.FontSize = 7
-            ShowHint = True
             Style = eosFinePanel
             TabOrder = 6
+            OnChange = slSliderChange
+            OnMouseUp = slSliderMouseUp
           end
           object slTranspose2: TECSlider
             AnchorSideLeft.Control = slHiNote2
@@ -3446,7 +3446,6 @@ object frmMain: TfrmMain
             PageSize = 10
             ParentColor = False
             ParentFont = False
-            ParentShowHint = False
             PositionToHint = True
             ProgressColor = 5162664
             ProgressColor2 = 5162664
@@ -3465,9 +3464,10 @@ object frmMain: TfrmMain
             Scale.ValueVisible = evvBounds
             ScaleFontOptions.FontColor = 5162664
             ScaleFontOptions.FontSize = 7
-            ShowHint = True
             Style = eosFinePanel
             TabOrder = 7
+            OnChange = slSliderChange
+            OnMouseUp = slSliderMouseUp
           end
           object slReverbSend2: TECSlider
             AnchorSideLeft.Control = slTranspose2
@@ -3500,7 +3500,6 @@ object frmMain: TfrmMain
             PageSize = 10
             ParentColor = False
             ParentFont = False
-            ParentShowHint = False
             PositionToHint = True
             ProgressColor = 5162664
             ProgressColor2 = 5162664
@@ -3516,9 +3515,10 @@ object frmMain: TfrmMain
             Scale.ValueVisible = evvBounds
             ScaleFontOptions.FontColor = 5162664
             ScaleFontOptions.FontSize = 7
-            ShowHint = True
             Style = eosFinePanel
             TabOrder = 8
+            OnChange = slSliderChange
+            OnMouseUp = slSliderMouseUp
           end
           object slPitchBendRange2: TECSlider
             AnchorSideLeft.Control = slReverbSend2
@@ -3551,7 +3551,6 @@ object frmMain: TfrmMain
             PageSize = 10
             ParentColor = False
             ParentFont = False
-            ParentShowHint = False
             Position = 2
             PositionToHint = True
             ProgressColor = 5162664
@@ -3568,9 +3567,10 @@ object frmMain: TfrmMain
             Scale.ValueVisible = evvBounds
             ScaleFontOptions.FontColor = 5162664
             ScaleFontOptions.FontSize = 7
-            ShowHint = True
             Style = eosFinePanel
             TabOrder = 9
+            OnChange = slSliderChange
+            OnMouseUp = slSliderMouseUp
           end
           object slPitchBendStep2: TECSlider
             AnchorSideLeft.Control = slPitchBendRange2
@@ -3603,7 +3603,6 @@ object frmMain: TfrmMain
             PageSize = 10
             ParentColor = False
             ParentFont = False
-            ParentShowHint = False
             PositionToHint = True
             ProgressColor = 5162664
             ProgressColor2 = 5162664
@@ -3619,9 +3618,10 @@ object frmMain: TfrmMain
             Scale.ValueVisible = evvBounds
             ScaleFontOptions.FontColor = 5162664
             ScaleFontOptions.FontSize = 7
-            ShowHint = True
             Style = eosFinePanel
             TabOrder = 10
+            OnChange = slSliderChange
+            OnMouseUp = slSliderMouseUp
           end
           object slPortaTime2: TECSlider
             AnchorSideLeft.Control = slPitchBendStep2
@@ -3654,7 +3654,6 @@ object frmMain: TfrmMain
             PageSize = 10
             ParentColor = False
             ParentFont = False
-            ParentShowHint = False
             PositionToHint = True
             ProgressColor = 5162664
             ProgressColor2 = 5162664
@@ -3670,9 +3669,10 @@ object frmMain: TfrmMain
             Scale.ValueVisible = evvBounds
             ScaleFontOptions.FontColor = 5162664
             ScaleFontOptions.FontSize = 7
-            ShowHint = True
             Style = eosFinePanel
             TabOrder = 11
+            OnChange = slSliderChange
+            OnMouseUp = slSliderMouseUp
           end
           object swPortaMode2: TECSwitch
             AnchorSideLeft.Control = slPortaTime2
@@ -3967,7 +3967,6 @@ object frmMain: TfrmMain
             PageSize = 10
             ParentColor = False
             ParentFont = False
-            ParentShowHint = False
             Position = 100
             PositionToHint = True
             ProgressColor = 5162664
@@ -3984,9 +3983,10 @@ object frmMain: TfrmMain
             Scale.ValueVisible = evvBounds
             ScaleFontOptions.FontColor = 5162664
             ScaleFontOptions.FontSize = 7
-            ShowHint = True
             Style = eosFinePanel
             TabOrder = 0
+            OnChange = slSliderChange
+            OnMouseUp = slSliderMouseUp
           end
           object slPan3: TECSlider
             AnchorSideLeft.Control = slVolume3
@@ -4019,7 +4019,6 @@ object frmMain: TfrmMain
             PageSize = 10
             ParentColor = False
             ParentFont = False
-            ParentShowHint = False
             Position = 64
             PositionToHint = True
             ProgressColor = 5162664
@@ -4039,9 +4038,10 @@ object frmMain: TfrmMain
             Scale.ValueVisible = evvBounds
             ScaleFontOptions.FontColor = 5162664
             ScaleFontOptions.FontSize = 7
-            ShowHint = True
             Style = eosFinePanel
             TabOrder = 1
+            OnChange = slSliderChange
+            OnMouseUp = slSliderMouseUp
           end
           object slDetune3: TECSlider
             AnchorSideLeft.Control = slPan3
@@ -4074,7 +4074,6 @@ object frmMain: TfrmMain
             PageSize = 10
             ParentColor = False
             ParentFont = False
-            ParentShowHint = False
             PositionToHint = True
             ProgressColor = 5162664
             ProgressColor2 = 5162664
@@ -4093,9 +4092,10 @@ object frmMain: TfrmMain
             Scale.ValueVisible = evvBounds
             ScaleFontOptions.FontColor = 5162664
             ScaleFontOptions.FontSize = 7
-            ShowHint = True
             Style = eosFinePanel
             TabOrder = 2
+            OnChange = slSliderChange
+            OnMouseUp = slSliderMouseUp
           end
           object slCutoff3: TECSlider
             AnchorSideLeft.Control = slDetune3
@@ -4128,7 +4128,6 @@ object frmMain: TfrmMain
             PageSize = 10
             ParentColor = False
             ParentFont = False
-            ParentShowHint = False
             Position = 99
             PositionToHint = True
             ProgressColor = 5162664
@@ -4145,9 +4144,10 @@ object frmMain: TfrmMain
             Scale.ValueVisible = evvBounds
             ScaleFontOptions.FontColor = 5162664
             ScaleFontOptions.FontSize = 7
-            ShowHint = True
             Style = eosFinePanel
             TabOrder = 3
+            OnChange = slSliderChange
+            OnMouseUp = slSliderMouseUp
           end
           object slResonance3: TECSlider
             AnchorSideLeft.Control = slCutoff3
@@ -4180,7 +4180,6 @@ object frmMain: TfrmMain
             PageSize = 10
             ParentColor = False
             ParentFont = False
-            ParentShowHint = False
             PositionToHint = True
             ProgressColor = 5162664
             ProgressColor2 = 5162664
@@ -4196,9 +4195,10 @@ object frmMain: TfrmMain
             Scale.ValueVisible = evvBounds
             ScaleFontOptions.FontColor = 5162664
             ScaleFontOptions.FontSize = 7
-            ShowHint = True
             Style = eosFinePanel
             TabOrder = 4
+            OnChange = slSliderChange
+            OnMouseUp = slSliderMouseUp
           end
           object slLoNote3: TECSlider
             AnchorSideLeft.Control = slResonance3
@@ -4231,7 +4231,6 @@ object frmMain: TfrmMain
             PageSize = 10
             ParentColor = False
             ParentFont = False
-            ParentShowHint = False
             PositionToHint = True
             ProgressColor = 5162664
             ProgressColor2 = 5162664
@@ -4247,9 +4246,10 @@ object frmMain: TfrmMain
             Scale.ValueVisible = evvBounds
             ScaleFontOptions.FontColor = 5162664
             ScaleFontOptions.FontSize = 7
-            ShowHint = True
             Style = eosFinePanel
             TabOrder = 5
+            OnChange = slSliderChange
+            OnMouseUp = slSliderMouseUp
           end
           object slHiNote3: TECSlider
             AnchorSideLeft.Control = slLoNote3
@@ -4282,7 +4282,6 @@ object frmMain: TfrmMain
             PageSize = 10
             ParentColor = False
             ParentFont = False
-            ParentShowHint = False
             Position = 127
             PositionToHint = True
             ProgressColor = 5162664
@@ -4299,9 +4298,10 @@ object frmMain: TfrmMain
             Scale.ValueVisible = evvBounds
             ScaleFontOptions.FontColor = 5162664
             ScaleFontOptions.FontSize = 7
-            ShowHint = True
             Style = eosFinePanel
             TabOrder = 6
+            OnChange = slSliderChange
+            OnMouseUp = slSliderMouseUp
           end
           object slTranspose3: TECSlider
             AnchorSideLeft.Control = slHiNote3
@@ -4334,7 +4334,6 @@ object frmMain: TfrmMain
             PageSize = 10
             ParentColor = False
             ParentFont = False
-            ParentShowHint = False
             PositionToHint = True
             ProgressColor = 5162664
             ProgressColor2 = 5162664
@@ -4353,9 +4352,10 @@ object frmMain: TfrmMain
             Scale.ValueVisible = evvBounds
             ScaleFontOptions.FontColor = 5162664
             ScaleFontOptions.FontSize = 7
-            ShowHint = True
             Style = eosFinePanel
             TabOrder = 7
+            OnChange = slSliderChange
+            OnMouseUp = slSliderMouseUp
           end
           object slReverbSend3: TECSlider
             AnchorSideLeft.Control = slTranspose3
@@ -4388,7 +4388,6 @@ object frmMain: TfrmMain
             PageSize = 10
             ParentColor = False
             ParentFont = False
-            ParentShowHint = False
             PositionToHint = True
             ProgressColor = 5162664
             ProgressColor2 = 5162664
@@ -4404,9 +4403,10 @@ object frmMain: TfrmMain
             Scale.ValueVisible = evvBounds
             ScaleFontOptions.FontColor = 5162664
             ScaleFontOptions.FontSize = 7
-            ShowHint = True
             Style = eosFinePanel
             TabOrder = 8
+            OnChange = slSliderChange
+            OnMouseUp = slSliderMouseUp
           end
           object slPitchBendRange3: TECSlider
             AnchorSideLeft.Control = slReverbSend3
@@ -4439,7 +4439,6 @@ object frmMain: TfrmMain
             PageSize = 10
             ParentColor = False
             ParentFont = False
-            ParentShowHint = False
             Position = 2
             PositionToHint = True
             ProgressColor = 5162664
@@ -4456,9 +4455,10 @@ object frmMain: TfrmMain
             Scale.ValueVisible = evvBounds
             ScaleFontOptions.FontColor = 5162664
             ScaleFontOptions.FontSize = 7
-            ShowHint = True
             Style = eosFinePanel
             TabOrder = 9
+            OnChange = slSliderChange
+            OnMouseUp = slSliderMouseUp
           end
           object slPitchBendStep3: TECSlider
             AnchorSideLeft.Control = slPitchBendRange3
@@ -4491,7 +4491,6 @@ object frmMain: TfrmMain
             PageSize = 10
             ParentColor = False
             ParentFont = False
-            ParentShowHint = False
             PositionToHint = True
             ProgressColor = 5162664
             ProgressColor2 = 5162664
@@ -4507,9 +4506,10 @@ object frmMain: TfrmMain
             Scale.ValueVisible = evvBounds
             ScaleFontOptions.FontColor = 5162664
             ScaleFontOptions.FontSize = 7
-            ShowHint = True
             Style = eosFinePanel
             TabOrder = 10
+            OnChange = slSliderChange
+            OnMouseUp = slSliderMouseUp
           end
           object slPortaTime3: TECSlider
             AnchorSideLeft.Control = slPitchBendStep3
@@ -4542,7 +4542,6 @@ object frmMain: TfrmMain
             PageSize = 10
             ParentColor = False
             ParentFont = False
-            ParentShowHint = False
             PositionToHint = True
             ProgressColor = 5162664
             ProgressColor2 = 5162664
@@ -4558,9 +4557,10 @@ object frmMain: TfrmMain
             Scale.ValueVisible = evvBounds
             ScaleFontOptions.FontColor = 5162664
             ScaleFontOptions.FontSize = 7
-            ShowHint = True
             Style = eosFinePanel
             TabOrder = 11
+            OnChange = slSliderChange
+            OnMouseUp = slSliderMouseUp
           end
           object swPortaMode3: TECSwitch
             AnchorSideLeft.Control = slPortaTime3
@@ -4855,7 +4855,6 @@ object frmMain: TfrmMain
             PageSize = 10
             ParentColor = False
             ParentFont = False
-            ParentShowHint = False
             Position = 100
             PositionToHint = True
             ProgressColor = 5162664
@@ -4872,9 +4871,10 @@ object frmMain: TfrmMain
             Scale.ValueVisible = evvBounds
             ScaleFontOptions.FontColor = 5162664
             ScaleFontOptions.FontSize = 7
-            ShowHint = True
             Style = eosFinePanel
             TabOrder = 0
+            OnChange = slSliderChange
+            OnMouseUp = slSliderMouseUp
           end
           object slPan4: TECSlider
             AnchorSideLeft.Control = slVolume4
@@ -4907,7 +4907,6 @@ object frmMain: TfrmMain
             PageSize = 10
             ParentColor = False
             ParentFont = False
-            ParentShowHint = False
             Position = 64
             PositionToHint = True
             ProgressColor = 5162664
@@ -4927,9 +4926,10 @@ object frmMain: TfrmMain
             Scale.ValueVisible = evvBounds
             ScaleFontOptions.FontColor = 5162664
             ScaleFontOptions.FontSize = 7
-            ShowHint = True
             Style = eosFinePanel
             TabOrder = 1
+            OnChange = slSliderChange
+            OnMouseUp = slSliderMouseUp
           end
           object slDetune4: TECSlider
             AnchorSideLeft.Control = slPan4
@@ -4962,7 +4962,6 @@ object frmMain: TfrmMain
             PageSize = 10
             ParentColor = False
             ParentFont = False
-            ParentShowHint = False
             PositionToHint = True
             ProgressColor = 5162664
             ProgressColor2 = 5162664
@@ -4981,9 +4980,10 @@ object frmMain: TfrmMain
             Scale.ValueVisible = evvBounds
             ScaleFontOptions.FontColor = 5162664
             ScaleFontOptions.FontSize = 7
-            ShowHint = True
             Style = eosFinePanel
             TabOrder = 2
+            OnChange = slSliderChange
+            OnMouseUp = slSliderMouseUp
           end
           object slCutoff4: TECSlider
             AnchorSideLeft.Control = slDetune4
@@ -5016,7 +5016,6 @@ object frmMain: TfrmMain
             PageSize = 10
             ParentColor = False
             ParentFont = False
-            ParentShowHint = False
             Position = 99
             PositionToHint = True
             ProgressColor = 5162664
@@ -5033,9 +5032,10 @@ object frmMain: TfrmMain
             Scale.ValueVisible = evvBounds
             ScaleFontOptions.FontColor = 5162664
             ScaleFontOptions.FontSize = 7
-            ShowHint = True
             Style = eosFinePanel
             TabOrder = 3
+            OnChange = slSliderChange
+            OnMouseUp = slSliderMouseUp
           end
           object slResonance4: TECSlider
             AnchorSideLeft.Control = slCutoff4
@@ -5068,7 +5068,6 @@ object frmMain: TfrmMain
             PageSize = 10
             ParentColor = False
             ParentFont = False
-            ParentShowHint = False
             PositionToHint = True
             ProgressColor = 5162664
             ProgressColor2 = 5162664
@@ -5084,9 +5083,10 @@ object frmMain: TfrmMain
             Scale.ValueVisible = evvBounds
             ScaleFontOptions.FontColor = 5162664
             ScaleFontOptions.FontSize = 7
-            ShowHint = True
             Style = eosFinePanel
             TabOrder = 4
+            OnChange = slSliderChange
+            OnMouseUp = slSliderMouseUp
           end
           object slLoNote4: TECSlider
             AnchorSideLeft.Control = slResonance4
@@ -5119,7 +5119,6 @@ object frmMain: TfrmMain
             PageSize = 10
             ParentColor = False
             ParentFont = False
-            ParentShowHint = False
             PositionToHint = True
             ProgressColor = 5162664
             ProgressColor2 = 5162664
@@ -5135,9 +5134,10 @@ object frmMain: TfrmMain
             Scale.ValueVisible = evvBounds
             ScaleFontOptions.FontColor = 5162664
             ScaleFontOptions.FontSize = 7
-            ShowHint = True
             Style = eosFinePanel
             TabOrder = 5
+            OnChange = slSliderChange
+            OnMouseUp = slSliderMouseUp
           end
           object slHiNote4: TECSlider
             AnchorSideLeft.Control = slLoNote4
@@ -5170,7 +5170,6 @@ object frmMain: TfrmMain
             PageSize = 10
             ParentColor = False
             ParentFont = False
-            ParentShowHint = False
             Position = 127
             PositionToHint = True
             ProgressColor = 5162664
@@ -5187,9 +5186,10 @@ object frmMain: TfrmMain
             Scale.ValueVisible = evvBounds
             ScaleFontOptions.FontColor = 5162664
             ScaleFontOptions.FontSize = 7
-            ShowHint = True
             Style = eosFinePanel
             TabOrder = 6
+            OnChange = slSliderChange
+            OnMouseUp = slSliderMouseUp
           end
           object slTranspose4: TECSlider
             AnchorSideLeft.Control = slHiNote4
@@ -5222,7 +5222,6 @@ object frmMain: TfrmMain
             PageSize = 10
             ParentColor = False
             ParentFont = False
-            ParentShowHint = False
             PositionToHint = True
             ProgressColor = 5162664
             ProgressColor2 = 5162664
@@ -5241,9 +5240,10 @@ object frmMain: TfrmMain
             Scale.ValueVisible = evvBounds
             ScaleFontOptions.FontColor = 5162664
             ScaleFontOptions.FontSize = 7
-            ShowHint = True
             Style = eosFinePanel
             TabOrder = 7
+            OnChange = slSliderChange
+            OnMouseUp = slSliderMouseUp
           end
           object slReverbSend4: TECSlider
             AnchorSideLeft.Control = slTranspose4
@@ -5276,7 +5276,6 @@ object frmMain: TfrmMain
             PageSize = 10
             ParentColor = False
             ParentFont = False
-            ParentShowHint = False
             PositionToHint = True
             ProgressColor = 5162664
             ProgressColor2 = 5162664
@@ -5292,9 +5291,10 @@ object frmMain: TfrmMain
             Scale.ValueVisible = evvBounds
             ScaleFontOptions.FontColor = 5162664
             ScaleFontOptions.FontSize = 7
-            ShowHint = True
             Style = eosFinePanel
             TabOrder = 8
+            OnChange = slSliderChange
+            OnMouseUp = slSliderMouseUp
           end
           object slPitchBendRange4: TECSlider
             AnchorSideLeft.Control = slReverbSend4
@@ -5327,7 +5327,6 @@ object frmMain: TfrmMain
             PageSize = 10
             ParentColor = False
             ParentFont = False
-            ParentShowHint = False
             Position = 2
             PositionToHint = True
             ProgressColor = 5162664
@@ -5344,9 +5343,10 @@ object frmMain: TfrmMain
             Scale.ValueVisible = evvBounds
             ScaleFontOptions.FontColor = 5162664
             ScaleFontOptions.FontSize = 7
-            ShowHint = True
             Style = eosFinePanel
             TabOrder = 9
+            OnChange = slSliderChange
+            OnMouseUp = slSliderMouseUp
           end
           object slPitchBendStep4: TECSlider
             AnchorSideLeft.Control = slPitchBendRange4
@@ -5379,7 +5379,6 @@ object frmMain: TfrmMain
             PageSize = 10
             ParentColor = False
             ParentFont = False
-            ParentShowHint = False
             PositionToHint = True
             ProgressColor = 5162664
             ProgressColor2 = 5162664
@@ -5395,9 +5394,10 @@ object frmMain: TfrmMain
             Scale.ValueVisible = evvBounds
             ScaleFontOptions.FontColor = 5162664
             ScaleFontOptions.FontSize = 7
-            ShowHint = True
             Style = eosFinePanel
             TabOrder = 10
+            OnChange = slSliderChange
+            OnMouseUp = slSliderMouseUp
           end
           object slPortaTime4: TECSlider
             AnchorSideLeft.Control = slPitchBendStep4
@@ -5430,7 +5430,6 @@ object frmMain: TfrmMain
             PageSize = 10
             ParentColor = False
             ParentFont = False
-            ParentShowHint = False
             PositionToHint = True
             ProgressColor = 5162664
             ProgressColor2 = 5162664
@@ -5446,9 +5445,10 @@ object frmMain: TfrmMain
             Scale.ValueVisible = evvBounds
             ScaleFontOptions.FontColor = 5162664
             ScaleFontOptions.FontSize = 7
-            ShowHint = True
             Style = eosFinePanel
             TabOrder = 11
+            OnChange = slSliderChange
+            OnMouseUp = slSliderMouseUp
           end
           object swPortaMode4: TECSwitch
             AnchorSideLeft.Control = slPortaTime4
@@ -5743,7 +5743,6 @@ object frmMain: TfrmMain
             PageSize = 10
             ParentColor = False
             ParentFont = False
-            ParentShowHint = False
             Position = 100
             PositionToHint = True
             ProgressColor = 5162664
@@ -5760,9 +5759,10 @@ object frmMain: TfrmMain
             Scale.ValueVisible = evvBounds
             ScaleFontOptions.FontColor = 5162664
             ScaleFontOptions.FontSize = 7
-            ShowHint = True
             Style = eosFinePanel
             TabOrder = 0
+            OnChange = slSliderChange
+            OnMouseUp = slSliderMouseUp
           end
           object slPan5: TECSlider
             AnchorSideLeft.Control = slVolume5
@@ -5795,7 +5795,6 @@ object frmMain: TfrmMain
             PageSize = 10
             ParentColor = False
             ParentFont = False
-            ParentShowHint = False
             Position = 64
             PositionToHint = True
             ProgressColor = 5162664
@@ -5815,9 +5814,10 @@ object frmMain: TfrmMain
             Scale.ValueVisible = evvBounds
             ScaleFontOptions.FontColor = 5162664
             ScaleFontOptions.FontSize = 7
-            ShowHint = True
             Style = eosFinePanel
             TabOrder = 1
+            OnChange = slSliderChange
+            OnMouseUp = slSliderMouseUp
           end
           object slDetune5: TECSlider
             AnchorSideLeft.Control = slPan5
@@ -5850,7 +5850,6 @@ object frmMain: TfrmMain
             PageSize = 10
             ParentColor = False
             ParentFont = False
-            ParentShowHint = False
             PositionToHint = True
             ProgressColor = 5162664
             ProgressColor2 = 5162664
@@ -5869,9 +5868,10 @@ object frmMain: TfrmMain
             Scale.ValueVisible = evvBounds
             ScaleFontOptions.FontColor = 5162664
             ScaleFontOptions.FontSize = 7
-            ShowHint = True
             Style = eosFinePanel
             TabOrder = 2
+            OnChange = slSliderChange
+            OnMouseUp = slSliderMouseUp
           end
           object slCutoff5: TECSlider
             AnchorSideLeft.Control = slDetune5
@@ -5904,7 +5904,6 @@ object frmMain: TfrmMain
             PageSize = 10
             ParentColor = False
             ParentFont = False
-            ParentShowHint = False
             Position = 99
             PositionToHint = True
             ProgressColor = 5162664
@@ -5921,9 +5920,10 @@ object frmMain: TfrmMain
             Scale.ValueVisible = evvBounds
             ScaleFontOptions.FontColor = 5162664
             ScaleFontOptions.FontSize = 7
-            ShowHint = True
             Style = eosFinePanel
             TabOrder = 3
+            OnChange = slSliderChange
+            OnMouseUp = slSliderMouseUp
           end
           object slResonance5: TECSlider
             AnchorSideLeft.Control = slCutoff5
@@ -5956,7 +5956,6 @@ object frmMain: TfrmMain
             PageSize = 10
             ParentColor = False
             ParentFont = False
-            ParentShowHint = False
             PositionToHint = True
             ProgressColor = 5162664
             ProgressColor2 = 5162664
@@ -5972,9 +5971,10 @@ object frmMain: TfrmMain
             Scale.ValueVisible = evvBounds
             ScaleFontOptions.FontColor = 5162664
             ScaleFontOptions.FontSize = 7
-            ShowHint = True
             Style = eosFinePanel
             TabOrder = 4
+            OnChange = slSliderChange
+            OnMouseUp = slSliderMouseUp
           end
           object slLoNote5: TECSlider
             AnchorSideLeft.Control = slResonance5
@@ -6007,7 +6007,6 @@ object frmMain: TfrmMain
             PageSize = 10
             ParentColor = False
             ParentFont = False
-            ParentShowHint = False
             PositionToHint = True
             ProgressColor = 5162664
             ProgressColor2 = 5162664
@@ -6023,9 +6022,10 @@ object frmMain: TfrmMain
             Scale.ValueVisible = evvBounds
             ScaleFontOptions.FontColor = 5162664
             ScaleFontOptions.FontSize = 7
-            ShowHint = True
             Style = eosFinePanel
             TabOrder = 5
+            OnChange = slSliderChange
+            OnMouseUp = slSliderMouseUp
           end
           object slHiNote5: TECSlider
             AnchorSideLeft.Control = slLoNote5
@@ -6058,7 +6058,6 @@ object frmMain: TfrmMain
             PageSize = 10
             ParentColor = False
             ParentFont = False
-            ParentShowHint = False
             Position = 127
             PositionToHint = True
             ProgressColor = 5162664
@@ -6075,9 +6074,10 @@ object frmMain: TfrmMain
             Scale.ValueVisible = evvBounds
             ScaleFontOptions.FontColor = 5162664
             ScaleFontOptions.FontSize = 7
-            ShowHint = True
             Style = eosFinePanel
             TabOrder = 6
+            OnChange = slSliderChange
+            OnMouseUp = slSliderMouseUp
           end
           object slTranspose5: TECSlider
             AnchorSideLeft.Control = slHiNote5
@@ -6110,7 +6110,6 @@ object frmMain: TfrmMain
             PageSize = 10
             ParentColor = False
             ParentFont = False
-            ParentShowHint = False
             PositionToHint = True
             ProgressColor = 5162664
             ProgressColor2 = 5162664
@@ -6129,9 +6128,10 @@ object frmMain: TfrmMain
             Scale.ValueVisible = evvBounds
             ScaleFontOptions.FontColor = 5162664
             ScaleFontOptions.FontSize = 7
-            ShowHint = True
             Style = eosFinePanel
             TabOrder = 7
+            OnChange = slSliderChange
+            OnMouseUp = slSliderMouseUp
           end
           object slReverbSend5: TECSlider
             AnchorSideLeft.Control = slTranspose5
@@ -6164,7 +6164,6 @@ object frmMain: TfrmMain
             PageSize = 10
             ParentColor = False
             ParentFont = False
-            ParentShowHint = False
             PositionToHint = True
             ProgressColor = 5162664
             ProgressColor2 = 5162664
@@ -6180,9 +6179,10 @@ object frmMain: TfrmMain
             Scale.ValueVisible = evvBounds
             ScaleFontOptions.FontColor = 5162664
             ScaleFontOptions.FontSize = 7
-            ShowHint = True
             Style = eosFinePanel
             TabOrder = 8
+            OnChange = slSliderChange
+            OnMouseUp = slSliderMouseUp
           end
           object slPitchBendRange5: TECSlider
             AnchorSideLeft.Control = slReverbSend5
@@ -6215,7 +6215,6 @@ object frmMain: TfrmMain
             PageSize = 10
             ParentColor = False
             ParentFont = False
-            ParentShowHint = False
             Position = 2
             PositionToHint = True
             ProgressColor = 5162664
@@ -6232,9 +6231,10 @@ object frmMain: TfrmMain
             Scale.ValueVisible = evvBounds
             ScaleFontOptions.FontColor = 5162664
             ScaleFontOptions.FontSize = 7
-            ShowHint = True
             Style = eosFinePanel
             TabOrder = 9
+            OnChange = slSliderChange
+            OnMouseUp = slSliderMouseUp
           end
           object slPitchBendStep5: TECSlider
             AnchorSideLeft.Control = slPitchBendRange5
@@ -6267,7 +6267,6 @@ object frmMain: TfrmMain
             PageSize = 10
             ParentColor = False
             ParentFont = False
-            ParentShowHint = False
             PositionToHint = True
             ProgressColor = 5162664
             ProgressColor2 = 5162664
@@ -6283,9 +6282,10 @@ object frmMain: TfrmMain
             Scale.ValueVisible = evvBounds
             ScaleFontOptions.FontColor = 5162664
             ScaleFontOptions.FontSize = 7
-            ShowHint = True
             Style = eosFinePanel
             TabOrder = 10
+            OnChange = slSliderChange
+            OnMouseUp = slSliderMouseUp
           end
           object slPortaTime5: TECSlider
             AnchorSideLeft.Control = slPitchBendStep5
@@ -6318,7 +6318,6 @@ object frmMain: TfrmMain
             PageSize = 10
             ParentColor = False
             ParentFont = False
-            ParentShowHint = False
             PositionToHint = True
             ProgressColor = 5162664
             ProgressColor2 = 5162664
@@ -6334,9 +6333,10 @@ object frmMain: TfrmMain
             Scale.ValueVisible = evvBounds
             ScaleFontOptions.FontColor = 5162664
             ScaleFontOptions.FontSize = 7
-            ShowHint = True
             Style = eosFinePanel
             TabOrder = 11
+            OnChange = slSliderChange
+            OnMouseUp = slSliderMouseUp
           end
           object swPortaMode5: TECSwitch
             AnchorSideLeft.Control = slPortaTime5
@@ -6631,7 +6631,6 @@ object frmMain: TfrmMain
             PageSize = 10
             ParentColor = False
             ParentFont = False
-            ParentShowHint = False
             Position = 100
             PositionToHint = True
             ProgressColor = 5162664
@@ -6648,9 +6647,10 @@ object frmMain: TfrmMain
             Scale.ValueVisible = evvBounds
             ScaleFontOptions.FontColor = 5162664
             ScaleFontOptions.FontSize = 7
-            ShowHint = True
             Style = eosFinePanel
             TabOrder = 0
+            OnChange = slSliderChange
+            OnMouseUp = slSliderMouseUp
           end
           object slPan6: TECSlider
             AnchorSideLeft.Control = slVolume6
@@ -6683,7 +6683,6 @@ object frmMain: TfrmMain
             PageSize = 10
             ParentColor = False
             ParentFont = False
-            ParentShowHint = False
             Position = 64
             PositionToHint = True
             ProgressColor = 5162664
@@ -6703,9 +6702,10 @@ object frmMain: TfrmMain
             Scale.ValueVisible = evvBounds
             ScaleFontOptions.FontColor = 5162664
             ScaleFontOptions.FontSize = 7
-            ShowHint = True
             Style = eosFinePanel
             TabOrder = 1
+            OnChange = slSliderChange
+            OnMouseUp = slSliderMouseUp
           end
           object slDetune6: TECSlider
             AnchorSideLeft.Control = slPan6
@@ -6738,7 +6738,6 @@ object frmMain: TfrmMain
             PageSize = 10
             ParentColor = False
             ParentFont = False
-            ParentShowHint = False
             PositionToHint = True
             ProgressColor = 5162664
             ProgressColor2 = 5162664
@@ -6757,9 +6756,10 @@ object frmMain: TfrmMain
             Scale.ValueVisible = evvBounds
             ScaleFontOptions.FontColor = 5162664
             ScaleFontOptions.FontSize = 7
-            ShowHint = True
             Style = eosFinePanel
             TabOrder = 2
+            OnChange = slSliderChange
+            OnMouseUp = slSliderMouseUp
           end
           object slCutoff6: TECSlider
             AnchorSideLeft.Control = slDetune6
@@ -6792,7 +6792,6 @@ object frmMain: TfrmMain
             PageSize = 10
             ParentColor = False
             ParentFont = False
-            ParentShowHint = False
             Position = 99
             PositionToHint = True
             ProgressColor = 5162664
@@ -6809,9 +6808,10 @@ object frmMain: TfrmMain
             Scale.ValueVisible = evvBounds
             ScaleFontOptions.FontColor = 5162664
             ScaleFontOptions.FontSize = 7
-            ShowHint = True
             Style = eosFinePanel
             TabOrder = 3
+            OnChange = slSliderChange
+            OnMouseUp = slSliderMouseUp
           end
           object slResonance6: TECSlider
             AnchorSideLeft.Control = slCutoff6
@@ -6844,7 +6844,6 @@ object frmMain: TfrmMain
             PageSize = 10
             ParentColor = False
             ParentFont = False
-            ParentShowHint = False
             PositionToHint = True
             ProgressColor = 5162664
             ProgressColor2 = 5162664
@@ -6860,9 +6859,10 @@ object frmMain: TfrmMain
             Scale.ValueVisible = evvBounds
             ScaleFontOptions.FontColor = 5162664
             ScaleFontOptions.FontSize = 7
-            ShowHint = True
             Style = eosFinePanel
             TabOrder = 4
+            OnChange = slSliderChange
+            OnMouseUp = slSliderMouseUp
           end
           object slLoNote6: TECSlider
             AnchorSideLeft.Control = slResonance6
@@ -6895,7 +6895,6 @@ object frmMain: TfrmMain
             PageSize = 10
             ParentColor = False
             ParentFont = False
-            ParentShowHint = False
             PositionToHint = True
             ProgressColor = 5162664
             ProgressColor2 = 5162664
@@ -6911,9 +6910,10 @@ object frmMain: TfrmMain
             Scale.ValueVisible = evvBounds
             ScaleFontOptions.FontColor = 5162664
             ScaleFontOptions.FontSize = 7
-            ShowHint = True
             Style = eosFinePanel
             TabOrder = 5
+            OnChange = slSliderChange
+            OnMouseUp = slSliderMouseUp
           end
           object slHiNote6: TECSlider
             AnchorSideLeft.Control = slLoNote6
@@ -6946,7 +6946,6 @@ object frmMain: TfrmMain
             PageSize = 10
             ParentColor = False
             ParentFont = False
-            ParentShowHint = False
             Position = 127
             PositionToHint = True
             ProgressColor = 5162664
@@ -6963,9 +6962,10 @@ object frmMain: TfrmMain
             Scale.ValueVisible = evvBounds
             ScaleFontOptions.FontColor = 5162664
             ScaleFontOptions.FontSize = 7
-            ShowHint = True
             Style = eosFinePanel
             TabOrder = 6
+            OnChange = slSliderChange
+            OnMouseUp = slSliderMouseUp
           end
           object slTranspose6: TECSlider
             AnchorSideLeft.Control = slHiNote6
@@ -6998,7 +6998,6 @@ object frmMain: TfrmMain
             PageSize = 10
             ParentColor = False
             ParentFont = False
-            ParentShowHint = False
             PositionToHint = True
             ProgressColor = 5162664
             ProgressColor2 = 5162664
@@ -7017,9 +7016,10 @@ object frmMain: TfrmMain
             Scale.ValueVisible = evvBounds
             ScaleFontOptions.FontColor = 5162664
             ScaleFontOptions.FontSize = 7
-            ShowHint = True
             Style = eosFinePanel
             TabOrder = 7
+            OnChange = slSliderChange
+            OnMouseUp = slSliderMouseUp
           end
           object slReverbSend6: TECSlider
             AnchorSideLeft.Control = slTranspose6
@@ -7052,7 +7052,6 @@ object frmMain: TfrmMain
             PageSize = 10
             ParentColor = False
             ParentFont = False
-            ParentShowHint = False
             PositionToHint = True
             ProgressColor = 5162664
             ProgressColor2 = 5162664
@@ -7068,9 +7067,10 @@ object frmMain: TfrmMain
             Scale.ValueVisible = evvBounds
             ScaleFontOptions.FontColor = 5162664
             ScaleFontOptions.FontSize = 7
-            ShowHint = True
             Style = eosFinePanel
             TabOrder = 8
+            OnChange = slSliderChange
+            OnMouseUp = slSliderMouseUp
           end
           object slPitchBendRange6: TECSlider
             AnchorSideLeft.Control = slReverbSend6
@@ -7103,7 +7103,6 @@ object frmMain: TfrmMain
             PageSize = 10
             ParentColor = False
             ParentFont = False
-            ParentShowHint = False
             Position = 2
             PositionToHint = True
             ProgressColor = 5162664
@@ -7120,9 +7119,10 @@ object frmMain: TfrmMain
             Scale.ValueVisible = evvBounds
             ScaleFontOptions.FontColor = 5162664
             ScaleFontOptions.FontSize = 7
-            ShowHint = True
             Style = eosFinePanel
             TabOrder = 9
+            OnChange = slSliderChange
+            OnMouseUp = slSliderMouseUp
           end
           object slPitchBendStep6: TECSlider
             AnchorSideLeft.Control = slPitchBendRange6
@@ -7155,7 +7155,6 @@ object frmMain: TfrmMain
             PageSize = 10
             ParentColor = False
             ParentFont = False
-            ParentShowHint = False
             PositionToHint = True
             ProgressColor = 5162664
             ProgressColor2 = 5162664
@@ -7171,9 +7170,10 @@ object frmMain: TfrmMain
             Scale.ValueVisible = evvBounds
             ScaleFontOptions.FontColor = 5162664
             ScaleFontOptions.FontSize = 7
-            ShowHint = True
             Style = eosFinePanel
             TabOrder = 10
+            OnChange = slSliderChange
+            OnMouseUp = slSliderMouseUp
           end
           object slPortaTime6: TECSlider
             AnchorSideLeft.Control = slPitchBendStep6
@@ -7206,7 +7206,6 @@ object frmMain: TfrmMain
             PageSize = 10
             ParentColor = False
             ParentFont = False
-            ParentShowHint = False
             PositionToHint = True
             ProgressColor = 5162664
             ProgressColor2 = 5162664
@@ -7222,9 +7221,10 @@ object frmMain: TfrmMain
             Scale.ValueVisible = evvBounds
             ScaleFontOptions.FontColor = 5162664
             ScaleFontOptions.FontSize = 7
-            ShowHint = True
             Style = eosFinePanel
             TabOrder = 11
+            OnChange = slSliderChange
+            OnMouseUp = slSliderMouseUp
           end
           object swPortaMode6: TECSwitch
             AnchorSideLeft.Control = slPortaTime6
@@ -7519,7 +7519,6 @@ object frmMain: TfrmMain
             PageSize = 10
             ParentColor = False
             ParentFont = False
-            ParentShowHint = False
             Position = 100
             PositionToHint = True
             ProgressColor = 5162664
@@ -7536,9 +7535,10 @@ object frmMain: TfrmMain
             Scale.ValueVisible = evvBounds
             ScaleFontOptions.FontColor = 5162664
             ScaleFontOptions.FontSize = 7
-            ShowHint = True
             Style = eosFinePanel
             TabOrder = 0
+            OnChange = slSliderChange
+            OnMouseUp = slSliderMouseUp
           end
           object slPan7: TECSlider
             AnchorSideLeft.Control = slVolume7
@@ -7571,7 +7571,6 @@ object frmMain: TfrmMain
             PageSize = 10
             ParentColor = False
             ParentFont = False
-            ParentShowHint = False
             Position = 64
             PositionToHint = True
             ProgressColor = 5162664
@@ -7591,9 +7590,10 @@ object frmMain: TfrmMain
             Scale.ValueVisible = evvBounds
             ScaleFontOptions.FontColor = 5162664
             ScaleFontOptions.FontSize = 7
-            ShowHint = True
             Style = eosFinePanel
             TabOrder = 1
+            OnChange = slSliderChange
+            OnMouseUp = slSliderMouseUp
           end
           object slDetune7: TECSlider
             AnchorSideLeft.Control = slPan7
@@ -7626,7 +7626,6 @@ object frmMain: TfrmMain
             PageSize = 10
             ParentColor = False
             ParentFont = False
-            ParentShowHint = False
             PositionToHint = True
             ProgressColor = 5162664
             ProgressColor2 = 5162664
@@ -7645,9 +7644,10 @@ object frmMain: TfrmMain
             Scale.ValueVisible = evvBounds
             ScaleFontOptions.FontColor = 5162664
             ScaleFontOptions.FontSize = 7
-            ShowHint = True
             Style = eosFinePanel
             TabOrder = 2
+            OnChange = slSliderChange
+            OnMouseUp = slSliderMouseUp
           end
           object slCutoff7: TECSlider
             AnchorSideLeft.Control = slDetune7
@@ -7680,7 +7680,6 @@ object frmMain: TfrmMain
             PageSize = 10
             ParentColor = False
             ParentFont = False
-            ParentShowHint = False
             Position = 99
             PositionToHint = True
             ProgressColor = 5162664
@@ -7697,9 +7696,10 @@ object frmMain: TfrmMain
             Scale.ValueVisible = evvBounds
             ScaleFontOptions.FontColor = 5162664
             ScaleFontOptions.FontSize = 7
-            ShowHint = True
             Style = eosFinePanel
             TabOrder = 3
+            OnChange = slSliderChange
+            OnMouseUp = slSliderMouseUp
           end
           object slResonance7: TECSlider
             AnchorSideLeft.Control = slCutoff7
@@ -7732,7 +7732,6 @@ object frmMain: TfrmMain
             PageSize = 10
             ParentColor = False
             ParentFont = False
-            ParentShowHint = False
             PositionToHint = True
             ProgressColor = 5162664
             ProgressColor2 = 5162664
@@ -7748,9 +7747,10 @@ object frmMain: TfrmMain
             Scale.ValueVisible = evvBounds
             ScaleFontOptions.FontColor = 5162664
             ScaleFontOptions.FontSize = 7
-            ShowHint = True
             Style = eosFinePanel
             TabOrder = 4
+            OnChange = slSliderChange
+            OnMouseUp = slSliderMouseUp
           end
           object slLoNote7: TECSlider
             AnchorSideLeft.Control = slResonance7
@@ -7783,7 +7783,6 @@ object frmMain: TfrmMain
             PageSize = 10
             ParentColor = False
             ParentFont = False
-            ParentShowHint = False
             PositionToHint = True
             ProgressColor = 5162664
             ProgressColor2 = 5162664
@@ -7799,9 +7798,10 @@ object frmMain: TfrmMain
             Scale.ValueVisible = evvBounds
             ScaleFontOptions.FontColor = 5162664
             ScaleFontOptions.FontSize = 7
-            ShowHint = True
             Style = eosFinePanel
             TabOrder = 5
+            OnChange = slSliderChange
+            OnMouseUp = slSliderMouseUp
           end
           object slHiNote7: TECSlider
             AnchorSideLeft.Control = slLoNote7
@@ -7834,7 +7834,6 @@ object frmMain: TfrmMain
             PageSize = 10
             ParentColor = False
             ParentFont = False
-            ParentShowHint = False
             Position = 127
             PositionToHint = True
             ProgressColor = 5162664
@@ -7851,9 +7850,10 @@ object frmMain: TfrmMain
             Scale.ValueVisible = evvBounds
             ScaleFontOptions.FontColor = 5162664
             ScaleFontOptions.FontSize = 7
-            ShowHint = True
             Style = eosFinePanel
             TabOrder = 6
+            OnChange = slSliderChange
+            OnMouseUp = slSliderMouseUp
           end
           object slTranspose7: TECSlider
             AnchorSideLeft.Control = slHiNote7
@@ -7886,7 +7886,6 @@ object frmMain: TfrmMain
             PageSize = 10
             ParentColor = False
             ParentFont = False
-            ParentShowHint = False
             PositionToHint = True
             ProgressColor = 5162664
             ProgressColor2 = 5162664
@@ -7905,9 +7904,10 @@ object frmMain: TfrmMain
             Scale.ValueVisible = evvBounds
             ScaleFontOptions.FontColor = 5162664
             ScaleFontOptions.FontSize = 7
-            ShowHint = True
             Style = eosFinePanel
             TabOrder = 7
+            OnChange = slSliderChange
+            OnMouseUp = slSliderMouseUp
           end
           object slReverbSend7: TECSlider
             AnchorSideLeft.Control = slTranspose7
@@ -7940,7 +7940,6 @@ object frmMain: TfrmMain
             PageSize = 10
             ParentColor = False
             ParentFont = False
-            ParentShowHint = False
             PositionToHint = True
             ProgressColor = 5162664
             ProgressColor2 = 5162664
@@ -7956,9 +7955,10 @@ object frmMain: TfrmMain
             Scale.ValueVisible = evvBounds
             ScaleFontOptions.FontColor = 5162664
             ScaleFontOptions.FontSize = 7
-            ShowHint = True
             Style = eosFinePanel
             TabOrder = 8
+            OnChange = slSliderChange
+            OnMouseUp = slSliderMouseUp
           end
           object slPitchBendRange7: TECSlider
             AnchorSideLeft.Control = slReverbSend7
@@ -7991,7 +7991,6 @@ object frmMain: TfrmMain
             PageSize = 10
             ParentColor = False
             ParentFont = False
-            ParentShowHint = False
             Position = 2
             PositionToHint = True
             ProgressColor = 5162664
@@ -8008,9 +8007,10 @@ object frmMain: TfrmMain
             Scale.ValueVisible = evvBounds
             ScaleFontOptions.FontColor = 5162664
             ScaleFontOptions.FontSize = 7
-            ShowHint = True
             Style = eosFinePanel
             TabOrder = 9
+            OnChange = slSliderChange
+            OnMouseUp = slSliderMouseUp
           end
           object slPitchBendStep7: TECSlider
             AnchorSideLeft.Control = slPitchBendRange7
@@ -8043,7 +8043,6 @@ object frmMain: TfrmMain
             PageSize = 10
             ParentColor = False
             ParentFont = False
-            ParentShowHint = False
             PositionToHint = True
             ProgressColor = 5162664
             ProgressColor2 = 5162664
@@ -8059,9 +8058,10 @@ object frmMain: TfrmMain
             Scale.ValueVisible = evvBounds
             ScaleFontOptions.FontColor = 5162664
             ScaleFontOptions.FontSize = 7
-            ShowHint = True
             Style = eosFinePanel
             TabOrder = 10
+            OnChange = slSliderChange
+            OnMouseUp = slSliderMouseUp
           end
           object slPortaTime7: TECSlider
             AnchorSideLeft.Control = slPitchBendStep7
@@ -8094,7 +8094,6 @@ object frmMain: TfrmMain
             PageSize = 10
             ParentColor = False
             ParentFont = False
-            ParentShowHint = False
             PositionToHint = True
             ProgressColor = 5162664
             ProgressColor2 = 5162664
@@ -8110,9 +8109,10 @@ object frmMain: TfrmMain
             Scale.ValueVisible = evvBounds
             ScaleFontOptions.FontColor = 5162664
             ScaleFontOptions.FontSize = 7
-            ShowHint = True
             Style = eosFinePanel
             TabOrder = 11
+            OnChange = slSliderChange
+            OnMouseUp = slSliderMouseUp
           end
           object swPortaMode7: TECSwitch
             AnchorSideLeft.Control = slPortaTime7
@@ -8405,7 +8405,6 @@ object frmMain: TfrmMain
             PageSize = 10
             ParentColor = False
             ParentFont = False
-            ParentShowHint = False
             Position = 100
             PositionToHint = True
             ProgressColor = 5162664
@@ -8422,9 +8421,10 @@ object frmMain: TfrmMain
             Scale.ValueVisible = evvBounds
             ScaleFontOptions.FontColor = 5162664
             ScaleFontOptions.FontSize = 7
-            ShowHint = True
             Style = eosFinePanel
             TabOrder = 0
+            OnChange = slSliderChange
+            OnMouseUp = slSliderMouseUp
           end
           object slPan8: TECSlider
             AnchorSideLeft.Control = slVolume8
@@ -8457,7 +8457,6 @@ object frmMain: TfrmMain
             PageSize = 10
             ParentColor = False
             ParentFont = False
-            ParentShowHint = False
             Position = 64
             PositionToHint = True
             ProgressColor = 5162664
@@ -8477,9 +8476,10 @@ object frmMain: TfrmMain
             Scale.ValueVisible = evvBounds
             ScaleFontOptions.FontColor = 5162664
             ScaleFontOptions.FontSize = 7
-            ShowHint = True
             Style = eosFinePanel
             TabOrder = 1
+            OnChange = slSliderChange
+            OnMouseUp = slSliderMouseUp
           end
           object slDetune8: TECSlider
             AnchorSideLeft.Control = slPan8
@@ -8512,7 +8512,6 @@ object frmMain: TfrmMain
             PageSize = 10
             ParentColor = False
             ParentFont = False
-            ParentShowHint = False
             PositionToHint = True
             ProgressColor = 5162664
             ProgressColor2 = 5162664
@@ -8531,9 +8530,10 @@ object frmMain: TfrmMain
             Scale.ValueVisible = evvBounds
             ScaleFontOptions.FontColor = 5162664
             ScaleFontOptions.FontSize = 7
-            ShowHint = True
             Style = eosFinePanel
             TabOrder = 2
+            OnChange = slSliderChange
+            OnMouseUp = slSliderMouseUp
           end
           object slCutoff8: TECSlider
             AnchorSideLeft.Control = slDetune8
@@ -8566,7 +8566,6 @@ object frmMain: TfrmMain
             PageSize = 10
             ParentColor = False
             ParentFont = False
-            ParentShowHint = False
             Position = 99
             PositionToHint = True
             ProgressColor = 5162664
@@ -8583,9 +8582,10 @@ object frmMain: TfrmMain
             Scale.ValueVisible = evvBounds
             ScaleFontOptions.FontColor = 5162664
             ScaleFontOptions.FontSize = 7
-            ShowHint = True
             Style = eosFinePanel
             TabOrder = 3
+            OnChange = slSliderChange
+            OnMouseUp = slSliderMouseUp
           end
           object slResonance8: TECSlider
             AnchorSideLeft.Control = slCutoff8
@@ -8618,7 +8618,6 @@ object frmMain: TfrmMain
             PageSize = 10
             ParentColor = False
             ParentFont = False
-            ParentShowHint = False
             PositionToHint = True
             ProgressColor = 5162664
             ProgressColor2 = 5162664
@@ -8634,9 +8633,10 @@ object frmMain: TfrmMain
             Scale.ValueVisible = evvBounds
             ScaleFontOptions.FontColor = 5162664
             ScaleFontOptions.FontSize = 7
-            ShowHint = True
             Style = eosFinePanel
             TabOrder = 4
+            OnChange = slSliderChange
+            OnMouseUp = slSliderMouseUp
           end
           object slLoNote8: TECSlider
             AnchorSideLeft.Control = slResonance8
@@ -8669,7 +8669,6 @@ object frmMain: TfrmMain
             PageSize = 10
             ParentColor = False
             ParentFont = False
-            ParentShowHint = False
             PositionToHint = True
             ProgressColor = 5162664
             ProgressColor2 = 5162664
@@ -8685,9 +8684,10 @@ object frmMain: TfrmMain
             Scale.ValueVisible = evvBounds
             ScaleFontOptions.FontColor = 5162664
             ScaleFontOptions.FontSize = 7
-            ShowHint = True
             Style = eosFinePanel
             TabOrder = 5
+            OnChange = slSliderChange
+            OnMouseUp = slSliderMouseUp
           end
           object slHiNote8: TECSlider
             AnchorSideLeft.Control = slLoNote8
@@ -8720,7 +8720,6 @@ object frmMain: TfrmMain
             PageSize = 10
             ParentColor = False
             ParentFont = False
-            ParentShowHint = False
             Position = 127
             PositionToHint = True
             ProgressColor = 5162664
@@ -8737,9 +8736,10 @@ object frmMain: TfrmMain
             Scale.ValueVisible = evvBounds
             ScaleFontOptions.FontColor = 5162664
             ScaleFontOptions.FontSize = 7
-            ShowHint = True
             Style = eosFinePanel
             TabOrder = 6
+            OnChange = slSliderChange
+            OnMouseUp = slSliderMouseUp
           end
           object slTranspose8: TECSlider
             AnchorSideLeft.Control = slHiNote8
@@ -8772,7 +8772,6 @@ object frmMain: TfrmMain
             PageSize = 10
             ParentColor = False
             ParentFont = False
-            ParentShowHint = False
             PositionToHint = True
             ProgressColor = 5162664
             ProgressColor2 = 5162664
@@ -8791,9 +8790,10 @@ object frmMain: TfrmMain
             Scale.ValueVisible = evvBounds
             ScaleFontOptions.FontColor = 5162664
             ScaleFontOptions.FontSize = 7
-            ShowHint = True
             Style = eosFinePanel
             TabOrder = 7
+            OnChange = slSliderChange
+            OnMouseUp = slSliderMouseUp
           end
           object slReverbSend8: TECSlider
             AnchorSideLeft.Control = slTranspose8
@@ -8826,7 +8826,6 @@ object frmMain: TfrmMain
             PageSize = 10
             ParentColor = False
             ParentFont = False
-            ParentShowHint = False
             PositionToHint = True
             ProgressColor = 5162664
             ProgressColor2 = 5162664
@@ -8842,9 +8841,10 @@ object frmMain: TfrmMain
             Scale.ValueVisible = evvBounds
             ScaleFontOptions.FontColor = 5162664
             ScaleFontOptions.FontSize = 7
-            ShowHint = True
             Style = eosFinePanel
             TabOrder = 8
+            OnChange = slSliderChange
+            OnMouseUp = slSliderMouseUp
           end
           object slPitchBendRange8: TECSlider
             AnchorSideLeft.Control = slReverbSend8
@@ -8877,7 +8877,6 @@ object frmMain: TfrmMain
             PageSize = 10
             ParentColor = False
             ParentFont = False
-            ParentShowHint = False
             Position = 2
             PositionToHint = True
             ProgressColor = 5162664
@@ -8894,9 +8893,10 @@ object frmMain: TfrmMain
             Scale.ValueVisible = evvBounds
             ScaleFontOptions.FontColor = 5162664
             ScaleFontOptions.FontSize = 7
-            ShowHint = True
             Style = eosFinePanel
             TabOrder = 9
+            OnChange = slSliderChange
+            OnMouseUp = slSliderMouseUp
           end
           object slPitchBendStep8: TECSlider
             AnchorSideLeft.Control = slPitchBendRange8
@@ -8929,7 +8929,6 @@ object frmMain: TfrmMain
             PageSize = 10
             ParentColor = False
             ParentFont = False
-            ParentShowHint = False
             PositionToHint = True
             ProgressColor = 5162664
             ProgressColor2 = 5162664
@@ -8945,9 +8944,10 @@ object frmMain: TfrmMain
             Scale.ValueVisible = evvBounds
             ScaleFontOptions.FontColor = 5162664
             ScaleFontOptions.FontSize = 7
-            ShowHint = True
             Style = eosFinePanel
             TabOrder = 10
+            OnChange = slSliderChange
+            OnMouseUp = slSliderMouseUp
           end
           object slPortaTime8: TECSlider
             AnchorSideLeft.Control = slPitchBendStep8
@@ -8980,7 +8980,6 @@ object frmMain: TfrmMain
             PageSize = 10
             ParentColor = False
             ParentFont = False
-            ParentShowHint = False
             PositionToHint = True
             ProgressColor = 5162664
             ProgressColor2 = 5162664
@@ -8996,9 +8995,10 @@ object frmMain: TfrmMain
             Scale.ValueVisible = evvBounds
             ScaleFontOptions.FontColor = 5162664
             ScaleFontOptions.FontSize = 7
-            ShowHint = True
             Style = eosFinePanel
             TabOrder = 11
+            OnChange = slSliderChange
+            OnMouseUp = slSliderMouseUp
           end
           object swPortaMode8: TECSwitch
             AnchorSideLeft.Control = slPortaTime8
@@ -9291,7 +9291,6 @@ object frmMain: TfrmMain
             PageSize = 10
             ParentColor = False
             ParentFont = False
-            ParentShowHint = False
             ProgressColor = 5162664
             ProgressColor2 = 5162664
             RelativeScaleLength = -1
@@ -9342,7 +9341,6 @@ object frmMain: TfrmMain
             PageSize = 10
             ParentColor = False
             ParentFont = False
-            ParentShowHint = False
             PositionToHint = True
             ProgressColor = 5162664
             ProgressColor2 = 5162664
@@ -9358,9 +9356,10 @@ object frmMain: TfrmMain
             Scale.ValueVisible = evvBounds
             ScaleFontOptions.FontColor = 5162664
             ScaleFontOptions.FontSize = 7
-            ShowHint = True
             Style = eosFinePanel
             TabOrder = 1
+            OnChange = slSliderChange
+            OnMouseUp = slSliderMouseUp
           end
           object slReverbLowDamp: TECSlider
             AnchorSideLeft.Control = slReverbHighDamp
@@ -9393,7 +9392,6 @@ object frmMain: TfrmMain
             PageSize = 10
             ParentColor = False
             ParentFont = False
-            ParentShowHint = False
             PositionToHint = True
             ProgressColor = 5162664
             ProgressColor2 = 5162664
@@ -9409,9 +9407,10 @@ object frmMain: TfrmMain
             Scale.ValueVisible = evvBounds
             ScaleFontOptions.FontColor = 5162664
             ScaleFontOptions.FontSize = 7
-            ShowHint = True
             Style = eosFinePanel
             TabOrder = 2
+            OnChange = slSliderChange
+            OnMouseUp = slSliderMouseUp
           end
           object swReverbEnable: TECSwitch
             AnchorSideLeft.Side = asrBottom
@@ -9471,7 +9470,6 @@ object frmMain: TfrmMain
             PageSize = 10
             ParentColor = False
             ParentFont = False
-            ParentShowHint = False
             PositionToHint = True
             ProgressColor = 5162664
             ProgressColor2 = 5162664
@@ -9487,9 +9485,10 @@ object frmMain: TfrmMain
             Scale.ValueVisible = evvBounds
             ScaleFontOptions.FontColor = 5162664
             ScaleFontOptions.FontSize = 7
-            ShowHint = True
             Style = eosFinePanel
             TabOrder = 4
+            OnChange = slSliderChange
+            OnMouseUp = slSliderMouseUp
           end
           object slReverbDiffusion: TECSlider
             AnchorSideLeft.Control = slReverbLowPass
@@ -9522,7 +9521,6 @@ object frmMain: TfrmMain
             PageSize = 10
             ParentColor = False
             ParentFont = False
-            ParentShowHint = False
             PositionToHint = True
             ProgressColor = 5162664
             ProgressColor2 = 5162664
@@ -9538,9 +9536,10 @@ object frmMain: TfrmMain
             Scale.ValueVisible = evvBounds
             ScaleFontOptions.FontColor = 5162664
             ScaleFontOptions.FontSize = 7
-            ShowHint = True
             Style = eosFinePanel
             TabOrder = 5
+            OnChange = slSliderChange
+            OnMouseUp = slSliderMouseUp
           end
           object slReverbLevel: TECSlider
             AnchorSideLeft.Control = slReverbDiffusion
@@ -9573,7 +9572,6 @@ object frmMain: TfrmMain
             PageSize = 10
             ParentColor = False
             ParentFont = False
-            ParentShowHint = False
             PositionToHint = True
             ProgressColor = 5162664
             ProgressColor2 = 5162664
@@ -9589,9 +9587,10 @@ object frmMain: TfrmMain
             Scale.ValueVisible = evvBounds
             ScaleFontOptions.FontColor = 5162664
             ScaleFontOptions.FontSize = 7
-            ShowHint = True
             Style = eosFinePanel
             TabOrder = 6
+            OnChange = slSliderChange
+            OnMouseUp = slSliderMouseUp
           end
           object swCompressorEnable: TECSwitch
             AnchorSideLeft.Side = asrBottom
@@ -9673,6 +9672,231 @@ object frmMain: TfrmMain
     end
     object tsSettings: TTabSheet
       Caption = 'Settings'
+      ClientHeight = 740
+      ClientWidth = 1268
+      object cbMidiIn: TBCComboBox
+        AnchorSideLeft.Control = lbMidiIn
+        Cursor = crHandPoint
+        Left = 40
+        Height = 20
+        Top = 56
+        Width = 300
+        ItemIndex = -1
+        ArrowSize = 8
+        ArrowWidth = 16
+        FocusBorderColor = 5162664
+        FocusBorderOpacity = 0
+        DropDownBorderColor = 5162664
+        DropDownHighlight = 5162664
+        GlobalOpacity = 255
+        MemoryUsage = bmuHigh
+        Rounding.RoundX = 12
+        Rounding.RoundY = 12
+        StateClicked.Background.Color = 5162664
+        StateClicked.Background.Gradient1.StartColor = 8404992
+        StateClicked.Background.Gradient1.EndColor = 4194304
+        StateClicked.Background.Gradient1.GradientType = gtRadial
+        StateClicked.Background.Gradient1.Point1XPercent = 50
+        StateClicked.Background.Gradient1.Point1YPercent = 100
+        StateClicked.Background.Gradient1.Point2XPercent = 0
+        StateClicked.Background.Gradient1.Point2YPercent = 0
+        StateClicked.Background.Gradient2.StartColor = clWhite
+        StateClicked.Background.Gradient2.EndColor = clBlack
+        StateClicked.Background.Gradient2.GradientType = gtLinear
+        StateClicked.Background.Gradient2.Point1XPercent = 0
+        StateClicked.Background.Gradient2.Point1YPercent = 0
+        StateClicked.Background.Gradient2.Point2XPercent = 0
+        StateClicked.Background.Gradient2.Point2YPercent = 100
+        StateClicked.Background.Gradient1EndPercent = 100
+        StateClicked.Background.Style = bbsColor
+        StateClicked.Border.Style = bboNone
+        StateClicked.FontEx.Color = 2900284
+        StateClicked.FontEx.FontQuality = fqSystemClearType
+        StateClicked.FontEx.Name = 'consolas'
+        StateClicked.FontEx.Shadow = False
+        StateClicked.FontEx.ShadowRadius = 2
+        StateClicked.FontEx.ShadowOffsetX = 1
+        StateClicked.FontEx.ShadowOffsetY = 1
+        StateClicked.FontEx.Style = [fsBold, fsUnderline]
+        StateHover.Background.Color = 5162664
+        StateHover.Background.Gradient1.StartColor = 16744448
+        StateHover.Background.Gradient1.EndColor = 8404992
+        StateHover.Background.Gradient1.GradientType = gtRadial
+        StateHover.Background.Gradient1.Point1XPercent = 50
+        StateHover.Background.Gradient1.Point1YPercent = 100
+        StateHover.Background.Gradient1.Point2XPercent = 0
+        StateHover.Background.Gradient1.Point2YPercent = 0
+        StateHover.Background.Gradient2.StartColor = clWhite
+        StateHover.Background.Gradient2.EndColor = clBlack
+        StateHover.Background.Gradient2.GradientType = gtLinear
+        StateHover.Background.Gradient2.Point1XPercent = 0
+        StateHover.Background.Gradient2.Point1YPercent = 0
+        StateHover.Background.Gradient2.Point2XPercent = 0
+        StateHover.Background.Gradient2.Point2YPercent = 100
+        StateHover.Background.Gradient1EndPercent = 100
+        StateHover.Background.Style = bbsColor
+        StateHover.Border.Style = bboNone
+        StateHover.FontEx.Color = 2900284
+        StateHover.FontEx.FontQuality = fqSystemClearType
+        StateHover.FontEx.Name = 'consolas'
+        StateHover.FontEx.Shadow = False
+        StateHover.FontEx.ShadowRadius = 2
+        StateHover.FontEx.ShadowOffsetX = 1
+        StateHover.FontEx.ShadowOffsetY = 1
+        StateHover.FontEx.Style = [fsBold]
+        StateNormal.Background.Color = 5162664
+        StateNormal.Background.Gradient1.StartColor = 4194304
+        StateNormal.Background.Gradient1.EndColor = 8405056
+        StateNormal.Background.Gradient1.GradientType = gtLinear
+        StateNormal.Background.Gradient1.Point1XPercent = 0
+        StateNormal.Background.Gradient1.Point1YPercent = 0
+        StateNormal.Background.Gradient1.Point2XPercent = 0
+        StateNormal.Background.Gradient1.Point2YPercent = 100
+        StateNormal.Background.Gradient2.StartColor = 5162664
+        StateNormal.Background.Gradient2.EndColor = 4194304
+        StateNormal.Background.Gradient2.GradientType = gtRadial
+        StateNormal.Background.Gradient2.Point1XPercent = 50
+        StateNormal.Background.Gradient2.Point1YPercent = 100
+        StateNormal.Background.Gradient2.Point2XPercent = 0
+        StateNormal.Background.Gradient2.Point2YPercent = 0
+        StateNormal.Background.Gradient1EndPercent = 60
+        StateNormal.Background.Style = bbsColor
+        StateNormal.Border.Style = bboNone
+        StateNormal.FontEx.Color = 2900284
+        StateNormal.FontEx.FontQuality = fqSystemClearType
+        StateNormal.FontEx.Name = 'consolas'
+        StateNormal.FontEx.Shadow = False
+        StateNormal.FontEx.ShadowRadius = 2
+        StateNormal.FontEx.ShadowOffsetX = 1
+        StateNormal.FontEx.ShadowOffsetY = 1
+        StateNormal.FontEx.Style = []
+        StaticButton = False
+        TabOrder = 0
+      end
+      object cbMidiOut: TBCComboBox
+        AnchorSideLeft.Control = lbMidiIn
+        Cursor = crHandPoint
+        Left = 40
+        Height = 20
+        Top = 128
+        Width = 300
+        ItemIndex = -1
+        ArrowSize = 8
+        ArrowWidth = 16
+        FocusBorderColor = 5162664
+        FocusBorderOpacity = 0
+        DropDownBorderColor = 5162664
+        DropDownHighlight = 5162664
+        GlobalOpacity = 255
+        MemoryUsage = bmuHigh
+        Rounding.RoundX = 12
+        Rounding.RoundY = 12
+        StateClicked.Background.Color = 5162664
+        StateClicked.Background.Gradient1.StartColor = 8404992
+        StateClicked.Background.Gradient1.EndColor = 4194304
+        StateClicked.Background.Gradient1.GradientType = gtRadial
+        StateClicked.Background.Gradient1.Point1XPercent = 50
+        StateClicked.Background.Gradient1.Point1YPercent = 100
+        StateClicked.Background.Gradient1.Point2XPercent = 0
+        StateClicked.Background.Gradient1.Point2YPercent = 0
+        StateClicked.Background.Gradient2.StartColor = clWhite
+        StateClicked.Background.Gradient2.EndColor = clBlack
+        StateClicked.Background.Gradient2.GradientType = gtLinear
+        StateClicked.Background.Gradient2.Point1XPercent = 0
+        StateClicked.Background.Gradient2.Point1YPercent = 0
+        StateClicked.Background.Gradient2.Point2XPercent = 0
+        StateClicked.Background.Gradient2.Point2YPercent = 100
+        StateClicked.Background.Gradient1EndPercent = 100
+        StateClicked.Background.Style = bbsColor
+        StateClicked.Border.Style = bboNone
+        StateClicked.FontEx.Color = 2900284
+        StateClicked.FontEx.FontQuality = fqSystemClearType
+        StateClicked.FontEx.Name = 'consolas'
+        StateClicked.FontEx.Shadow = False
+        StateClicked.FontEx.ShadowRadius = 2
+        StateClicked.FontEx.ShadowOffsetX = 1
+        StateClicked.FontEx.ShadowOffsetY = 1
+        StateClicked.FontEx.Style = [fsBold, fsUnderline]
+        StateHover.Background.Color = 5162664
+        StateHover.Background.Gradient1.StartColor = 16744448
+        StateHover.Background.Gradient1.EndColor = 8404992
+        StateHover.Background.Gradient1.GradientType = gtRadial
+        StateHover.Background.Gradient1.Point1XPercent = 50
+        StateHover.Background.Gradient1.Point1YPercent = 100
+        StateHover.Background.Gradient1.Point2XPercent = 0
+        StateHover.Background.Gradient1.Point2YPercent = 0
+        StateHover.Background.Gradient2.StartColor = clWhite
+        StateHover.Background.Gradient2.EndColor = clBlack
+        StateHover.Background.Gradient2.GradientType = gtLinear
+        StateHover.Background.Gradient2.Point1XPercent = 0
+        StateHover.Background.Gradient2.Point1YPercent = 0
+        StateHover.Background.Gradient2.Point2XPercent = 0
+        StateHover.Background.Gradient2.Point2YPercent = 100
+        StateHover.Background.Gradient1EndPercent = 100
+        StateHover.Background.Style = bbsColor
+        StateHover.Border.Style = bboNone
+        StateHover.FontEx.Color = 2900284
+        StateHover.FontEx.FontQuality = fqSystemClearType
+        StateHover.FontEx.Name = 'consolas'
+        StateHover.FontEx.Shadow = False
+        StateHover.FontEx.ShadowRadius = 2
+        StateHover.FontEx.ShadowOffsetX = 1
+        StateHover.FontEx.ShadowOffsetY = 1
+        StateHover.FontEx.Style = [fsBold]
+        StateNormal.Background.Color = 5162664
+        StateNormal.Background.Gradient1.StartColor = 4194304
+        StateNormal.Background.Gradient1.EndColor = 8405056
+        StateNormal.Background.Gradient1.GradientType = gtLinear
+        StateNormal.Background.Gradient1.Point1XPercent = 0
+        StateNormal.Background.Gradient1.Point1YPercent = 0
+        StateNormal.Background.Gradient1.Point2XPercent = 0
+        StateNormal.Background.Gradient1.Point2YPercent = 100
+        StateNormal.Background.Gradient2.StartColor = 5162664
+        StateNormal.Background.Gradient2.EndColor = 4194304
+        StateNormal.Background.Gradient2.GradientType = gtRadial
+        StateNormal.Background.Gradient2.Point1XPercent = 50
+        StateNormal.Background.Gradient2.Point1YPercent = 100
+        StateNormal.Background.Gradient2.Point2XPercent = 0
+        StateNormal.Background.Gradient2.Point2YPercent = 0
+        StateNormal.Background.Gradient1EndPercent = 60
+        StateNormal.Background.Style = bbsColor
+        StateNormal.Border.Style = bboNone
+        StateNormal.FontEx.Color = 2900284
+        StateNormal.FontEx.FontQuality = fqSystemClearType
+        StateNormal.FontEx.Name = 'consolas'
+        StateNormal.FontEx.Shadow = False
+        StateNormal.FontEx.ShadowRadius = 2
+        StateNormal.FontEx.ShadowOffsetX = 1
+        StateNormal.FontEx.ShadowOffsetY = 1
+        StateNormal.FontEx.Style = []
+        StaticButton = False
+        TabOrder = 1
+      end
+      object lbMidiIn: TLabel
+        Left = 40
+        Height = 14
+        Top = 32
+        Width = 70
+        Alignment = taCenter
+        AutoSize = False
+        Caption = 'MIDI In:'
+        Color = 5162664
+        ParentColor = False
+        Transparent = False
+      end
+      object lbMidiOut: TLabel
+        AnchorSideLeft.Control = lbMidiIn
+        Left = 40
+        Height = 14
+        Top = 104
+        Width = 70
+        Alignment = taCenter
+        AutoSize = False
+        Caption = 'MIDI Out:'
+        Color = 5162664
+        ParentColor = False
+        Transparent = False
+      end
     end
   end
   object pnHint: TPanel
@@ -9695,6 +9919,7 @@ object frmMain: TfrmMain
       Color = 5162664
       ParentColor = False
       Transparent = False
+      Visible = False
     end
   end
   object SelectDirectoryDialog1: TSelectDirectoryDialog

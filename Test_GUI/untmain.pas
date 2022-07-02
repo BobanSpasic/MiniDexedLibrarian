@@ -5,10 +5,10 @@ unit untMain;
 interface
 
 uses
-  Classes, SysUtils, Forms, Controls, Graphics, Dialogs, StdCtrls, ComCtrls,
+  Classes, SysUtils, StrUtils, Forms, Controls, Graphics, Dialogs, StdCtrls, ComCtrls,
   ExtCtrls, JPP.Edit, atshapeline, cyPageControl, ECSlider, ECSwitch,
   ECEditBtns, BCComboBox, untFileUtils, untDX7Bank, untDX7Voice,
-  untDX7Utils, untMiniINI;
+  untDX7Utils, untMiniINI, MIDI;
 
 type
 
@@ -16,8 +16,12 @@ type
 
   TfrmMain = class(TForm)
     btSelectDir: TECSpeedBtnPlus;
+    cbMidiOut: TBCComboBox;
+    cbMidiIn: TBCComboBox;
     Label9: TLabel;
     lbHint: TLabel;
+    lbMidiIn: TLabel;
+    lbMidiOut: TLabel;
     OpenPerformanceDialog1: TOpenDialog;
     edbtSelDir: TECEditBtn;
     cbMidiCh1: TBCComboBox;
@@ -316,7 +320,7 @@ type
     procedure lbVoicesStartDrag(Sender: TObject; var DragObject: TDragObject);
     procedure slSliderChange(Sender: TObject);
     procedure slSliderMouseUp(Sender: TObject; Button: TMouseButton;
-      Shift: TShiftState; X, Y: Integer);
+      Shift: TShiftState; X, Y: integer);
     procedure tbbtLoadPerformanceClick(Sender: TObject);
     procedure tbbtSaveClick(Sender: TObject);
     procedure RefreshSlots;
@@ -509,7 +513,16 @@ begin
   pcBankPerformanceSlots.ActivePage := tsBankSlots;
   RefreshSlots;
   pnHint.BringToFront;
-  lbHint.Caption:='';
+  lbHint.Caption := '';
+
+  //fill MIDI ports to ComboBoxes
+  cbMidiIn.Items.Clear;
+  for i := 0 to MidiInput.Devices.Count - 1 do
+    cbMidiIn.Items.Add(MidiInput.Devices[i]);
+
+  cbMidiOut.Items.Clear;
+  for i := 0 to MidiOutput.Devices.Count - 1 do
+    cbMidiOut.Items.Add(MidiOutput.Devices[i]);
 end;
 
 procedure TfrmMain.FormShow(Sender: TObject);
@@ -588,20 +601,31 @@ var
   ctrl: TControl;
 begin
   pt := ScreenToClient(Mouse.CursorPos);
-  lbHint.Caption := Format('%.3d', [trunc(TECSlider(Sender).Position)]);
   ctrl := ControlAtPos(pt, [capfRecursive, capfAllowWinControls]);
-    if Assigned(ctrl) then
-    begin
-        pnHint.Left := ctrl.Left + ctrl.Width - lbHint.Width
-    end
-    else
-        pnHint.Left := pt.Y;
-  pnHint.Top := pt.Y;
-  lbHint.Visible := True;
+  if ctrl.Name.Contains('Note') then
+    lbHint.Caption := PadLeft(GetNoteName(trunc(TECSlider(Sender).Position)), 4)
+  else
+  if ctrl.Name.Contains('Pan') then
+  begin
+    if trunc(TECSlider(Sender).Position) = 64 then lbHint.Caption := ' <C>';
+    if trunc(TECSlider(Sender).Position) < 64 then
+      lbHint.Caption := Format('L %.2d', [64 - trunc(TECSlider(Sender).Position)]);
+    if trunc(TECSlider(Sender).Position) > 64 then
+      lbHint.Caption := Format('R %.2d', [trunc(TECSlider(Sender).Position) - 64]);
+  end
+  else
+    lbHint.Caption := PadLeft(Format('%.3d', [trunc(TECSlider(Sender).Position)]), 4);
+  if Assigned(ctrl) then
+  begin
+    pnHint.Parent := ctrl.Parent;
+    pnHint.Left := ctrl.Left + ctrl.Width - lbHint.Width;
+    pnHint.Top := ctrl.Top + (ctrl.Height div 2) - (lbHint.Height div 2);
+    lbHint.Visible := True;
+  end;
 end;
 
 procedure TfrmMain.slSliderMouseUp(Sender: TObject; Button: TMouseButton;
-  Shift: TShiftState; X, Y: Integer);
+  Shift: TShiftState; X, Y: integer);
 begin
   lbHint.Visible := False;
 end;
