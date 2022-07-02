@@ -297,7 +297,7 @@ begin
   FMiniINI.Add('ReverbLowDamp=50');
   FMiniINI.Add('ReverbLowPass=30');
   FMiniINI.Add('ReverbDiffusion=65');
-  FMiniINI.Add('ReverbLevel=99');
+  FMiniINI.Add('ReverbLevel=80');
 end;
 
 end.

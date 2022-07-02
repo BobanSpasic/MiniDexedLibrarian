@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, StdCtrls, ComCtrls,
-  ExtCtrls, JPP.Edit, atshapeline, cyPageControl, attabs, ECSlider, ECSwitch,
+  ExtCtrls, JPP.Edit, atshapeline, cyPageControl, ECSlider, ECSwitch,
   ECEditBtns, BCComboBox, untFileUtils, untDX7Bank, untDX7Voice,
   untDX7Utils, untMiniINI;
 
@@ -15,8 +15,12 @@ type
   { TfrmMain }
 
   TfrmMain = class(TForm)
-    cbMidiCh1: TBCComboBox;
     btSelectDir: TECSpeedBtnPlus;
+    Label9: TLabel;
+    lbHint: TLabel;
+    OpenPerformanceDialog1: TOpenDialog;
+    edbtSelDir: TECEditBtn;
+    cbMidiCh1: TBCComboBox;
     cbMidiCh2: TBCComboBox;
     cbMidiCh3: TBCComboBox;
     cbMidiCh4: TBCComboBox;
@@ -40,7 +44,8 @@ type
     Label6: TLabel;
     Label7: TLabel;
     Label8: TLabel;
-    OpenPerformanceDialog1: TOpenDialog;
+    pnHint: TPanel;
+    pnPEffects: TPanel;
     pnPSlot1: TPanel;
     pnPSlot2: TPanel;
     pnPSlot3: TPanel;
@@ -49,6 +54,7 @@ type
     pnPSlot6: TPanel;
     pnPSlot7: TPanel;
     pnPSlot8: TPanel;
+    pnPVoice1: TPanel;
     pnPVoice2: TPanel;
     pnPVoice3: TPanel;
     pnPVoice4: TPanel;
@@ -56,6 +62,7 @@ type
     pnPVoice6: TPanel;
     pnPVoice7: TPanel;
     pnPVoice8: TPanel;
+    SavePerformanceDialog1: TSaveDialog;
     ShapeLine1: TShapeLine;
     ShapeLine2: TShapeLine;
     ShapeLine3: TShapeLine;
@@ -64,6 +71,8 @@ type
     ShapeLine6: TShapeLine;
     ShapeLine7: TShapeLine;
     ShapeLine8: TShapeLine;
+    ShapeLine9: TShapeLine;
+    slCutoff1: TECSlider;
     slCutoff2: TECSlider;
     slCutoff3: TECSlider;
     slCutoff4: TECSlider;
@@ -71,6 +80,7 @@ type
     slCutoff6: TECSlider;
     slCutoff7: TECSlider;
     slCutoff8: TECSlider;
+    slDetune1: TECSlider;
     slDetune2: TECSlider;
     slDetune3: TECSlider;
     slDetune4: TECSlider;
@@ -78,6 +88,7 @@ type
     slDetune6: TECSlider;
     slDetune7: TECSlider;
     slDetune8: TECSlider;
+    slHiNote1: TECSlider;
     slHiNote2: TECSlider;
     slHiNote3: TECSlider;
     slHiNote4: TECSlider;
@@ -85,6 +96,7 @@ type
     slHiNote6: TECSlider;
     slHiNote7: TECSlider;
     slHiNote8: TECSlider;
+    slLoNote1: TECSlider;
     slLoNote2: TECSlider;
     slLoNote3: TECSlider;
     slLoNote4: TECSlider;
@@ -92,6 +104,7 @@ type
     slLoNote6: TECSlider;
     slLoNote7: TECSlider;
     slLoNote8: TECSlider;
+    slPan1: TECSlider;
     slPan2: TECSlider;
     slPan3: TECSlider;
     slPan4: TECSlider;
@@ -99,6 +112,7 @@ type
     slPan6: TECSlider;
     slPan7: TECSlider;
     slPan8: TECSlider;
+    slPitchBendRange1: TECSlider;
     slPitchBendRange2: TECSlider;
     slPitchBendRange3: TECSlider;
     slPitchBendRange4: TECSlider;
@@ -106,6 +120,7 @@ type
     slPitchBendRange6: TECSlider;
     slPitchBendRange7: TECSlider;
     slPitchBendRange8: TECSlider;
+    slPitchBendStep1: TECSlider;
     slPitchBendStep2: TECSlider;
     slPitchBendStep3: TECSlider;
     slPitchBendStep4: TECSlider;
@@ -113,6 +128,7 @@ type
     slPitchBendStep6: TECSlider;
     slPitchBendStep7: TECSlider;
     slPitchBendStep8: TECSlider;
+    slPortaTime1: TECSlider;
     slPortaTime2: TECSlider;
     slPortaTime3: TECSlider;
     slPortaTime4: TECSlider;
@@ -120,6 +136,10 @@ type
     slPortaTime6: TECSlider;
     slPortaTime7: TECSlider;
     slPortaTime8: TECSlider;
+    slResonance1: TECSlider;
+    slReverbHighDamp: TECSlider;
+    slReverbDiffusion: TECSlider;
+    slReverbLowDamp: TECSlider;
     slResonance2: TECSlider;
     slResonance3: TECSlider;
     slResonance4: TECSlider;
@@ -127,10 +147,9 @@ type
     slResonance6: TECSlider;
     slResonance7: TECSlider;
     slResonance8: TECSlider;
+    slReverbLevel: TECSlider;
+    slReverbSize: TECSlider;
     slReverbSend1: TECSlider;
-    slPitchBendRange1: TECSlider;
-    slPitchBendStep1: TECSlider;
-    slPortaTime1: TECSlider;
     slReverbSend2: TECSlider;
     slReverbSend3: TECSlider;
     slReverbSend4: TECSlider;
@@ -138,6 +157,8 @@ type
     slReverbSend6: TECSlider;
     slReverbSend7: TECSlider;
     slReverbSend8: TECSlider;
+    slReverbLowPass: TECSlider;
+    slTranspose1: TECSlider;
     slTranspose2: TECSlider;
     slTranspose3: TECSlider;
     slTranspose4: TECSlider;
@@ -146,13 +167,6 @@ type
     slTranspose7: TECSlider;
     slTranspose8: TECSlider;
     slVolume1: TECSlider;
-    slPan1: TECSlider;
-    slDetune1: TECSlider;
-    slCutoff1: TECSlider;
-    slResonance1: TECSlider;
-    slLoNote1: TECSlider;
-    slHiNote1: TECSlider;
-    slTranspose1: TECSlider;
     slVolume2: TECSlider;
     slVolume3: TECSlider;
     slVolume4: TECSlider;
@@ -160,6 +174,7 @@ type
     slVolume6: TECSlider;
     slVolume7: TECSlider;
     slVolume8: TECSlider;
+    swPortaGlissando1: TECSwitch;
     swPortaGlissando2: TECSwitch;
     swPortaGlissando3: TECSwitch;
     swPortaGlissando4: TECSwitch;
@@ -167,9 +182,6 @@ type
     swPortaGlissando6: TECSwitch;
     swPortaGlissando7: TECSwitch;
     swPortaGlissando8: TECSwitch;
-    swPortaMode1: TECSwitch;
-    swPortaGlissando1: TECSwitch;
-    edbtSelDir: TECEditBtn;
     edSlot01: TJppEdit;
     edSlot02: TJppEdit;
     edSlot03: TJppEdit;
@@ -189,7 +201,6 @@ type
     edSlot17: TJppEdit;
     edSlot18: TJppEdit;
     edSlot19: TJppEdit;
-    edPSlot01: TJppEdit;
     edSlot20: TJppEdit;
     edSlot21: TJppEdit;
     edSlot22: TJppEdit;
@@ -200,10 +211,11 @@ type
     edSlot27: TJppEdit;
     edSlot28: TJppEdit;
     edSlot29: TJppEdit;
-    edPSlot02: TJppEdit;
     edSlot30: TJppEdit;
     edSlot31: TJppEdit;
     edSlot32: TJppEdit;
+    edPSlot01: TJppEdit;
+    edPSlot02: TJppEdit;
     edPSlot03: TJppEdit;
     edPSlot04: TJppEdit;
     edPSlot05: TJppEdit;
@@ -214,7 +226,6 @@ type
     lbChecksum: TLabel;
     lbFiles: TListBox;
     mmLog: TMemo;
-    pnPVoice1: TPanel;
     pcBankPerformanceSlots: TcyPageControl;
     pnBankPerformanceSlots: TPanel;
     pnExplorer: TPanel;
@@ -250,10 +261,10 @@ type
     pnSlot27: TPanel;
     pnSlot28: TPanel;
     pnSlot29: TPanel;
-    pnPSlot02: TPanel;
     pnSlot30: TPanel;
     pnSlot31: TPanel;
     pnSlot32: TPanel;
+    pnPSlot02: TPanel;
     pnPSlot03: TPanel;
     pnPSlot04: TPanel;
     pnPSlot05: TPanel;
@@ -269,6 +280,7 @@ type
     sl4: TShapeLine;
     Splitter1: TSplitter;
     Splitter2: TSplitter;
+    swPortaMode1: TECSwitch;
     swPortaMode2: TECSwitch;
     swPortaMode3: TECSwitch;
     swPortaMode4: TECSwitch;
@@ -276,6 +288,8 @@ type
     swPortaMode6: TECSwitch;
     swPortaMode7: TECSwitch;
     swPortaMode8: TECSwitch;
+    swReverbEnable: TECSwitch;
+    swCompressorEnable: TECSwitch;
     tbBank: TToolBar;
     tbbtOpenBank: TToolButton;
     tbbtSave: TToolButton;
@@ -288,20 +302,25 @@ type
     tsLibrarian: TTabSheet;
     tsPerformanceEdit: TTabSheet;
     procedure btSelectDirClick(Sender: TObject);
-    procedure edPSlotDragDrop(Sender, Source: TObject; X, Y: Integer);
-    procedure edPSlotDragOver(Sender, Source: TObject; X, Y: Integer;
-      State: TDragState; var Accept: Boolean);
+    procedure edPSlotDragDrop(Sender, Source: TObject; X, Y: integer);
+    procedure edPSlotDragOver(Sender, Source: TObject; X, Y: integer;
+      State: TDragState; var Accept: boolean);
     procedure edSlotDragDrop(Sender, Source: TObject; X, Y: integer);
     procedure edSlotDragOver(Sender, Source: TObject; X, Y: integer;
       State: TDragState; var Accept: boolean);
     procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
     procedure FormCreate(Sender: TObject);
+    procedure FormShow(Sender: TObject);
     procedure lbFilesClick(Sender: TObject);
     procedure lbFilesStartDrag(Sender: TObject; var DragObject: TDragObject);
     procedure lbVoicesStartDrag(Sender: TObject; var DragObject: TDragObject);
+    procedure slSliderChange(Sender: TObject);
+    procedure slSliderMouseUp(Sender: TObject; Button: TMouseButton;
+      Shift: TShiftState; X, Y: Integer);
     procedure tbbtLoadPerformanceClick(Sender: TObject);
     procedure tbbtSaveClick(Sender: TObject);
     procedure RefreshSlots;
+    procedure tbbtSavePerformanceClick(Sender: TObject);
 
   private
 
@@ -337,7 +356,7 @@ begin
   end;
 end;
 
-procedure TfrmMain.edPSlotDragDrop(Sender, Source: TObject; X, Y: Integer);
+procedure TfrmMain.edPSlotDragDrop(Sender, Source: TObject; X, Y: integer);
 var
   dmp: TMemoryStream;
   f: string;
@@ -360,7 +379,8 @@ begin
       begin
         tmpVoice := TDX7VoiceContainer.Create;
         FBankDX.GetVoice(lbVoices.ItemIndex + 1, tmpVoice);
-        FPerfSlotsDX[(Sender as TJppEdit).Tag + 1].SetVoiceParams(tmpVoice.GetVoiceParams);
+        FPerfSlotsDX[(Sender as TJppEdit).Tag + 1].SetVoiceParams(
+          tmpVoice.GetVoiceParams);
         tmpVoice.Free;
       end;
       i := 0;
@@ -368,7 +388,8 @@ begin
       begin
         tmpVoice := TDX7VoiceContainer.Create;
         tmpVoice.LoadExpandedVoiceFromStream(dmp, j);
-        FPerfSlotsDX[(Sender as TJppEdit).Tag + 1].SetVoiceParams(tmpVoice.GetVoiceParams);
+        FPerfSlotsDX[(Sender as TJppEdit).Tag + 1].SetVoiceParams(
+          tmpVoice.GetVoiceParams);
         tmpVoice.Free;
       end;
       RefreshSlots;
@@ -377,8 +398,8 @@ begin
   end;
 end;
 
-procedure TfrmMain.edPSlotDragOver(Sender, Source: TObject; X, Y: Integer;
-  State: TDragState; var Accept: Boolean);
+procedure TfrmMain.edPSlotDragOver(Sender, Source: TObject; X, Y: integer;
+  State: TDragState; var Accept: boolean);
 begin
   if (Sender = lbVoices) and (dragItem <> -1) then Accept := True;
 end;
@@ -486,6 +507,14 @@ begin
   end;
   pcMain.ActivePage := tsLibrarian;
   pcBankPerformanceSlots.ActivePage := tsBankSlots;
+  RefreshSlots;
+  pnHint.BringToFront;
+  lbHint.Caption:='';
+end;
+
+procedure TfrmMain.FormShow(Sender: TObject);
+begin
+
 end;
 
 procedure TfrmMain.lbFilesClick(Sender: TObject);
@@ -551,6 +580,30 @@ procedure TfrmMain.lbVoicesStartDrag(Sender: TObject; var DragObject: TDragObjec
 begin
   if lbVoices.ItemIndex <> -1 then
     dragItem := lbVoices.ItemIndex;
+end;
+
+procedure TfrmMain.slSliderChange(Sender: TObject);
+var
+  pt: TPoint;
+  ctrl: TControl;
+begin
+  pt := ScreenToClient(Mouse.CursorPos);
+  lbHint.Caption := Format('%.3d', [trunc(TECSlider(Sender).Position)]);
+  ctrl := ControlAtPos(pt, [capfRecursive, capfAllowWinControls]);
+    if Assigned(ctrl) then
+    begin
+        pnHint.Left := ctrl.Left + ctrl.Width - lbHint.Width
+    end
+    else
+        pnHint.Left := pt.Y;
+  pnHint.Top := pt.Y;
+  lbHint.Visible := True;
+end;
+
+procedure TfrmMain.slSliderMouseUp(Sender: TObject; Button: TMouseButton;
+  Shift: TShiftState; X, Y: Integer);
+begin
+  lbHint.Visible := False;
 end;
 
 procedure TfrmMain.tbbtLoadPerformanceClick(Sender: TObject);
@@ -773,12 +826,21 @@ begin
     hexstring := ini.ReadString('VoiceData8', '');
     if hexstring <> '' then
     begin
-      hexstream.Position := 0;
       ExpandedHexToStream(hexstring, hexstream);
       FPerfSlotsDX[8].LoadExpandedVoiceFromStream(hexstream, 0);
     end
     else
       FPerfSlotsDX[8].InitVoice;
+
+    swCompressorEnable.Checked := ini.ReadInteger('CompressorEnable', 1) = 1;
+    swReverbEnable.Checked := ini.ReadInteger('ReverbEnable', 1) = 1;
+    slReverbSize.Position := ini.ReadInteger('ReverbSize', 70);
+    slReverbHighDamp.Position := ini.ReadInteger('ReverbHighDamp', 50);
+    slReverbLowDamp.Position := ini.ReadInteger('ReverbLowDamp', 50);
+    slReverbLowPass.Position := ini.ReadInteger('ReverbLowPass', 30);
+    slReverbDiffusion.Position := ini.ReadInteger('ReverbDiffusion', 65);
+    slReverbLevel.Position := ini.ReadInteger('ReverbLevel', 80);
+
     RefreshSlots;
     hexstream.Free;
     ini.Init;
@@ -816,6 +878,193 @@ begin
   begin
     TJppEdit(FindComponent(Format('edSlot%.2d', [i]))).Text :=
       FSlotsDX.GetVoiceName(i);
+  end;
+end;
+
+procedure TfrmMain.tbbtSavePerformanceClick(Sender: TObject);
+var
+  ini: TMiniINIFile;
+  hexstream: TMemoryStream;
+  hexstring: string;
+begin
+  if SavePerformanceDialog1.Execute then
+  begin
+    ini := TMiniINIFile.Create;
+    ini.Init;
+    //ini.LoadFromFile(OpenPerformanceDialog1.FileName);
+    hexstream := TMemoryStream.Create;
+
+    ini.WriteInteger('MIDIChannel1', cbMidiCh1.ItemIndex);
+    ini.WriteInteger('Volume1', trunc(slVolume1.Position));
+    ini.WriteInteger('Pan1', trunc(slPan1.Position));
+    ini.WriteInteger('Detune1', trunc(slDetune1.Position));
+    ini.WriteInteger('Cutoff1', trunc(slCutoff1.Position));
+    ini.WriteInteger('Resonance1', trunc(slResonance1.Position));
+    ini.WriteInteger('NoteLimitLow1', trunc(slLoNote1.Position));
+    ini.WriteInteger('NoteLimitHigh1', trunc(slHiNote1.Position));
+    ini.WriteInteger('NoteShift1', trunc(slTranspose1.Position));
+    ini.WriteInteger('ReverbSend1', trunc(slReverbSend1.Position));
+    ini.WriteInteger('PitchBendRange1', trunc(slPitchBendRange1.Position));
+    ini.WriteInteger('PitchBendStep1', trunc(slPitchBendStep1.Position));
+    ini.WriteInteger('PortamentoMode1', byte(swPortaMode1.Checked));
+    ini.WriteInteger('PortamentoGlissando1', byte(swPortaGlissando1.Checked));
+    ini.WriteInteger('PortamentoTime1', trunc(slPortaTime1.Position));
+    FPerfSlotsDX[1].SaveExpandedVoiceToStream(hexstream);
+    hexstring := StreamToExpandedHex(hexstream);
+    ini.WriteString('VoiceData1', hexstring);
+
+    ini.WriteInteger('MIDIChannel2', cbMidiCh2.ItemIndex);
+    ini.WriteInteger('Volume2', trunc(slVolume2.Position));
+    ini.WriteInteger('Pan2', trunc(slPan2.Position));
+    ini.WriteInteger('Detune2', trunc(slDetune2.Position));
+    ini.WriteInteger('Cutoff2', trunc(slCutoff2.Position));
+    ini.WriteInteger('Resonance2', trunc(slResonance2.Position));
+    ini.WriteInteger('NoteLimitLow2', trunc(slLoNote2.Position));
+    ini.WriteInteger('NoteLimitHigh2', trunc(slHiNote2.Position));
+    ini.WriteInteger('NoteShift2', trunc(slTranspose2.Position));
+    ini.WriteInteger('ReverbSend2', trunc(slReverbSend2.Position));
+    ini.WriteInteger('PitchBendRange2', trunc(slPitchBendRange2.Position));
+    ini.WriteInteger('PitchBendStep2', trunc(slPitchBendStep2.Position));
+    ini.WriteInteger('PortamentoMode2', byte(swPortaMode2.Checked));
+    ini.WriteInteger('PortamentoGlissando2', byte(swPortaGlissando2.Checked));
+    ini.WriteInteger('PortamentoTime2', trunc(slPortaTime2.Position));
+    FPerfSlotsDX[2].SaveExpandedVoiceToStream(hexstream);
+    hexstring := StreamToExpandedHex(hexstream);
+    ini.WriteString('VoiceData2', hexstring);
+
+    ini.WriteInteger('MIDIChannel3', cbMidiCh3.ItemIndex);
+    ini.WriteInteger('Volume3', trunc(slVolume3.Position));
+    ini.WriteInteger('Pan3', trunc(slPan3.Position));
+    ini.WriteInteger('Detune3', trunc(slDetune3.Position));
+    ini.WriteInteger('Cutoff3', trunc(slCutoff3.Position));
+    ini.WriteInteger('Resonance3', trunc(slResonance3.Position));
+    ini.WriteInteger('NoteLimitLow3', trunc(slLoNote3.Position));
+    ini.WriteInteger('NoteLimitHigh3', trunc(slHiNote3.Position));
+    ini.WriteInteger('NoteShift3', trunc(slTranspose3.Position));
+    ini.WriteInteger('ReverbSend3', trunc(slReverbSend3.Position));
+    ini.WriteInteger('PitchBendRange3', trunc(slPitchBendRange3.Position));
+    ini.WriteInteger('PitchBendStep3', trunc(slPitchBendStep3.Position));
+    ini.WriteInteger('PortamentoMode3', byte(swPortaMode3.Checked));
+    ini.WriteInteger('PortamentoGlissando3', byte(swPortaGlissando3.Checked));
+    ini.WriteInteger('PortamentoTime3', trunc(slPortaTime3.Position));
+    FPerfSlotsDX[3].SaveExpandedVoiceToStream(hexstream);
+    hexstring := StreamToExpandedHex(hexstream);
+    ini.WriteString('VoiceData3', hexstring);
+
+    ini.WriteInteger('MIDIChannel4', cbMidiCh4.ItemIndex);
+    ini.WriteInteger('Volume4', trunc(slVolume4.Position));
+    ini.WriteInteger('Pan4', trunc(slPan4.Position));
+    ini.WriteInteger('Detune4', trunc(slDetune4.Position));
+    ini.WriteInteger('Cutoff4', trunc(slCutoff4.Position));
+    ini.WriteInteger('Resonance4', trunc(slResonance4.Position));
+    ini.WriteInteger('NoteLimitLow4', trunc(slLoNote4.Position));
+    ini.WriteInteger('NoteLimitHigh4', trunc(slHiNote4.Position));
+    ini.WriteInteger('NoteShift4', trunc(slTranspose4.Position));
+    ini.WriteInteger('ReverbSend4', trunc(slReverbSend4.Position));
+    ini.WriteInteger('PitchBendRange4', trunc(slPitchBendRange4.Position));
+    ini.WriteInteger('PitchBendStep4', trunc(slPitchBendStep4.Position));
+    ini.WriteInteger('PortamentoMode4', byte(swPortaMode4.Checked));
+    ini.WriteInteger('PortamentoGlissando4',
+      byte(swPortaGlissando4.Checked));
+    ini.WriteInteger('PortamentoTime4', trunc(slPortaTime4.Position));
+    FPerfSlotsDX[4].SaveExpandedVoiceToStream(hexstream);
+    hexstring := StreamToExpandedHex(hexstream);
+    ini.WriteString('VoiceData4', hexstring);
+
+    ini.WriteInteger('MIDIChannel5', cbMidiCh5.ItemIndex);
+    ini.WriteInteger('Volume5', trunc(slVolume5.Position));
+    ini.WriteInteger('Pan5', trunc(slPan5.Position));
+    ini.WriteInteger('Detune5', trunc(slDetune5.Position));
+    ini.WriteInteger('Cutoff5', trunc(slCutoff5.Position));
+    ini.WriteInteger('Resonance5', trunc(slResonance5.Position));
+    ini.WriteInteger('NoteLimitLow5', trunc(slLoNote5.Position));
+    ini.WriteInteger('NoteLimitHigh5', trunc(slHiNote5.Position));
+    ini.WriteInteger('NoteShift5', trunc(slTranspose5.Position));
+    ini.WriteInteger('ReverbSend5', trunc(slReverbSend5.Position));
+    ini.WriteInteger('PitchBendRange5',
+      trunc(slPitchBendRange5.Position));
+    ini.WriteInteger('PitchBendStep5', trunc(slPitchBendStep5.Position));
+    ini.WriteInteger('PortamentoMode5', byte(swPortaMode5.Checked));
+    ini.WriteInteger('PortamentoGlissando5',
+      byte(swPortaGlissando5.Checked));
+    ini.WriteInteger('PortamentoTime5', trunc(slPortaTime5.Position));
+    FPerfSlotsDX[5].SaveExpandedVoiceToStream(hexstream);
+    hexstring := StreamToExpandedHex(hexstream);
+    ini.WriteString('VoiceData5', hexstring);
+
+    ini.WriteInteger('MIDIChannel6', cbMidiCh6.ItemIndex);
+    ini.WriteInteger('Volume6', trunc(slVolume6.Position));
+    ini.WriteInteger('Pan6', trunc(slPan6.Position));
+    ini.WriteInteger('Detune6', trunc(slDetune6.Position));
+    ini.WriteInteger('Cutoff6', trunc(slCutoff6.Position));
+    ini.WriteInteger('Resonance6', trunc(slResonance6.Position));
+    ini.WriteInteger('NoteLimitLow6', trunc(slLoNote6.Position));
+    ini.WriteInteger('NoteLimitHigh6', trunc(slHiNote6.Position));
+    ini.WriteInteger('NoteShift6', trunc(slTranspose6.Position));
+    ini.WriteInteger('ReverbSend6', trunc(slReverbSend6.Position));
+    ini.WriteInteger('PitchBendRange6',
+      trunc(slPitchBendRange6.Position));
+    ini.WriteInteger('PitchBendStep6',
+      trunc(slPitchBendStep6.Position));
+    ini.WriteInteger('PortamentoMode6', byte(swPortaMode6.Checked));
+    ini.WriteInteger('PortamentoGlissando6',
+      byte(swPortaGlissando6.Checked));
+    ini.WriteInteger('PortamentoTime6',
+      trunc(slPortaTime6.Position));
+    FPerfSlotsDX[6].SaveExpandedVoiceToStream(hexstream);
+    hexstring := StreamToExpandedHex(hexstream);
+    ini.WriteString('VoiceData6', hexstring);
+
+    ini.WriteInteger('MIDIChannel7', cbMidiCh7.ItemIndex);
+    ini.WriteInteger('Volume7', trunc(slVolume7.Position));
+    ini.WriteInteger('Pan7', trunc(slPan7.Position));
+    ini.WriteInteger('Detune7', trunc(slDetune7.Position));
+    ini.WriteInteger('Cutoff7', trunc(slCutoff7.Position));
+    ini.WriteInteger('Resonance7', trunc(slResonance7.Position));
+    ini.WriteInteger('NoteLimitLow7', trunc(slLoNote7.Position));
+    ini.WriteInteger('NoteLimitHigh7', trunc(slHiNote7.Position));
+    ini.WriteInteger('NoteShift7', trunc(slTranspose7.Position));
+    ini.WriteInteger('ReverbSend7', trunc(slReverbSend7.Position));
+    ini.WriteInteger('PitchBendRange7', trunc(slPitchBendRange7.Position));
+    ini.WriteInteger('PitchBendStep7', trunc(slPitchBendStep7.Position));
+    ini.WriteInteger('PortamentoMode7', byte(swPortaMode7.Checked));
+    ini.WriteInteger('PortamentoGlissando7', byte(swPortaGlissando7.Checked));
+    ini.WriteInteger('PortamentoTime7', trunc(slPortaTime7.Position));
+    FPerfSlotsDX[7].SaveExpandedVoiceToStream(hexstream);
+    hexstring := StreamToExpandedHex(hexstream);
+    ini.WriteString('VoiceData7', hexstring);
+
+    ini.WriteInteger('MIDIChannel8', cbMidiCh8.ItemIndex);
+    ini.WriteInteger('Volume8', trunc(slVolume8.Position));
+    ini.WriteInteger('Pan8', trunc(slPan8.Position));
+    ini.WriteInteger('Detune8', trunc(slDetune8.Position));
+    ini.WriteInteger('Cutoff8', trunc(slCutoff8.Position));
+    ini.WriteInteger('Resonance8', trunc(slResonance8.Position));
+    ini.WriteInteger('NoteLimitLow8', trunc(slLoNote8.Position));
+    ini.WriteInteger('NoteLimitHigh8', trunc(slHiNote8.Position));
+    ini.WriteInteger('NoteShift8', trunc(slTranspose8.Position));
+    ini.WriteInteger('ReverbSend8', trunc(slReverbSend8.Position));
+    ini.WriteInteger('PitchBendRange8', trunc(slPitchBendRange8.Position));
+    ini.WriteInteger('PitchBendStep8', trunc(slPitchBendStep8.Position));
+    ini.WriteInteger('PortamentoMode8', byte(swPortaMode8.Checked));
+    ini.WriteInteger('PortamentoGlissando8', byte(swPortaGlissando8.Checked));
+    ini.WriteInteger('PortamentoTime8', trunc(slPortaTime8.Position));
+    FPerfSlotsDX[8].SaveExpandedVoiceToStream(hexstream);
+    hexstring := StreamToExpandedHex(hexstream);
+    ini.WriteString('VoiceData8', hexstring);
+
+    ini.WriteInteger('CompressorEnable', byte(swCompressorEnable.Checked));
+    ini.WriteInteger('ReverbEnable', byte(swReverbEnable.Checked));
+    ini.WriteInteger('ReverbSize', Trunc(slReverbSize.Position));
+    ini.WriteInteger('ReverbHighDamp', Trunc(slReverbHighDamp.Position));
+    ini.WriteInteger('ReverbLowDamp', Trunc(slReverbLowDamp.Position));
+    ini.WriteInteger('ReverbLowPass', Trunc(slReverbLowPass.Position));
+    ini.WriteInteger('ReverbDiffusion', Trunc(slReverbDiffusion.Position));
+    ini.WriteInteger('ReverbLevel', Trunc(slReverbLevel.Position));
+
+    ini.SaveToFile(SavePerformanceDialog1.FileName);
+    ini.Free;
+    hexstream.Free;
   end;
 end;
 

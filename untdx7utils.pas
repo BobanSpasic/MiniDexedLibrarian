@@ -85,6 +85,7 @@ function ContainsDXData(dmp: TMemoryStream; var StartPos: integer;
   const Report: TStrings): boolean;
 function Printable(c: char): char;
 function ExpandedHexToStream(aHex: string; var aStream: TMemoryStream): boolean;
+function StreamToExpandedHex(var aStream: TMemoryStream): string;
 
 implementation
 
@@ -310,9 +311,9 @@ begin
   try
     s := ReplaceStr(aHex, ' ', '');
     aStream.Clear;
-    for i := 0 to 155 do
+    for i := 0 to 154 do
     begin
-      partS := '$' + Copy(s, i * 2, 2);
+      partS := '$' + Copy(s, i * 2 + 1, 2);
       buffer[i] := byte(Hex2Dec(partS));
       aStream.WriteByte(buffer[i]);
     end;
@@ -320,6 +321,20 @@ begin
   except
     on e: Exception do Result := False;
   end;
+end;
+
+function StreamToExpandedHex(var aStream: TMemoryStream): string;
+var
+  i: integer;
+begin
+  Result := '';
+  aStream.Position := 0;
+  for i := 0 to aStream.Size - 1 do
+  begin
+    Result := Result + IntToHex(aStream.ReadByte, 2) + ' ';
+  end;
+  Result := ReplaceStr(Result, '$', '');
+  Result := Trim(Result);
 end;
 
 end.

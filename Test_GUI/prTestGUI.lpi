@@ -8,6 +8,7 @@
       <Title Value="prTestGUI"/>
       <Scaled Value="True"/>
       <ResourceType Value="res"/>
+      <UseXPManifest Value="True"/>
       <XPManifest>
         <DpiAware Value="True"/>
       </XPManifest>
@@ -98,15 +99,6 @@
     </RunParams>
     <RequiredPackages>
       <Item>
-        <PackageName Value="JvMMLazR"/>
-      </Item>
-      <Item>
-        <PackageName Value="JvCtrlsLazR"/>
-      </Item>
-      <Item>
-        <PackageName Value="pl_ExControls"/>
-      </Item>
-      <Item>
         <PackageName Value="jppacklcl"/>
       </Item>
       <Item>
@@ -116,22 +108,10 @@
         <PackageName Value="pl_Cindy"/>
       </Item>
       <Item>
-        <PackageName Value="LazControls"/>
-      </Item>
-      <Item>
-        <PackageName Value="atflatcontrols_package"/>
-      </Item>
-      <Item>
-        <PackageName Value="industrial"/>
-      </Item>
-      <Item>
         <PackageName Value="eccontrols"/>
       </Item>
       <Item>
         <PackageName Value="bgracontrols"/>
-      </Item>
-      <Item>
-        <PackageName Value="uEControls"/>
       </Item>
       <Item>
         <PackageName Value="LCL"/>
@@ -188,6 +168,9 @@
       </Item>
       <Item>
         <Name Value="EFOpenError"/>
+      </Item>
+      <Item>
+        <Name Value="RunError(201)"/>
       </Item>
     </Exceptions>
   </Debugging>
