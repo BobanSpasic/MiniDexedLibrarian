@@ -1,6 +1,6 @@
 # MiniDexedLibrarian
 This project's target is to produce a librarian/editor for MiniDexed: https://github.com/probonopd/MiniDexed
 
-![mdgui](https://user-images.githubusercontent.com/68187526/176781421-b7183c28-946e-48e6-b726-b72aa2b9bbae.png)
+![screen20220704](https://user-images.githubusercontent.com/68187526/177214738-78d8b019-6be4-42a1-8a22-6bbe6c2276cc.png)
 
 Developed by using Lazarus/Freepascal
