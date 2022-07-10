@@ -5,7 +5,7 @@
     <PathDelim Value="\"/>
     <General>
       <SessionStorage Value="InProjectDir"/>
-      <Title Value="prTestGUI"/>
+      <Title Value="MiniDexed Control Center"/>
       <Scaled Value="True"/>
       <ResourceType Value="res"/>
       <UseXPManifest Value="True"/>
@@ -21,12 +21,12 @@
           <Version Value="11"/>
           <PathDelim Value="\"/>
           <Target>
-            <Filename Value="prTestGUI"/>
+            <Filename Value="..\bin\MiniDexedCC_dbg"/>
           </Target>
           <SearchPaths>
             <IncludeFiles Value="$(ProjOutDir)"/>
-            <OtherUnitFiles Value="..;..\ext_units"/>
-            <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)"/>
+            <OtherUnitFiles Value="..\ext_units;..\units"/>
+            <UnitOutputDirectory Value="..\lib\$(TargetCPU)-$(TargetOS)"/>
           </SearchPaths>
           <Parsing>
             <SyntaxOptions>
@@ -62,12 +62,12 @@
           <Version Value="11"/>
           <PathDelim Value="\"/>
           <Target>
-            <Filename Value="prTestGUI"/>
+            <Filename Value="..\bin\MiniDexedCC"/>
           </Target>
           <SearchPaths>
             <IncludeFiles Value="$(ProjOutDir)"/>
-            <OtherUnitFiles Value="..;..\ext_units"/>
-            <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)"/>
+            <OtherUnitFiles Value="..\ext_units;..\units"/>
+            <UnitOutputDirectory Value="..\lib\$(TargetCPU)-$(TargetOS)"/>
           </SearchPaths>
           <CodeGeneration>
             <SmartLinkUnit Value="True"/>
@@ -99,6 +99,12 @@
     </RunParams>
     <RequiredPackages>
       <Item>
+        <PackageName Value="uEControls"/>
+      </Item>
+      <Item>
+        <PackageName Value="rxnew"/>
+      </Item>
+      <Item>
         <PackageName Value="jppacklcl"/>
       </Item>
       <Item>
@@ -119,7 +125,7 @@
     </RequiredPackages>
     <Units>
       <Unit>
-        <Filename Value="prTestGUI.lpr"/>
+        <Filename Value="prMiniDexedCC.lpr"/>
         <IsPartOfProject Value="True"/>
       </Unit>
       <Unit>
@@ -131,7 +137,32 @@
         <UnitName Value="untMain"/>
       </Unit>
       <Unit>
-        <Filename Value="..\untminiini.pas"/>
+        <Filename Value="..\units\untdx7bank.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="untDX7Bank"/>
+      </Unit>
+      <Unit>
+        <Filename Value="..\units\untdx7sysexdefs.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="untDX7SysExDefs"/>
+      </Unit>
+      <Unit>
+        <Filename Value="..\units\untdx7utils.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="untDX7Utils"/>
+      </Unit>
+      <Unit>
+        <Filename Value="..\units\untdx7voice.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="untDX7Voice"/>
+      </Unit>
+      <Unit>
+        <Filename Value="..\units\untfileutils.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="untFileUtils"/>
+      </Unit>
+      <Unit>
+        <Filename Value="..\units\untminiini.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="untMiniINI"/>
       </Unit>
@@ -141,7 +172,7 @@
     <Version Value="11"/>
     <PathDelim Value="\"/>
     <Target>
-      <Filename Value="prTestGUI"/>
+      <Filename Value="MiniDexedCC"/>
     </Target>
     <SearchPaths>
       <IncludeFiles Value="$(ProjOutDir)"/>

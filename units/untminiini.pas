@@ -5,7 +5,7 @@ unit untMiniINI;
 interface
 
 uses
-  Classes, SysUtils;
+  Classes, SysUtils, StrUtils;
 
 type
   TNotes = array[0..127] of string;
@@ -23,7 +23,12 @@ type
     function ReadString(aName: string; aDefault: string): string;
     procedure WriteInteger(aName: string; aVal: integer);
     procedure WriteString(aName, aVal: string);
-    procedure Init;
+    procedure InitPerformance;
+    procedure InitMiniDexedINI;
+    procedure Comment(aName: string);
+    procedure Uncomment(aName: string);
+    function NameExists(aName: string): boolean;
+
   end;
 
 const
@@ -50,6 +55,7 @@ const
     'C8', 'C#8', 'D8', 'D#8', 'E8', 'F8', 'F#8', 'G8');
 
 function GetNoteName(aValue: integer): string;
+function StrToCHex(aVal: string): string;
 
 implementation
 
@@ -59,6 +65,19 @@ begin
     Result := FNotes[aValue]
   else
     Result := 'UNK';
+end;
+
+function StrToCHex(aVal: string): string;
+var
+  tmpInt: integer;
+begin
+  if TryStrToInt(aVal, tmpInt) then
+    Result := IntToHex(tmpInt, 2)
+  else
+    Result := '0'; //wrong, but...
+  if pos('$', Result) > 0 then Result := ReplaceStr(Result, '$', '0x')
+  else
+    Result := '0x' + Result;
 end;
 
 constructor TMiniINIFile.Create;
@@ -102,7 +121,7 @@ begin
   tmp := FMiniINI.Values[aName];
   if tmp = '' then Result := aDefault
   else
-  if (not TryStrToInt(tmp, Result) = True) then Result := aDefault;
+  if (not TryStrToInt(trim(tmp), Result) = True) then Result := aDefault;
 end;
 
 function TMiniINIFile.ReadString(aName: string; aDefault: string): string;
@@ -110,9 +129,9 @@ var
   tmp: string;
 begin
   tmp := FMiniINI.Values[aName];
-  if tmp = '' then Result := aDefault
+  if tmp = '' then Result := trim(aDefault)
   else
-    Result := tmp;
+    Result := trim(tmp);
 end;
 
 procedure TMiniINIFile.WriteInteger(aName: string; aVal: integer);
@@ -122,16 +141,44 @@ end;
 
 procedure TMiniINIFile.WriteString(aName, aVal: string);
 begin
-  FMiniINI.Values[aName] := aVal;
+  FMiniINI.Values[aName] := trim(aVal);
 end;
 
-procedure TMiniINIFile.Init;
+procedure TMiniINIFile.Comment(aName: string);
+begin
+  if FMiniINI.IndexOfName('#' + aName) <> -1 then
+    FMiniINI.Delete(FMiniINI.IndexOfName('#' + aName));  //delete old commented line
+  FMiniINI.Insert(FMiniINI.IndexOfName(aName), '#' +
+    FMiniINI[FMiniINI.IndexOfName(aName)]);
+  //insert new commented line
+  FMiniINI.Delete(FMiniINI.IndexOfName(aName)); //delete uncommented line
+end;
+
+procedure TMiniINIFile.Uncomment(aName: string);
+var
+  tmpStr: string;
+begin
+  tmpStr := copy(aName, 2, length(aName));
+  if FMiniINI.IndexOfName(tmpStr) <> -1 then
+    FMiniINI.Delete(FMiniINI.IndexOfName(tmpStr));  //delete old uncommented line
+  FMiniINI.Insert(FMiniINI.IndexOfName(aName), tmpStr + '=');
+  //insert new uncommented line
+  FMiniINI.Values[tmpStr] := FMiniINI.Values[aName]; //copy value
+  FMiniINI.Delete(FMiniINI.IndexOfName(aName)); //delete commented line
+end;
+
+function TMiniINIFile.NameExists(aName: string): boolean;
+begin
+  Result := FMiniINI.IndexOfName(aName) <> -1;
+end;
+
+procedure TMiniINIFile.InitPerformance;
 begin
   FMiniINI.Clear;
   FMiniINI.Add('#');
   FMiniINI.Add('#  performance.ini');
   FMiniINI.Add('#  edited/created with');
-  FMiniINI.Add('#  MiniDexedLibrarian');
+  FMiniINI.Add('#  MiniDexed Controle Center');
   FMiniINI.Add('#');
   FMiniINI.Add('#  https://github.com/BobanSpasic/MiniDexedLibrarian');
   FMiniINI.Add('#');
@@ -417,6 +464,60 @@ begin
   FMiniINI.Add('ReverbLowPass=30');
   FMiniINI.Add('ReverbDiffusion=65');
   FMiniINI.Add('ReverbLevel=80');
+end;
+
+procedure TMiniINIFile.InitMiniDexedINI;
+begin
+  FMiniINI.Clear;
+  FMiniINI.Add('#');
+  FMiniINI.Add('#  minidexed.ini');
+  FMiniINI.Add('#  edited/created with');
+  FMiniINI.Add('#  MiniDexed Controle Center');
+  FMiniINI.Add('#');
+  FMiniINI.Add('#  https://github.com/BobanSpasic/MiniDexedLibrarian');
+  FMiniINI.Add('#');
+  FMiniINI.Add('');
+  FMiniINI.Add('# Comments');
+  FMiniINI.Add('CommentLine1=');
+  FMiniINI.Add('CommentLine2=');
+  FMiniINI.Add('CommentLine3=');
+  FMiniINI.Add('');
+  FMiniINI.Add('# Sound device');
+  FMiniINI.Add('#SoundDevice=i2s, pwm, hdmi');
+  FMiniINI.Add('SoundDevice=pwm');
+  FMiniINI.Add('SampleRate=48000');
+  FMiniINI.Add('#ChunkSize=256');
+  FMiniINI.Add('DACI2CAddress=0');
+  FMiniINI.Add('ChannelsSwapped=0');
+  FMiniINI.Add('');
+  FMiniINI.Add('# MIDI');
+  FMiniINI.Add('MIDIBaudRate=31250');
+  FMiniINI.Add('#MIDIThru=umidi1,ttyS1');
+  FMiniINI.Add('MIDIRXProgramChange=1');
+  FMiniINI.Add('');
+  FMiniINI.Add('# HD44780 LCD');
+  FMiniINI.Add('LCDEnabled=1');
+  FMiniINI.Add('LCDPinEnable=17');
+  FMiniINI.Add('LCDPinRegisterSelect=4');
+  FMiniINI.Add('LCDPinReadWrite=0');
+  FMiniINI.Add('LCDPinData4=22');
+  FMiniINI.Add('LCDPinData5=23');
+  FMiniINI.Add('LCDPinData6=24');
+  FMiniINI.Add('LCDPinData7=25');
+  FMiniINI.Add('LCDI2CAddress=0x00');
+  FMiniINI.Add('');
+  FMiniINI.Add('# KY-040 Rotary Encoder');
+  FMiniINI.Add('EncoderEnabled=1');
+  FMiniINI.Add('EncoderPinClock=10');
+  FMiniINI.Add('EncoderPinData=9');
+  FMiniINI.Add('EncoderPinSwitch=11');
+  FMiniINI.Add('');
+  FMiniINI.Add('# Debug');
+  FMiniINI.Add('MIDIDumpEnabled=0');
+  FMiniINI.Add('ProfileEnabled=0');
+  FMiniINI.Add('');
+  FMiniINI.Add('# Performance');
+  FMiniINI.Add('PerformanceSelectToLoad=1');
 end;
 
 end.

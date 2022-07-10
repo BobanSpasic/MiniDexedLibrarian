@@ -1,4 +1,4 @@
-program prTestOpenSysEx;
+program prMiniDexedCC;
 
 {$mode objfpc}{$H+}
 
@@ -10,13 +10,14 @@ uses
   athreads,
   {$ENDIF}
   Interfaces, // this includes the LCL widgetset
-  Forms, untMain, untDX7Bank, untdx7voice, untDX7Utils
-  { you can add units after this };
+  Forms, rxnew, uecontrols, untMain, untDX7Bank, untDX7SysExDefs, untDX7Utils,
+  untDX7Voice, untFileUtils, untMiniINI;
 
 {$R *.res}
 
 begin
   RequireDerivedFormResource:=True;
+  Application.Title:='MiniDexed Control Center';
   Application.Scaled:=True;
   Application.Initialize;
   Application.CreateForm(TfrmMain, frmMain);

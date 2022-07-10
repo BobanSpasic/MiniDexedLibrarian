@@ -5,10 +5,11 @@ unit untMain;
 interface
 
 uses
-  Classes, SysUtils, StrUtils, Forms, Controls, Graphics, Dialogs, StdCtrls, ComCtrls,
-  ExtCtrls, JPP.Edit, atshapeline, cyPageControl, ECSlider, ECSwitch,
-  ECEditBtns, BCComboBox, untFileUtils, untDX7Bank, untDX7Voice,
-  untDX7Utils, untMiniINI, MIDI;
+  Classes, SysUtils, StrUtils, Forms, Controls, Graphics, Dialogs, StdCtrls,
+  ComCtrls, ExtCtrls, Grids, JPP.Edit, atshapeline, cyPageControl, ECSlider,
+  ECSwitch, ECEditBtns, BCComboBox,
+  untFileUtils, untDX7Bank, untDX7Voice, untDX7Utils, untMiniINI,
+  MIDI;
 
 type
 
@@ -16,6 +17,14 @@ type
 
   TfrmMain = class(TForm)
     btSelectDir: TECSpeedBtnPlus;
+    cbDisplayPinD4: TBCComboBox;
+    cbDisplayPinD5: TBCComboBox;
+    cbDisplayPinD6: TBCComboBox;
+    cbDisplayPinD7: TBCComboBox;
+    cbEncoderSwPin: TBCComboBox;
+    cbDisplayPinEN: TBCComboBox;
+    cbEncoderDataPin: TBCComboBox;
+    cbEncoderClockPin: TBCComboBox;
     cbMidiCh1: TBCComboBox;
     cbMidiCh2: TBCComboBox;
     cbMidiCh3: TBCComboBox;
@@ -24,8 +33,15 @@ type
     cbMidiCh6: TBCComboBox;
     cbMidiCh7: TBCComboBox;
     cbMidiCh8: TBCComboBox;
+    cbMIDIThruTo: TBCComboBox;
+    cbDisplayPinRS: TBCComboBox;
+    cbSoundDevSampleRate: TBCComboBox;
     cbMidiOut: TBCComboBox;
     cbMidiIn: TBCComboBox;
+    cbSoundDevChunkSize: TBCComboBox;
+    cbMIDIThruFrom: TBCComboBox;
+    cbDisplayPinRW: TBCComboBox;
+    edbtSelSDCard: TECEditBtn;
     edPSlot1: TJppEdit;
     edPSlot2: TJppEdit;
     edPSlot3: TJppEdit;
@@ -34,7 +50,27 @@ type
     edPSlot6: TJppEdit;
     edPSlot7: TJppEdit;
     edPSlot8: TJppEdit;
+    edMIDIBaudRate: TJppEdit;
+    edDisplayi2sAddr: TJppEdit;
+    edSoundDevOther: TJppEdit;
+    edSoundDevi2sAddr: TJppEdit;
     Label1: TLabel;
+    lbPerfOptions: TLabel;
+    lbDisplayPinD4: TLabel;
+    lbDisplayPinD5: TLabel;
+    lbDisplayPinD6: TLabel;
+    lbDisplayPinD7: TLabel;
+    lbEncoderSwPin: TLabel;
+    lbDisplayPinEN: TLabel;
+    lbEncoderDataPin: TLabel;
+    lbEncoderClockPin: TLabel;
+    lbMIDIDevice: TLabel;
+    lbDbgOptions: TLabel;
+    lbMIDIThruTo: TLabel;
+    lbSoundDev1: TLabel;
+    lbDisplayPinRS: TLabel;
+    lbSoundDev2: TLabel;
+    lbSoundDevSampleRate: TLabel;
     Label2: TLabel;
     Label3: TLabel;
     Label4: TLabel;
@@ -42,6 +78,17 @@ type
     Label6: TLabel;
     Label7: TLabel;
     Label8: TLabel;
+    lbSoundDev: TLabel;
+    lbSoundDevChunkSize: TLabel;
+    lbMIDIThruFrom: TLabel;
+    lbDisplayPinRW: TLabel;
+    mmINIComments: TMemo;
+    OpenMiniDexedINI: TOpenDialog;
+    pnPerfOptions: TPanel;
+    pnEncoder: TPanel;
+    pnDebug: TPanel;
+    pnSoundDevice: TPanel;
+    pcMiniDexedFiles: TcyPageControl;
     pcTGs: TcyPageControl;
     Label9: TLabel;
     lbHint: TLabel;
@@ -49,6 +96,7 @@ type
     lbMidiOut: TLabel;
     OpenPerformanceDialog1: TOpenDialog;
     edbtSelDir: TECEditBtn;
+    pnMiniDexedFiles: TPanel;
     pnHint: TPanel;
     pnPEffects: TPanel;
     pnPSlot1: TPanel;
@@ -59,6 +107,7 @@ type
     pnPSlot6: TPanel;
     pnPSlot7: TPanel;
     pnPSlot8: TPanel;
+    pnSelSDCard: TPanel;
     pnPVoice1: TPanel;
     pnPVoice2: TPanel;
     pnPVoice3: TPanel;
@@ -67,6 +116,18 @@ type
     pnPVoice6: TPanel;
     pnPVoice7: TPanel;
     pnPVoice8: TPanel;
+    pnMIDIDevice: TPanel;
+    pnDisplay: TPanel;
+    rbDisplayDiscrete: TRadioButton;
+    rbEncoderDiscrete: TRadioButton;
+    rbDisplayi2c: TRadioButton;
+    rbEncoderNone: TRadioButton;
+    rbSoundDevPWM: TRadioButton;
+    rbSoundDevi2s: TRadioButton;
+    rbSoundDevOther: TRadioButton;
+    rbSoundDevHDMI: TRadioButton;
+    rbDisplayNone: TRadioButton;
+    SaveMiniDexedINI: TSaveDialog;
     SavePerformanceDialog1: TSaveDialog;
     ShapeLine1: TShapeLine;
     ShapeLine2: TShapeLine;
@@ -308,6 +369,7 @@ type
     sl4: TShapeLine;
     Splitter1: TSplitter;
     Splitter2: TSplitter;
+    sgGPIO: TStringGrid;
     swAfterTouchA1: TECSwitch;
     swAfterTouchA2: TECSwitch;
     swAfterTouchA3: TECSwitch;
@@ -356,6 +418,7 @@ type
     swBreathP6: TECSwitch;
     swBreathP7: TECSwitch;
     swBreathP8: TECSwitch;
+    swPerfSelToLoad: TECSwitch;
     swFootEG1: TECSwitch;
     swFootEG2: TECSwitch;
     swFootEG3: TECSwitch;
@@ -380,6 +443,8 @@ type
     swFootP6: TECSwitch;
     swFootP7: TECSwitch;
     swFootP8: TECSwitch;
+    swDbgProfile: TECSwitch;
+    swDbgMIDIDump: TECSwitch;
     swModA1: TECSwitch;
     swModA2: TECSwitch;
     swModA3: TECSwitch;
@@ -430,11 +495,20 @@ type
     swPortaMode8: TECSwitch;
     swReverbEnable: TECSwitch;
     swCompressorEnable: TECSwitch;
+    swSoundDevSwapCh: TECSwitch;
+    swMIDIThruEnable: TECSwitch;
+    swMIDIProgChange: TECSwitch;
+    tbINIFiles: TToolBar;
+    tbbtOpenINIFiles: TToolButton;
+    tbbtSaveINIFiles: TToolButton;
+    tsIniFiles: TTabSheet;
+    tsSyxFiles: TTabSheet;
+    tsSDCard: TTabSheet;
     tsTG1_4: TTabSheet;
     tsTG5_8: TTabSheet;
     tbBank: TToolBar;
     tbbtOpenBank: TToolButton;
-    tbbtSave: TToolButton;
+    tbbtSaveBank: TToolButton;
     tbbtSavePerformance: TToolButton;
     tbbtLoadPerformance: TToolButton;
     tbPerfEdit: TToolBar;
@@ -444,6 +518,7 @@ type
     tsLibrarian: TTabSheet;
     tsPerformanceEdit: TTabSheet;
     procedure btSelectDirClick(Sender: TObject);
+    procedure cbDisplayEncoderChange(Sender: TObject);
     procedure edPSlotDragDrop(Sender, Source: TObject; X, Y: integer);
     procedure edPSlotDragOver(Sender, Source: TObject; X, Y: integer;
       State: TDragState; var Accept: boolean);
@@ -456,13 +531,24 @@ type
     procedure lbFilesClick(Sender: TObject);
     procedure lbFilesStartDrag(Sender: TObject; var DragObject: TDragObject);
     procedure lbVoicesStartDrag(Sender: TObject; var DragObject: TDragObject);
+    procedure rbDisplayDiscreteChange(Sender: TObject);
+    procedure rbDisplayi2cChange(Sender: TObject);
+    procedure rbEncoderDiscreteChange(Sender: TObject);
+    procedure rbSoundDevHDMIChange(Sender: TObject);
+    procedure rbSoundDevi2sChange(Sender: TObject);
+    procedure rbSoundDevOtherChange(Sender: TObject);
+    procedure rbSoundDevPWMChange(Sender: TObject);
     procedure slSliderChange(Sender: TObject);
     procedure slSliderMouseUp(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: integer);
+    procedure swMIDIThruEnableChange(Sender: TObject);
     procedure tbbtLoadPerformanceClick(Sender: TObject);
-    procedure tbbtSaveClick(Sender: TObject);
+    procedure tbbtOpenINIFilesClick(Sender: TObject);
+    procedure tbbtSaveBankClick(Sender: TObject);
     procedure RefreshSlots;
+    procedure tbbtSaveINIFilesClick(Sender: TObject);
     procedure tbbtSavePerformanceClick(Sender: TObject);
+    procedure CalculateGPIO;
 
   private
 
@@ -496,6 +582,11 @@ begin
     lbFiles.Items.AddStrings(sl);
     sl.Free;
   end;
+end;
+
+procedure TfrmMain.cbDisplayEncoderChange(Sender: TObject);
+begin
+  CalculateGPIO;
 end;
 
 procedure TfrmMain.edPSlotDragDrop(Sender, Source: TObject; X, Y: integer);
@@ -738,6 +829,273 @@ begin
     dragItem := lbVoices.ItemIndex;
 end;
 
+procedure TfrmMain.rbDisplayDiscreteChange(Sender: TObject);
+begin
+  if rbDisplayDiscrete.Checked then
+  begin
+    cbDisplayPinRW.Enabled := True;
+    cbDisplayPinRS.Enabled := True;
+    cbDisplayPinEN.Enabled := True;
+    cbDisplayPinD4.Enabled := True;
+    cbDisplayPinD5.Enabled := True;
+    cbDisplayPinD6.Enabled := True;
+    cbDisplayPinD7.Enabled := True;
+    edDisplayi2sAddr.Text := '0';
+  end
+  else
+  begin
+    cbDisplayPinRW.Enabled := False;
+    cbDisplayPinRS.Enabled := False;
+    cbDisplayPinEN.Enabled := False;
+    cbDisplayPinD4.Enabled := False;
+    cbDisplayPinD5.Enabled := False;
+    cbDisplayPinD6.Enabled := False;
+    cbDisplayPinD7.Enabled := False;
+  end;
+  CalculateGPIO;
+end;
+
+procedure TfrmMain.rbDisplayi2cChange(Sender: TObject);
+begin
+  if rbDisplayi2c.Checked then edDisplayi2sAddr.Enabled := True
+  else
+    edDisplayi2sAddr.Enabled := False;
+  CalculateGPIO;
+end;
+
+procedure TfrmMain.rbEncoderDiscreteChange(Sender: TObject);
+begin
+  if rbEncoderDiscrete.Checked then
+  begin
+    cbEncoderClockPin.Enabled := True;
+    cbEncoderDataPin.Enabled := True;
+    cbEncoderSwPin.Enabled := True;
+  end
+  else
+  begin
+    cbEncoderClockPin.Enabled := False;
+    cbEncoderDataPin.Enabled := False;
+    cbEncoderSwPin.Enabled := False;
+  end;
+  CalculateGPIO;
+end;
+
+procedure TfrmMain.rbSoundDevHDMIChange(Sender: TObject);
+begin
+  if rbSoundDevHDMI.Checked then
+  begin
+    edSoundDevi2sAddr.Enabled := False;
+    edSoundDevOther.Enabled := False;
+    CalculateGPIO;
+  end;
+end;
+
+procedure TfrmMain.rbSoundDevi2sChange(Sender: TObject);
+begin
+  if rbSoundDevi2s.Checked then
+  begin
+    edSoundDevi2sAddr.Enabled := True;
+    edSoundDevOther.Enabled := False;
+    CalculateGPIO;
+  end;
+end;
+
+procedure TfrmMain.CalculateGPIO;
+var
+  GPIO_Occupied: array[2..27] of boolean;
+  GPIO_Function: array[2..27] of string;
+  i: integer;
+  slFreeGPIOs: TStringList;
+  tmpItem: string;
+begin
+  for i := 2 to 27 do GPIO_Occupied[i] := False;
+  for i := 0 to 19 do
+  begin
+    sgGPIO.Cells[0, i] := '';
+    sgGPIO.Cells[5, i] := '';
+  end;
+  GPIO_Occupied[7] := True;
+  GPIO_Occupied[8] := True;
+  GPIO_Occupied[14] := True;
+  GPIO_Occupied[15] := True;
+  GPIO_Function[7] := 'SPI0_CE1_N';
+  GPIO_Function[8] := 'SPI0_CE0_N';
+  GPIO_Function[14] := 'TXD';
+  GPIO_Function[15] := 'RXD';
+  if rbSoundDevi2s.Checked then
+  begin
+    GPIO_Occupied[18] := True;
+    GPIO_Occupied[19] := True;
+    GPIO_Occupied[21] := True;
+    GPIO_Function[18] := 'DAC BCK';
+    GPIO_Function[19] := 'DAC LCK';
+    GPIO_Function[21] := 'DAC DIN';
+  end;
+  if rbDisplayi2c.Checked then
+  begin
+    GPIO_Occupied[2] := True;
+    GPIO_Occupied[3] := True;
+    GPIO_Function[2] := 'I2C SDA';
+    GPIO_Function[3] := 'I2C SCL';
+  end;
+  Application.ProcessMessages;
+  if rbDisplayDiscrete.Checked then
+  begin
+    if cbDisplayPinRW.Text <> '0' then
+      GPIO_Occupied[StrToInt(cbDisplayPinRW.Text)] := True;
+    if cbDisplayPinRW.Text <> '0' then
+      GPIO_Function[StrToInt(cbDisplayPinRW.Text)] := 'LCD RW';
+    if cbDisplayPinRS.Text <> '0' then
+      GPIO_Occupied[StrToInt(cbDisplayPinRS.Text)] := True;
+    if cbDisplayPinRS.Text <> '0' then
+      GPIO_Function[StrToInt(cbDisplayPinRS.Text)] := 'LCD RS';
+    if cbDisplayPinEN.Text <> '0' then
+      GPIO_Occupied[StrToInt(cbDisplayPinEN.Text)] := True;
+    if cbDisplayPinEN.Text <> '0' then
+      GPIO_Function[StrToInt(cbDisplayPinEN.Text)] := 'LCD EN';
+    if cbDisplayPinD4.Text <> '0' then
+      GPIO_Occupied[StrToInt(cbDisplayPinD4.Text)] := True;
+    if cbDisplayPinD4.Text <> '0' then
+      GPIO_Function[StrToInt(cbDisplayPinD4.Text)] := 'LCD D4';
+    if cbDisplayPinD5.Text <> '0' then
+      GPIO_Occupied[StrToInt(cbDisplayPinD5.Text)] := True;
+    if cbDisplayPinD5.Text <> '0' then
+      GPIO_Function[StrToInt(cbDisplayPinD5.Text)] := 'LCD D5';
+    if cbDisplayPinD6.Text <> '0' then
+      GPIO_Occupied[StrToInt(cbDisplayPinD6.Text)] := True;
+    if cbDisplayPinD6.Text <> '0' then
+      GPIO_Function[StrToInt(cbDisplayPinD6.Text)] := 'LCD D6';
+    if cbDisplayPinD7.Text <> '0' then
+      GPIO_Occupied[StrToInt(cbDisplayPinD7.Text)] := True;
+    if cbDisplayPinD7.Text <> '0' then
+      GPIO_Function[StrToInt(cbDisplayPinD7.Text)] := 'LCD D7';
+  end;
+  if rbEncoderDiscrete.Checked then
+  begin
+    if cbEncoderClockPin.Text <> '0' then
+      GPIO_Occupied[StrToInt(cbEncoderClockPin.Text)] := True;
+    if cbEncoderClockPin.Text <> '0' then
+      GPIO_Function[StrToInt(cbEncoderClockPin.Text)] := 'ENC CLK/A';
+    if cbEncoderDataPin.Text <> '0' then
+      GPIO_Occupied[StrToInt(cbEncoderDataPin.Text)] := True;
+    if cbEncoderDataPin.Text <> '0' then
+      GPIO_Function[StrToInt(cbEncoderDataPin.Text)] := 'ENC DATA/B';
+    if cbEncoderSwPin.Text <> '0' then
+      GPIO_Occupied[StrToInt(cbEncoderSwPin.Text)] := True;
+    if cbEncoderSwPin.Text <> '0' then
+      GPIO_Function[StrToInt(cbEncoderSwPin.Text)] := 'ENC SW';
+  end;
+  if GPIO_Occupied[2] then sgGPIO.Cells[0, 1] := GPIO_Function[2];
+  if GPIO_Occupied[3] then sgGPIO.Cells[0, 2] := GPIO_Function[3];
+  if GPIO_Occupied[4] then sgGPIO.Cells[0, 3] := GPIO_Function[4];
+  if GPIO_Occupied[17] then sgGPIO.Cells[0, 5] := GPIO_Function[17];
+  if GPIO_Occupied[27] then sgGPIO.Cells[0, 6] := GPIO_Function[27];
+  if GPIO_Occupied[22] then sgGPIO.Cells[0, 7] := GPIO_Function[22];
+  if GPIO_Occupied[10] then sgGPIO.Cells[0, 9] := GPIO_Function[10];
+  if GPIO_Occupied[9] then sgGPIO.Cells[0, 10] := GPIO_Function[9];
+  if GPIO_Occupied[11] then sgGPIO.Cells[0, 11] := GPIO_Function[11];
+  if GPIO_Occupied[5] then sgGPIO.Cells[0, 14] := GPIO_Function[5];
+  if GPIO_Occupied[6] then sgGPIO.Cells[0, 15] := GPIO_Function[6];
+  if GPIO_Occupied[13] then sgGPIO.Cells[0, 16] := GPIO_Function[13];
+  if GPIO_Occupied[19] then sgGPIO.Cells[0, 17] := GPIO_Function[19];
+  if GPIO_Occupied[26] then sgGPIO.Cells[0, 18] := GPIO_Function[26];
+  if GPIO_Occupied[14] then sgGPIO.Cells[5, 3] := GPIO_Function[14];
+  if GPIO_Occupied[15] then sgGPIO.Cells[5, 4] := GPIO_Function[15];
+  if GPIO_Occupied[18] then sgGPIO.Cells[5, 5] := GPIO_Function[18];
+  if GPIO_Occupied[23] then sgGPIO.Cells[5, 7] := GPIO_Function[23];
+  if GPIO_Occupied[24] then sgGPIO.Cells[5, 8] := GPIO_Function[24];
+  if GPIO_Occupied[25] then sgGPIO.Cells[5, 10] := GPIO_Function[25];
+  if GPIO_Occupied[8] then sgGPIO.Cells[5, 11] := GPIO_Function[8];
+  if GPIO_Occupied[7] then sgGPIO.Cells[5, 12] := GPIO_Function[7];
+  if GPIO_Occupied[12] then sgGPIO.Cells[5, 15] := GPIO_Function[12];
+  if GPIO_Occupied[16] then sgGPIO.Cells[5, 17] := GPIO_Function[16];
+  if GPIO_Occupied[20] then sgGPIO.Cells[5, 18] := GPIO_Function[20];
+  if GPIO_Occupied[21] then sgGPIO.Cells[5, 19] := GPIO_Function[21];
+
+  slFreeGPIOs := TStringList.Create;
+  slFreeGPIOs.Sorted := True;
+  slFreeGPIOs.Duplicates := dupIgnore;
+  slFreeGPIOs.Add('0');
+  for i := 2 to 27 do
+    if GPIO_Occupied[i] = False then slFreeGPIOs.Add(IntToStr(i));
+  tmpItem := cbDisplayPinRW.Text;
+  cbDisplayPinRW.Items.Clear;
+  cbDisplayPinRW.Items.Add(tmpItem);
+  cbDisplayPinRW.Items.AddStrings(slFreeGPIOs);
+  cbDisplayPinRW.ItemIndex := cbDisplayPinRW.Items.IndexOf(tmpItem);
+
+  tmpItem := cbDisplayPinRS.Text;
+  cbDisplayPinRS.Items.Clear;
+  cbDisplayPinRS.Items.Add(tmpItem);
+  cbDisplayPinRS.Items.AddStrings(slFreeGPIOs);
+  cbDisplayPinRS.ItemIndex := cbDisplayPinRS.Items.IndexOf(tmpItem);
+
+  tmpItem := cbDisplayPinEN.Text;
+  cbDisplayPinEN.Items.Clear;
+  cbDisplayPinEN.Items.Add(tmpItem);
+  cbDisplayPinEN.Items.AddStrings(slFreeGPIOs);
+  cbDisplayPinEN.ItemIndex := cbDisplayPinEN.Items.IndexOf(tmpItem);
+
+  tmpItem := cbDisplayPinD4.Text;
+  cbDisplayPinD4.Items.Clear;
+  cbDisplayPinD4.Items.Add(tmpItem);
+  cbDisplayPinD4.Items.AddStrings(slFreeGPIOs);
+  cbDisplayPinD4.ItemIndex := cbDisplayPinD4.Items.IndexOf(tmpItem);
+
+  tmpItem := cbDisplayPinD5.Text;
+  cbDisplayPinD5.Items.Clear;
+  cbDisplayPinD5.Items.Add(tmpItem);
+  cbDisplayPinD5.Items.AddStrings(slFreeGPIOs);
+  cbDisplayPinD5.ItemIndex := cbDisplayPinD5.Items.IndexOf(tmpItem);
+
+  tmpItem := cbDisplayPinD6.Text;
+  cbDisplayPinD6.Items.Clear;
+  cbDisplayPinD6.Items.Add(tmpItem);
+  cbDisplayPinD6.Items.AddStrings(slFreeGPIOs);
+  cbDisplayPinD6.ItemIndex := cbDisplayPinD6.Items.IndexOf(tmpItem);
+
+  tmpItem := cbDisplayPinD7.Text;
+  cbDisplayPinD7.Items.Clear;
+  cbDisplayPinD7.Items.Add(tmpItem);
+  cbDisplayPinD7.Items.AddStrings(slFreeGPIOs);
+  cbDisplayPinD7.ItemIndex := cbDisplayPinD7.Items.IndexOf(tmpItem);
+
+  tmpItem := cbEncoderClockPin.Text;
+  cbEncoderClockPin.Items.Clear;
+  cbEncoderClockPin.Items.Add(tmpItem);
+  cbEncoderClockPin.Items.AddStrings(slFreeGPIOs);
+  cbEncoderClockPin.ItemIndex := cbEncoderClockPin.Items.IndexOf(tmpItem);
+
+  tmpItem := cbEncoderDataPin.Text;
+  cbEncoderDataPin.Items.Clear;
+  cbEncoderDataPin.Items.Add(tmpItem);
+  cbEncoderDataPin.Items.AddStrings(slFreeGPIOs);
+  cbEncoderDataPin.ItemIndex := cbEncoderDataPin.Items.IndexOf(tmpItem);
+
+  tmpItem := cbEncoderSwPin.Text;
+  cbEncoderSwPin.Items.Clear;
+  cbEncoderSwPin.Items.Add(tmpItem);
+  cbEncoderSwPin.Items.AddStrings(slFreeGPIOs);
+  cbEncoderSwPin.ItemIndex := cbEncoderSwPin.Items.IndexOf(tmpItem);
+
+  slFreeGPIOs.Free;
+end;
+
+procedure TfrmMain.rbSoundDevOtherChange(Sender: TObject);
+begin
+  edSoundDevOther.Enabled := rbSoundDevOther.Checked;
+end;
+
+procedure TfrmMain.rbSoundDevPWMChange(Sender: TObject);
+begin
+  if rbSoundDevPWM.Checked then
+  begin
+    edSoundDevi2sAddr.Enabled := False;
+    edSoundDevOther.Enabled := False;
+    CalculateGPIO;
+  end;
+end;
+
 procedure TfrmMain.slSliderChange(Sender: TObject);
 var
   pt: TPoint;
@@ -773,6 +1131,14 @@ procedure TfrmMain.slSliderMouseUp(Sender: TObject; Button: TMouseButton;
   Shift: TShiftState; X, Y: integer);
 begin
   pnHint.Visible := False;
+end;
+
+procedure TfrmMain.swMIDIThruEnableChange(Sender: TObject);
+begin
+  cbMIDIThruFrom.Enabled := swMIDIThruEnable.Checked;
+  cbMIDIThruTo.Enabled := swMIDIThruEnable.Checked;
+  if not cbMIDIThruFrom.Enabled then cbMIDIThruFrom.ItemIndex := -1;
+  if not cbMIDIThruTo.Enabled then cbMIDIThruTo.ItemIndex := -1;
 end;
 
 procedure TfrmMain.tbbtLoadPerformanceClick(Sender: TObject);
@@ -1148,13 +1514,157 @@ begin
 
     RefreshSlots;
     hexstream.Free;
-    ini.Init;
+    ini.InitPerformance;
     ini.Free;
     pnHint.Visible := False;
   end;
 end;
 
-procedure TfrmMain.tbbtSaveClick(Sender: TObject);
+procedure TfrmMain.tbbtOpenINIFilesClick(Sender: TObject);
+var
+  ini: TMiniINIFile;
+  tmpStr: string;
+  tmpInt: integer;
+begin
+  if OpenMiniDexedINI.Execute then
+  begin
+    try
+      ini := TMiniINIFile.Create;
+      ini.LoadFromFile(OpenMiniDexedINI.FileName);
+      mmINIComments.Lines.Clear;
+      mmINIComments.Lines.Insert(0, ini.ReadString('CommentLine1', ''));
+      mmINIComments.Lines.Insert(1, ini.ReadString('CommentLine2', ''));
+      mmINIComments.Lines.Insert(2, ini.ReadString('CommentLine3', ''));
+      mmINIComments.SelStart := 0;
+      tmpStr := ini.ReadString('SoundDevice', 'pwm');
+      edSoundDevi2sAddr.Enabled := False;
+      edSoundDevOther.Enabled := False;
+      case tmpStr of
+        'pwm': rbSoundDevPWM.Checked := True;
+        'i2s': begin
+          rbSoundDevi2s.Checked := True;
+          edSoundDevi2sAddr.Enabled := True;
+          tmpStr := ini.ReadString('DACI2CAddress', '0');
+          tmpInt := 0;
+          if pos('0x', tmpStr) > 0 then tmpInt := Hex2Dec(ReplaceStr(tmpStr, '0x', '$'))
+          else
+            tmpInt := StrToInt(tmpStr);
+          edSoundDevi2sAddr.Text := IntToStr(tmpInt);
+        end;
+        'hdmi': rbSoundDevHDMI.Checked := True;
+        else
+        begin
+          rbSoundDevOther.Checked := True;
+          edSoundDevOther.Enabled := True;
+        end;
+      end;
+      cbSoundDevSampleRate.ItemIndex :=
+        cbSoundDevSampleRate.Items.IndexOf(ini.ReadString('SampleRate', '48000'));
+      tmpStr := ini.ReadString('ChunkSize', '');
+      if tmpStr = '' then cbSoundDevChunkSize.ItemIndex := 0
+      else
+        cbSoundDevChunkSize.ItemIndex := cbSoundDevChunkSize.Items.IndexOf(tmpStr);
+      swSoundDevSwapCh.Checked := boolean(ini.ReadInteger('ChannelsSwapped', 0) and 1);
+
+      edMIDIBaudRate.Text := ini.ReadString('MIDIBaudRate', '31250');
+      tmpStr := ini.ReadString('MIDIThru', '');
+      swMIDIThruEnable.Checked := tmpStr <> '';
+      if swMIDIThruEnable.Checked then
+      begin
+        cbMIDIThruFrom.Enabled := True;
+        cbMIDIThruTo.Enabled := True;
+        cbMIDIThruFrom.ItemIndex :=
+          cbMIDIThruFrom.Items.IndexOf(copy(tmpStr, 0, pos(',', tmpStr) - 1));
+        cbMIDIThruTo.ItemIndex :=
+          cbMIDIThruTo.Items.IndexOf(copy(tmpStr, pos(',', tmpStr) + 1, Length(tmpStr)));
+      end
+      else
+      begin
+        cbMIDIThruFrom.Enabled := False;
+        cbMIDIThruTo.Enabled := False;
+        cbMIDIThruFrom.ItemIndex := -1;
+        cbMIDIThruTo.ItemIndex := -1;
+      end;
+      swMIDIProgChange.Checked :=
+        boolean(ini.ReadInteger('MIDIRXProgramChange', 1) and 1);
+      rbDisplayNone.Checked := boolean(ini.ReadInteger('LCDEnabled', 0) and 0);
+      tmpStr := ini.ReadString('LCDI2CAddress', '0');
+      tmpInt := 0;
+      if pos('0x', tmpStr) > 0 then tmpInt := Hex2Dec(ReplaceStr(tmpStr, '0x', '$'))
+      else
+        tmpInt := StrToInt(tmpStr);
+      if (tmpInt = 0) and not rbDisplayNone.Checked then
+      begin
+        rbDisplayDiscrete.Checked := True;
+        cbDisplayPinRW.Enabled := True;
+        cbDisplayPinRS.Enabled := True;
+        cbDisplayPinEN.Enabled := True;
+        cbDisplayPinD4.Enabled := True;
+        cbDisplayPinD5.Enabled := True;
+        cbDisplayPinD6.Enabled := True;
+        cbDisplayPinD7.Enabled := True;
+        cbDisplayPinRW.ItemIndex :=
+          cbDisplayPinRW.Items.IndexOf(ini.ReadString('LCDPinReadWrite', '0'));
+        cbDisplayPinRS.ItemIndex :=
+          cbDisplayPinRS.Items.IndexOf(ini.ReadString('LCDPinRegisterSelect', '4'));
+        cbDisplayPinEN.ItemIndex :=
+          cbDisplayPinEN.Items.IndexOf(ini.ReadString('LCDPinEnable', '17'));
+        cbDisplayPinD4.ItemIndex :=
+          cbDisplayPinD4.Items.IndexOf(ini.ReadString('LCDPinData4', '22'));
+        cbDisplayPinD5.ItemIndex :=
+          cbDisplayPinD5.Items.IndexOf(ini.ReadString('LCDPinData5', '23'));
+        cbDisplayPinD6.ItemIndex :=
+          cbDisplayPinD6.Items.IndexOf(ini.ReadString('LCDPinData6', '24'));
+        cbDisplayPinD7.ItemIndex :=
+          cbDisplayPinD7.Items.IndexOf(ini.ReadString('LCDPinData7', '25'));
+        edDisplayi2sAddr.Text := '0';
+        edDisplayi2sAddr.Enabled := False;
+      end;
+      if (tmpInt <> 0) and not rbDisplayNone.Checked then
+      begin
+        rbDisplayi2c.Checked := True;
+        edDisplayi2sAddr.Enabled := True;
+        edDisplayi2sAddr.Text := IntToStr(tmpInt);
+        cbDisplayPinRW.Enabled := False;
+        cbDisplayPinRS.Enabled := False;
+        cbDisplayPinEN.Enabled := False;
+        cbDisplayPinD4.Enabled := False;
+        cbDisplayPinD5.Enabled := False;
+        cbDisplayPinD6.Enabled := False;
+        cbDisplayPinD7.Enabled := False;
+      end;
+      rbEncoderNone.Checked := boolean(ini.ReadInteger('EncoderEnabled', 1) and 0);
+      rbEncoderDiscrete.Checked := boolean(ini.ReadInteger('EncoderEnabled', 1) and 1);
+      if rbEncoderNone.Checked then
+      begin
+        cbEncoderClockPin.Enabled := False;
+        cbEncoderDataPin.Enabled := False;
+        cbEncoderSwPin.Enabled := False;
+      end;
+      if rbEncoderDiscrete.Checked then
+      begin
+        cbEncoderClockPin.Enabled := True;
+        cbEncoderDataPin.Enabled := True;
+        cbEncoderSwPin.Enabled := True;
+        cbEncoderClockPin.ItemIndex :=
+          cbEncoderClockPin.Items.IndexOf(ini.ReadString('EncoderPinClock', '10'));
+        cbEncoderDataPin.ItemIndex :=
+          cbEncoderDataPin.Items.IndexOf(ini.ReadString('EncoderPinData', '9'));
+        cbEncoderSwPin.ItemIndex :=
+          cbEncoderSwPin.Items.IndexOf(ini.ReadString('EncoderPinSwitch', '11'));
+      end;
+      swDbgMIDIDump.Checked := boolean(ini.ReadInteger('MIDIDumpEnabled', 0) and 1);
+      swDbgProfile.Checked := boolean(ini.ReadInteger('ProfileEnabled', 0) and 1);
+      swPerfSelToLoad.Checked :=
+        boolean(ini.ReadInteger('PerformanceSelectToLoad', 1) and 1);
+      CalculateGPIO;
+    finally
+      ini.Free;
+    end;
+  end;
+end;
+
+procedure TfrmMain.tbbtSaveBankClick(Sender: TObject);
 begin
   if SaveBankDialog1.Execute then
     FSlotsDX.SaveBankToSysExFile(SaveBankDialog1.FileName);
@@ -1187,6 +1697,93 @@ begin
   end;
 end;
 
+procedure TfrmMain.tbbtSaveINIFilesClick(Sender: TObject);
+var
+  ini: TMiniINIFile;
+begin
+  if SaveMiniDexedINI.Execute then
+  begin
+    try
+      ini := TMiniINIFile.Create;
+      ini.InitMiniDexedINI;
+      if mmINIComments.Lines.Count > 0 then
+      ini.WriteString('CommentLine1', mmINIComments.Lines[0]);
+      if mmINIComments.Lines.Count > 1 then
+      ini.WriteString('CommentLine2', mmINIComments.Lines[1]);
+      if mmINIComments.Lines.Count > 2 then
+      ini.WriteString('CommentLine3', mmINIComments.Lines[2]);
+      if rbSoundDevPWM.Checked then ini.WriteString('SoundDevice', 'pwm');
+      if rbSoundDevi2s.Checked then
+      begin
+        ini.WriteString('SoundDevice', 'i2s');
+        ini.WriteString('DACI2CAddress', StrToCHex(edSoundDevi2sAddr.Text));
+      end;
+      if rbSoundDevHDMI.Checked then ini.WriteString('SoundDevice', 'hdmi');
+      if rbSoundDevOther.Checked then
+        ini.WriteString('SoundDevice', edSoundDevOther.Text);
+      ini.WriteString('SampleRate', cbSoundDevSampleRate.Text);
+      if cbSoundDevChunkSize.ItemIndex <> 0 then
+      begin
+        ini.Uncomment('#ChunkSize');
+        ini.WriteString('ChunkSize', cbSoundDevChunkSize.Text);
+      end
+      else
+      begin
+        if ini.NameExists('ChunkSize') then ini.Comment('ChunkSize');
+      end;
+      ini.WriteInteger('ChannelsSwapped', integer(swSoundDevSwapCh.Checked));
+      ini.WriteString('MIDIBaudRate', edMIDIBaudRate.Text);
+      ini.WriteInteger('MIDIRXProgramChange', integer(swMIDIProgChange.Checked));
+      if swMIDIThruEnable.Checked then
+      begin
+        if not ini.NameExists('MIDIThru') then
+        begin
+          if ini.NameExists('#MIDIThru') then ini.Uncomment('#MIDIThru');
+        end;
+        if ini.NameExists('MIDIThru') then
+          ini.WriteString('MIDIThru', cbMIDIThruFrom.Text + ',' + cbMIDIThruTo.Text);
+      end
+      else
+      begin
+        if ini.NameExists('MIDIThru') then ini.Comment('MIDIThru');
+      end;
+      if rbDisplayNone.Checked then ini.WriteString('LCDEnabled', '0');
+      if rbDisplayi2c.Checked then
+      begin
+        ini.WriteString('LCDEnabled', '1');
+        ini.WriteString('LCDI2CAddress', StrToCHex(edDisplayi2sAddr.Text));
+      end;
+      if rbDisplayDiscrete.Checked then
+      begin
+        ini.WriteString('LCDEnabled', '1');
+        ini.WriteString('LCDI2CAddress', StrToCHex('0'));
+        ini.WriteString('LCDPinReadWrite', cbDisplayPinRW.Text);
+        ini.WriteString('LCDPinRegisterSelect', cbDisplayPinRS.Text);
+        ini.WriteString('LCDPinEnable', cbDisplayPinEN.Text);
+        ini.WriteString('LCDPinData4', cbDisplayPinD4.Text);
+        ini.WriteString('LCDPinData5', cbDisplayPinD5.Text);
+        ini.WriteString('LCDPinData6', cbDisplayPinD6.Text);
+        ini.WriteString('LCDPinData7', cbDisplayPinD7.Text);
+      end;
+      if rbEncoderNone.Checked then ini.WriteInteger('EncoderEnabled', 0);
+      if rbEncoderDiscrete.Checked then
+      begin
+        ini.WriteInteger('EncoderEnabled', 1);
+        ini.WriteString('EncoderPinClock', cbEncoderClockPin.Text);
+        ini.WriteString('EncoderPinData', cbEncoderDataPin.Text);
+        ini.WriteString('EncoderPinSwitch', cbEncoderSwPin.Text);
+      end;
+      ini.WriteInteger('MIDIDumpEnabled', integer(swDbgMIDIDump.Checked));
+      ini.WriteInteger('ProfileEnabled', integer(swDbgProfile.Checked));
+      ini.WriteInteger('PerformanceSelectToLoad', integer(swPerfSelToLoad.Checked));
+
+      ini.SaveToFile(SaveMiniDexedINI.FileName);
+    finally
+      ini.Free;
+    end;
+  end;
+end;
+
 procedure TfrmMain.tbbtSavePerformanceClick(Sender: TObject);
 var
   ini: TMiniINIFile;
@@ -1196,8 +1793,7 @@ begin
   if SavePerformanceDialog1.Execute then
   begin
     ini := TMiniINIFile.Create;
-    ini.Init;
-    //ini.LoadFromFile(OpenPerformanceDialog1.FileName);
+    ini.InitPerformance;
     hexstream := TMemoryStream.Create;
 
     ini.WriteInteger('MIDIChannel1', cbMidiCh1.ItemIndex);
@@ -1254,7 +1850,7 @@ begin
     FPerfSlotsDX[2].SaveExpandedVoiceToStream(hexstream);
     hexstring := StreamToExpandedHex(hexstream);
     ini.WriteString('VoiceData2', hexstring);
-        ini.WriteInteger('MonoMode2', byte(swMonoMode2.Checked));
+    ini.WriteInteger('MonoMode2', byte(swMonoMode2.Checked));
     ini.WriteInteger('ModulationWheelRange2', trunc(slModWhRange2.Position));
     ini.WriteInteger('ModulationWheelTarget2',
       (byte(swModEG2.Checked) shl 2) + (byte(swModA2.Checked) shl 1) +
@@ -1290,7 +1886,7 @@ begin
     FPerfSlotsDX[3].SaveExpandedVoiceToStream(hexstream);
     hexstring := StreamToExpandedHex(hexstream);
     ini.WriteString('VoiceData3', hexstring);
-        ini.WriteInteger('MonoMode3', byte(swMonoMode3.Checked));
+    ini.WriteInteger('MonoMode3', byte(swMonoMode3.Checked));
     ini.WriteInteger('ModulationWheelRange3', trunc(slModWhRange3.Position));
     ini.WriteInteger('ModulationWheelTarget3',
       (byte(swModEG3.Checked) shl 2) + (byte(swModA3.Checked) shl 1) +
@@ -1327,7 +1923,7 @@ begin
     FPerfSlotsDX[4].SaveExpandedVoiceToStream(hexstream);
     hexstring := StreamToExpandedHex(hexstream);
     ini.WriteString('VoiceData4', hexstring);
-        ini.WriteInteger('MonoMode4', byte(swMonoMode4.Checked));
+    ini.WriteInteger('MonoMode4', byte(swMonoMode4.Checked));
     ini.WriteInteger('ModulationWheelRange4', trunc(slModWhRange4.Position));
     ini.WriteInteger('ModulationWheelTarget4',
       (byte(swModEG4.Checked) shl 2) + (byte(swModA4.Checked) shl 1) +
@@ -1365,7 +1961,7 @@ begin
     FPerfSlotsDX[5].SaveExpandedVoiceToStream(hexstream);
     hexstring := StreamToExpandedHex(hexstream);
     ini.WriteString('VoiceData5', hexstring);
-        ini.WriteInteger('MonoMode5', byte(swMonoMode5.Checked));
+    ini.WriteInteger('MonoMode5', byte(swMonoMode5.Checked));
     ini.WriteInteger('ModulationWheelRange5', trunc(slModWhRange5.Position));
     ini.WriteInteger('ModulationWheelTarget5',
       (byte(swModEG5.Checked) shl 2) + (byte(swModA5.Checked) shl 1) +
@@ -1405,7 +2001,7 @@ begin
     FPerfSlotsDX[6].SaveExpandedVoiceToStream(hexstream);
     hexstring := StreamToExpandedHex(hexstream);
     ini.WriteString('VoiceData6', hexstring);
-        ini.WriteInteger('MonoMode6', byte(swMonoMode6.Checked));
+    ini.WriteInteger('MonoMode6', byte(swMonoMode6.Checked));
     ini.WriteInteger('ModulationWheelRange6', trunc(slModWhRange6.Position));
     ini.WriteInteger('ModulationWheelTarget6',
       (byte(swModEG6.Checked) shl 2) + (byte(swModA6.Checked) shl 1) +
@@ -1441,7 +2037,7 @@ begin
     FPerfSlotsDX[7].SaveExpandedVoiceToStream(hexstream);
     hexstring := StreamToExpandedHex(hexstream);
     ini.WriteString('VoiceData7', hexstring);
-        ini.WriteInteger('MonoMode7', byte(swMonoMode7.Checked));
+    ini.WriteInteger('MonoMode7', byte(swMonoMode7.Checked));
     ini.WriteInteger('ModulationWheelRange7', trunc(slModWhRange7.Position));
     ini.WriteInteger('ModulationWheelTarget7',
       (byte(swModEG7.Checked) shl 2) + (byte(swModA7.Checked) shl 1) +
@@ -1477,7 +2073,7 @@ begin
     FPerfSlotsDX[8].SaveExpandedVoiceToStream(hexstream);
     hexstring := StreamToExpandedHex(hexstream);
     ini.WriteString('VoiceData8', hexstring);
-        ini.WriteInteger('MonoMode8', byte(swMonoMode8.Checked));
+    ini.WriteInteger('MonoMode8', byte(swMonoMode8.Checked));
     ini.WriteInteger('ModulationWheelRange8', trunc(slModWhRange8.Position));
     ini.WriteInteger('ModulationWheelTarget8',
       (byte(swModEG8.Checked) shl 2) + (byte(swModA8.Checked) shl 1) +
