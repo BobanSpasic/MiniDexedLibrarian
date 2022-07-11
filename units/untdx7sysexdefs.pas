@@ -1,3 +1,13 @@
+{
+ *****************************************************************************
+  See the file COPYING.modifiedLGPL.txt, included in this distribution,
+  for details about the license.
+ *****************************************************************************
+
+ Author: Boban Spasic
+
+}
+
 unit untDX7SysExDefs;
 
 {$mode ObjFPC}{$H+}
@@ -216,13 +226,17 @@ begin
   FDX7SysExs.Add('PORTAMENTO_GLISSANDO= ');// 0-1
   FDX7SysExs.Add('PORTAMENTO_MODE= ');     // 0-1 - 0=retain 1=follow
   FDX7SysExs.Add('MOD_WHELL_SENS= ');      // 0-15
-  FDX7SysExs.Add('MOD_WHELL_ASSIGN= ');    // 0-7  Bit0=pitch, Bit1=amplitude Bit2=EG bias
+  FDX7SysExs.Add('MOD_WHELL_ASSIGN= ');
+  // 0-7  Bit0=pitch, Bit1=amplitude Bit2=EG bias
   FDX7SysExs.Add('FOOT_CTRL_SENS= ');      // 0-15
-  FDX7SysExs.Add('FOOT_CTRL_ASSIGN= ');    // 0-7  Bit0=pitch, Bit1=amplitude Bit2=EG bias
+  FDX7SysExs.Add('FOOT_CTRL_ASSIGN= ');
+  // 0-7  Bit0=pitch, Bit1=amplitude Bit2=EG bias
   FDX7SysExs.Add('AFTER_TOUCH_SENS= ');    // 0-15
-  FDX7SysExs.Add('AFTER_TOUCH_ASSIGN= ');  // 0-7  Bit0=pitch, Bit1=amplitude Bit2=EG bias
+  FDX7SysExs.Add('AFTER_TOUCH_ASSIGN= ');
+  // 0-7  Bit0=pitch, Bit1=amplitude Bit2=EG bias
   FDX7SysExs.Add('BREATH_CTRL_SENS= ');    // 0-15
-  FDX7SysExs.Add('BREATH_CTRL_ASSIGN= ');  // 0-7  Bit0=pitch, Bit1=amplitude Bit2=EG bias
+  FDX7SysExs.Add('BREATH_CTRL_ASSIGN= ');
+  // 0-7  Bit0=pitch, Bit1=amplitude Bit2=EG bias
   FDX7SysExs.Add('OUTPUT_ATTENUATION= ');  // 0-7
   FDX7SysExs.Add('MASTER_TUNING= ');       // 0-127    64=concert tuning
 

@@ -1,3 +1,13 @@
+{
+ *****************************************************************************
+  See the file COPYING.modifiedLGPL.txt, included in this distribution,
+  for details about the license.
+ *****************************************************************************
+
+ Author: Boban Spasic
+
+}
+
 unit untDX7Voice;
 
 {$mode ObjFPC}{$H+}

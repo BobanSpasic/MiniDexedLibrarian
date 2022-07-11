@@ -1,3 +1,13 @@
+{
+ *****************************************************************************
+  See the file COPYING.modifiedLGPL.txt, included in this distribution,
+  for details about the license.
+ *****************************************************************************
+
+ Author: Boban Spasic
+
+}
+
 unit untMiniINI;
 
 {$mode ObjFPC}{$H+}
@@ -178,7 +188,7 @@ begin
   FMiniINI.Add('#');
   FMiniINI.Add('#  performance.ini');
   FMiniINI.Add('#  edited/created with');
-  FMiniINI.Add('#  MiniDexed Controle Center');
+  FMiniINI.Add('#  MiniDexed Control Center');
   FMiniINI.Add('#');
   FMiniINI.Add('#  https://github.com/BobanSpasic/MiniDexedLibrarian');
   FMiniINI.Add('#');
@@ -472,7 +482,7 @@ begin
   FMiniINI.Add('#');
   FMiniINI.Add('#  minidexed.ini');
   FMiniINI.Add('#  edited/created with');
-  FMiniINI.Add('#  MiniDexed Controle Center');
+  FMiniINI.Add('#  MiniDexed Control Center');
   FMiniINI.Add('#');
   FMiniINI.Add('#  https://github.com/BobanSpasic/MiniDexedLibrarian');
   FMiniINI.Add('#');

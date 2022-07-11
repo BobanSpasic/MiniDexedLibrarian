@@ -1,3 +1,13 @@
+{
+ *****************************************************************************
+  See the file COPYING.modifiedLGPL.txt, included in this distribution,
+  for details about the license.
+ *****************************************************************************
+
+ Author: Boban Spasic
+
+}
+
 unit untMain;
 
 {$mode objfpc}{$H+}
@@ -5,11 +15,10 @@ unit untMain;
 interface
 
 uses
-  Classes, SysUtils, StrUtils, Forms, Controls, Graphics, Dialogs, StdCtrls,
-  ComCtrls, ExtCtrls, Grids, JPP.Edit, atshapeline, cyPageControl, ECSlider,
-  ECSwitch, ECEditBtns, BCComboBox,
-  untFileUtils, untDX7Bank, untDX7Voice, untDX7Utils, untMiniINI,
-  MIDI;
+  Classes, Messages, SysUtils, StrUtils, Forms, Controls, Graphics,
+  Dialogs, StdCtrls, ComCtrls, ExtCtrls, Grids, JPP.Edit, atshapeline,
+  cyPageControl, ECSlider, ECSwitch, ECEditBtns, BCComboBox,
+  untUtils, untDX7Bank, untDX7Voice, untDX7Utils, untMiniINI, MIDI, Types;
 
 type
 
@@ -55,6 +64,8 @@ type
     edSoundDevOther: TJppEdit;
     edSoundDevi2sAddr: TJppEdit;
     Label1: TLabel;
+    lbComments: TLabel;
+    lbGPIOPins: TLabel;
     lbPerfOptions: TLabel;
     lbDisplayPinD4: TLabel;
     lbDisplayPinD5: TLabel;
@@ -84,6 +95,7 @@ type
     lbDisplayPinRW: TLabel;
     mmINIComments: TMemo;
     OpenMiniDexedINI: TOpenDialog;
+    pnComments: TPanel;
     pnPerfOptions: TPanel;
     pnEncoder: TPanel;
     pnDebug: TPanel;
@@ -501,6 +513,8 @@ type
     tbINIFiles: TToolBar;
     tbbtOpenINIFiles: TToolButton;
     tbbtSaveINIFiles: TToolButton;
+    tbbtSendVoiceDump: TToolButton;
+    ToolButton1: TToolButton;
     tsIniFiles: TTabSheet;
     tsSyxFiles: TTabSheet;
     tsSDCard: TTabSheet;
@@ -519,6 +533,8 @@ type
     tsPerformanceEdit: TTabSheet;
     procedure btSelectDirClick(Sender: TObject);
     procedure cbDisplayEncoderChange(Sender: TObject);
+    procedure cbMidiInChange(Sender: TObject);
+    procedure cbMidiOutChange(Sender: TObject);
     procedure edPSlotDragDrop(Sender, Source: TObject; X, Y: integer);
     procedure edPSlotDragOver(Sender, Source: TObject; X, Y: integer;
       State: TDragState; var Accept: boolean);
@@ -526,8 +542,8 @@ type
     procedure edSlotDragOver(Sender, Source: TObject; X, Y: integer;
       State: TDragState; var Accept: boolean);
     procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
+    procedure FormCloseQuery(Sender: TObject; var CanClose: boolean);
     procedure FormCreate(Sender: TObject);
-    procedure FormShow(Sender: TObject);
     procedure lbFilesClick(Sender: TObject);
     procedure lbFilesStartDrag(Sender: TObject; var DragObject: TDragObject);
     procedure lbVoicesStartDrag(Sender: TObject; var DragObject: TDragObject);
@@ -538,6 +554,8 @@ type
     procedure rbSoundDevi2sChange(Sender: TObject);
     procedure rbSoundDevOtherChange(Sender: TObject);
     procedure rbSoundDevPWMChange(Sender: TObject);
+    procedure sgGPIODrawCell(Sender: TObject; aCol, aRow: Integer;
+      aRect: TRect; aState: TGridDrawState);
     procedure slSliderChange(Sender: TObject);
     procedure slSliderMouseUp(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: integer);
@@ -549,11 +567,14 @@ type
     procedure tbbtSaveINIFilesClick(Sender: TObject);
     procedure tbbtSavePerformanceClick(Sender: TObject);
     procedure CalculateGPIO;
+    procedure tbbtSendVoiceDumpClick(Sender: TObject);
 
   private
-
+    procedure MIDIdataIn(var msg: TMessage); message WM_MIDIDATA_ARRIVED;
   public
-
+    procedure OnMidiInData(const aDeviceIndex: integer;
+      const aStatus, aData1, aData2: byte);
+    procedure OnSysExData(const aDeviceIndex: integer; const aStream: TMemoryStream);
   end;
 
 var
@@ -561,13 +582,77 @@ var
   FBankDX: TDX7BankContainer;
   FSlotsDX: TDX7BankContainer;
   FPerfSlotsDX: array [1..8] of TDX7VoiceContainer;
+  FMidiIn: string;
+  FMidiInInt: integer;
+  FMidiOut: string;
+  FMidiOutInt: integer;
+  FMidiIsActive: boolean;
   frmMain: TfrmMain;
+
 
 implementation
 
 {$R *.lfm}
 
+uses JWAwindows;
+
 { TfrmMain }
+
+procedure TfrmMain.OnMidiInData(const aDeviceIndex: integer;
+  const aStatus, aData1, aData2: byte);
+begin
+  //do not call GUI elements from a callback function, use Messages
+
+  // skip active sensing signals from keyboard
+  if aStatus = $FE then Exit;  //skip active sensing
+  if aStatus = $F8 then Exit;  //skip real-time clock
+  PostMessage(Application.MainForm.Handle,
+    WM_MIDIDATA_ARRIVED,
+    aDeviceIndex,
+    aStatus + (aData1 and $ff) shl 8 + (aData2 and $FF) shl 16);
+end;
+
+procedure TfrmMain.MIDIdataIn(var msg: TMessage);
+begin
+  // simply display the values:
+  if (Msg.lParamlo <> $F8)     // IGNORE real-time message clock $F8 = 248
+    and (Msg.lParamlo <> $FE)  // IGNORE "Active Sensing" $FE = 254
+  then
+  begin
+      {
+      Memo1.Append( IntToStr( Msg.wParamhi) +' '
+                       +IntToStr( Msg.wParamlo) +'  '
+                       // MIDI Note on / off
+                       +IntToHex( Msg.lParamlo and $FF, 2) +' '
+                       // MIDI Note value
+                       +IntToHex( (Msg.lParamlo shr 8) and $FF, 2) +' '
+                       // MIDI Key On Velocity
+                       +IntToHex( Msg.lParamhi and $FF, 2)
+                       );
+
+                       // this value always contains NULL and can be ignored :
+                       //+IntToHex( (Msg.lParamhi shr 8) and $FF, 2)
+                       }
+  end;
+end;
+
+procedure TfrmMain.OnSysExData(const aDeviceIndex: integer;
+  const aStream: TMemoryStream);
+begin
+  //do something with data
+
+  //memLog.Lines.BeginUpdate;
+  try
+    // print the message log
+    {memLog.Lines.Insert( 0, Format( '[%s] %s: <Bytes> %d <SysEx> %s',
+      [ FormatDateTime( 'HH:NN:SS.ZZZ', now ),
+        MidiInput.Devices[aDeviceIndex],
+        aStream.Size,
+        SysExStreamToStr( aStream ) ] )); }
+  finally
+    //memLog.Lines.EndUpdate;
+  end;
+end;
 
 procedure TfrmMain.btSelectDirClick(Sender: TObject);
 var
@@ -589,6 +674,36 @@ begin
   CalculateGPIO;
 end;
 
+procedure TfrmMain.cbMidiInChange(Sender: TObject);
+var
+  i: integer;
+begin
+  for i := 0 to MidiInput.Devices.Count - 1 do
+    MidiInput.Close(i);
+  if cbMidiIn.ItemIndex <> -1 then
+  begin
+    FMidiIn := cbMidiIn.Text;
+    FMidiInInt := cbMidiIn.ItemIndex;
+    MidiInput.Open(FMidiInInt);
+    FMidiIsActive := True;
+  end;
+end;
+
+procedure TfrmMain.cbMidiOutChange(Sender: TObject);
+var
+  i: integer;
+begin
+  for i := 0 to MidiOutput.Devices.Count - 1 do
+    MidiOutput.Close(i);
+  if cbMidiOut.ItemIndex <> -1 then
+  begin
+    FMidiOut := cbMidiOut.Text;
+    FMidiOutInt := cbMidiOut.ItemIndex;
+    MidiOutput.Open(FMidiOutInt);
+    FMidiIsActive := True;
+  end;
+end;
+
 procedure TfrmMain.edPSlotDragDrop(Sender, Source: TObject; X, Y: integer);
 var
   dmp: TMemoryStream;
@@ -597,6 +712,7 @@ var
   i, j: integer;
   tmpVoice: TDX7VoiceContainer;
 begin
+  Unused(X, Y);
   if Source = lbVoices then
   begin
     if (lbVoices.ItemIndex = -1) or (lbFiles.ItemIndex = -1) then Exit;
@@ -634,6 +750,8 @@ end;
 procedure TfrmMain.edPSlotDragOver(Sender, Source: TObject; X, Y: integer;
   State: TDragState; var Accept: boolean);
 begin
+  Unused(Source, State);
+  Unused(X, Y);
   if (Sender = lbVoices) and (dragItem <> -1) then Accept := True;
 end;
 
@@ -645,6 +763,7 @@ var
   i, j: integer;
   tmpVoice: TDX7VoiceContainer;
 begin
+  Unused(X, Y);
   if Source = lbFiles then
   begin
     if lbFiles.ItemIndex = -1 then exit;
@@ -706,6 +825,8 @@ end;
 procedure TfrmMain.edSlotDragOver(Sender, Source: TObject; X, Y: integer;
   State: TDragState; var Accept: boolean);
 begin
+  Unused(Source, State);
+  Unused(X, Y);
   if (Sender = lbFiles) and (dragItem <> -1) then Accept := True;
   if (Sender = lbVoices) and (dragItem <> -1) then Accept := True;
 end;
@@ -714,10 +835,24 @@ procedure TfrmMain.FormClose(Sender: TObject; var CloseAction: TCloseAction);
 var
   i: integer;
 begin
+  Unused(CloseAction);
   FBankDX.Free;
   FSlotsDX.Free;
   for i := 1 to 8 do
     FPerfSlotsDX[i].Free;
+end;
+
+procedure TfrmMain.FormCloseQuery(Sender: TObject; var CanClose: boolean);
+begin
+  CanClose := False;
+  if FMidiIsActive then
+  begin
+    MidiInput.CloseAll;
+    MidiOutput.CloseAll;
+    CanClose := True;
+  end
+  else
+    CanClose := True;
 end;
 
 procedure TfrmMain.FormCreate(Sender: TObject);
@@ -744,24 +879,26 @@ begin
   RefreshSlots;
   pnHint.BringToFront;
   pnHint.Visible := False;
-  ;
   lbHint.Caption := '';
   pnHint.Top := frmMain.Height;
   pnHint.Left := frmMain.Width;
 
+  FMidiIsActive := False;
+  FMidiInInt := -1;
+  FMidiOutInt := -1;
+  FMidiIn := '';
+  FMidiOut := '';
+  MidiInput.OnMidiData := @Self.OnMidiInData;
+  MidiInput.OnSysExData := @Self.OnSysExData;
+
   //fill MIDI ports to ComboBoxes
   cbMidiIn.Items.Clear;
-  for i := 0 to MidiInput.Devices.Count - 1 do
-    cbMidiIn.Items.Add(MidiInput.Devices[i]);
+  //for i := 0 to MidiInput.Devices.Count - 1 do
+  cbMidiIn.Items.Assign(MidiInput.Devices);
 
   cbMidiOut.Items.Clear;
-  for i := 0 to MidiOutput.Devices.Count - 1 do
-    cbMidiOut.Items.Add(MidiOutput.Devices[i]);
-end;
-
-procedure TfrmMain.FormShow(Sender: TObject);
-begin
-
+  //for i := 0 to MidiOutput.Devices.Count - 1 do
+  cbMidiOut.Items.Assign(MidiOutput.Devices);
 end;
 
 procedure TfrmMain.lbFilesClick(Sender: TObject);
@@ -819,12 +956,14 @@ end;
 
 procedure TfrmMain.lbFilesStartDrag(Sender: TObject; var DragObject: TDragObject);
 begin
+  Unused(DragObject);
   if lbFiles.ItemIndex <> -1 then
     dragItem := lbFiles.ItemIndex;
 end;
 
 procedure TfrmMain.lbVoicesStartDrag(Sender: TObject; var DragObject: TDragObject);
 begin
+  Unused(DragObject);
   if lbVoices.ItemIndex <> -1 then
     dragItem := lbVoices.ItemIndex;
 end;
@@ -1081,6 +1220,23 @@ begin
   slFreeGPIOs.Free;
 end;
 
+procedure TfrmMain.tbbtSendVoiceDumpClick(Sender: TObject);
+var
+  bankStream: TMemoryStream;
+begin
+  if FMidiOutInt <> -1 then
+  begin
+    try
+      bankStream := TMemoryStream.Create;
+      FSlotsDX.SysExBankToStream(bankStream);
+      MidiOutput.SendSysEx(FMidiOutInt, bankStream);
+      ShowMessage('Bank sent!');
+    finally
+      bankStream.Free;
+    end;
+  end;
+end;
+
 procedure TfrmMain.rbSoundDevOtherChange(Sender: TObject);
 begin
   edSoundDevOther.Enabled := rbSoundDevOther.Checked;
@@ -1093,6 +1249,24 @@ begin
     edSoundDevi2sAddr.Enabled := False;
     edSoundDevOther.Enabled := False;
     CalculateGPIO;
+  end;
+end;
+
+procedure TfrmMain.sgGPIODrawCell(Sender: TObject; aCol, aRow: Integer;
+  aRect: TRect; aState: TGridDrawState);
+begin
+  Unused(aState);
+  if aRow <= 12 then
+  begin
+    sgGPIO.Canvas.Brush.Color:=clWhite;
+    sgGPIO.Canvas.FillRect(aRect);
+    sgGPIO.Canvas.TextOut(aRect.Left + 2, aRect.Top + 2, sgGPIO.Cells[aCol, aRow]);
+  end
+  else
+  begin
+    sgGPIO.Canvas.Brush.Color:=clGray;
+    sgGPIO.Canvas.FillRect(aRect);
+    sgGPIO.Canvas.TextOut(aRect.Left + 2, aRect.Top + 2, sgGPIO.Cells[aCol, aRow]);
   end;
 end;
 
@@ -1130,6 +1304,8 @@ end;
 procedure TfrmMain.slSliderMouseUp(Sender: TObject; Button: TMouseButton;
   Shift: TShiftState; X, Y: integer);
 begin
+  Unused(Button, Shift);
+  Unused(X, Y);
   pnHint.Visible := False;
 end;
 
@@ -1707,11 +1883,11 @@ begin
       ini := TMiniINIFile.Create;
       ini.InitMiniDexedINI;
       if mmINIComments.Lines.Count > 0 then
-      ini.WriteString('CommentLine1', mmINIComments.Lines[0]);
+        ini.WriteString('CommentLine1', mmINIComments.Lines[0]);
       if mmINIComments.Lines.Count > 1 then
-      ini.WriteString('CommentLine2', mmINIComments.Lines[1]);
+        ini.WriteString('CommentLine2', mmINIComments.Lines[1]);
       if mmINIComments.Lines.Count > 2 then
-      ini.WriteString('CommentLine3', mmINIComments.Lines[2]);
+        ini.WriteString('CommentLine3', mmINIComments.Lines[2]);
       if rbSoundDevPWM.Checked then ini.WriteString('SoundDevice', 'pwm');
       if rbSoundDevi2s.Checked then
       begin

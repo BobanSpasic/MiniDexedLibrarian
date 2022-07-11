@@ -14,6 +14,13 @@
       </XPManifest>
       <Icon Value="0"/>
     </General>
+    <VersionInfo>
+      <UseVersionInfo Value="True"/>
+      <MajorVersionNr Value="1"/>
+      <BuildNr Value="4"/>
+      <Attributes pvaPreRelease="True"/>
+      <StringTable FileDescription="MiniDexed Control Center" LegalCopyright="Boban Spasic" OriginalFilename="MiniDexedCC"/>
+    </VersionInfo>
     <BuildModes>
       <Item Name="Default" Default="True"/>
       <Item Name="Debug">
@@ -157,9 +164,9 @@
         <UnitName Value="untDX7Voice"/>
       </Unit>
       <Unit>
-        <Filename Value="..\units\untfileutils.pas"/>
+        <Filename Value="..\units\untutils.pas"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="untFileUtils"/>
+        <UnitName Value="untUtils"/>
       </Unit>
       <Unit>
         <Filename Value="..\units\untminiini.pas"/>

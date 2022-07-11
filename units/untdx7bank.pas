@@ -1,3 +1,13 @@
+{
+ *****************************************************************************
+  See the file COPYING.modifiedLGPL.txt, included in this distribution,
+  for details about the license.
+ *****************************************************************************
+
+ Author: Boban Spasic
+
+}
+
 unit untDX7Bank;
 
 {$mode ObjFPC}{$H+}
@@ -26,6 +36,7 @@ type
     function SetVoice(aVoiceNr: integer; var FDX7Voice: TDX7VoiceContainer): boolean;
     function GetChecksum: integer;
     function SaveBankToSysExFile(aFile: string): boolean;
+    procedure SysExBankToStream(var aStream: TMemoryStream);
   end;
 
 implementation
@@ -162,6 +173,24 @@ begin
   finally
     tmpStream.Free;
   end;
+end;
+
+procedure TDX7BankContainer.SysExBankToStream(var aStream: TMemoryStream);
+var
+  i: integer;
+begin
+  aStream.Clear;
+  aStream.Position := 0;
+  aStream.WriteByte($F0);
+  aStream.WriteByte($43);
+  aStream.WriteByte($00);
+  aStream.WriteByte($09);
+  aStream.WriteByte($20);
+  aStream.WriteByte($00);
+  for i := 0 to 31 do
+    FDX7BankParams[i].SavePackedVoiceToStream(aStream);
+  aStream.WriteByte(GetChecksum);
+  aStream.WriteByte($F7);
 end;
 
 end.
