@@ -5,6 +5,7 @@ Working:
 - open/combine/save DX7 SysEx bulk dumps (Voice banks)
 - open/edit/save MiniDexed performance.ini files
 - open/edit/save MiniDexed minidexed.ini configuration files
+- sending voice bulk dumps (banks) to Dexed (not to MiniDexed)
 
 ToDo:
 - organize SysEx and performance files on MiniDexed SD Card
