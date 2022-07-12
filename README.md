@@ -1,6 +1,7 @@
 # MiniDexedLibrarian
-This project's target is to produce a librarian/editor for [MiniDexed](https://github.com/probonopd/MiniDexed) - 8x Dexed on bare metal Rapsberry Pi.
-As side-effect, it can also be used as a librarian for Yamaha DX7/TX816.
+This project's target is to produce a librarian/editor for [MiniDexed](https://github.com/probonopd/MiniDexed) - 8x Dexed on bare metal Raspberry Pi.
+
+As a side-effect, it can also be used as a librarian for Yamaha DX7/TX816.
 
 ## MiniDexed Control Center
 The project binaries will be distributed under the name **MiniDexed Control Center**
