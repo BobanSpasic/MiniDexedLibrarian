@@ -1,8 +1,8 @@
 # MiniDexedLibrarian
-This project's target is to produce a librarian/editor for MiniDexed: https://github.com/probonopd/MiniDexed
+This project's target is to produce a librarian/editor for [MiniDexed](https://github.com/probonopd/MiniDexed)
 
 ## MiniDexed Control Center
-The project binaries will be distributed under the name MiniDexed Control Center
+The project binaries will be distributed under the name **MiniDexed Control Center**
 
 Working:
 - open/combine/save DX7 SysEx bulk dumps (Voice banks)
