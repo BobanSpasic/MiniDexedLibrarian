@@ -18,10 +18,10 @@ object frmMain: TfrmMain
     Height = 859
     Top = 0
     Width = 1513
-    ActivePage = tsSDCard
+    ActivePage = tsSettings
     Align = alClient
     Style = tsButton
-    TabIndex = 2
+    TabIndex = 3
     TabOrder = 0
     ThinBorder = False
     ActiveTabColors.FromColor = 2900284
@@ -79,7 +79,7 @@ object frmMain: TfrmMain
             ParentFont = False
             TabOrder = 0
           end
-          object edbtSelDir: TECEditBtn
+          object edbtSelSysExDir: TECEditBtn
             Left = 11
             Height = 15
             Hint = 'Select directory'
@@ -210,8 +210,8 @@ object frmMain: TfrmMain
           InactiveTabColors.ToColor = 2900284
           object tsBankSlots: TTabSheet
             Caption = 'Bank'
-            ClientHeight = 807
-            ClientWidth = 815
+            ClientHeight = 797
+            ClientWidth = 807
             object pnSlot01: TPanel
               Left = 16
               Height = 20
@@ -1750,32 +1750,33 @@ object frmMain: TfrmMain
               Left = 0
               Height = 26
               Top = 0
-              Width = 815
+              Width = 807
               Caption = 'tbBank'
+              EdgeBorders = []
               Images = ilToolbarBankPerformance
               TabOrder = 32
               object tbbtOpenBank: TToolButton
                 Left = 1
-                Top = 2
+                Top = 0
                 Caption = 'tbbtOpenBank'
                 ImageIndex = 0
               end
               object tbbtSaveBank: TToolButton
                 Left = 24
-                Top = 2
+                Top = 0
                 ImageIndex = 1
                 OnClick = tbbtSaveBankClick
               end
               object tbbtSendVoiceDump: TToolButton
                 Left = 70
-                Top = 2
+                Top = 0
                 Caption = 'Send'
                 ImageIndex = 2
                 OnClick = tbbtSendVoiceDumpClick
               end
               object ToolButton1: TToolButton
                 Left = 47
-                Top = 2
+                Top = 0
                 Caption = 'ToolButton1'
               end
             end
@@ -1793,8 +1794,8 @@ object frmMain: TfrmMain
           end
           object tsPerformanceSlots: TTabSheet
             Caption = 'Performance'
-            ClientHeight = 807
-            ClientWidth = 815
+            ClientHeight = 797
+            ClientWidth = 807
             object pnPSlot01: TPanel
               Left = 16
               Height = 20
@@ -2197,17 +2198,18 @@ object frmMain: TfrmMain
         Top = 0
         Width = 1505
         Caption = 'tbPerfEdit'
+        EdgeBorders = []
         Images = ilToolbarBankPerformance
         TabOrder = 0
         object tbbtLoadPerformance: TToolButton
           Left = 1
-          Top = 2
+          Top = 0
           ImageIndex = 0
           OnClick = tbbtLoadPerformanceClick
         end
         object tbbtSavePerformance: TToolButton
           Left = 24
-          Top = 2
+          Top = 0
           ImageIndex = 1
           OnClick = tbbtSavePerformanceClick
         end
@@ -15218,6 +15220,7 @@ object frmMain: TfrmMain
           Button.GlyphColor = 2900284
           Button.GlyphDesign = egdList
           Button.Spacing = 0
+          Button.OnClick = btSelSDCardClick
           Indent = 10
           AutoSelect = False
           AutoSize = False
@@ -15261,26 +15264,27 @@ object frmMain: TfrmMain
           InactiveTabColors.ToColor = 2900284
           object tsIniFiles: TTabSheet
             Caption = 'INI Files'
-            ClientHeight = 774
-            ClientWidth = 1503
+            ClientHeight = 764
+            ClientWidth = 1495
             object tbINIFiles: TToolBar
               Left = 0
               Height = 26
               Top = 0
-              Width = 1503
+              Width = 1495
               Caption = 'tbIniFiles'
+              EdgeBorders = []
               Images = ilToolbarBankPerformance
               TabOrder = 0
               object tbbtOpenINIFiles: TToolButton
                 Left = 1
-                Top = 2
+                Top = 0
                 Caption = 'tbbtOpenINI'
                 ImageIndex = 0
                 OnClick = tbbtOpenINIFilesClick
               end
               object tbbtSaveINIFiles: TToolButton
                 Left = 24
-                Top = 2
+                Top = 0
                 ImageIndex = 1
                 OnClick = tbbtSaveINIFilesClick
               end
@@ -17554,7 +17558,7 @@ object frmMain: TfrmMain
                 item
                   ReadOnly = True
                   Title.Caption = 'Title'
-                  Width = 100
+                  Width = 91
                 end              
                 item
                   Alignment = taRightJustify
@@ -17589,7 +17593,7 @@ object frmMain: TfrmMain
                   Alignment = taRightJustify
                   ReadOnly = True
                   Title.Caption = 'Title'
-                  Width = 100
+                  Width = 92
                 end>
               FixedCols = 0
               FixedRows = 0
@@ -17599,12 +17603,12 @@ object frmMain: TfrmMain
               TabOrder = 7
               OnDrawCell = sgGPIODrawCell
               ColWidths = (
-                100
+                91
                 54
                 20
                 20
                 54
-                100
+                92
               )
               Cells = (
                 40
@@ -18039,7 +18043,7 @@ object frmMain: TfrmMain
       Transparent = False
     end
   end
-  object SelectDirectoryDialog1: TSelectDirectoryDialog
+  object SelectSysExDirectoryDialog1: TSelectDirectoryDialog
     Left = 576
   end
   object ilToolbarBankPerformance: TImageList
@@ -18087,6 +18091,7 @@ object frmMain: TfrmMain
     Title = 'Open performance file'
     DefaultExt = '.ini'
     Filter = '*.ini|*.ini'
+    Options = [ofFileMustExist, ofEnableSizing, ofViewDetail]
     Left = 480
   end
   object SavePerformanceDialog1: TSaveDialog
@@ -18100,12 +18105,18 @@ object frmMain: TfrmMain
     Title = 'Open minidexed.ini file'
     DefaultExt = '.ini'
     Filter = '*.ini|*.ini'
+    Options = [ofFileMustExist, ofEnableSizing, ofViewDetail]
     Left = 672
   end
   object SaveMiniDexedINI: TSaveDialog
     Title = 'Save minidexed.ini file'
     DefaultExt = '.ini'
     Filter = '*.ini|*.ini'
+    Options = [ofOverwritePrompt, ofEnableSizing, ofViewDetail]
     Left = 720
+  end
+  object SelectSDCardDirectoryDialog1: TSelectDirectoryDialog
+    Title = 'Select SD Card root directory'
+    Left = 768
   end
 end

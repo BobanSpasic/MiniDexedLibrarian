@@ -1239,9 +1239,9 @@ end;
 
 function TDX7VoiceContainer.SavePackedVoiceToStream(var aStream: TMemoryStream): boolean;
 begin
+  //dont clear the stream here or else bulk dump won't work
   if Assigned(aStream) then
   begin
-    aStream.Clear;
     with FDX7PackedVoiceParams do
     begin
       aStream.WriteByte(OP6_EG_rate_1);

@@ -26,6 +26,7 @@ type
 
   TfrmMain = class(TForm)
     btSelectDir: TECSpeedBtnPlus;
+    btSelSDCard: TECSpeedBtnPlus;
     cbDisplayPinD4: TBCComboBox;
     cbDisplayPinD5: TBCComboBox;
     cbDisplayPinD6: TBCComboBox;
@@ -107,7 +108,7 @@ type
     lbMidiIn: TLabel;
     lbMidiOut: TLabel;
     OpenPerformanceDialog1: TOpenDialog;
-    edbtSelDir: TECEditBtn;
+    edbtSelSysExDir: TECEditBtn;
     pnMiniDexedFiles: TPanel;
     pnHint: TPanel;
     pnPEffects: TPanel;
@@ -141,6 +142,7 @@ type
     rbDisplayNone: TRadioButton;
     SaveMiniDexedINI: TSaveDialog;
     SavePerformanceDialog1: TSaveDialog;
+    SelectSDCardDirectoryDialog1: TSelectDirectoryDialog;
     ShapeLine1: TShapeLine;
     ShapeLine2: TShapeLine;
     ShapeLine3: TShapeLine;
@@ -376,7 +378,7 @@ type
     pnVoiceManager: TPanel;
     pnFileManager: TPanel;
     SaveBankDialog1: TSaveDialog;
-    SelectDirectoryDialog1: TSelectDirectoryDialog;
+    SelectSysExDirectoryDialog1: TSelectDirectoryDialog;
     sl3: TShapeLine;
     sl4: TShapeLine;
     Splitter1: TSplitter;
@@ -535,6 +537,7 @@ type
     procedure cbDisplayEncoderChange(Sender: TObject);
     procedure cbMidiInChange(Sender: TObject);
     procedure cbMidiOutChange(Sender: TObject);
+    procedure btSelSDCardClick(Sender: TObject);
     procedure edPSlotDragDrop(Sender, Source: TObject; X, Y: integer);
     procedure edPSlotDragOver(Sender, Source: TObject; X, Y: integer;
       State: TDragState; var Accept: boolean);
@@ -554,7 +557,7 @@ type
     procedure rbSoundDevi2sChange(Sender: TObject);
     procedure rbSoundDevOtherChange(Sender: TObject);
     procedure rbSoundDevPWMChange(Sender: TObject);
-    procedure sgGPIODrawCell(Sender: TObject; aCol, aRow: Integer;
+    procedure sgGPIODrawCell(Sender: TObject; aCol, aRow: integer;
       aRect: TRect; aState: TGridDrawState);
     procedure slSliderChange(Sender: TObject);
     procedure slSliderMouseUp(Sender: TObject; Button: TMouseButton;
@@ -568,6 +571,10 @@ type
     procedure tbbtSavePerformanceClick(Sender: TObject);
     procedure CalculateGPIO;
     procedure tbbtSendVoiceDumpClick(Sender: TObject);
+    procedure LoadLastStateBank;
+    procedure FillFilesList(aFolder: string);
+    procedure OpenSysEx(aName: string);
+    procedure OpenPerformance(aName: string);
 
   private
     procedure MIDIdataIn(var msg: TMessage); message WM_MIDIDATA_ARRIVED;
@@ -588,7 +595,14 @@ var
   FMidiOutInt: integer;
   FMidiIsActive: boolean;
   frmMain: TfrmMain;
-
+  LastSysExOpenDir: string;
+  LastSysExSaveDir: string;
+  LastSysEx: string;
+  LastPerfOpenDir: string;
+  LastPerfSaveDir: string;
+  LastPerf: string;
+  LastSDCardDir: string;
+  FUpdatingForm: boolean;
 
 implementation
 
@@ -655,17 +669,13 @@ begin
 end;
 
 procedure TfrmMain.btSelectDirClick(Sender: TObject);
-var
-  sl: TStringList;
 begin
-  if SelectDirectoryDialog1.Execute then
+  if SelectSysExDirectoryDialog1.Execute then
   begin
-    edbtSelDir.Text := SelectDirectoryDialog1.FileName;
-    sl := TStringList.Create;
-    FindFiles(IncludeTrailingPathDelimiter(SelectDirectoryDialog1.FileName), sl);
-    lbFiles.Items.Clear;
-    lbFiles.Items.AddStrings(sl);
-    sl.Free;
+    edbtSelSysExDir.Text := SelectSysExDirectoryDialog1.FileName;
+    LastSysExOpenDir := IncludeTrailingPathDelimiter(
+      SelectSysExDirectoryDialog1.FileName);
+    FillFilesList(SelectSysExDirectoryDialog1.FileName);
   end;
 end;
 
@@ -704,6 +714,15 @@ begin
   end;
 end;
 
+procedure TfrmMain.btSelSDCardClick(Sender: TObject);
+begin
+  if SelectSDCardDirectoryDialog1.Execute then
+  begin
+    LastSDCardDir := SelectSDCardDirectoryDialog1.FileName;
+    edbtSelSDCard.Text := SelectSDCardDirectoryDialog1.FileName;
+  end;
+end;
+
 procedure TfrmMain.edPSlotDragDrop(Sender, Source: TObject; X, Y: integer);
 var
   dmp: TMemoryStream;
@@ -717,7 +736,7 @@ begin
   begin
     if (lbVoices.ItemIndex = -1) or (lbFiles.ItemIndex = -1) then Exit;
     itm := lbFiles.Items[lbFiles.ItemIndex];
-    f := IncludeTrailingPathDelimiter(edbtSelDir.Text) + itm;
+    f := IncludeTrailingPathDelimiter(edbtSelSysExDir.Text) + itm;
     if FileExists(f) then
     begin
       dmp := TMemoryStream.Create;
@@ -768,7 +787,7 @@ begin
   begin
     if lbFiles.ItemIndex = -1 then exit;
     itm := lbFiles.Items[dragItem];
-    f := IncludeTrailingPathDelimiter(edbtSelDir.Text) + itm;
+    f := IncludeTrailingPathDelimiter(edbtSelSysExDir.Text) + itm;
     if FileExists(f) then
     begin
       dmp := TMemoryStream.Create;
@@ -792,7 +811,7 @@ begin
   begin
     if (lbVoices.ItemIndex = -1) or (lbFiles.ItemIndex = -1) then Exit;
     itm := lbFiles.Items[lbFiles.ItemIndex];
-    f := IncludeTrailingPathDelimiter(edbtSelDir.Text) + itm;
+    f := IncludeTrailingPathDelimiter(edbtSelSysExDir.Text) + itm;
     if FileExists(f) then
     begin
       dmp := TMemoryStream.Create;
@@ -831,6 +850,17 @@ begin
   if (Sender = lbVoices) and (dragItem <> -1) then Accept := True;
 end;
 
+procedure TfrmMain.FillFilesList(aFolder: string);
+var
+  sl: TStringList;
+begin
+  sl := TStringList.Create;
+  FindFiles(IncludeTrailingPathDelimiter(aFolder), sl);
+  lbFiles.Items.Clear;
+  lbFiles.Items.AddStrings(sl);
+  sl.Free;
+end;
+
 procedure TfrmMain.FormClose(Sender: TObject; var CloseAction: TCloseAction);
 var
   i: integer;
@@ -843,8 +873,32 @@ begin
 end;
 
 procedure TfrmMain.FormCloseQuery(Sender: TObject; var CanClose: boolean);
+var
+  ini: TMiniINIFile;
+  appFolder: string;
 begin
   CanClose := False;
+  try
+    ini := TMiniINIFile.Create;
+    appFolder := IncludeTrailingPathDelimiter(ExtractFileDir(Application.Params[0]));
+    ini.LoadFromFile(appFolder + 'settings.ini');
+    if cbMIDIIn.ItemIndex <> -1 then
+      ini.WriteString('MIDIInput', cbMidiIn.Text);
+    if cbMidiOut.ItemIndex <> -1 then
+      ini.WriteString('MIDIOutput', cbMidiOut.Text);
+    ini.WriteString('LastSysExOpenDir', LastSysExOpenDir);
+    ini.WriteString('LastSysExSaveDir', LastSysExSaveDir);
+    ini.WriteString('LastSysEx', LastSysEx);
+    ini.WriteString('LastPerfOpenDir', LastPerfOpenDir);
+    ini.WriteString('LastPerfSaveDir', LastPerfSaveDir);
+    ini.WriteString('LastPerf', LastPerf);
+    ini.WriteString('LastSDCardDir', LastSDCardDir);
+    ini.SaveToFile(appFolder + 'settings.ini');
+    FSlotsDX.SaveBankToSysExFile(appFolder + 'lastState.syx');
+  finally
+    ini.Free;
+  end;
+
   if FMidiIsActive then
   begin
     MidiInput.CloseAll;
@@ -858,6 +912,8 @@ end;
 procedure TfrmMain.FormCreate(Sender: TObject);
 var
   i: integer;
+  ini: TMiniINIFile;
+  appFolder: string;
 begin
   FBankDX := TDX7BankContainer.Create;
   FSlotsDX := TDX7BankContainer.Create;
@@ -899,59 +955,102 @@ begin
   cbMidiOut.Items.Clear;
   //for i := 0 to MidiOutput.Devices.Count - 1 do
   cbMidiOut.Items.Assign(MidiOutput.Devices);
+
+  LastSysExOpenDir := '';
+  LastSysExSaveDir := '';
+  LastSysEx := '';
+  LastPerfOpenDir := '';
+  LastPerfSaveDir := '';
+  LastPerf := '';
+  LastSDCardDir := '';
+
+  try
+    ini := TMiniINIFile.Create;
+    appFolder := IncludeTrailingPathDelimiter(ExtractFileDir(Application.Params[0]));
+    ini.LoadFromFile(appFolder + 'settings.ini');
+    cbMIDIIn.ItemIndex := cbMidiIn.Items.IndexOf(ini.ReadString('MIDIInput', ''));
+    cbMidiOut.ItemIndex := cbMidiOut.Items.IndexOf(ini.ReadString('MIDIOutput', ''));
+    LastSysExOpenDir := ini.ReadString('LastSysExOpenDir', '');
+    LastSysExSaveDir := ini.ReadString('LastSysExSaveDir', '');
+    LastSysEx := ini.ReadString('LastSysEx', '');
+    LastPerfOpenDir := ini.ReadString('LastPerfOpenDir', '');
+    LastPerfSaveDir := ini.ReadString('LastPerfSaveDir', '');
+    LastPerf := ini.ReadString('LastPerf', '');
+    LastSDCardDir := ini.ReadString('LastSDCardDir', '');
+    if DirectoryExists(LastSysExOpenDir) then
+    begin
+      SelectSysExDirectoryDialog1.InitialDir := LastSysExOpenDir;
+      edbtSelSysExDir.Text := LastSysExOpenDir;
+      FillFilesList(LastSysExOpenDir);
+    end;
+    if DirectoryExists(LastSysExSaveDir) then
+      SaveBankDialog1.InitialDir := LastSysExSaveDir;
+    if lbFiles.Items.IndexOf(LastSysEx) <> -1 then
+    begin
+      lbFiles.ItemIndex := lbFiles.Items.IndexOf(LastSysEx);
+      if FileExists(LastSysExOpenDir + LastSysEx) then
+        OpenSysEx(LastSysExOpenDir + LastSysEx);
+    end;
+    if DirectoryExists(LastPerfOpenDir) then
+      OpenPerformanceDialog1.InitialDir := LastPerfOpenDir;
+    if DirectoryExists(LastPerfSaveDir) then
+      SavePerformanceDialog1.InitialDir := LastPerfSaveDir;
+    if FileExists(LastPerf) then
+    begin
+      OpenPerformance(LastPerf);
+    end;
+    if DirectoryExists(LastSDCardDir) then
+    begin
+      SelectSDCardDirectoryDialog1.InitialDir := LastSDCardDir;
+      edbtSelSDCard.Text := LastSDCardDir;
+    end;
+    pnHint.Visible := False;
+    LoadLastStateBank;
+  finally
+    ini.Free;
+  end;
+end;
+
+procedure TfrmMain.LoadLastStateBank;
+var
+  dmp: TMemoryStream;
+  i, j: integer;
+  Itm: string;
+  nr: integer;
+  appFolder: string;
+begin
+  appFolder := IncludeTrailingPathDelimiter(ExtractFileDir(Application.Params[0]));
+  Itm := appFolder + 'lastState.syx';
+  if FileExists(itm) then
+  begin
+    dmp := TMemoryStream.Create;
+    dmp.LoadFromFile(itm);
+    i := 0;
+    j := 0;
+    if ContainsDX7BankDump(dmp, i, j) then
+    begin
+      FSlotsDX.LoadBankFromStream(dmp, j);
+      for nr := 0 to 31 do
+      begin
+        TJppEdit(FindComponent(Format('edSlot%.2d', [nr + 1]))).Text :=
+          FSlotsDX.GetVoiceName(nr + 1);
+      end;
+      lbChecksum.Caption := 'Checksum: $' + IntToHex(FSlotsDX.GetChecksum, 2);
+    end;
+    dmp.Free;
+  end;
 end;
 
 procedure TfrmMain.lbFilesClick(Sender: TObject);
 var
-  dmp: TMemoryStream;
-  i, j: integer;
-  v, b: boolean;
   dbg: string;
   Itm: string;
-  dxv: TDX7VoiceContainer;
-  nr: integer;
 begin
   if lbFiles.ItemIndex = -1 then exit;
   Itm := lbFiles.Items[lbFiles.ItemIndex];
-  dbg := IncludeTrailingPathDelimiter(edbtSelDir.Text) + Itm;
-  if dbg = '' then exit;
-  if FileExists(dbg) then
-  begin
-    dmp := TMemoryStream.Create;
-    dmp.LoadFromFile(dbg);
-    mmLog.Lines.Clear;
-    i := 0;
-    j := 0;
-    v := False;
-    b := False;
-    ContainsDXData(dmp, i, mmLog.Lines);
-    if ContainsDX7VoiceDump(dmp, i, j) then
-    begin
-      mmLog.Lines.Add('File ' + Itm +
-        ' contains DX7 single voice header at position ' + IntToStr(i));
-      dxv := TDX7VoiceContainer.Create;
-      dxv.LoadExpandedVoiceFromStream(dmp, j);
-      if dxv.GetVoiceName <> '' then lbVoices.Items.Add(dxv.GetVoiceName);
-      dxv.Free;
-    end
-    else
-      v := True;
-    i := 0; //read from the begining of the stream again
-    if ContainsDX7BankDump(dmp, i, j) then
-    begin
-      lbVoices.Items.Clear;
-      mmLog.Lines.Add('File ' + Itm +
-        ' contains DX7 voice bank header at position ' + IntToStr(i));
-      FBankDX.LoadBankFromStream(dmp, j);
-      for nr := 1 to 32 do
-        lbVoices.Items.Add(FBankDX.GetVoiceName(nr));
-    end
-    else
-      b := True;
-    if b and v then
-      mmLog.Lines.Add('File ' + Itm + ' contains no DX7 dumps');
-    dmp.Free;
-  end;
+  LastSysEx := itm;
+  dbg := IncludeTrailingPathDelimiter(edbtSelSysExDir.Text) + Itm;
+  OpenSysEx(dbg);
 end;
 
 procedure TfrmMain.lbFilesStartDrag(Sender: TObject; var DragObject: TDragObject);
@@ -966,6 +1065,428 @@ begin
   Unused(DragObject);
   if lbVoices.ItemIndex <> -1 then
     dragItem := lbVoices.ItemIndex;
+end;
+
+procedure TfrmMain.OpenPerformance(aName: string);
+var
+  ini: TMiniINIFile;
+  hexstream: TMemoryStream;
+  hexstring: string;
+begin
+  ini := TMiniINIFile.Create;
+  ini.LoadFromFile(aName);
+  hexstream := TMemoryStream.Create;
+  if ini.ReadInteger('MIDIChannel1', 1) > 16 then cbMidiCh1.ItemIndex := 17
+  else
+    cbMidiCh1.ItemIndex := ini.ReadInteger('MIDIChannel1', 1);
+  slVolume1.Position := ini.ReadInteger('Volume1', 100);
+  slPan1.Position := ini.ReadInteger('Pan1', 0);
+  slDetune1.Position := ini.ReadInteger('Detune1', 0);
+  slCutoff1.Position := ini.ReadInteger('Cutoff1', 99);
+  slResonance1.Position := ini.ReadInteger('Resonance1', 0);
+  slLoNote1.Position := ini.ReadInteger('NoteLimitLow1', 0);
+  slHiNote1.Position := ini.ReadInteger('NoteLimitHigh1', 127);
+  slTranspose1.Position := ini.ReadInteger('NoteShift1', 0);
+  slReverbSend1.Position := ini.ReadInteger('ReverbSend1', 0);
+  slPitchBendRange1.Position := ini.ReadInteger('PitchBendRange1', 2);
+  slPitchBendStep1.Position := ini.ReadInteger('PitchBendStep1', 0);
+  swPortaMode1.Checked := ini.ReadInteger('PortamentoMode1', 0) = 1;
+  swPortaGlissando1.Checked := ini.ReadInteger('PortamentoGlissando1', 0) = 1;
+  slPortaTime1.Position := ini.ReadInteger('PortamentoTime1', 0);
+  hexstring := ini.ReadString('VoiceData1', '');
+  if hexstring <> '' then
+  begin
+    hexstream.Position := 0;
+    ExpandedHexToStream(hexstring, hexstream);
+    FPerfSlotsDX[1].LoadExpandedVoiceFromStream(hexstream, 0);
+  end
+  else
+    FPerfSlotsDX[1].InitVoice;
+  swMonoMode1.Checked := ini.ReadInteger('MonoMode1', 0) = 1;
+  slModWhRange1.Position := ini.ReadInteger('ModulationWheelRange1', 99);
+  swModP1.Checked := ini.ReadInteger('ModulationWheelTarget1', 1) and 1 = 1;
+  swModA1.Checked := ini.ReadInteger('ModulationWheelTarget1', 1) and 2 = 2;
+  swModEG1.Checked := ini.ReadInteger('ModulationWheelTarget1', 1) and 4 = 4;
+  slFootCtrlRange1.Position := ini.ReadInteger('FootControlRange1', 99);
+  swFootP1.Checked := ini.ReadInteger('FootControlTarget1', 0) and 1 = 1;
+  swFootA1.Checked := ini.ReadInteger('FootControlTarget1', 0) and 2 = 2;
+  swFootEG1.Checked := ini.ReadInteger('FootControlTarget1', 0) and 4 = 4;
+  slBreathCtrlRange1.Position := ini.ReadInteger('BreathControlRange1', 99);
+  swBreathP1.Checked := ini.ReadInteger('BreathControlTarget1', 0) and 1 = 1;
+  swBreathA1.Checked := ini.ReadInteger('BreathControlTarget1', 0) and 2 = 2;
+  swBreathEG1.Checked := ini.ReadInteger('BreathControlTarget1', 0) and 4 = 4;
+  slAfterTouchRange1.Position := ini.ReadInteger('AfterTouchRange1', 99);
+  swAfterTouchP1.Checked := ini.ReadInteger('AfterTouchTarget1', 0) and 1 = 1;
+  swAfterTouchA1.Checked := ini.ReadInteger('AfterTouchTarget1', 0) and 2 = 2;
+  swAfterTouchEG1.Checked := ini.ReadInteger('AfterTouchTarget1', 0) and 4 = 4;
+
+  if ini.ReadInteger('MIDIChannel2', 1) > 16 then cbMidiCh2.ItemIndex := 17
+  else
+    cbMidiCh2.ItemIndex := ini.ReadInteger('MIDIChannel2', 1);
+  slVolume2.Position := ini.ReadInteger('Volume2', 100);
+  slPan2.Position := ini.ReadInteger('Pan2', 0);
+  slDetune2.Position := ini.ReadInteger('Detune2', 0);
+  slCutoff2.Position := ini.ReadInteger('Cutoff2', 99);
+  slResonance2.Position := ini.ReadInteger('Resonance2', 0);
+  slLoNote2.Position := ini.ReadInteger('NoteLimitLow2', 0);
+  slHiNote2.Position := ini.ReadInteger('NoteLimitHigh2', 127);
+  slTranspose2.Position := ini.ReadInteger('NoteShift2', 0);
+  slReverbSend2.Position := ini.ReadInteger('ReverbSend2', 0);
+  slPitchBendRange2.Position := ini.ReadInteger('PitchBendRange2', 2);
+  slPitchBendStep2.Position := ini.ReadInteger('PitchBendStep2', 0);
+  swPortaMode2.Checked := ini.ReadInteger('PortamentoMode2', 0) = 1;
+  swPortaGlissando2.Checked := ini.ReadInteger('PortamentoGlissando2', 0) = 1;
+  slPortaTime2.Position := ini.ReadInteger('PortamentoTime2', 0);
+  hexstring := ini.ReadString('VoiceData2', '');
+  if hexstring <> '' then
+  begin
+    hexstream.Position := 0;
+    ExpandedHexToStream(hexstring, hexstream);
+    FPerfSlotsDX[2].LoadExpandedVoiceFromStream(hexstream, 0);
+  end
+  else
+    FPerfSlotsDX[2].InitVoice;
+  swMonoMode2.Checked := ini.ReadInteger('MonoMode2', 0) = 1;
+  slModWhRange2.Position := ini.ReadInteger('ModulationWheelRange2', 99);
+  swModP2.Checked := ini.ReadInteger('ModulationWheelTarget2', 1) and 1 = 1;
+  swModA2.Checked := ini.ReadInteger('ModulationWheelTarget2', 1) and 2 = 2;
+  swModEG2.Checked := ini.ReadInteger('ModulationWheelTarget2', 1) and 4 = 4;
+  slFootCtrlRange2.Position := ini.ReadInteger('FootControlRange2', 99);
+  swFootP2.Checked := ini.ReadInteger('FootControlTarget2', 0) and 1 = 1;
+  swFootA2.Checked := ini.ReadInteger('FootControlTarget2', 0) and 2 = 2;
+  swFootEG2.Checked := ini.ReadInteger('FootControlTarget2', 0) and 4 = 4;
+  slBreathCtrlRange2.Position := ini.ReadInteger('BreathControlRange2', 99);
+  swBreathP2.Checked := ini.ReadInteger('BreathControlTarget2', 0) and 1 = 1;
+  swBreathA2.Checked := ini.ReadInteger('BreathControlTarget2', 0) and 2 = 2;
+  swBreathEG2.Checked := ini.ReadInteger('BreathControlTarget2', 0) and 4 = 4;
+  slAfterTouchRange2.Position := ini.ReadInteger('AfterTouchRange2', 99);
+  swAfterTouchP2.Checked := ini.ReadInteger('AfterTouchTarget2', 0) and 1 = 1;
+  swAfterTouchA2.Checked := ini.ReadInteger('AfterTouchTarget2', 0) and 2 = 2;
+  swAfterTouchEG2.Checked := ini.ReadInteger('AfterTouchTarget2', 0) and 4 = 4;
+
+  if ini.ReadInteger('MIDIChannel3', 1) > 16 then cbMidiCh3.ItemIndex := 17
+  else
+    cbMidiCh3.ItemIndex := ini.ReadInteger('MIDIChannel3', 1);
+  slVolume3.Position := ini.ReadInteger('Volume3', 100);
+  slPan3.Position := ini.ReadInteger('Pan3', 0);
+  slDetune3.Position := ini.ReadInteger('Detune3', 0);
+  slCutoff3.Position := ini.ReadInteger('Cutoff3', 99);
+  slResonance3.Position := ini.ReadInteger('Resonance3', 0);
+  slLoNote3.Position := ini.ReadInteger('NoteLimitLow3', 0);
+  slHiNote3.Position := ini.ReadInteger('NoteLimitHigh3', 127);
+  slTranspose3.Position := ini.ReadInteger('NoteShift3', 0);
+  slReverbSend3.Position := ini.ReadInteger('ReverbSend3', 0);
+  slPitchBendRange3.Position := ini.ReadInteger('PitchBendRange3', 2);
+  slPitchBendStep3.Position := ini.ReadInteger('PitchBendStep3', 0);
+  swPortaMode3.Checked := ini.ReadInteger('PortamentoMode3', 0) = 1;
+  swPortaGlissando3.Checked := ini.ReadInteger('PortamentoGlissando3', 0) = 1;
+  slPortaTime3.Position := ini.ReadInteger('PortamentoTime3', 0);
+  hexstring := ini.ReadString('VoiceData3', '');
+  if hexstring <> '' then
+  begin
+    hexstream.Position := 0;
+    ExpandedHexToStream(hexstring, hexstream);
+    FPerfSlotsDX[3].LoadExpandedVoiceFromStream(hexstream, 0);
+  end
+  else
+    FPerfSlotsDX[3].InitVoice;
+  swMonoMode3.Checked := ini.ReadInteger('MonoMode3', 0) = 1;
+  slModWhRange3.Position := ini.ReadInteger('ModulationWheelRange3', 99);
+  swModP3.Checked := ini.ReadInteger('ModulationWheelTarget3', 1) and 1 = 1;
+  swModA3.Checked := ini.ReadInteger('ModulationWheelTarget3', 1) and 2 = 2;
+  swModEG3.Checked := ini.ReadInteger('ModulationWheelTarget3', 1) and 4 = 4;
+  slFootCtrlRange3.Position := ini.ReadInteger('FootControlRange3', 99);
+  swFootP3.Checked := ini.ReadInteger('FootControlTarget3', 0) and 1 = 1;
+  swFootA3.Checked := ini.ReadInteger('FootControlTarget3', 0) and 2 = 2;
+  swFootEG3.Checked := ini.ReadInteger('FootControlTarget3', 0) and 4 = 4;
+  slBreathCtrlRange3.Position := ini.ReadInteger('BreathControlRange3', 99);
+  swBreathP3.Checked := ini.ReadInteger('BreathControlTarget3', 0) and 1 = 1;
+  swBreathA3.Checked := ini.ReadInteger('BreathControlTarget3', 0) and 2 = 2;
+  swBreathEG3.Checked := ini.ReadInteger('BreathControlTarget3', 0) and 4 = 4;
+  slAfterTouchRange3.Position := ini.ReadInteger('AfterTouchRange3', 99);
+  swAfterTouchP3.Checked := ini.ReadInteger('AfterTouchTarget3', 0) and 1 = 1;
+  swAfterTouchA3.Checked := ini.ReadInteger('AfterTouchTarget3', 0) and 2 = 2;
+  swAfterTouchEG3.Checked := ini.ReadInteger('AfterTouchTarget3', 0) and 4 = 4;
+
+  if ini.ReadInteger('MIDIChannel4', 1) > 16 then cbMidiCh4.ItemIndex := 17
+  else
+    cbMidiCh4.ItemIndex := ini.ReadInteger('MIDIChannel4', 1);
+  slVolume4.Position := ini.ReadInteger('Volume4', 100);
+  slPan4.Position := ini.ReadInteger('Pan4', 0);
+  slDetune4.Position := ini.ReadInteger('Detune4', 0);
+  slCutoff4.Position := ini.ReadInteger('Cutoff4', 99);
+  slResonance4.Position := ini.ReadInteger('Resonance4', 0);
+  slLoNote4.Position := ini.ReadInteger('NoteLimitLow4', 0);
+  slHiNote4.Position := ini.ReadInteger('NoteLimitHigh4', 127);
+  slTranspose4.Position := ini.ReadInteger('NoteShift4', 0);
+  slReverbSend4.Position := ini.ReadInteger('ReverbSend4', 0);
+  slPitchBendRange4.Position := ini.ReadInteger('PitchBendRange4', 2);
+  slPitchBendStep4.Position := ini.ReadInteger('PitchBendStep4', 0);
+  swPortaMode4.Checked := ini.ReadInteger('PortamentoMode4', 0) = 1;
+  swPortaGlissando4.Checked := ini.ReadInteger('PortamentoGlissando4', 0) = 1;
+  slPortaTime4.Position := ini.ReadInteger('PortamentoTime4', 0);
+  hexstring := ini.ReadString('VoiceData4', '');
+  if hexstring <> '' then
+  begin
+    hexstream.Position := 0;
+    ExpandedHexToStream(hexstring, hexstream);
+    FPerfSlotsDX[4].LoadExpandedVoiceFromStream(hexstream, 0);
+  end
+  else
+    FPerfSlotsDX[4].InitVoice;
+  swMonoMode4.Checked := ini.ReadInteger('MonoMode4', 0) = 1;
+  slModWhRange4.Position := ini.ReadInteger('ModulationWheelRange4', 99);
+  swModP4.Checked := ini.ReadInteger('ModulationWheelTarget4', 1) and 1 = 1;
+  swModA4.Checked := ini.ReadInteger('ModulationWheelTarget4', 1) and 2 = 2;
+  swModEG4.Checked := ini.ReadInteger('ModulationWheelTarget4', 1) and 4 = 4;
+  slFootCtrlRange4.Position := ini.ReadInteger('FootControlRange4', 99);
+  swFootP4.Checked := ini.ReadInteger('FootControlTarget4', 0) and 1 = 1;
+  swFootA4.Checked := ini.ReadInteger('FootControlTarget4', 0) and 2 = 2;
+  swFootEG4.Checked := ini.ReadInteger('FootControlTarget4', 0) and 4 = 4;
+  slBreathCtrlRange4.Position := ini.ReadInteger('BreathControlRange4', 99);
+  swBreathP4.Checked := ini.ReadInteger('BreathControlTarget4', 0) and 1 = 1;
+  swBreathA4.Checked := ini.ReadInteger('BreathControlTarget4', 0) and 2 = 2;
+  swBreathEG4.Checked := ini.ReadInteger('BreathControlTarget4', 0) and 4 = 4;
+  slAfterTouchRange4.Position := ini.ReadInteger('AfterTouchRange4', 99);
+  swAfterTouchP4.Checked := ini.ReadInteger('AfterTouchTarget4', 0) and 1 = 1;
+  swAfterTouchA4.Checked := ini.ReadInteger('AfterTouchTarget4', 0) and 2 = 2;
+  swAfterTouchEG4.Checked := ini.ReadInteger('AfterTouchTarget4', 0) and 4 = 4;
+
+  if ini.ReadInteger('MIDIChannel5', 1) > 16 then cbMidiCh5.ItemIndex := 17
+  else
+    cbMidiCh5.ItemIndex := ini.ReadInteger('MIDIChannel5', 1);
+  slVolume5.Position := ini.ReadInteger('Volume5', 100);
+  slPan5.Position := ini.ReadInteger('Pan5', 0);
+  slDetune5.Position := ini.ReadInteger('Detune5', 0);
+  slCutoff5.Position := ini.ReadInteger('Cutoff5', 99);
+  slResonance5.Position := ini.ReadInteger('Resonance5', 0);
+  slLoNote5.Position := ini.ReadInteger('NoteLimitLow5', 0);
+  slHiNote5.Position := ini.ReadInteger('NoteLimitHigh5', 127);
+  slTranspose5.Position := ini.ReadInteger('NoteShift5', 0);
+  slReverbSend5.Position := ini.ReadInteger('ReverbSend5', 0);
+  slPitchBendRange5.Position := ini.ReadInteger('PitchBendRange5', 2);
+  slPitchBendStep5.Position := ini.ReadInteger('PitchBendStep5', 0);
+  swPortaMode5.Checked := ini.ReadInteger('PortamentoMode5', 0) = 1;
+  swPortaGlissando5.Checked := ini.ReadInteger('PortamentoGlissando5', 0) = 1;
+  slPortaTime5.Position := ini.ReadInteger('PortamentoTime5', 0);
+  hexstring := ini.ReadString('VoiceData5', '');
+  if hexstring <> '' then
+  begin
+    hexstream.Position := 0;
+    ExpandedHexToStream(hexstring, hexstream);
+    FPerfSlotsDX[5].LoadExpandedVoiceFromStream(hexstream, 0);
+  end
+  else
+    FPerfSlotsDX[5].InitVoice;
+  swMonoMode5.Checked := ini.ReadInteger('MonoMode5', 0) = 1;
+  slModWhRange5.Position := ini.ReadInteger('ModulationWheelRange5', 99);
+  swModP5.Checked := ini.ReadInteger('ModulationWheelTarget5', 1) and 1 = 1;
+  swModA5.Checked := ini.ReadInteger('ModulationWheelTarget5', 1) and 2 = 2;
+  swModEG5.Checked := ini.ReadInteger('ModulationWheelTarget5', 1) and 4 = 4;
+  slFootCtrlRange5.Position := ini.ReadInteger('FootControlRange5', 99);
+  swFootP5.Checked := ini.ReadInteger('FootControlTarget5', 0) and 1 = 1;
+  swFootA5.Checked := ini.ReadInteger('FootControlTarget5', 0) and 2 = 2;
+  swFootEG5.Checked := ini.ReadInteger('FootControlTarget5', 0) and 4 = 4;
+  slBreathCtrlRange5.Position := ini.ReadInteger('BreathControlRange5', 99);
+  swBreathP5.Checked := ini.ReadInteger('BreathControlTarget5', 0) and 1 = 1;
+  swBreathA5.Checked := ini.ReadInteger('BreathControlTarget5', 0) and 2 = 2;
+  swBreathEG5.Checked := ini.ReadInteger('BreathControlTarget5', 0) and 4 = 4;
+  slAfterTouchRange5.Position := ini.ReadInteger('AfterTouchRange5', 99);
+  swAfterTouchP5.Checked := ini.ReadInteger('AfterTouchTarget5', 0) and 1 = 1;
+  swAfterTouchA5.Checked := ini.ReadInteger('AfterTouchTarget5', 0) and 2 = 2;
+  swAfterTouchEG5.Checked := ini.ReadInteger('AfterTouchTarget5', 0) and 4 = 4;
+
+  if ini.ReadInteger('MIDIChannel6', 1) > 16 then cbMidiCh6.ItemIndex := 17
+  else
+    cbMidiCh6.ItemIndex := ini.ReadInteger('MIDIChannel6', 1);
+  slVolume6.Position := ini.ReadInteger('Volume6', 100);
+  slPan6.Position := ini.ReadInteger('Pan6', 0);
+  slDetune6.Position := ini.ReadInteger('Detune6', 0);
+  slCutoff6.Position := ini.ReadInteger('Cutoff6', 99);
+  slResonance6.Position := ini.ReadInteger('Resonance6', 0);
+  slLoNote6.Position := ini.ReadInteger('NoteLimitLow6', 0);
+  slHiNote6.Position := ini.ReadInteger('NoteLimitHigh6', 127);
+  slTranspose6.Position := ini.ReadInteger('NoteShift6', 0);
+  slReverbSend6.Position := ini.ReadInteger('ReverbSend6', 0);
+  slPitchBendRange6.Position := ini.ReadInteger('PitchBendRange6', 2);
+  slPitchBendStep6.Position := ini.ReadInteger('PitchBendStep6', 0);
+  swPortaMode6.Checked := ini.ReadInteger('PortamentoMode6', 0) = 1;
+  swPortaGlissando6.Checked := ini.ReadInteger('PortamentoGlissando6', 0) = 1;
+  slPortaTime6.Position := ini.ReadInteger('PortamentoTime6', 0);
+  hexstring := ini.ReadString('VoiceData6', '');
+  if hexstring <> '' then
+  begin
+    hexstream.Position := 0;
+    ExpandedHexToStream(hexstring, hexstream);
+    FPerfSlotsDX[6].LoadExpandedVoiceFromStream(hexstream, 0);
+  end
+  else
+    FPerfSlotsDX[6].InitVoice;
+  swMonoMode6.Checked := ini.ReadInteger('MonoMode6', 0) = 1;
+  slModWhRange6.Position := ini.ReadInteger('ModulationWheelRange6', 99);
+  swModP6.Checked := ini.ReadInteger('ModulationWheelTarget6', 1) and 1 = 1;
+  swModA6.Checked := ini.ReadInteger('ModulationWheelTarget6', 1) and 2 = 2;
+  swModEG6.Checked := ini.ReadInteger('ModulationWheelTarget6', 1) and 4 = 4;
+  slFootCtrlRange6.Position := ini.ReadInteger('FootControlRange6', 99);
+  swFootP6.Checked := ini.ReadInteger('FootControlTarget6', 0) and 1 = 1;
+  swFootA6.Checked := ini.ReadInteger('FootControlTarget6', 0) and 2 = 2;
+  swFootEG6.Checked := ini.ReadInteger('FootControlTarget6', 0) and 4 = 4;
+  slBreathCtrlRange6.Position := ini.ReadInteger('BreathControlRange6', 99);
+  swBreathP6.Checked := ini.ReadInteger('BreathControlTarget6', 0) and 1 = 1;
+  swBreathA6.Checked := ini.ReadInteger('BreathControlTarget6', 0) and 2 = 2;
+  swBreathEG6.Checked := ini.ReadInteger('BreathControlTarget6', 0) and 4 = 4;
+  slAfterTouchRange6.Position := ini.ReadInteger('AfterTouchRange6', 99);
+  swAfterTouchP6.Checked := ini.ReadInteger('AfterTouchTarget6', 0) and 1 = 1;
+  swAfterTouchA6.Checked := ini.ReadInteger('AfterTouchTarget6', 0) and 2 = 2;
+  swAfterTouchEG6.Checked := ini.ReadInteger('AfterTouchTarget6', 0) and 4 = 4;
+
+  if ini.ReadInteger('MIDIChannel7', 1) > 16 then cbMidiCh7.ItemIndex := 17
+  else
+    cbMidiCh7.ItemIndex := ini.ReadInteger('MIDIChannel7', 1);
+  slVolume7.Position := ini.ReadInteger('Volume7', 100);
+  slPan7.Position := ini.ReadInteger('Pan7', 0);
+  slDetune7.Position := ini.ReadInteger('Detune7', 0);
+  slCutoff7.Position := ini.ReadInteger('Cutoff7', 99);
+  slResonance7.Position := ini.ReadInteger('Resonance7', 0);
+  slLoNote7.Position := ini.ReadInteger('NoteLimitLow7', 0);
+  slHiNote7.Position := ini.ReadInteger('NoteLimitHigh7', 127);
+  slTranspose7.Position := ini.ReadInteger('NoteShift7', 0);
+  slReverbSend7.Position := ini.ReadInteger('ReverbSend7', 0);
+  slPitchBendRange7.Position := ini.ReadInteger('PitchBendRange7', 2);
+  slPitchBendStep7.Position := ini.ReadInteger('PitchBendStep7', 0);
+  swPortaMode7.Checked := ini.ReadInteger('PortamentoMode7', 0) = 1;
+  swPortaGlissando7.Checked := ini.ReadInteger('PortamentoGlissando7', 0) = 1;
+  slPortaTime7.Position := ini.ReadInteger('PortamentoTime7', 0);
+  hexstring := ini.ReadString('VoiceData7', '');
+  if hexstring <> '' then
+  begin
+    hexstream.Position := 0;
+    ExpandedHexToStream(hexstring, hexstream);
+    FPerfSlotsDX[7].LoadExpandedVoiceFromStream(hexstream, 0);
+  end
+  else
+    FPerfSlotsDX[7].InitVoice;
+  swMonoMode7.Checked := ini.ReadInteger('MonoMode7', 0) = 1;
+  slModWhRange7.Position := ini.ReadInteger('ModulationWheelRange7', 99);
+  swModP7.Checked := ini.ReadInteger('ModulationWheelTarget7', 1) and 1 = 1;
+  swModA7.Checked := ini.ReadInteger('ModulationWheelTarget7', 1) and 2 = 2;
+  swModEG7.Checked := ini.ReadInteger('ModulationWheelTarget7', 1) and 4 = 4;
+  slFootCtrlRange7.Position := ini.ReadInteger('FootControlRange7', 99);
+  swFootP7.Checked := ini.ReadInteger('FootControlTarget7', 0) and 1 = 1;
+  swFootA7.Checked := ini.ReadInteger('FootControlTarget7', 0) and 2 = 2;
+  swFootEG7.Checked := ini.ReadInteger('FootControlTarget7', 0) and 4 = 4;
+  slBreathCtrlRange7.Position := ini.ReadInteger('BreathControlRange7', 99);
+  swBreathP7.Checked := ini.ReadInteger('BreathControlTarget7', 0) and 1 = 1;
+  swBreathA7.Checked := ini.ReadInteger('BreathControlTarget7', 0) and 2 = 2;
+  swBreathEG7.Checked := ini.ReadInteger('BreathControlTarget7', 0) and 4 = 4;
+  slAfterTouchRange7.Position := ini.ReadInteger('AfterTouchRange7', 99);
+  swAfterTouchP7.Checked := ini.ReadInteger('AfterTouchTarget7', 0) and 1 = 1;
+  swAfterTouchA7.Checked := ini.ReadInteger('AfterTouchTarget7', 0) and 2 = 2;
+  swAfterTouchEG7.Checked := ini.ReadInteger('AfterTouchTarget7', 0) and 4 = 4;
+
+  if ini.ReadInteger('MIDIChannel8', 1) > 16 then cbMidiCh8.ItemIndex := 17
+  else
+    cbMidiCh8.ItemIndex := ini.ReadInteger('MIDIChannel8', 1);
+  slVolume8.Position := ini.ReadInteger('Volume8', 100);
+  slPan8.Position := ini.ReadInteger('Pan8', 0);
+  slDetune8.Position := ini.ReadInteger('Detune8', 0);
+  slCutoff8.Position := ini.ReadInteger('Cutoff8', 99);
+  slResonance8.Position := ini.ReadInteger('Resonance8', 0);
+  slLoNote8.Position := ini.ReadInteger('NoteLimitLow8', 0);
+  slHiNote8.Position := ini.ReadInteger('NoteLimitHigh8', 127);
+  slTranspose8.Position := ini.ReadInteger('NoteShift8', 0);
+  slReverbSend8.Position := ini.ReadInteger('ReverbSend8', 0);
+  slPitchBendRange8.Position := ini.ReadInteger('PitchBendRange8', 2);
+  slPitchBendStep8.Position := ini.ReadInteger('PitchBendStep8', 0);
+  swPortaMode8.Checked := ini.ReadInteger('PortamentoMode8', 0) = 1;
+  swPortaGlissando8.Checked := ini.ReadInteger('PortamentoGlissando8', 0) = 1;
+  slPortaTime8.Position := ini.ReadInteger('PortamentoTime8', 0);
+  hexstring := ini.ReadString('VoiceData8', '');
+  if hexstring <> '' then
+  begin
+    ExpandedHexToStream(hexstring, hexstream);
+    FPerfSlotsDX[8].LoadExpandedVoiceFromStream(hexstream, 0);
+  end
+  else
+    FPerfSlotsDX[8].InitVoice;
+  swMonoMode8.Checked := ini.ReadInteger('MonoMode8', 0) = 1;
+  slModWhRange8.Position := ini.ReadInteger('ModulationWheelRange8', 99);
+  swModP8.Checked := ini.ReadInteger('ModulationWheelTarget8', 1) and 1 = 1;
+  swModA8.Checked := ini.ReadInteger('ModulationWheelTarget8', 1) and 2 = 2;
+  swModEG8.Checked := ini.ReadInteger('ModulationWheelTarget8', 1) and 4 = 4;
+  slFootCtrlRange8.Position := ini.ReadInteger('FootControlRange8', 99);
+  swFootP8.Checked := ini.ReadInteger('FootControlTarget8', 0) and 1 = 1;
+  swFootA8.Checked := ini.ReadInteger('FootControlTarget8', 0) and 2 = 2;
+  swFootEG8.Checked := ini.ReadInteger('FootControlTarget8', 0) and 4 = 4;
+  slBreathCtrlRange8.Position := ini.ReadInteger('BreathControlRange8', 99);
+  swBreathP8.Checked := ini.ReadInteger('BreathControlTarget8', 0) and 1 = 1;
+  swBreathA8.Checked := ini.ReadInteger('BreathControlTarget8', 0) and 2 = 2;
+  swBreathEG8.Checked := ini.ReadInteger('BreathControlTarget8', 0) and 4 = 4;
+  slAfterTouchRange8.Position := ini.ReadInteger('AfterTouchRange8', 99);
+  swAfterTouchP8.Checked := ini.ReadInteger('AfterTouchTarget8', 0) and 1 = 1;
+  swAfterTouchA8.Checked := ini.ReadInteger('AfterTouchTarget8', 0) and 2 = 2;
+  swAfterTouchEG8.Checked := ini.ReadInteger('AfterTouchTarget8', 0) and 4 = 4;
+
+  swCompressorEnable.Checked := ini.ReadInteger('CompressorEnable', 1) = 1;
+  swReverbEnable.Checked := ini.ReadInteger('ReverbEnable', 1) = 1;
+  slReverbSize.Position := ini.ReadInteger('ReverbSize', 70);
+  slReverbHighDamp.Position := ini.ReadInteger('ReverbHighDamp', 50);
+  slReverbLowDamp.Position := ini.ReadInteger('ReverbLowDamp', 50);
+  slReverbLowPass.Position := ini.ReadInteger('ReverbLowPass', 30);
+  slReverbDiffusion.Position := ini.ReadInteger('ReverbDiffusion', 65);
+  slReverbLevel.Position := ini.ReadInteger('ReverbLevel', 80);
+
+  hexstream.Free;
+  ini.Free;
+  RefreshSlots;
+end;
+
+procedure TfrmMain.OpenSysEx(aName: string);
+var
+  dmp: TMemoryStream;
+  i, j: integer;
+  v, b: boolean;
+  dxv: TDX7VoiceContainer;
+  nr: integer;
+begin
+  if aName = '' then exit;
+  if FileExists(aName) then
+  begin
+    dmp := TMemoryStream.Create;
+    dmp.LoadFromFile(aName);
+    mmLog.Lines.Clear;
+    i := 0;
+    j := 0;
+    v := False;
+    b := False;
+    ContainsDXData(dmp, i, mmLog.Lines);
+    if ContainsDX7VoiceDump(dmp, i, j) then
+    begin
+      mmLog.Lines.Add('File ' + ExtractFileName(aName) +
+        ' contains DX7 single voice header at position ' + IntToStr(i));
+      dxv := TDX7VoiceContainer.Create;
+      dxv.LoadExpandedVoiceFromStream(dmp, j);
+      if dxv.GetVoiceName <> '' then lbVoices.Items.Add(dxv.GetVoiceName);
+      dxv.Free;
+    end
+    else
+      v := True;
+    i := 0; //read from the begining of the stream again
+    if ContainsDX7BankDump(dmp, i, j) then
+    begin
+      lbVoices.Items.Clear;
+      mmLog.Lines.Add('File ' + ExtractFileName(aName) +
+        ' contains DX7 voice bank header at position ' + IntToStr(i));
+      FBankDX.LoadBankFromStream(dmp, j);
+      for nr := 1 to 32 do
+        lbVoices.Items.Add(FBankDX.GetVoiceName(nr));
+    end
+    else
+      b := True;
+    if b and v then
+      mmLog.Lines.Add('File ' + ExtractFileName(aName) + ' contains no DX7 dumps');
+    dmp.Free;
+  end;
 end;
 
 procedure TfrmMain.rbDisplayDiscreteChange(Sender: TObject);
@@ -1234,6 +1755,11 @@ begin
     finally
       bankStream.Free;
     end;
+  end
+  else
+  begin
+    ShowMessage('Please set-up the MIDI Output first');
+    pcMain.ActivePage := tsSettings;
   end;
 end;
 
@@ -1252,19 +1778,19 @@ begin
   end;
 end;
 
-procedure TfrmMain.sgGPIODrawCell(Sender: TObject; aCol, aRow: Integer;
+procedure TfrmMain.sgGPIODrawCell(Sender: TObject; aCol, aRow: integer;
   aRect: TRect; aState: TGridDrawState);
 begin
   Unused(aState);
   if aRow <= 12 then
   begin
-    sgGPIO.Canvas.Brush.Color:=clWhite;
+    sgGPIO.Canvas.Brush.Color := clWhite;
     sgGPIO.Canvas.FillRect(aRect);
     sgGPIO.Canvas.TextOut(aRect.Left + 2, aRect.Top + 2, sgGPIO.Cells[aCol, aRow]);
   end
   else
   begin
-    sgGPIO.Canvas.Brush.Color:=clGray;
+    sgGPIO.Canvas.Brush.Color := clGray;
     sgGPIO.Canvas.FillRect(aRect);
     sgGPIO.Canvas.TextOut(aRect.Left + 2, aRect.Top + 2, sgGPIO.Cells[aCol, aRow]);
   end;
@@ -1318,380 +1844,13 @@ begin
 end;
 
 procedure TfrmMain.tbbtLoadPerformanceClick(Sender: TObject);
-var
-  ini: TMiniINIFile;
-  hexstream: TMemoryStream;
-  hexstring: string;
 begin
   if OpenPerformanceDialog1.Execute then
   begin
-    ini := TMiniINIFile.Create;
-    ini.LoadFromFile(OpenPerformanceDialog1.FileName);
-    hexstream := TMemoryStream.Create;
-    if ini.ReadInteger('MIDIChannel1', 1) > 16 then cbMidiCh1.ItemIndex := 17
-    else
-      cbMidiCh1.ItemIndex := ini.ReadInteger('MIDIChannel1', 1);
-    slVolume1.Position := ini.ReadInteger('Volume1', 100);
-    slPan1.Position := ini.ReadInteger('Pan1', 0);
-    slDetune1.Position := ini.ReadInteger('Detune1', 0);
-    slCutoff1.Position := ini.ReadInteger('Cutoff1', 99);
-    slResonance1.Position := ini.ReadInteger('Resonance1', 0);
-    slLoNote1.Position := ini.ReadInteger('NoteLimitLow1', 0);
-    slHiNote1.Position := ini.ReadInteger('NoteLimitHigh1', 127);
-    slTranspose1.Position := ini.ReadInteger('NoteShift1', 0);
-    slReverbSend1.Position := ini.ReadInteger('ReverbSend1', 0);
-    slPitchBendRange1.Position := ini.ReadInteger('PitchBendRange1', 2);
-    slPitchBendStep1.Position := ini.ReadInteger('PitchBendStep1', 0);
-    swPortaMode1.Checked := ini.ReadInteger('PortamentoMode1', 0) = 1;
-    swPortaGlissando1.Checked := ini.ReadInteger('PortamentoGlissando1', 0) = 1;
-    slPortaTime1.Position := ini.ReadInteger('PortamentoTime1', 0);
-    hexstring := ini.ReadString('VoiceData1', '');
-    if hexstring <> '' then
-    begin
-      hexstream.Position := 0;
-      ExpandedHexToStream(hexstring, hexstream);
-      FPerfSlotsDX[1].LoadExpandedVoiceFromStream(hexstream, 0);
-    end
-    else
-      FPerfSlotsDX[1].InitVoice;
-    swMonoMode1.Checked := ini.ReadInteger('MonoMode1', 0) = 1;
-    slModWhRange1.Position := ini.ReadInteger('ModulationWheelRange1', 99);
-    swModP1.Checked := ini.ReadInteger('ModulationWheelTarget1', 1) and 1 = 1;
-    swModA1.Checked := ini.ReadInteger('ModulationWheelTarget1', 1) and 2 = 2;
-    swModEG1.Checked := ini.ReadInteger('ModulationWheelTarget1', 1) and 4 = 4;
-    slFootCtrlRange1.Position := ini.ReadInteger('FootControlRange1', 99);
-    swFootP1.Checked := ini.ReadInteger('FootControlTarget1', 0) and 1 = 1;
-    swFootA1.Checked := ini.ReadInteger('FootControlTarget1', 0) and 2 = 2;
-    swFootEG1.Checked := ini.ReadInteger('FootControlTarget1', 0) and 4 = 4;
-    slBreathCtrlRange1.Position := ini.ReadInteger('BreathControlRange1', 99);
-    swBreathP1.Checked := ini.ReadInteger('BreathControlTarget1', 0) and 1 = 1;
-    swBreathA1.Checked := ini.ReadInteger('BreathControlTarget1', 0) and 2 = 2;
-    swBreathEG1.Checked := ini.ReadInteger('BreathControlTarget1', 0) and 4 = 4;
-    slAfterTouchRange1.Position := ini.ReadInteger('AfterTouchRange1', 99);
-    swAfterTouchP1.Checked := ini.ReadInteger('AfterTouchTarget1', 0) and 1 = 1;
-    swAfterTouchA1.Checked := ini.ReadInteger('AfterTouchTarget1', 0) and 2 = 2;
-    swAfterTouchEG1.Checked := ini.ReadInteger('AfterTouchTarget1', 0) and 4 = 4;
-
-    if ini.ReadInteger('MIDIChannel2', 1) > 16 then cbMidiCh2.ItemIndex := 17
-    else
-      cbMidiCh2.ItemIndex := ini.ReadInteger('MIDIChannel2', 1);
-    slVolume2.Position := ini.ReadInteger('Volume2', 100);
-    slPan2.Position := ini.ReadInteger('Pan2', 0);
-    slDetune2.Position := ini.ReadInteger('Detune2', 0);
-    slCutoff2.Position := ini.ReadInteger('Cutoff2', 99);
-    slResonance2.Position := ini.ReadInteger('Resonance2', 0);
-    slLoNote2.Position := ini.ReadInteger('NoteLimitLow2', 0);
-    slHiNote2.Position := ini.ReadInteger('NoteLimitHigh2', 127);
-    slTranspose2.Position := ini.ReadInteger('NoteShift2', 0);
-    slReverbSend2.Position := ini.ReadInteger('ReverbSend2', 0);
-    slPitchBendRange2.Position := ini.ReadInteger('PitchBendRange2', 2);
-    slPitchBendStep2.Position := ini.ReadInteger('PitchBendStep2', 0);
-    swPortaMode2.Checked := ini.ReadInteger('PortamentoMode2', 0) = 1;
-    swPortaGlissando2.Checked := ini.ReadInteger('PortamentoGlissando2', 0) = 1;
-    slPortaTime2.Position := ini.ReadInteger('PortamentoTime2', 0);
-    hexstring := ini.ReadString('VoiceData2', '');
-    if hexstring <> '' then
-    begin
-      hexstream.Position := 0;
-      ExpandedHexToStream(hexstring, hexstream);
-      FPerfSlotsDX[2].LoadExpandedVoiceFromStream(hexstream, 0);
-    end
-    else
-      FPerfSlotsDX[2].InitVoice;
-    swMonoMode2.Checked := ini.ReadInteger('MonoMode2', 0) = 1;
-    slModWhRange2.Position := ini.ReadInteger('ModulationWheelRange2', 99);
-    swModP2.Checked := ini.ReadInteger('ModulationWheelTarget2', 1) and 1 = 1;
-    swModA2.Checked := ini.ReadInteger('ModulationWheelTarget2', 1) and 2 = 2;
-    swModEG2.Checked := ini.ReadInteger('ModulationWheelTarget2', 1) and 4 = 4;
-    slFootCtrlRange2.Position := ini.ReadInteger('FootControlRange2', 99);
-    swFootP2.Checked := ini.ReadInteger('FootControlTarget2', 0) and 1 = 1;
-    swFootA2.Checked := ini.ReadInteger('FootControlTarget2', 0) and 2 = 2;
-    swFootEG2.Checked := ini.ReadInteger('FootControlTarget2', 0) and 4 = 4;
-    slBreathCtrlRange2.Position := ini.ReadInteger('BreathControlRange2', 99);
-    swBreathP2.Checked := ini.ReadInteger('BreathControlTarget2', 0) and 1 = 1;
-    swBreathA2.Checked := ini.ReadInteger('BreathControlTarget2', 0) and 2 = 2;
-    swBreathEG2.Checked := ini.ReadInteger('BreathControlTarget2', 0) and 4 = 4;
-    slAfterTouchRange2.Position := ini.ReadInteger('AfterTouchRange2', 99);
-    swAfterTouchP2.Checked := ini.ReadInteger('AfterTouchTarget2', 0) and 1 = 1;
-    swAfterTouchA2.Checked := ini.ReadInteger('AfterTouchTarget2', 0) and 2 = 2;
-    swAfterTouchEG2.Checked := ini.ReadInteger('AfterTouchTarget2', 0) and 4 = 4;
-
-    if ini.ReadInteger('MIDIChannel3', 1) > 16 then cbMidiCh3.ItemIndex := 17
-    else
-      cbMidiCh3.ItemIndex := ini.ReadInteger('MIDIChannel3', 1);
-    slVolume3.Position := ini.ReadInteger('Volume3', 100);
-    slPan3.Position := ini.ReadInteger('Pan3', 0);
-    slDetune3.Position := ini.ReadInteger('Detune3', 0);
-    slCutoff3.Position := ini.ReadInteger('Cutoff3', 99);
-    slResonance3.Position := ini.ReadInteger('Resonance3', 0);
-    slLoNote3.Position := ini.ReadInteger('NoteLimitLow3', 0);
-    slHiNote3.Position := ini.ReadInteger('NoteLimitHigh3', 127);
-    slTranspose3.Position := ini.ReadInteger('NoteShift3', 0);
-    slReverbSend3.Position := ini.ReadInteger('ReverbSend3', 0);
-    slPitchBendRange3.Position := ini.ReadInteger('PitchBendRange3', 2);
-    slPitchBendStep3.Position := ini.ReadInteger('PitchBendStep3', 0);
-    swPortaMode3.Checked := ini.ReadInteger('PortamentoMode3', 0) = 1;
-    swPortaGlissando3.Checked := ini.ReadInteger('PortamentoGlissando3', 0) = 1;
-    slPortaTime3.Position := ini.ReadInteger('PortamentoTime3', 0);
-    hexstring := ini.ReadString('VoiceData3', '');
-    if hexstring <> '' then
-    begin
-      hexstream.Position := 0;
-      ExpandedHexToStream(hexstring, hexstream);
-      FPerfSlotsDX[3].LoadExpandedVoiceFromStream(hexstream, 0);
-    end
-    else
-      FPerfSlotsDX[3].InitVoice;
-    swMonoMode3.Checked := ini.ReadInteger('MonoMode3', 0) = 1;
-    slModWhRange3.Position := ini.ReadInteger('ModulationWheelRange3', 99);
-    swModP3.Checked := ini.ReadInteger('ModulationWheelTarget3', 1) and 1 = 1;
-    swModA3.Checked := ini.ReadInteger('ModulationWheelTarget3', 1) and 2 = 2;
-    swModEG3.Checked := ini.ReadInteger('ModulationWheelTarget3', 1) and 4 = 4;
-    slFootCtrlRange3.Position := ini.ReadInteger('FootControlRange3', 99);
-    swFootP3.Checked := ini.ReadInteger('FootControlTarget3', 0) and 1 = 1;
-    swFootA3.Checked := ini.ReadInteger('FootControlTarget3', 0) and 2 = 2;
-    swFootEG3.Checked := ini.ReadInteger('FootControlTarget3', 0) and 4 = 4;
-    slBreathCtrlRange3.Position := ini.ReadInteger('BreathControlRange3', 99);
-    swBreathP3.Checked := ini.ReadInteger('BreathControlTarget3', 0) and 1 = 1;
-    swBreathA3.Checked := ini.ReadInteger('BreathControlTarget3', 0) and 2 = 2;
-    swBreathEG3.Checked := ini.ReadInteger('BreathControlTarget3', 0) and 4 = 4;
-    slAfterTouchRange3.Position := ini.ReadInteger('AfterTouchRange3', 99);
-    swAfterTouchP3.Checked := ini.ReadInteger('AfterTouchTarget3', 0) and 1 = 1;
-    swAfterTouchA3.Checked := ini.ReadInteger('AfterTouchTarget3', 0) and 2 = 2;
-    swAfterTouchEG3.Checked := ini.ReadInteger('AfterTouchTarget3', 0) and 4 = 4;
-
-    if ini.ReadInteger('MIDIChannel4', 1) > 16 then cbMidiCh4.ItemIndex := 17
-    else
-      cbMidiCh4.ItemIndex := ini.ReadInteger('MIDIChannel4', 1);
-    slVolume4.Position := ini.ReadInteger('Volume4', 100);
-    slPan4.Position := ini.ReadInteger('Pan4', 0);
-    slDetune4.Position := ini.ReadInteger('Detune4', 0);
-    slCutoff4.Position := ini.ReadInteger('Cutoff4', 99);
-    slResonance4.Position := ini.ReadInteger('Resonance4', 0);
-    slLoNote4.Position := ini.ReadInteger('NoteLimitLow4', 0);
-    slHiNote4.Position := ini.ReadInteger('NoteLimitHigh4', 127);
-    slTranspose4.Position := ini.ReadInteger('NoteShift4', 0);
-    slReverbSend4.Position := ini.ReadInteger('ReverbSend4', 0);
-    slPitchBendRange4.Position := ini.ReadInteger('PitchBendRange4', 2);
-    slPitchBendStep4.Position := ini.ReadInteger('PitchBendStep4', 0);
-    swPortaMode4.Checked := ini.ReadInteger('PortamentoMode4', 0) = 1;
-    swPortaGlissando4.Checked := ini.ReadInteger('PortamentoGlissando4', 0) = 1;
-    slPortaTime4.Position := ini.ReadInteger('PortamentoTime4', 0);
-    hexstring := ini.ReadString('VoiceData4', '');
-    if hexstring <> '' then
-    begin
-      hexstream.Position := 0;
-      ExpandedHexToStream(hexstring, hexstream);
-      FPerfSlotsDX[4].LoadExpandedVoiceFromStream(hexstream, 0);
-    end
-    else
-      FPerfSlotsDX[4].InitVoice;
-    swMonoMode4.Checked := ini.ReadInteger('MonoMode4', 0) = 1;
-    slModWhRange4.Position := ini.ReadInteger('ModulationWheelRange4', 99);
-    swModP4.Checked := ini.ReadInteger('ModulationWheelTarget4', 1) and 1 = 1;
-    swModA4.Checked := ini.ReadInteger('ModulationWheelTarget4', 1) and 2 = 2;
-    swModEG4.Checked := ini.ReadInteger('ModulationWheelTarget4', 1) and 4 = 4;
-    slFootCtrlRange4.Position := ini.ReadInteger('FootControlRange4', 99);
-    swFootP4.Checked := ini.ReadInteger('FootControlTarget4', 0) and 1 = 1;
-    swFootA4.Checked := ini.ReadInteger('FootControlTarget4', 0) and 2 = 2;
-    swFootEG4.Checked := ini.ReadInteger('FootControlTarget4', 0) and 4 = 4;
-    slBreathCtrlRange4.Position := ini.ReadInteger('BreathControlRange4', 99);
-    swBreathP4.Checked := ini.ReadInteger('BreathControlTarget4', 0) and 1 = 1;
-    swBreathA4.Checked := ini.ReadInteger('BreathControlTarget4', 0) and 2 = 2;
-    swBreathEG4.Checked := ini.ReadInteger('BreathControlTarget4', 0) and 4 = 4;
-    slAfterTouchRange4.Position := ini.ReadInteger('AfterTouchRange4', 99);
-    swAfterTouchP4.Checked := ini.ReadInteger('AfterTouchTarget4', 0) and 1 = 1;
-    swAfterTouchA4.Checked := ini.ReadInteger('AfterTouchTarget4', 0) and 2 = 2;
-    swAfterTouchEG4.Checked := ini.ReadInteger('AfterTouchTarget4', 0) and 4 = 4;
-
-    if ini.ReadInteger('MIDIChannel5', 1) > 16 then cbMidiCh5.ItemIndex := 17
-    else
-      cbMidiCh5.ItemIndex := ini.ReadInteger('MIDIChannel5', 1);
-    slVolume5.Position := ini.ReadInteger('Volume5', 100);
-    slPan5.Position := ini.ReadInteger('Pan5', 0);
-    slDetune5.Position := ini.ReadInteger('Detune5', 0);
-    slCutoff5.Position := ini.ReadInteger('Cutoff5', 99);
-    slResonance5.Position := ini.ReadInteger('Resonance5', 0);
-    slLoNote5.Position := ini.ReadInteger('NoteLimitLow5', 0);
-    slHiNote5.Position := ini.ReadInteger('NoteLimitHigh5', 127);
-    slTranspose5.Position := ini.ReadInteger('NoteShift5', 0);
-    slReverbSend5.Position := ini.ReadInteger('ReverbSend5', 0);
-    slPitchBendRange5.Position := ini.ReadInteger('PitchBendRange5', 2);
-    slPitchBendStep5.Position := ini.ReadInteger('PitchBendStep5', 0);
-    swPortaMode5.Checked := ini.ReadInteger('PortamentoMode5', 0) = 1;
-    swPortaGlissando5.Checked := ini.ReadInteger('PortamentoGlissando5', 0) = 1;
-    slPortaTime5.Position := ini.ReadInteger('PortamentoTime5', 0);
-    hexstring := ini.ReadString('VoiceData5', '');
-    if hexstring <> '' then
-    begin
-      hexstream.Position := 0;
-      ExpandedHexToStream(hexstring, hexstream);
-      FPerfSlotsDX[5].LoadExpandedVoiceFromStream(hexstream, 0);
-    end
-    else
-      FPerfSlotsDX[5].InitVoice;
-    swMonoMode5.Checked := ini.ReadInteger('MonoMode5', 0) = 1;
-    slModWhRange5.Position := ini.ReadInteger('ModulationWheelRange5', 99);
-    swModP5.Checked := ini.ReadInteger('ModulationWheelTarget5', 1) and 1 = 1;
-    swModA5.Checked := ini.ReadInteger('ModulationWheelTarget5', 1) and 2 = 2;
-    swModEG5.Checked := ini.ReadInteger('ModulationWheelTarget5', 1) and 4 = 4;
-    slFootCtrlRange5.Position := ini.ReadInteger('FootControlRange5', 99);
-    swFootP5.Checked := ini.ReadInteger('FootControlTarget5', 0) and 1 = 1;
-    swFootA5.Checked := ini.ReadInteger('FootControlTarget5', 0) and 2 = 2;
-    swFootEG5.Checked := ini.ReadInteger('FootControlTarget5', 0) and 4 = 4;
-    slBreathCtrlRange5.Position := ini.ReadInteger('BreathControlRange5', 99);
-    swBreathP5.Checked := ini.ReadInteger('BreathControlTarget5', 0) and 1 = 1;
-    swBreathA5.Checked := ini.ReadInteger('BreathControlTarget5', 0) and 2 = 2;
-    swBreathEG5.Checked := ini.ReadInteger('BreathControlTarget5', 0) and 4 = 4;
-    slAfterTouchRange5.Position := ini.ReadInteger('AfterTouchRange5', 99);
-    swAfterTouchP5.Checked := ini.ReadInteger('AfterTouchTarget5', 0) and 1 = 1;
-    swAfterTouchA5.Checked := ini.ReadInteger('AfterTouchTarget5', 0) and 2 = 2;
-    swAfterTouchEG5.Checked := ini.ReadInteger('AfterTouchTarget5', 0) and 4 = 4;
-
-    if ini.ReadInteger('MIDIChannel6', 1) > 16 then cbMidiCh6.ItemIndex := 17
-    else
-      cbMidiCh6.ItemIndex := ini.ReadInteger('MIDIChannel6', 1);
-    slVolume6.Position := ini.ReadInteger('Volume6', 100);
-    slPan6.Position := ini.ReadInteger('Pan6', 0);
-    slDetune6.Position := ini.ReadInteger('Detune6', 0);
-    slCutoff6.Position := ini.ReadInteger('Cutoff6', 99);
-    slResonance6.Position := ini.ReadInteger('Resonance6', 0);
-    slLoNote6.Position := ini.ReadInteger('NoteLimitLow6', 0);
-    slHiNote6.Position := ini.ReadInteger('NoteLimitHigh6', 127);
-    slTranspose6.Position := ini.ReadInteger('NoteShift6', 0);
-    slReverbSend6.Position := ini.ReadInteger('ReverbSend6', 0);
-    slPitchBendRange6.Position := ini.ReadInteger('PitchBendRange6', 2);
-    slPitchBendStep6.Position := ini.ReadInteger('PitchBendStep6', 0);
-    swPortaMode6.Checked := ini.ReadInteger('PortamentoMode6', 0) = 1;
-    swPortaGlissando6.Checked := ini.ReadInteger('PortamentoGlissando6', 0) = 1;
-    slPortaTime6.Position := ini.ReadInteger('PortamentoTime6', 0);
-    hexstring := ini.ReadString('VoiceData6', '');
-    if hexstring <> '' then
-    begin
-      hexstream.Position := 0;
-      ExpandedHexToStream(hexstring, hexstream);
-      FPerfSlotsDX[6].LoadExpandedVoiceFromStream(hexstream, 0);
-    end
-    else
-      FPerfSlotsDX[6].InitVoice;
-    swMonoMode6.Checked := ini.ReadInteger('MonoMode6', 0) = 1;
-    slModWhRange6.Position := ini.ReadInteger('ModulationWheelRange6', 99);
-    swModP6.Checked := ini.ReadInteger('ModulationWheelTarget6', 1) and 1 = 1;
-    swModA6.Checked := ini.ReadInteger('ModulationWheelTarget6', 1) and 2 = 2;
-    swModEG6.Checked := ini.ReadInteger('ModulationWheelTarget6', 1) and 4 = 4;
-    slFootCtrlRange6.Position := ini.ReadInteger('FootControlRange6', 99);
-    swFootP6.Checked := ini.ReadInteger('FootControlTarget6', 0) and 1 = 1;
-    swFootA6.Checked := ini.ReadInteger('FootControlTarget6', 0) and 2 = 2;
-    swFootEG6.Checked := ini.ReadInteger('FootControlTarget6', 0) and 4 = 4;
-    slBreathCtrlRange6.Position := ini.ReadInteger('BreathControlRange6', 99);
-    swBreathP6.Checked := ini.ReadInteger('BreathControlTarget6', 0) and 1 = 1;
-    swBreathA6.Checked := ini.ReadInteger('BreathControlTarget6', 0) and 2 = 2;
-    swBreathEG6.Checked := ini.ReadInteger('BreathControlTarget6', 0) and 4 = 4;
-    slAfterTouchRange6.Position := ini.ReadInteger('AfterTouchRange6', 99);
-    swAfterTouchP6.Checked := ini.ReadInteger('AfterTouchTarget6', 0) and 1 = 1;
-    swAfterTouchA6.Checked := ini.ReadInteger('AfterTouchTarget6', 0) and 2 = 2;
-    swAfterTouchEG6.Checked := ini.ReadInteger('AfterTouchTarget6', 0) and 4 = 4;
-
-    if ini.ReadInteger('MIDIChannel7', 1) > 16 then cbMidiCh7.ItemIndex := 17
-    else
-      cbMidiCh7.ItemIndex := ini.ReadInteger('MIDIChannel7', 1);
-    slVolume7.Position := ini.ReadInteger('Volume7', 100);
-    slPan7.Position := ini.ReadInteger('Pan7', 0);
-    slDetune7.Position := ini.ReadInteger('Detune7', 0);
-    slCutoff7.Position := ini.ReadInteger('Cutoff7', 99);
-    slResonance7.Position := ini.ReadInteger('Resonance7', 0);
-    slLoNote7.Position := ini.ReadInteger('NoteLimitLow7', 0);
-    slHiNote7.Position := ini.ReadInteger('NoteLimitHigh7', 127);
-    slTranspose7.Position := ini.ReadInteger('NoteShift7', 0);
-    slReverbSend7.Position := ini.ReadInteger('ReverbSend7', 0);
-    slPitchBendRange7.Position := ini.ReadInteger('PitchBendRange7', 2);
-    slPitchBendStep7.Position := ini.ReadInteger('PitchBendStep7', 0);
-    swPortaMode7.Checked := ini.ReadInteger('PortamentoMode7', 0) = 1;
-    swPortaGlissando7.Checked := ini.ReadInteger('PortamentoGlissando7', 0) = 1;
-    slPortaTime7.Position := ini.ReadInteger('PortamentoTime7', 0);
-    hexstring := ini.ReadString('VoiceData7', '');
-    if hexstring <> '' then
-    begin
-      hexstream.Position := 0;
-      ExpandedHexToStream(hexstring, hexstream);
-      FPerfSlotsDX[7].LoadExpandedVoiceFromStream(hexstream, 0);
-    end
-    else
-      FPerfSlotsDX[7].InitVoice;
-    swMonoMode7.Checked := ini.ReadInteger('MonoMode7', 0) = 1;
-    slModWhRange7.Position := ini.ReadInteger('ModulationWheelRange7', 99);
-    swModP7.Checked := ini.ReadInteger('ModulationWheelTarget7', 1) and 1 = 1;
-    swModA7.Checked := ini.ReadInteger('ModulationWheelTarget7', 1) and 2 = 2;
-    swModEG7.Checked := ini.ReadInteger('ModulationWheelTarget7', 1) and 4 = 4;
-    slFootCtrlRange7.Position := ini.ReadInteger('FootControlRange7', 99);
-    swFootP7.Checked := ini.ReadInteger('FootControlTarget7', 0) and 1 = 1;
-    swFootA7.Checked := ini.ReadInteger('FootControlTarget7', 0) and 2 = 2;
-    swFootEG7.Checked := ini.ReadInteger('FootControlTarget7', 0) and 4 = 4;
-    slBreathCtrlRange7.Position := ini.ReadInteger('BreathControlRange7', 99);
-    swBreathP7.Checked := ini.ReadInteger('BreathControlTarget7', 0) and 1 = 1;
-    swBreathA7.Checked := ini.ReadInteger('BreathControlTarget7', 0) and 2 = 2;
-    swBreathEG7.Checked := ini.ReadInteger('BreathControlTarget7', 0) and 4 = 4;
-    slAfterTouchRange7.Position := ini.ReadInteger('AfterTouchRange7', 99);
-    swAfterTouchP7.Checked := ini.ReadInteger('AfterTouchTarget7', 0) and 1 = 1;
-    swAfterTouchA7.Checked := ini.ReadInteger('AfterTouchTarget7', 0) and 2 = 2;
-    swAfterTouchEG7.Checked := ini.ReadInteger('AfterTouchTarget7', 0) and 4 = 4;
-
-    if ini.ReadInteger('MIDIChannel8', 1) > 16 then cbMidiCh8.ItemIndex := 17
-    else
-      cbMidiCh8.ItemIndex := ini.ReadInteger('MIDIChannel8', 1);
-    slVolume8.Position := ini.ReadInteger('Volume8', 100);
-    slPan8.Position := ini.ReadInteger('Pan8', 0);
-    slDetune8.Position := ini.ReadInteger('Detune8', 0);
-    slCutoff8.Position := ini.ReadInteger('Cutoff8', 99);
-    slResonance8.Position := ini.ReadInteger('Resonance8', 0);
-    slLoNote8.Position := ini.ReadInteger('NoteLimitLow8', 0);
-    slHiNote8.Position := ini.ReadInteger('NoteLimitHigh8', 127);
-    slTranspose8.Position := ini.ReadInteger('NoteShift8', 0);
-    slReverbSend8.Position := ini.ReadInteger('ReverbSend8', 0);
-    slPitchBendRange8.Position := ini.ReadInteger('PitchBendRange8', 2);
-    slPitchBendStep8.Position := ini.ReadInteger('PitchBendStep8', 0);
-    swPortaMode8.Checked := ini.ReadInteger('PortamentoMode8', 0) = 1;
-    swPortaGlissando8.Checked := ini.ReadInteger('PortamentoGlissando8', 0) = 1;
-    slPortaTime8.Position := ini.ReadInteger('PortamentoTime8', 0);
-    hexstring := ini.ReadString('VoiceData8', '');
-    if hexstring <> '' then
-    begin
-      ExpandedHexToStream(hexstring, hexstream);
-      FPerfSlotsDX[8].LoadExpandedVoiceFromStream(hexstream, 0);
-    end
-    else
-      FPerfSlotsDX[8].InitVoice;
-    swMonoMode8.Checked := ini.ReadInteger('MonoMode8', 0) = 1;
-    slModWhRange8.Position := ini.ReadInteger('ModulationWheelRange8', 99);
-    swModP8.Checked := ini.ReadInteger('ModulationWheelTarget8', 1) and 1 = 1;
-    swModA8.Checked := ini.ReadInteger('ModulationWheelTarget8', 1) and 2 = 2;
-    swModEG8.Checked := ini.ReadInteger('ModulationWheelTarget8', 1) and 4 = 4;
-    slFootCtrlRange8.Position := ini.ReadInteger('FootControlRange8', 99);
-    swFootP8.Checked := ini.ReadInteger('FootControlTarget8', 0) and 1 = 1;
-    swFootA8.Checked := ini.ReadInteger('FootControlTarget8', 0) and 2 = 2;
-    swFootEG8.Checked := ini.ReadInteger('FootControlTarget8', 0) and 4 = 4;
-    slBreathCtrlRange8.Position := ini.ReadInteger('BreathControlRange8', 99);
-    swBreathP8.Checked := ini.ReadInteger('BreathControlTarget8', 0) and 1 = 1;
-    swBreathA8.Checked := ini.ReadInteger('BreathControlTarget8', 0) and 2 = 2;
-    swBreathEG8.Checked := ini.ReadInteger('BreathControlTarget8', 0) and 4 = 4;
-    slAfterTouchRange8.Position := ini.ReadInteger('AfterTouchRange8', 99);
-    swAfterTouchP8.Checked := ini.ReadInteger('AfterTouchTarget8', 0) and 1 = 1;
-    swAfterTouchA8.Checked := ini.ReadInteger('AfterTouchTarget8', 0) and 2 = 2;
-    swAfterTouchEG8.Checked := ini.ReadInteger('AfterTouchTarget8', 0) and 4 = 4;
-
-    swCompressorEnable.Checked := ini.ReadInteger('CompressorEnable', 1) = 1;
-    swReverbEnable.Checked := ini.ReadInteger('ReverbEnable', 1) = 1;
-    slReverbSize.Position := ini.ReadInteger('ReverbSize', 70);
-    slReverbHighDamp.Position := ini.ReadInteger('ReverbHighDamp', 50);
-    slReverbLowDamp.Position := ini.ReadInteger('ReverbLowDamp', 50);
-    slReverbLowPass.Position := ini.ReadInteger('ReverbLowPass', 30);
-    slReverbDiffusion.Position := ini.ReadInteger('ReverbDiffusion', 65);
-    slReverbLevel.Position := ini.ReadInteger('ReverbLevel', 80);
-
-    RefreshSlots;
-    hexstream.Free;
-    ini.InitPerformance;
-    ini.Free;
+    LastPerfOpenDir := IncludeTrailingPathDelimiter(
+      ExtractFileDir(OpenPerformanceDialog1.FileName));
+    LastPerf := OpenPerformanceDialog1.FileName;
+    OpenPerformance(OpenPerformanceDialog1.FileName);
     pnHint.Visible := False;
   end;
 end;
@@ -1843,7 +2002,11 @@ end;
 procedure TfrmMain.tbbtSaveBankClick(Sender: TObject);
 begin
   if SaveBankDialog1.Execute then
+  begin
     FSlotsDX.SaveBankToSysExFile(SaveBankDialog1.FileName);
+    LastSysExSaveDir := IncludeTrailingPathDelimiter(
+      ExtractFileDir(SaveBankDialog1.FileName));
+  end;
 end;
 
 procedure TfrmMain.RefreshSlots;
@@ -1968,6 +2131,9 @@ var
 begin
   if SavePerformanceDialog1.Execute then
   begin
+    LastPerfSaveDir := IncludeTrailingPathDelimiter(
+      ExtractFileDir(SavePerformanceDialog1.FileName));
+    LastPerf := SavePerformanceDialog1.FileName;
     ini := TMiniINIFile.Create;
     ini.InitPerformance;
     hexstream := TMemoryStream.Create;
