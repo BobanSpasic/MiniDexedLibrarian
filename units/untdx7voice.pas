@@ -335,6 +335,8 @@ type
     function SavePackedVoiceToStream(var aStream: TMemoryStream): boolean;
     function SaveExpandedVoiceToStream(var aStream: TMemoryStream): boolean;
     function GetChecksumPart: integer;
+    function GetChecksum: integer;
+    procedure SysExVoiceToStream(var aStream: TMemoryStream);
   end;
 
 function Expanded2PackedVoice(aPar: TDX7ExpandedVoiceParams): TDX7PackedVoiceParams;
@@ -1384,7 +1386,6 @@ function TDX7VoiceContainer.SaveExpandedVoiceToStream(
 begin
   if Assigned(aStream) then
   begin
-    aStream.Clear;
     with FDX7ExpandedVoiceParams do
     begin
       aStream.WriteByte(OP6_EG_rate_1);
@@ -1569,6 +1570,34 @@ begin
     checksum := checksum + tmpStream.ReadByte;
   Result := checksum;
   tmpStream.Free;
+end;
+
+function TDX7VoiceContainer.GetChecksum: integer;
+var
+  checksum: integer;
+begin
+  checksum := 0;
+  try
+      checksum := GetChecksumPart;
+    Result := ((not (checksum and 255)) and 127) + 1;
+  except
+    on e: Exception do Result := 0;
+  end;
+end;
+
+procedure TDX7VoiceContainer.SysExVoiceToStream(var aStream: TMemoryStream);
+begin
+  aStream.Clear;
+  aStream.Position := 0;
+  aStream.WriteByte($F0);
+  aStream.WriteByte($43);
+  aStream.WriteByte($00);
+  aStream.WriteByte($00);
+  aStream.WriteByte($01);
+  aStream.WriteByte($1B);
+  SaveExpandedVoiceToStream(aStream);
+  aStream.WriteByte(GetChecksum);
+  aStream.WriteByte($F7);
 end;
 
 end.

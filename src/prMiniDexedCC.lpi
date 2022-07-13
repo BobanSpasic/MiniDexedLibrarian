@@ -16,8 +16,9 @@
     </General>
     <VersionInfo>
       <UseVersionInfo Value="True"/>
+      <AutoIncrementBuild Value="True"/>
       <MajorVersionNr Value="1"/>
-      <BuildNr Value="5"/>
+      <BuildNr Value="7"/>
       <Attributes pvaPreRelease="True"/>
       <StringTable FileDescription="MiniDexed Control Center" LegalCopyright="Boban Spasic" OriginalFilename="MiniDexedCC"/>
     </VersionInfo>
@@ -172,6 +173,11 @@
         <Filename Value="..\units\untminiini.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="untMiniINI"/>
+      </Unit>
+      <Unit>
+        <Filename Value="untpopup.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="untPopUp"/>
       </Unit>
     </Units>
   </ProjectOptions>

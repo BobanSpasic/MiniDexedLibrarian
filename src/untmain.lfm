@@ -18,10 +18,10 @@ object frmMain: TfrmMain
     Height = 859
     Top = 0
     Width = 1513
-    ActivePage = tsSettings
+    ActivePage = tsLibrarian
     Align = alClient
     Style = tsButton
-    TabIndex = 3
+    TabIndex = 0
     TabOrder = 0
     ThinBorder = False
     ActiveTabColors.FromColor = 2900284
@@ -210,8 +210,8 @@ object frmMain: TfrmMain
           InactiveTabColors.ToColor = 2900284
           object tsBankSlots: TTabSheet
             Caption = 'Bank'
-            ClientHeight = 797
-            ClientWidth = 807
+            ClientHeight = 807
+            ClientWidth = 815
             object pnSlot01: TPanel
               Left = 16
               Height = 20
@@ -236,6 +236,7 @@ object frmMain: TfrmMain
                 ReadOnly = True
                 TabOrder = 0
                 TextHint = 'Slot empty'
+                OnDblClick = edSlotDblClick
                 OnDragDrop = edSlotDragDrop
                 OnDragOver = edSlotDragOver
                 Appearance.NormalBgColor = 5162664
@@ -283,6 +284,7 @@ object frmMain: TfrmMain
                 ReadOnly = True
                 TabOrder = 0
                 TextHint = 'Slot empty'
+                OnDblClick = edSlotDblClick
                 OnDragDrop = edSlotDragDrop
                 OnDragOver = edSlotDragOver
                 Appearance.NormalBgColor = 5162664
@@ -331,6 +333,7 @@ object frmMain: TfrmMain
                 ReadOnly = True
                 TabOrder = 0
                 TextHint = 'Slot empty'
+                OnDblClick = edSlotDblClick
                 OnDragDrop = edSlotDragDrop
                 OnDragOver = edSlotDragOver
                 Appearance.NormalBgColor = 5162664
@@ -379,6 +382,7 @@ object frmMain: TfrmMain
                 ReadOnly = True
                 TabOrder = 0
                 TextHint = 'Slot empty'
+                OnDblClick = edSlotDblClick
                 OnDragDrop = edSlotDragDrop
                 OnDragOver = edSlotDragOver
                 Appearance.NormalBgColor = 5162664
@@ -427,6 +431,7 @@ object frmMain: TfrmMain
                 ReadOnly = True
                 TabOrder = 0
                 TextHint = 'Slot empty'
+                OnDblClick = edSlotDblClick
                 OnDragDrop = edSlotDragDrop
                 OnDragOver = edSlotDragOver
                 Appearance.NormalBgColor = 5162664
@@ -475,6 +480,7 @@ object frmMain: TfrmMain
                 ReadOnly = True
                 TabOrder = 0
                 TextHint = 'Slot empty'
+                OnDblClick = edSlotDblClick
                 OnDragDrop = edSlotDragDrop
                 OnDragOver = edSlotDragOver
                 Appearance.NormalBgColor = 5162664
@@ -523,6 +529,7 @@ object frmMain: TfrmMain
                 ReadOnly = True
                 TabOrder = 0
                 TextHint = 'Slot empty'
+                OnDblClick = edSlotDblClick
                 OnDragDrop = edSlotDragDrop
                 OnDragOver = edSlotDragOver
                 Appearance.NormalBgColor = 5162664
@@ -571,6 +578,7 @@ object frmMain: TfrmMain
                 ReadOnly = True
                 TabOrder = 0
                 TextHint = 'Slot empty'
+                OnDblClick = edSlotDblClick
                 OnDragDrop = edSlotDragDrop
                 OnDragOver = edSlotDragOver
                 Appearance.NormalBgColor = 5162664
@@ -619,6 +627,7 @@ object frmMain: TfrmMain
                 ReadOnly = True
                 TabOrder = 0
                 TextHint = 'Slot empty'
+                OnDblClick = edSlotDblClick
                 OnDragDrop = edSlotDragDrop
                 OnDragOver = edSlotDragOver
                 Appearance.NormalBgColor = 5162664
@@ -667,6 +676,7 @@ object frmMain: TfrmMain
                 ReadOnly = True
                 TabOrder = 0
                 TextHint = 'Slot empty'
+                OnDblClick = edSlotDblClick
                 OnDragDrop = edSlotDragDrop
                 OnDragOver = edSlotDragOver
                 Appearance.NormalBgColor = 5162664
@@ -715,6 +725,7 @@ object frmMain: TfrmMain
                 ReadOnly = True
                 TabOrder = 0
                 TextHint = 'Slot empty'
+                OnDblClick = edSlotDblClick
                 OnDragDrop = edSlotDragDrop
                 OnDragOver = edSlotDragOver
                 Appearance.NormalBgColor = 5162664
@@ -763,6 +774,7 @@ object frmMain: TfrmMain
                 ReadOnly = True
                 TabOrder = 0
                 TextHint = 'Slot empty'
+                OnDblClick = edSlotDblClick
                 OnDragDrop = edSlotDragDrop
                 OnDragOver = edSlotDragOver
                 Appearance.NormalBgColor = 5162664
@@ -811,6 +823,7 @@ object frmMain: TfrmMain
                 ReadOnly = True
                 TabOrder = 0
                 TextHint = 'Slot empty'
+                OnDblClick = edSlotDblClick
                 OnDragDrop = edSlotDragDrop
                 OnDragOver = edSlotDragOver
                 Appearance.NormalBgColor = 5162664
@@ -859,6 +872,7 @@ object frmMain: TfrmMain
                 ReadOnly = True
                 TabOrder = 0
                 TextHint = 'Slot empty'
+                OnDblClick = edSlotDblClick
                 OnDragDrop = edSlotDragDrop
                 OnDragOver = edSlotDragOver
                 Appearance.NormalBgColor = 5162664
@@ -907,6 +921,7 @@ object frmMain: TfrmMain
                 ReadOnly = True
                 TabOrder = 0
                 TextHint = 'Slot empty'
+                OnDblClick = edSlotDblClick
                 OnDragDrop = edSlotDragDrop
                 OnDragOver = edSlotDragOver
                 Appearance.NormalBgColor = 5162664
@@ -955,6 +970,7 @@ object frmMain: TfrmMain
                 ReadOnly = True
                 TabOrder = 0
                 TextHint = 'Slot empty'
+                OnDblClick = edSlotDblClick
                 OnDragDrop = edSlotDragDrop
                 OnDragOver = edSlotDragOver
                 Appearance.NormalBgColor = 5162664
@@ -1003,6 +1019,7 @@ object frmMain: TfrmMain
                 ReadOnly = True
                 TabOrder = 0
                 TextHint = 'Slot empty'
+                OnDblClick = edSlotDblClick
                 OnDragDrop = edSlotDragDrop
                 OnDragOver = edSlotDragOver
                 Appearance.NormalBgColor = 5162664
@@ -1051,6 +1068,7 @@ object frmMain: TfrmMain
                 ReadOnly = True
                 TabOrder = 0
                 TextHint = 'Slot empty'
+                OnDblClick = edSlotDblClick
                 OnDragDrop = edSlotDragDrop
                 OnDragOver = edSlotDragOver
                 Appearance.NormalBgColor = 5162664
@@ -1099,6 +1117,7 @@ object frmMain: TfrmMain
                 ReadOnly = True
                 TabOrder = 0
                 TextHint = 'Slot empty'
+                OnDblClick = edSlotDblClick
                 OnDragDrop = edSlotDragDrop
                 OnDragOver = edSlotDragOver
                 Appearance.NormalBgColor = 5162664
@@ -1147,6 +1166,7 @@ object frmMain: TfrmMain
                 ReadOnly = True
                 TabOrder = 0
                 TextHint = 'Slot empty'
+                OnDblClick = edSlotDblClick
                 OnDragDrop = edSlotDragDrop
                 OnDragOver = edSlotDragOver
                 Appearance.NormalBgColor = 5162664
@@ -1195,6 +1215,7 @@ object frmMain: TfrmMain
                 ReadOnly = True
                 TabOrder = 0
                 TextHint = 'Slot empty'
+                OnDblClick = edSlotDblClick
                 OnDragDrop = edSlotDragDrop
                 OnDragOver = edSlotDragOver
                 Appearance.NormalBgColor = 5162664
@@ -1243,6 +1264,7 @@ object frmMain: TfrmMain
                 ReadOnly = True
                 TabOrder = 0
                 TextHint = 'Slot empty'
+                OnDblClick = edSlotDblClick
                 OnDragDrop = edSlotDragDrop
                 OnDragOver = edSlotDragOver
                 Appearance.NormalBgColor = 5162664
@@ -1291,6 +1313,7 @@ object frmMain: TfrmMain
                 ReadOnly = True
                 TabOrder = 0
                 TextHint = 'Slot empty'
+                OnDblClick = edSlotDblClick
                 OnDragDrop = edSlotDragDrop
                 OnDragOver = edSlotDragOver
                 Appearance.NormalBgColor = 5162664
@@ -1339,6 +1362,7 @@ object frmMain: TfrmMain
                 ReadOnly = True
                 TabOrder = 0
                 TextHint = 'Slot empty'
+                OnDblClick = edSlotDblClick
                 OnDragDrop = edSlotDragDrop
                 OnDragOver = edSlotDragOver
                 Appearance.NormalBgColor = 5162664
@@ -1387,6 +1411,7 @@ object frmMain: TfrmMain
                 ReadOnly = True
                 TabOrder = 0
                 TextHint = 'Slot empty'
+                OnDblClick = edSlotDblClick
                 OnDragDrop = edSlotDragDrop
                 OnDragOver = edSlotDragOver
                 Appearance.NormalBgColor = 5162664
@@ -1435,6 +1460,7 @@ object frmMain: TfrmMain
                 ReadOnly = True
                 TabOrder = 0
                 TextHint = 'Slot empty'
+                OnDblClick = edSlotDblClick
                 OnDragDrop = edSlotDragDrop
                 OnDragOver = edSlotDragOver
                 Appearance.NormalBgColor = 5162664
@@ -1483,6 +1509,7 @@ object frmMain: TfrmMain
                 ReadOnly = True
                 TabOrder = 0
                 TextHint = 'Slot empty'
+                OnDblClick = edSlotDblClick
                 OnDragDrop = edSlotDragDrop
                 OnDragOver = edSlotDragOver
                 Appearance.NormalBgColor = 5162664
@@ -1531,6 +1558,7 @@ object frmMain: TfrmMain
                 ReadOnly = True
                 TabOrder = 0
                 TextHint = 'Slot empty'
+                OnDblClick = edSlotDblClick
                 OnDragDrop = edSlotDragDrop
                 OnDragOver = edSlotDragOver
                 Appearance.NormalBgColor = 5162664
@@ -1579,6 +1607,7 @@ object frmMain: TfrmMain
                 ReadOnly = True
                 TabOrder = 0
                 TextHint = 'Slot empty'
+                OnDblClick = edSlotDblClick
                 OnDragDrop = edSlotDragDrop
                 OnDragOver = edSlotDragOver
                 Appearance.NormalBgColor = 5162664
@@ -1627,6 +1656,7 @@ object frmMain: TfrmMain
                 ReadOnly = True
                 TabOrder = 0
                 TextHint = 'Slot empty'
+                OnDblClick = edSlotDblClick
                 OnDragDrop = edSlotDragDrop
                 OnDragOver = edSlotDragOver
                 Appearance.NormalBgColor = 5162664
@@ -1675,6 +1705,7 @@ object frmMain: TfrmMain
                 ReadOnly = True
                 TabOrder = 0
                 TextHint = 'Slot empty'
+                OnDblClick = edSlotDblClick
                 OnDragDrop = edSlotDragDrop
                 OnDragOver = edSlotDragOver
                 Appearance.NormalBgColor = 5162664
@@ -1723,6 +1754,7 @@ object frmMain: TfrmMain
                 ReadOnly = True
                 TabOrder = 0
                 TextHint = 'Slot empty'
+                OnDblClick = edSlotDblClick
                 OnDragDrop = edSlotDragDrop
                 OnDragOver = edSlotDragOver
                 Appearance.NormalBgColor = 5162664
@@ -1750,7 +1782,7 @@ object frmMain: TfrmMain
               Left = 0
               Height = 26
               Top = 0
-              Width = 807
+              Width = 815
               Caption = 'tbBank'
               EdgeBorders = []
               Images = ilToolbarBankPerformance
@@ -1780,22 +1812,19 @@ object frmMain: TfrmMain
                 Caption = 'ToolButton1'
               end
             end
-            object lbChecksum: TLabel
+            object Label10: TLabel
               Left = 16
               Height = 14
               Top = 544
-              Width = 63
-              Caption = 'Checksum:'
-              Font.Color = 5162664
-              Font.Name = 'Consolas'
+              Width = 259
+              Caption = 'Double-click to send voices over MIDI'
               ParentColor = False
-              ParentFont = False
             end
           end
           object tsPerformanceSlots: TTabSheet
             Caption = 'Performance'
-            ClientHeight = 797
-            ClientWidth = 807
+            ClientHeight = 807
+            ClientWidth = 815
             object pnPSlot01: TPanel
               Left = 16
               Height = 20
@@ -15264,13 +15293,13 @@ object frmMain: TfrmMain
           InactiveTabColors.ToColor = 2900284
           object tsIniFiles: TTabSheet
             Caption = 'INI Files'
-            ClientHeight = 764
-            ClientWidth = 1495
+            ClientHeight = 774
+            ClientWidth = 1503
             object tbINIFiles: TToolBar
               Left = 0
               Height = 26
               Top = 0
-              Width = 1495
+              Width = 1503
               Caption = 'tbIniFiles'
               EdgeBorders = []
               Images = ilToolbarBankPerformance

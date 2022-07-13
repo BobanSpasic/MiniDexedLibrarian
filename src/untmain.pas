@@ -15,10 +15,10 @@ unit untMain;
 interface
 
 uses
-  Classes, Messages, SysUtils, StrUtils, Forms, Controls, Graphics,
-  Dialogs, StdCtrls, ComCtrls, ExtCtrls, Grids, JPP.Edit, atshapeline,
-  cyPageControl, ECSlider, ECSwitch, ECEditBtns, BCComboBox,
-  untUtils, untDX7Bank, untDX7Voice, untDX7Utils, untMiniINI, MIDI, Types;
+  Classes, Messages, SysUtils, StrUtils, Forms, Controls, Graphics, Dialogs,
+  StdCtrls, ComCtrls, ExtCtrls, Grids, JPP.Edit, atshapeline,
+  cyPageControl, ECSlider, ECSwitch, ECEditBtns, BCComboBox, untUtils,
+  untDX7Bank, untDX7Voice, untDX7Utils, untMiniINI, MIDI, Types, untPopUp;
 
 type
 
@@ -65,6 +65,7 @@ type
     edSoundDevOther: TJppEdit;
     edSoundDevi2sAddr: TJppEdit;
     Label1: TLabel;
+    Label10: TLabel;
     lbComments: TLabel;
     lbGPIOPins: TLabel;
     lbPerfOptions: TLabel;
@@ -327,7 +328,6 @@ type
     edPSlot07: TJppEdit;
     edPSlot08: TJppEdit;
     ilToolbarBankPerformance: TImageList;
-    lbChecksum: TLabel;
     lbFiles: TListBox;
     mmLog: TMemo;
     pcBankPerformanceSlots: TcyPageControl;
@@ -541,6 +541,7 @@ type
     procedure edPSlotDragDrop(Sender, Source: TObject; X, Y: integer);
     procedure edPSlotDragOver(Sender, Source: TObject; X, Y: integer;
       State: TDragState; var Accept: boolean);
+    procedure edSlotDblClick(Sender: TObject);
     procedure edSlotDragDrop(Sender, Source: TObject; X, Y: integer);
     procedure edSlotDragOver(Sender, Source: TObject; X, Y: integer;
       State: TDragState; var Accept: boolean);
@@ -571,6 +572,7 @@ type
     procedure tbbtSavePerformanceClick(Sender: TObject);
     procedure CalculateGPIO;
     procedure tbbtSendVoiceDumpClick(Sender: TObject);
+    procedure SendSingleVoice(aVoiceNr: integer);
     procedure LoadLastStateBank;
     procedure FillFilesList(aFolder: string);
     procedure OpenSysEx(aName: string);
@@ -774,6 +776,11 @@ begin
   if (Sender = lbVoices) and (dragItem <> -1) then Accept := True;
 end;
 
+procedure TfrmMain.edSlotDblClick(Sender: TObject);
+begin
+  SendSingleVoice((Sender as TJppEdit).Tag + 1);
+end;
+
 procedure TfrmMain.edSlotDragDrop(Sender, Source: TObject; X, Y: integer);
 var
   dmp: TMemoryStream;
@@ -802,7 +809,6 @@ begin
           TJppEdit(FindComponent(Format('edSlot%.2d', [i + 1]))).Text :=
             FSlotsDX.GetVoiceName(i + 1);
         end;
-        lbChecksum.Caption := 'Checksum: $' + IntToHex(FSlotsDX.GetChecksum, 2);
       end;
       dmp.Free;
     end;
@@ -835,7 +841,6 @@ begin
         (Sender as TJppEdit).Text := FSlotsDX.GetVoiceName((Sender as TJppEdit).Tag + 1);
         tmpVoice.Free;
       end;
-      lbChecksum.Caption := 'Checksum: $' + IntToHex(FSlotsDX.GetChecksum, 2);
       dmp.Free;
     end;
   end;
@@ -969,7 +974,21 @@ begin
     appFolder := IncludeTrailingPathDelimiter(ExtractFileDir(Application.Params[0]));
     ini.LoadFromFile(appFolder + 'settings.ini');
     cbMIDIIn.ItemIndex := cbMidiIn.Items.IndexOf(ini.ReadString('MIDIInput', ''));
+    if cbMidiIn.ItemIndex <> -1 then
+  begin
+    FMidiIn := cbMidiIn.Text;
+    FMidiInInt := cbMidiIn.ItemIndex;
+    MidiInput.Open(FMidiInInt);
+    FMidiIsActive := True;
+  end;
     cbMidiOut.ItemIndex := cbMidiOut.Items.IndexOf(ini.ReadString('MIDIOutput', ''));
+    if cbMidiOut.ItemIndex <> -1 then
+  begin
+    FMidiOut := cbMidiOut.Text;
+    FMidiOutInt := cbMidiOut.ItemIndex;
+    MidiOutput.Open(FMidiOutInt);
+    FMidiIsActive := True;
+  end;
     LastSysExOpenDir := ini.ReadString('LastSysExOpenDir', '');
     LastSysExSaveDir := ini.ReadString('LastSysExSaveDir', '');
     LastSysEx := ini.ReadString('LastSysEx', '');
@@ -1035,7 +1054,6 @@ begin
         TJppEdit(FindComponent(Format('edSlot%.2d', [nr + 1]))).Text :=
           FSlotsDX.GetVoiceName(nr + 1);
       end;
-      lbChecksum.Caption := 'Checksum: $' + IntToHex(FSlotsDX.GetChecksum, 2);
     end;
     dmp.Free;
   end;
@@ -1751,9 +1769,35 @@ begin
       bankStream := TMemoryStream.Create;
       FSlotsDX.SysExBankToStream(bankStream);
       MidiOutput.SendSysEx(FMidiOutInt, bankStream);
-      ShowMessage('Bank sent!');
+      PopUp('Bank'+#13+'sent', 3);
     finally
       bankStream.Free;
+    end;
+  end
+  else
+  begin
+    ShowMessage('Please set-up the MIDI Output first');
+    pcMain.ActivePage := tsSettings;
+  end;
+end;
+
+procedure TfrmMain.SendSingleVoice(aVoiceNr: integer);
+var
+  voiceStream: TMemoryStream;
+  tmpVoice: TDX7VoiceContainer;
+begin
+  if FMidiOutInt <> -1 then
+  begin
+    try
+      voiceStream := TMemoryStream.Create;
+      tmpVoice := TDX7VoiceContainer.Create;
+      FSlotsDX.GetVoice(aVoiceNr, tmpVoice);
+      tmpVoice.SysExVoiceToStream(voiceStream);
+      MidiOutput.SendSysEx(FMidiOutInt, voiceStream);
+      PopUp('Voice'+#13+'sent', 3);
+    finally
+      voiceStream.Free;
+      tmpVoice.Free;
     end;
   end
   else

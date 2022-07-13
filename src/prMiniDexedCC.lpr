@@ -11,7 +11,7 @@ uses
   {$ENDIF}
   Interfaces, // this includes the LCL widgetset
   Forms, rxnew, uecontrols, untMain, untDX7Bank, untDX7SysExDefs, untDX7Utils,
-  untDX7Voice, untUtils, untMiniINI;
+  untDX7Voice, untUtils, untMiniINI, untPopUp;
 
 {$R *.res}
 
