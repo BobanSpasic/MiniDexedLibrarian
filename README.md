@@ -11,6 +11,7 @@ Working:
 - open/edit/save MiniDexed performance.ini files
 - open/edit/save MiniDexed minidexed.ini configuration files
 - sending voice bulk dumps (banks) to Dexed (not to MiniDexed)
+- sending single voices
 - save/open current state on closing/opening the app
 
 ToDo:
