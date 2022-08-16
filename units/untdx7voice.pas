@@ -15,7 +15,7 @@ unit untDX7Voice;
 interface
 
 uses
-  Classes, SysUtils, untDX7Utils;
+  Classes, SysUtils, untDX7Utils, HlpHashFactory;
 
 type
   TDX7PackedVoiceDump = array [0..127] of byte;
@@ -336,7 +336,8 @@ type
     function SaveExpandedVoiceToStream(var aStream: TMemoryStream): boolean;
     function GetChecksumPart: integer;
     function GetChecksum: integer;
-    procedure SysExVoiceToStream(var aStream: TMemoryStream);
+    procedure SysExVoiceToStream(ch: integer; var aStream: TMemoryStream);
+    function CalculateHash: string;
   end;
 
 function Expanded2PackedVoice(aPar: TDX7ExpandedVoiceParams): TDX7PackedVoiceParams;
@@ -534,7 +535,6 @@ begin
   t.OP6_OSC_FREQ_COARSE := aPar.OP6_FC_M shr 1;
   t.OP6_OSC_MODE := aPar.OP6_FC_M and 1;
 
-  //ToDo OP5 to OP1
   //first the parameters without conversion
   t.OP5_EG_rate_1 := aPar.OP5_EG_rate_1;
   t.OP5_EG_rate_2 := aPar.OP5_EG_rate_2;
@@ -1556,6 +1556,169 @@ begin
     Result := False;
 end;
 
+function TDX7VoiceContainer.CalculateHash: string;
+var
+  aStream: TMemoryStream;
+begin
+  aStream := TMemoryStream.Create;
+  with FDX7ExpandedVoiceParams do
+  begin
+    aStream.WriteByte(OP6_EG_rate_1);
+    aStream.WriteByte(OP6_EG_rate_2);
+    aStream.WriteByte(OP6_EG_rate_3);
+    aStream.WriteByte(OP6_EG_rate_4);
+    aStream.WriteByte(OP6_EG_level_1);
+    aStream.WriteByte(OP6_EG_level_2);
+    aStream.WriteByte(OP6_EG_level_3);
+    aStream.WriteByte(OP6_EG_level_4);
+    aStream.WriteByte(OP6_KBD_LEV_SCL_BRK_PT);
+    aStream.WriteByte(OP6_KBD_LEV_SCL_LFT_DEPTH);
+    aStream.WriteByte(OP6_KBD_LEV_SCL_RHT_DEPTH);
+    aStream.WriteByte(OP6_KBD_LEV_SCL_LFT_CURVE);
+    aStream.WriteByte(OP6_KBD_LEV_SCL_RHT_CURVE);
+    aStream.WriteByte(OP6_KBD_RATE_SCALING);
+    aStream.WriteByte(OP6_AMP_MOD_SENSITIVITY);
+    aStream.WriteByte(OP6_KEY_VEL_SENSITIVITY);
+    aStream.WriteByte(OP6_OPERATOR_OUTPUT_LEVEL);
+    aStream.WriteByte(OP6_OSC_MODE);
+    aStream.WriteByte(OP6_OSC_FREQ_COARSE);
+    aStream.WriteByte(OP6_OSC_FREQ_FINE);
+    aStream.WriteByte(OP6_OSC_DETUNE);
+
+    aStream.WriteByte(OP5_EG_rate_1);
+    aStream.WriteByte(OP5_EG_rate_2);
+    aStream.WriteByte(OP5_EG_rate_3);
+    aStream.WriteByte(OP5_EG_rate_4);
+    aStream.WriteByte(OP5_EG_level_1);
+    aStream.WriteByte(OP5_EG_level_2);
+    aStream.WriteByte(OP5_EG_level_3);
+    aStream.WriteByte(OP5_EG_level_4);
+    aStream.WriteByte(OP5_KBD_LEV_SCL_BRK_PT);
+    aStream.WriteByte(OP5_KBD_LEV_SCL_LFT_DEPTH);
+    aStream.WriteByte(OP5_KBD_LEV_SCL_RHT_DEPTH);
+    aStream.WriteByte(OP5_KBD_LEV_SCL_LFT_CURVE);
+    aStream.WriteByte(OP5_KBD_LEV_SCL_RHT_CURVE);
+    aStream.WriteByte(OP5_KBD_RATE_SCALING);
+    aStream.WriteByte(OP5_AMP_MOD_SENSITIVITY);
+    aStream.WriteByte(OP5_KEY_VEL_SENSITIVITY);
+    aStream.WriteByte(OP5_OPERATOR_OUTPUT_LEVEL);
+    aStream.WriteByte(OP5_OSC_MODE);
+    aStream.WriteByte(OP5_OSC_FREQ_COARSE);
+    aStream.WriteByte(OP5_OSC_FREQ_FINE);
+    aStream.WriteByte(OP5_OSC_DETUNE);
+
+    aStream.WriteByte(OP4_EG_rate_1);
+    aStream.WriteByte(OP4_EG_rate_2);
+    aStream.WriteByte(OP4_EG_rate_3);
+    aStream.WriteByte(OP4_EG_rate_4);
+    aStream.WriteByte(OP4_EG_level_1);
+    aStream.WriteByte(OP4_EG_level_2);
+    aStream.WriteByte(OP4_EG_level_3);
+    aStream.WriteByte(OP4_EG_level_4);
+    aStream.WriteByte(OP4_KBD_LEV_SCL_BRK_PT);
+    aStream.WriteByte(OP4_KBD_LEV_SCL_LFT_DEPTH);
+    aStream.WriteByte(OP4_KBD_LEV_SCL_RHT_DEPTH);
+    aStream.WriteByte(OP4_KBD_LEV_SCL_LFT_CURVE);
+    aStream.WriteByte(OP4_KBD_LEV_SCL_RHT_CURVE);
+    aStream.WriteByte(OP4_KBD_RATE_SCALING);
+    aStream.WriteByte(OP4_AMP_MOD_SENSITIVITY);
+    aStream.WriteByte(OP4_KEY_VEL_SENSITIVITY);
+    aStream.WriteByte(OP4_OPERATOR_OUTPUT_LEVEL);
+    aStream.WriteByte(OP4_OSC_MODE);
+    aStream.WriteByte(OP4_OSC_FREQ_COARSE);
+    aStream.WriteByte(OP4_OSC_FREQ_FINE);
+    aStream.WriteByte(OP4_OSC_DETUNE);
+
+    aStream.WriteByte(OP3_EG_rate_1);
+    aStream.WriteByte(OP3_EG_rate_2);
+    aStream.WriteByte(OP3_EG_rate_3);
+    aStream.WriteByte(OP3_EG_rate_4);
+    aStream.WriteByte(OP3_EG_level_1);
+    aStream.WriteByte(OP3_EG_level_2);
+    aStream.WriteByte(OP3_EG_level_3);
+    aStream.WriteByte(OP3_EG_level_4);
+    aStream.WriteByte(OP3_KBD_LEV_SCL_BRK_PT);
+    aStream.WriteByte(OP3_KBD_LEV_SCL_LFT_DEPTH);
+    aStream.WriteByte(OP3_KBD_LEV_SCL_RHT_DEPTH);
+    aStream.WriteByte(OP3_KBD_LEV_SCL_LFT_CURVE);
+    aStream.WriteByte(OP3_KBD_LEV_SCL_RHT_CURVE);
+    aStream.WriteByte(OP3_KBD_RATE_SCALING);
+    aStream.WriteByte(OP3_AMP_MOD_SENSITIVITY);
+    aStream.WriteByte(OP3_KEY_VEL_SENSITIVITY);
+    aStream.WriteByte(OP3_OPERATOR_OUTPUT_LEVEL);
+    aStream.WriteByte(OP3_OSC_MODE);
+    aStream.WriteByte(OP3_OSC_FREQ_COARSE);
+    aStream.WriteByte(OP3_OSC_FREQ_FINE);
+    aStream.WriteByte(OP3_OSC_DETUNE);
+
+    aStream.WriteByte(OP2_EG_rate_1);
+    aStream.WriteByte(OP2_EG_rate_2);
+    aStream.WriteByte(OP2_EG_rate_3);
+    aStream.WriteByte(OP2_EG_rate_4);
+    aStream.WriteByte(OP2_EG_level_1);
+    aStream.WriteByte(OP2_EG_level_2);
+    aStream.WriteByte(OP2_EG_level_3);
+    aStream.WriteByte(OP2_EG_level_4);
+    aStream.WriteByte(OP2_KBD_LEV_SCL_BRK_PT);
+    aStream.WriteByte(OP2_KBD_LEV_SCL_LFT_DEPTH);
+    aStream.WriteByte(OP2_KBD_LEV_SCL_RHT_DEPTH);
+    aStream.WriteByte(OP2_KBD_LEV_SCL_LFT_CURVE);
+    aStream.WriteByte(OP2_KBD_LEV_SCL_RHT_CURVE);
+    aStream.WriteByte(OP2_KBD_RATE_SCALING);
+    aStream.WriteByte(OP2_AMP_MOD_SENSITIVITY);
+    aStream.WriteByte(OP2_KEY_VEL_SENSITIVITY);
+    aStream.WriteByte(OP2_OPERATOR_OUTPUT_LEVEL);
+    aStream.WriteByte(OP2_OSC_MODE);
+    aStream.WriteByte(OP2_OSC_FREQ_COARSE);
+    aStream.WriteByte(OP2_OSC_FREQ_FINE);
+    aStream.WriteByte(OP2_OSC_DETUNE);
+
+    aStream.WriteByte(OP1_EG_rate_1);
+    aStream.WriteByte(OP1_EG_rate_2);
+    aStream.WriteByte(OP1_EG_rate_3);
+    aStream.WriteByte(OP1_EG_rate_4);
+    aStream.WriteByte(OP1_EG_level_1);
+    aStream.WriteByte(OP1_EG_level_2);
+    aStream.WriteByte(OP1_EG_level_3);
+    aStream.WriteByte(OP1_EG_level_4);
+    aStream.WriteByte(OP1_KBD_LEV_SCL_BRK_PT);
+    aStream.WriteByte(OP1_KBD_LEV_SCL_LFT_DEPTH);
+    aStream.WriteByte(OP1_KBD_LEV_SCL_RHT_DEPTH);
+    aStream.WriteByte(OP1_KBD_LEV_SCL_LFT_CURVE);
+    aStream.WriteByte(OP1_KBD_LEV_SCL_RHT_CURVE);
+    aStream.WriteByte(OP1_KBD_RATE_SCALING);
+    aStream.WriteByte(OP1_AMP_MOD_SENSITIVITY);
+    aStream.WriteByte(OP1_KEY_VEL_SENSITIVITY);
+    aStream.WriteByte(OP1_OPERATOR_OUTPUT_LEVEL);
+    aStream.WriteByte(OP1_OSC_MODE);
+    aStream.WriteByte(OP1_OSC_FREQ_COARSE);
+    aStream.WriteByte(OP1_OSC_FREQ_FINE);
+    aStream.WriteByte(OP1_OSC_DETUNE);
+
+    aStream.WriteByte(PITCH_EG_RATE_1);
+    aStream.WriteByte(PITCH_EG_RATE_2);
+    aStream.WriteByte(PITCH_EG_RATE_3);
+    aStream.WriteByte(PITCH_EG_RATE_4);
+    aStream.WriteByte(PITCH_EG_LEVEL_1);
+    aStream.WriteByte(PITCH_EG_LEVEL_2);
+    aStream.WriteByte(PITCH_EG_LEVEL_3);
+    aStream.WriteByte(PITCH_EG_LEVEL_4);
+    aStream.WriteByte(ALGORITHM);
+    aStream.WriteByte(FEEDBACK);
+    aStream.WriteByte(OSCILLATOR_SYNC);
+    aStream.WriteByte(LFO_SPEED);
+    aStream.WriteByte(LFO_DELAY);
+    aStream.WriteByte(LFO_PITCH_MOD_DEPTH);
+    aStream.WriteByte(LFO_AMP_MOD_DEPTH);
+    aStream.WriteByte(LFO_SYNC);
+    aStream.WriteByte(LFO_WAVEFORM);
+    aStream.WriteByte(PITCH_MOD_SENSITIVITY);
+  end;
+  aStream.Position := 0;
+  Result := THashFactory.TCrypto.CreateSHA2_256().ComputeStream(aStream).ToString();
+  aStream.Free;
+end;
+
 function TDX7VoiceContainer.GetChecksumPart: integer;
 var
   checksum: integer;
@@ -1578,20 +1741,20 @@ var
 begin
   checksum := 0;
   try
-      checksum := GetChecksumPart;
+    checksum := GetChecksumPart;
     Result := ((not (checksum and 255)) and 127) + 1;
   except
     on e: Exception do Result := 0;
   end;
 end;
 
-procedure TDX7VoiceContainer.SysExVoiceToStream(var aStream: TMemoryStream);
+procedure TDX7VoiceContainer.SysExVoiceToStream(ch: integer; var aStream: TMemoryStream);
 begin
   aStream.Clear;
   aStream.Position := 0;
   aStream.WriteByte($F0);
   aStream.WriteByte($43);
-  aStream.WriteByte($00);
+  aStream.WriteByte($00 + ch); //MIDI channel
   aStream.WriteByte($00);
   aStream.WriteByte($01);
   aStream.WriteByte($1B);

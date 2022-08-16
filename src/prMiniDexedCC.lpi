@@ -107,6 +107,12 @@
     </RunParams>
     <RequiredPackages>
       <Item>
+        <PackageName Value="HashLib4PascalPackage"/>
+      </Item>
+      <Item>
+        <PackageName Value="FCL"/>
+      </Item>
+      <Item>
         <PackageName Value="uEControls"/>
       </Item>
       <Item>

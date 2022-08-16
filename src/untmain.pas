@@ -16,9 +16,9 @@ interface
 
 uses
   Classes, Messages, SysUtils, StrUtils, Forms, Controls, Graphics, Dialogs,
-  StdCtrls, ComCtrls, ExtCtrls, Grids, JPP.Edit, atshapeline,
-  cyPageControl, ECSlider, ECSwitch, ECEditBtns, BCComboBox, untUtils,
-  untDX7Bank, untDX7Voice, untDX7Utils, untMiniINI, MIDI, Types, untPopUp;
+  StdCtrls, ComCtrls, ExtCtrls, Grids, JPP.Edit, atshapeline, cyPageControl,
+  ECSlider, ECSwitch, ECEditBtns, BCComboBox, untUtils, untDX7Bank, untDX7Voice,
+  untDX7Utils, untMiniINI, MIDI, Types, untPopUp, SQLite3Conn, SQLDB;
 
 type
 
@@ -27,14 +27,24 @@ type
   TfrmMain = class(TForm)
     btSelectDir: TECSpeedBtnPlus;
     btSelSDCard: TECSpeedBtnPlus;
+    cbBtnActionNext: TBCComboBox;
+    cbBtnActionBack: TBCComboBox;
+    cbBtnActionSelect: TBCComboBox;
+    cbBtnActionHome: TBCComboBox;
+    cbBtnShortcut: TBCComboBox;
+    cbBtnHome: TBCComboBox;
+    cbBtnSelect: TBCComboBox;
     cbDisplayPinD4: TBCComboBox;
     cbDisplayPinD5: TBCComboBox;
     cbDisplayPinD6: TBCComboBox;
     cbDisplayPinD7: TBCComboBox;
-    cbEncoderSwPin: TBCComboBox;
+    cbBtnPrev: TBCComboBox;
+    cbBtnNext: TBCComboBox;
+    cbBtnActionPrev: TBCComboBox;
     cbDisplayPinEN: TBCComboBox;
     cbEncoderDataPin: TBCComboBox;
     cbEncoderClockPin: TBCComboBox;
+    cbBtnBack: TBCComboBox;
     cbMidiCh1: TBCComboBox;
     cbMidiCh2: TBCComboBox;
     cbMidiCh3: TBCComboBox;
@@ -51,7 +61,13 @@ type
     cbSoundDevChunkSize: TBCComboBox;
     cbMIDIThruFrom: TBCComboBox;
     cbDisplayPinRW: TBCComboBox;
+    cbDisplayResolution: TBCComboBox;
+    cbLibMIDIChannel: TBCComboBox;
+    edBtnLngPressTOut: TJppEdit;
     edbtSelSDCard: TECEditBtn;
+    edBtnDblClickTOut: TJppEdit;
+    edDisplayi2sCols: TJppEdit;
+    edDisplayi2sRows: TJppEdit;
     edPSlot1: TJppEdit;
     edPSlot2: TJppEdit;
     edPSlot3: TJppEdit;
@@ -66,23 +82,30 @@ type
     edSoundDevi2sAddr: TJppEdit;
     Label1: TLabel;
     Label10: TLabel;
+    lbBtnTimeouts: TLabel;
+    lbBtnShortcut: TLabel;
+    lbBtnHome: TLabel;
+    lbBtnSelect: TLabel;
     lbComments: TLabel;
+    lbBtnPrev: TLabel;
+    lbBtnNext: TLabel;
+    lbBtnBack: TLabel;
     lbGPIOPins: TLabel;
     lbPerfOptions: TLabel;
     lbDisplayPinD4: TLabel;
     lbDisplayPinD5: TLabel;
     lbDisplayPinD6: TLabel;
     lbDisplayPinD7: TLabel;
-    lbEncoderSwPin: TLabel;
     lbDisplayPinEN: TLabel;
     lbEncoderDataPin: TLabel;
     lbEncoderClockPin: TLabel;
     lbMIDIDevice: TLabel;
     lbDbgOptions: TLabel;
     lbMIDIThruTo: TLabel;
-    lbSoundDev1: TLabel;
+    lbDisplay: TLabel;
     lbDisplayPinRS: TLabel;
-    lbSoundDev2: TLabel;
+    lbRotaryEncoder: TLabel;
+    lbButtons: TLabel;
     lbSoundDevSampleRate: TLabel;
     Label2: TLabel;
     Label3: TLabel;
@@ -95,9 +118,11 @@ type
     lbSoundDevChunkSize: TLabel;
     lbMIDIThruFrom: TLabel;
     lbDisplayPinRW: TLabel;
+    lbDIsplayResolution: TLabel;
     mmINIComments: TMemo;
     OpenMiniDexedINI: TOpenDialog;
     pnComments: TPanel;
+    pnButtons: TPanel;
     pnPerfOptions: TPanel;
     pnEncoder: TPanel;
     pnDebug: TPanel;
@@ -133,8 +158,9 @@ type
     pnMIDIDevice: TPanel;
     pnDisplay: TPanel;
     rbDisplayDiscrete: TRadioButton;
+    rbDisplayi2cSSD1306: TRadioButton;
     rbEncoderDiscrete: TRadioButton;
-    rbDisplayi2c: TRadioButton;
+    rbDisplayi2cHD44780: TRadioButton;
     rbEncoderNone: TRadioButton;
     rbSoundDevPWM: TRadioButton;
     rbSoundDevi2s: TRadioButton;
@@ -384,6 +410,9 @@ type
     Splitter1: TSplitter;
     Splitter2: TSplitter;
     sgGPIO: TStringGrid;
+    SQLite3Con: TSQLite3Connection;
+    SQLQuery: TSQLQuery;
+    SQLTrans: TSQLTransaction;
     swAfterTouchA1: TECSwitch;
     swAfterTouchA2: TECSwitch;
     swAfterTouchA3: TECSwitch;
@@ -516,7 +545,8 @@ type
     tbbtOpenINIFiles: TToolButton;
     tbbtSaveINIFiles: TToolButton;
     tbbtSendVoiceDump: TToolButton;
-    ToolButton1: TToolButton;
+    tbSpace1: TToolButton;
+    tbStoreToDB: TToolButton;
     tsIniFiles: TTabSheet;
     tsSyxFiles: TTabSheet;
     tsSDCard: TTabSheet;
@@ -535,6 +565,7 @@ type
     tsPerformanceEdit: TTabSheet;
     procedure btSelectDirClick(Sender: TObject);
     procedure cbDisplayEncoderChange(Sender: TObject);
+    procedure cbDisplayResolutionChange(Sender: TObject);
     procedure cbMidiInChange(Sender: TObject);
     procedure cbMidiOutChange(Sender: TObject);
     procedure btSelSDCardClick(Sender: TObject);
@@ -552,7 +583,8 @@ type
     procedure lbFilesStartDrag(Sender: TObject; var DragObject: TDragObject);
     procedure lbVoicesStartDrag(Sender: TObject; var DragObject: TDragObject);
     procedure rbDisplayDiscreteChange(Sender: TObject);
-    procedure rbDisplayi2cChange(Sender: TObject);
+    procedure rbDisplayi2cHD44780Change(Sender: TObject);
+    procedure rbDisplayi2cSSD1306Change(Sender: TObject);
     procedure rbEncoderDiscreteChange(Sender: TObject);
     procedure rbSoundDevHDMIChange(Sender: TObject);
     procedure rbSoundDevi2sChange(Sender: TObject);
@@ -572,11 +604,14 @@ type
     procedure tbbtSavePerformanceClick(Sender: TObject);
     procedure CalculateGPIO;
     procedure tbbtSendVoiceDumpClick(Sender: TObject);
-    procedure SendSingleVoice(aVoiceNr: integer);
+    procedure SendSingleVoice(aCh, aVoiceNr: integer);
     procedure LoadLastStateBank;
     procedure FillFilesList(aFolder: string);
     procedure OpenSysEx(aName: string);
     procedure OpenPerformance(aName: string);
+    procedure SQLCreateTables;
+    procedure SQLAddVoice(aID, aName, aCategory, aData, aSupplement, aOrigin: string);
+    procedure tbStoreToDBClick(Sender: TObject);
 
   private
     procedure MIDIdataIn(var msg: TMessage); message WM_MIDIDATA_ARRIVED;
@@ -605,6 +640,9 @@ var
   LastPerf: string;
   LastSDCardDir: string;
   FUpdatingForm: boolean;
+  HD44780Addr: string;
+  SSD1306Addr: string;
+  DBName: string;
 
 implementation
 
@@ -613,6 +651,96 @@ implementation
 uses JWAwindows;
 
 { TfrmMain }
+
+procedure TfrmMain.SQLCreateTables;
+begin
+  if SQLite3Con.Connected then
+  begin
+    SQLQuery.Close;
+    SQLQuery.SQL.Text :=
+      'CREATE TABLE IF NOT EXISTS CATEGORY (NAME VARCHAR(32) UNIQUE NOT NULL, COMMENT VARCHAR(256));';
+    SQLQuery.ExecSQL;
+    SQLTrans.Commit;
+    SQLQuery.Close;
+    SQLQuery.SQL.Text :=
+      'CREATE TABLE IF NOT EXISTS VOICES (ID VARCHAR(256) UNIQUE NOT NULL, NAME VARCHAR(32) NOT NULL, CATEGORY VARCHAR(32) NOT NULL, DATA VARCHAR(500) NOT NULL, SUPPLEMENT VARCHAR(500), ORIGIN VARCHAR(256));';
+    SQLQuery.ExecSQL;
+    SQLTrans.Commit;
+  end
+  else
+    ShowMessage('No database file assigned');
+end;
+
+procedure TfrmMain.SQLAddVoice(aID, aName, aCategory, aData, aSupplement,
+  aOrigin: string);
+var
+  aExists: boolean;
+  aExName: string;
+begin
+  aExists := False;
+  if SQLite3Con.Connected then
+  begin
+    SQLQuery.Close;
+    aExName := '';
+    SQLQuery.SQL.Text :=
+      'SELECT * FROM VOICES WHERE ID = :AID';
+    SQLQuery.Params.ParamByName('AID').AsString := aID;
+    SQLTrans.StartTransaction;
+    SQLQuery.Open;
+    while not SQLQuery.EOF do
+    begin
+      if SQLQuery.FieldCount > 0 then
+      begin
+        aExName := SQLQuery.Fields[1].AsString;
+        aExists := True;
+        Break;
+      end;
+      SQLQuery.Next;
+    end;
+    SQLQuery.Close;
+    SQLTrans.Commit;
+
+    if aExists and (MessageDlg('Duplicate', 'This voice is a duplicate of ' +
+      aExName + #13#10 + 'Overwrite?', mtConfirmation, mbYesNo, 0) = mrNo) then
+      Exit
+    else
+    begin
+      SQLQuery.SQL.Text :=
+        'INSERT OR REPLACE INTO VOICES (ID, NAME, CATEGORY, DATA, SUPPLEMENT, ORIGIN) VALUES (:AID, :AName, :ACategory, :AData, :ASupplement, :AOrigin);';
+      SQLQuery.Params.ParamByName('AID').AsString := aID;
+      SQLQuery.Params.ParamByName('AName').AsString := aName;
+      SQLQuery.Params.ParamByName('ACategory').AsString := aCategory;
+      SQLQuery.Params.ParamByName('AData').AsString := aData;
+      SQLQuery.Params.ParamByName('ASupplement').AsString := aSupplement;
+      SQLQuery.Params.ParamByName('AOrigin').AsString := aOrigin;
+      SQLQuery.ExecSQL;
+      SQLTrans.Commit;
+    end;
+  end
+  else
+    ShowMessage('No database file assigned');
+end;
+
+procedure TfrmMain.tbStoreToDBClick(Sender: TObject);
+var
+  voiceStream: TMemoryStream;
+  tmpVoice: TDX7VoiceContainer;
+  i: integer;
+begin
+  for i := 1 to 32 do
+  begin
+    try
+      voiceStream := TMemoryStream.Create;
+      tmpVoice := TDX7VoiceContainer.Create;
+      FSlotsDX.GetVoice(i, tmpVoice);
+      tmpVoice.SaveExpandedVoiceToStream(voiceStream);
+      SQLAddVoice(tmpVoice.CalculateHash, tmpVoice.GetVoiceName, 'Misc.', SysExStreamToStr(voiceStream), '', 'Unknown');
+    finally
+      voiceStream.Free;
+      tmpVoice.Free;
+    end;
+  end;
+end;
 
 procedure TfrmMain.OnMidiInData(const aDeviceIndex: integer;
   const aStatus, aData1, aData2: byte);
@@ -684,6 +812,20 @@ end;
 procedure TfrmMain.cbDisplayEncoderChange(Sender: TObject);
 begin
   CalculateGPIO;
+end;
+
+procedure TfrmMain.cbDisplayResolutionChange(Sender: TObject);
+begin
+  case cbDisplayResolution.ItemIndex of
+    0: begin
+      edDisplayi2sCols.Text := '20';
+      edDisplayi2sRows.Text := '2';
+    end;
+    1: begin
+      edDisplayi2sCols.Text := '20';
+      edDisplayi2sRows.Text := '4';
+    end;
+  end;
 end;
 
 procedure TfrmMain.cbMidiInChange(Sender: TObject);
@@ -778,7 +920,7 @@ end;
 
 procedure TfrmMain.edSlotDblClick(Sender: TObject);
 begin
-  SendSingleVoice((Sender as TJppEdit).Tag + 1);
+  SendSingleVoice(cbLibMIDIChannel.ItemIndex + 1, (Sender as TJppEdit).Tag + 1);
 end;
 
 procedure TfrmMain.edSlotDragDrop(Sender, Source: TObject; X, Y: integer);
@@ -975,20 +1117,20 @@ begin
     ini.LoadFromFile(appFolder + 'settings.ini');
     cbMIDIIn.ItemIndex := cbMidiIn.Items.IndexOf(ini.ReadString('MIDIInput', ''));
     if cbMidiIn.ItemIndex <> -1 then
-  begin
-    FMidiIn := cbMidiIn.Text;
-    FMidiInInt := cbMidiIn.ItemIndex;
-    MidiInput.Open(FMidiInInt);
-    FMidiIsActive := True;
-  end;
+    begin
+      FMidiIn := cbMidiIn.Text;
+      FMidiInInt := cbMidiIn.ItemIndex;
+      MidiInput.Open(FMidiInInt);
+      FMidiIsActive := True;
+    end;
     cbMidiOut.ItemIndex := cbMidiOut.Items.IndexOf(ini.ReadString('MIDIOutput', ''));
     if cbMidiOut.ItemIndex <> -1 then
-  begin
-    FMidiOut := cbMidiOut.Text;
-    FMidiOutInt := cbMidiOut.ItemIndex;
-    MidiOutput.Open(FMidiOutInt);
-    FMidiIsActive := True;
-  end;
+    begin
+      FMidiOut := cbMidiOut.Text;
+      FMidiOutInt := cbMidiOut.ItemIndex;
+      MidiOutput.Open(FMidiOutInt);
+      FMidiIsActive := True;
+    end;
     LastSysExOpenDir := ini.ReadString('LastSysExOpenDir', '');
     LastSysExSaveDir := ini.ReadString('LastSysExSaveDir', '');
     LastSysEx := ini.ReadString('LastSysEx', '');
@@ -1028,6 +1170,23 @@ begin
   finally
     ini.Free;
   end;
+
+  HD44780Addr := '39';
+  SSD1306Addr := '60';
+
+  CalculateGPIO;
+  rbDisplayDiscreteChange(Self);
+  swMIDIThruEnableChange(Self);
+  rbEncoderDiscreteChange(Self);
+  rbSoundDevOtherChange(Self);
+
+  //DB Stuff
+  DBName := appFolder + 'SysExDB.sqlite';
+  SQLite3Con.Connected := False;
+  SQLite3Con.DatabaseName := DBName;
+  SQLite3Con.Connected := True;
+  SQLCreateTables;
+
 end;
 
 procedure TfrmMain.LoadLastStateBank;
@@ -1485,6 +1644,7 @@ begin
       dxv := TDX7VoiceContainer.Create;
       dxv.LoadExpandedVoiceFromStream(dmp, j);
       if dxv.GetVoiceName <> '' then lbVoices.Items.Add(dxv.GetVoiceName);
+      //mmLog.Lines.Add(dxv.CalculateHash);
       dxv.Free;
     end
     else
@@ -1497,7 +1657,10 @@ begin
         ' contains DX7 voice bank header at position ' + IntToStr(i));
       FBankDX.LoadBankFromStream(dmp, j);
       for nr := 1 to 32 do
+      begin
         lbVoices.Items.Add(FBankDX.GetVoiceName(nr));
+        //mmLog.Lines.Add(FBankDX.CalculateHash(nr));
+      end;
     end
     else
       b := True;
@@ -1518,6 +1681,8 @@ begin
     cbDisplayPinD5.Enabled := True;
     cbDisplayPinD6.Enabled := True;
     cbDisplayPinD7.Enabled := True;
+    edDisplayi2sCols.Enabled := True;
+    edDisplayi2sRows.Enabled := True;
     edDisplayi2sAddr.Text := '0';
   end
   else
@@ -1529,15 +1694,59 @@ begin
     cbDisplayPinD5.Enabled := False;
     cbDisplayPinD6.Enabled := False;
     cbDisplayPinD7.Enabled := False;
+    edDisplayi2sCols.Enabled := False;
+    edDisplayi2sRows.Enabled := False;
   end;
   CalculateGPIO;
 end;
 
-procedure TfrmMain.rbDisplayi2cChange(Sender: TObject);
+procedure TfrmMain.rbDisplayi2cHD44780Change(Sender: TObject);
 begin
-  if rbDisplayi2c.Checked then edDisplayi2sAddr.Enabled := True
+  if rbDisplayi2cHD44780.Checked then
+  begin
+    edDisplayi2sAddr.Enabled := True;
+    edDisplayi2sCols.Enabled := True;
+    edDisplayi2sRows.Enabled := True;
+    edDisplayi2sCols.Text := '16';
+    edDisplayi2sRows.Text := '2';
+    edDisplayi2sAddr.Text := HD44780Addr;
+  end
   else
+  begin
     edDisplayi2sAddr.Enabled := False;
+    edDisplayi2sCols.Enabled := False;
+    edDisplayi2sRows.Enabled := False;
+  end;
+  CalculateGPIO;
+end;
+
+procedure TfrmMain.rbDisplayi2cSSD1306Change(Sender: TObject);
+begin
+  if rbDisplayi2cSSD1306.Checked then
+  begin
+    edDisplayi2sAddr.Enabled := True;
+    edDisplayi2sCols.Enabled := True;
+    edDisplayi2sRows.Enabled := True;
+    cbDisplayResolution.Enabled := True;
+    edDisplayi2sAddr.Text := SSD1306Addr;
+    case cbDisplayResolution.ItemIndex of
+      0: begin
+        edDisplayi2sCols.Text := '20';
+        edDisplayi2sRows.Text := '2';
+      end;
+      1: begin
+        edDisplayi2sCols.Text := '20';
+        edDisplayi2sRows.Text := '4';
+      end;
+    end;
+  end
+  else
+  begin
+    edDisplayi2sAddr.Enabled := False;
+    edDisplayi2sCols.Enabled := False;
+    edDisplayi2sRows.Enabled := False;
+    cbDisplayResolution.Enabled := False;
+  end;
   CalculateGPIO;
 end;
 
@@ -1547,13 +1756,11 @@ begin
   begin
     cbEncoderClockPin.Enabled := True;
     cbEncoderDataPin.Enabled := True;
-    cbEncoderSwPin.Enabled := True;
   end
   else
   begin
     cbEncoderClockPin.Enabled := False;
     cbEncoderDataPin.Enabled := False;
-    cbEncoderSwPin.Enabled := False;
   end;
   CalculateGPIO;
 end;
@@ -1584,6 +1791,7 @@ var
   GPIO_Function: array[2..27] of string;
   i: integer;
   slFreeGPIOs: TStringList;
+  slButtons: TStringList;
   tmpItem: string;
 begin
   for i := 2 to 27 do GPIO_Occupied[i] := False;
@@ -1609,7 +1817,14 @@ begin
     GPIO_Function[19] := 'DAC LCK';
     GPIO_Function[21] := 'DAC DIN';
   end;
-  if rbDisplayi2c.Checked then
+  if rbDisplayi2cHD44780.Checked then
+  begin
+    GPIO_Occupied[2] := True;
+    GPIO_Occupied[3] := True;
+    GPIO_Function[2] := 'I2C SDA';
+    GPIO_Function[3] := 'I2C SCL';
+  end;
+  if rbDisplayi2cSSD1306.Checked then
   begin
     GPIO_Occupied[2] := True;
     GPIO_Occupied[3] := True;
@@ -1658,11 +1873,33 @@ begin
       GPIO_Occupied[StrToInt(cbEncoderDataPin.Text)] := True;
     if cbEncoderDataPin.Text <> '0' then
       GPIO_Function[StrToInt(cbEncoderDataPin.Text)] := 'ENC DATA/B';
-    if cbEncoderSwPin.Text <> '0' then
-      GPIO_Occupied[StrToInt(cbEncoderSwPin.Text)] := True;
-    if cbEncoderSwPin.Text <> '0' then
-      GPIO_Function[StrToInt(cbEncoderSwPin.Text)] := 'ENC SW';
   end;
+  //buttons
+  if cbBtnPrev.Text <> '0' then
+    GPIO_Occupied[StrToInt(cbBtnPrev.Text)] := True;
+  if cbBtnPrev.Text <> '0' then
+    GPIO_Function[StrToInt(cbBtnPrev.Text)] := 'Button';
+  if cbBtnNext.Text <> '0' then
+    GPIO_Occupied[StrToInt(cbBtnNext.Text)] := True;
+  if cbBtnNext.Text <> '0' then
+    GPIO_Function[StrToInt(cbBtnNext.Text)] := 'Button';
+  if cbBtnBack.Text <> '0' then
+    GPIO_Occupied[StrToInt(cbBtnBack.Text)] := True;
+  if cbBtnBack.Text <> '0' then
+    GPIO_Function[StrToInt(cbBtnBack.Text)] := 'Button';
+  if cbBtnSelect.Text <> '0' then
+    GPIO_Occupied[StrToInt(cbBtnSelect.Text)] := True;
+  if cbBtnSelect.Text <> '0' then
+    GPIO_Function[StrToInt(cbBtnSelect.Text)] := 'Button';
+  if cbBtnHome.Text <> '0' then
+    GPIO_Occupied[StrToInt(cbBtnHome.Text)] := True;
+  if cbBtnHome.Text <> '0' then
+    GPIO_Function[StrToInt(cbBtnHome.Text)] := 'Button';
+  if cbBtnShortcut.Text <> '0' then
+    GPIO_Occupied[StrToInt(cbBtnShortcut.Text)] := True;
+  if cbBtnShortcut.Text <> '0' then
+    GPIO_Function[StrToInt(cbBtnShortcut.Text)] := 'Button';
+
   if GPIO_Occupied[2] then sgGPIO.Cells[0, 1] := GPIO_Function[2];
   if GPIO_Occupied[3] then sgGPIO.Cells[0, 2] := GPIO_Function[3];
   if GPIO_Occupied[4] then sgGPIO.Cells[0, 3] := GPIO_Function[4];
@@ -1694,69 +1931,129 @@ begin
   slFreeGPIOs.Sorted := True;
   slFreeGPIOs.Duplicates := dupIgnore;
   slFreeGPIOs.Add('0');
+  slButtons := TStringList.Create;
+  slButtons.Sorted := True;
+  slButtons.Duplicates := dupIgnore;
+  slButtons.Add('0');
   for i := 2 to 27 do
-    if GPIO_Occupied[i] = False then slFreeGPIOs.Add(IntToStr(i));
+    if GPIO_Occupied[i] = False then
+    begin
+      slFreeGPIOs.Add(IntToStr(i));
+      slButtons.Add(IntToStr(i));
+    end;
+  for i := 2 to 27 do
+  begin
+    if GPIO_Function[i] = 'Button' then
+      slButtons.Add(IntToStr(i));
+  end;
   tmpItem := cbDisplayPinRW.Text;
   cbDisplayPinRW.Items.Clear;
-  cbDisplayPinRW.Items.Add(tmpItem);
+  if slFreeGPIOs.IndexOf(tmpItem) = -1 then
+    cbDisplayPinRW.Items.Add(tmpItem);
   cbDisplayPinRW.Items.AddStrings(slFreeGPIOs);
   cbDisplayPinRW.ItemIndex := cbDisplayPinRW.Items.IndexOf(tmpItem);
 
   tmpItem := cbDisplayPinRS.Text;
   cbDisplayPinRS.Items.Clear;
-  cbDisplayPinRS.Items.Add(tmpItem);
+  if slFreeGPIOs.IndexOf(tmpItem) = -1 then
+    cbDisplayPinRS.Items.Add(tmpItem);
   cbDisplayPinRS.Items.AddStrings(slFreeGPIOs);
   cbDisplayPinRS.ItemIndex := cbDisplayPinRS.Items.IndexOf(tmpItem);
 
   tmpItem := cbDisplayPinEN.Text;
   cbDisplayPinEN.Items.Clear;
-  cbDisplayPinEN.Items.Add(tmpItem);
+  if slFreeGPIOs.IndexOf(tmpItem) = -1 then
+    cbDisplayPinEN.Items.Add(tmpItem);
   cbDisplayPinEN.Items.AddStrings(slFreeGPIOs);
   cbDisplayPinEN.ItemIndex := cbDisplayPinEN.Items.IndexOf(tmpItem);
 
   tmpItem := cbDisplayPinD4.Text;
   cbDisplayPinD4.Items.Clear;
-  cbDisplayPinD4.Items.Add(tmpItem);
+  if slFreeGPIOs.IndexOf(tmpItem) = -1 then
+    cbDisplayPinD4.Items.Add(tmpItem);
   cbDisplayPinD4.Items.AddStrings(slFreeGPIOs);
   cbDisplayPinD4.ItemIndex := cbDisplayPinD4.Items.IndexOf(tmpItem);
 
   tmpItem := cbDisplayPinD5.Text;
   cbDisplayPinD5.Items.Clear;
-  cbDisplayPinD5.Items.Add(tmpItem);
+  if slFreeGPIOs.IndexOf(tmpItem) = -1 then
+    cbDisplayPinD5.Items.Add(tmpItem);
   cbDisplayPinD5.Items.AddStrings(slFreeGPIOs);
   cbDisplayPinD5.ItemIndex := cbDisplayPinD5.Items.IndexOf(tmpItem);
 
   tmpItem := cbDisplayPinD6.Text;
   cbDisplayPinD6.Items.Clear;
-  cbDisplayPinD6.Items.Add(tmpItem);
+  if slFreeGPIOs.IndexOf(tmpItem) = -1 then
+    cbDisplayPinD6.Items.Add(tmpItem);
   cbDisplayPinD6.Items.AddStrings(slFreeGPIOs);
   cbDisplayPinD6.ItemIndex := cbDisplayPinD6.Items.IndexOf(tmpItem);
 
   tmpItem := cbDisplayPinD7.Text;
   cbDisplayPinD7.Items.Clear;
-  cbDisplayPinD7.Items.Add(tmpItem);
+  if slFreeGPIOs.IndexOf(tmpItem) = -1 then
+    cbDisplayPinD7.Items.Add(tmpItem);
   cbDisplayPinD7.Items.AddStrings(slFreeGPIOs);
   cbDisplayPinD7.ItemIndex := cbDisplayPinD7.Items.IndexOf(tmpItem);
 
   tmpItem := cbEncoderClockPin.Text;
   cbEncoderClockPin.Items.Clear;
-  cbEncoderClockPin.Items.Add(tmpItem);
+  if slFreeGPIOs.IndexOf(tmpItem) = -1 then
+    cbEncoderClockPin.Items.Add(tmpItem);
   cbEncoderClockPin.Items.AddStrings(slFreeGPIOs);
   cbEncoderClockPin.ItemIndex := cbEncoderClockPin.Items.IndexOf(tmpItem);
 
   tmpItem := cbEncoderDataPin.Text;
   cbEncoderDataPin.Items.Clear;
-  cbEncoderDataPin.Items.Add(tmpItem);
+  if slFreeGPIOs.IndexOf(tmpItem) = -1 then
+    cbEncoderDataPin.Items.Add(tmpItem);
   cbEncoderDataPin.Items.AddStrings(slFreeGPIOs);
   cbEncoderDataPin.ItemIndex := cbEncoderDataPin.Items.IndexOf(tmpItem);
 
-  tmpItem := cbEncoderSwPin.Text;
-  cbEncoderSwPin.Items.Clear;
-  cbEncoderSwPin.Items.Add(tmpItem);
-  cbEncoderSwPin.Items.AddStrings(slFreeGPIOs);
-  cbEncoderSwPin.ItemIndex := cbEncoderSwPin.Items.IndexOf(tmpItem);
+  //buttons
+  tmpItem := cbBtnPrev.Text;
+  cbBtnPrev.Items.Clear;
+  if slButtons.IndexOf(tmpItem) = -1 then
+    cbBtnPrev.Items.Add(tmpItem);
+  cbBtnPrev.Items.AddStrings(slButtons);
+  cbBtnPrev.ItemIndex := cbBtnPrev.Items.IndexOf(tmpItem);
+
+  tmpItem := cbBtnNext.Text;
+  cbBtnNext.Items.Clear;
+  if slButtons.IndexOf(tmpItem) = -1 then
+    cbBtnNext.Items.Add(tmpItem);
+  cbBtnNext.Items.AddStrings(slButtons);
+  cbBtnNext.ItemIndex := cbBtnNext.Items.IndexOf(tmpItem);
+
+  tmpItem := cbBtnBack.Text;
+  cbBtnBack.Items.Clear;
+  if slButtons.IndexOf(tmpItem) = -1 then
+    cbBtnBack.Items.Add(tmpItem);
+  cbBtnBack.Items.AddStrings(slButtons);
+  cbBtnBack.ItemIndex := cbBtnBack.Items.IndexOf(tmpItem);
+
+  tmpItem := cbBtnSelect.Text;
+  cbBtnSelect.Items.Clear;
+  if slButtons.IndexOf(tmpItem) = -1 then
+    cbBtnSelect.Items.Add(tmpItem);
+  cbBtnSelect.Items.AddStrings(slButtons);
+  cbBtnSelect.ItemIndex := cbBtnSelect.Items.IndexOf(tmpItem);
+
+  tmpItem := cbBtnHome.Text;
+  cbBtnHome.Items.Clear;
+  if slButtons.IndexOf(tmpItem) = -1 then
+    cbBtnHome.Items.Add(tmpItem);
+  cbBtnHome.Items.AddStrings(slButtons);
+  cbBtnHome.ItemIndex := cbBtnHome.Items.IndexOf(tmpItem);
+
+  tmpItem := cbBtnShortcut.Text;
+  cbBtnShortcut.Items.Clear;
+  if slButtons.IndexOf(tmpItem) = -1 then
+    cbBtnShortcut.Items.Add(tmpItem);
+  cbBtnShortcut.Items.AddStrings(slButtons);
+  cbBtnShortcut.ItemIndex := cbBtnShortcut.Items.IndexOf(tmpItem);
 
   slFreeGPIOs.Free;
+  slButtons.Free;
 end;
 
 procedure TfrmMain.tbbtSendVoiceDumpClick(Sender: TObject);
@@ -1769,7 +2066,7 @@ begin
       bankStream := TMemoryStream.Create;
       FSlotsDX.SysExBankToStream(bankStream);
       MidiOutput.SendSysEx(FMidiOutInt, bankStream);
-      PopUp('Bank'+#13+'sent', 3);
+      PopUp('Bank' + #13 + 'sent', 3);
     finally
       bankStream.Free;
     end;
@@ -1781,7 +2078,7 @@ begin
   end;
 end;
 
-procedure TfrmMain.SendSingleVoice(aVoiceNr: integer);
+procedure TfrmMain.SendSingleVoice(aCh, aVoiceNr: integer);
 var
   voiceStream: TMemoryStream;
   tmpVoice: TDX7VoiceContainer;
@@ -1792,9 +2089,9 @@ begin
       voiceStream := TMemoryStream.Create;
       tmpVoice := TDX7VoiceContainer.Create;
       FSlotsDX.GetVoice(aVoiceNr, tmpVoice);
-      tmpVoice.SysExVoiceToStream(voiceStream);
+      tmpVoice.SysExVoiceToStream(aCh, voiceStream);
       MidiOutput.SendSysEx(FMidiOutInt, voiceStream);
-      PopUp('Voice'+#13+'sent', 3);
+      PopUp('Voice' + #13 + 'sent', 3);
     finally
       voiceStream.Free;
       tmpVoice.Free;
@@ -1904,6 +2201,8 @@ var
   ini: TMiniINIFile;
   tmpStr: string;
   tmpInt: integer;
+  resWidth: string;
+  resHeight: string;
 begin
   if OpenMiniDexedINI.Execute then
   begin
@@ -1998,12 +2297,21 @@ begin
           cbDisplayPinD7.Items.IndexOf(ini.ReadString('LCDPinData7', '25'));
         edDisplayi2sAddr.Text := '0';
         edDisplayi2sAddr.Enabled := False;
+        edDisplayi2sCols.Enabled := True;
+        edDisplayi2sCols.Text := ini.ReadString('LCDColumns', '16');
+        edDisplayi2sRows.Enabled := True;
+        edDisplayi2sRows.Text := ini.ReadString('LCDRows', '2');
+        cbDisplayResolution.Enabled := False;
       end;
       if (tmpInt <> 0) and not rbDisplayNone.Checked then
       begin
-        rbDisplayi2c.Checked := True;
+        rbDisplayi2cHD44780.Checked := True;
         edDisplayi2sAddr.Enabled := True;
         edDisplayi2sAddr.Text := IntToStr(tmpInt);
+        edDisplayi2sCols.Enabled := True;
+        edDisplayi2sCols.Text := ini.ReadString('LCDColumns', '16');
+        edDisplayi2sRows.Enabled := True;
+        edDisplayi2sRows.Text := ini.ReadString('LCDRows', '2');
         cbDisplayPinRW.Enabled := False;
         cbDisplayPinRS.Enabled := False;
         cbDisplayPinEN.Enabled := False;
@@ -2011,6 +2319,20 @@ begin
         cbDisplayPinD5.Enabled := False;
         cbDisplayPinD6.Enabled := False;
         cbDisplayPinD7.Enabled := False;
+        cbDisplayResolution.Enabled := False;
+      end;
+      tmpStr := ini.ReadString('SSD1306LCDI2CAddress', '0');
+      tmpInt := 0;
+      if pos('0x', tmpStr) > 0 then tmpInt := Hex2Dec(ReplaceStr(tmpStr, '0x', '$'))
+      else
+        tmpInt := StrToInt(tmpStr);
+      if tmpInt <> 0 then
+      begin
+        resWidth := ini.ReadString('SSD1306LCDWidth', '128');
+        resHeight := ini.ReadString('SSD1306LCDHeight', '32');
+        cbDisplayResolution.ItemIndex :=
+          cbDisplayResolution.Items.IndexOf(resWidth + 'x' + resHeight);
+        cbDisplayResolutionChange(Self);
       end;
       rbEncoderNone.Checked := boolean(ini.ReadInteger('EncoderEnabled', 1) and 0);
       rbEncoderDiscrete.Checked := boolean(ini.ReadInteger('EncoderEnabled', 1) and 1);
@@ -2018,20 +2340,44 @@ begin
       begin
         cbEncoderClockPin.Enabled := False;
         cbEncoderDataPin.Enabled := False;
-        cbEncoderSwPin.Enabled := False;
       end;
       if rbEncoderDiscrete.Checked then
       begin
         cbEncoderClockPin.Enabled := True;
         cbEncoderDataPin.Enabled := True;
-        cbEncoderSwPin.Enabled := True;
         cbEncoderClockPin.ItemIndex :=
           cbEncoderClockPin.Items.IndexOf(ini.ReadString('EncoderPinClock', '10'));
         cbEncoderDataPin.ItemIndex :=
           cbEncoderDataPin.Items.IndexOf(ini.ReadString('EncoderPinData', '9'));
-        cbEncoderSwPin.ItemIndex :=
-          cbEncoderSwPin.Items.IndexOf(ini.ReadString('EncoderPinSwitch', '11'));
       end;
+      cbBtnPrev.ItemIndex :=
+        cbBtnPrev.Items.IndexOf(ini.ReadString('ButtonPinPrev', '0'));
+      cbBtnActionPrev.ItemIndex :=
+        cbBtnActionPrev.Items.IndexOf(ini.ReadString('ButtonActionPrev', ''));
+      cbBtnNext.ItemIndex :=
+        cbBtnNext.Items.IndexOf(ini.ReadString('ButtonPinNext', '0'));
+      cbBtnActionNext.ItemIndex :=
+        cbBtnActionNext.Items.IndexOf(ini.ReadString('ButtonActionNext', ''));
+      cbBtnBack.ItemIndex :=
+        cbBtnBack.Items.IndexOf(ini.ReadString('ButtonPinBack', '11'));
+      cbBtnActionBack.ItemIndex :=
+        cbBtnActionBack.Items.IndexOf(ini.ReadString('ButtonActionBack', 'longpress'));
+
+      cbBtnSelect.ItemIndex :=
+        cbBtnSelect.Items.IndexOf(ini.ReadString('ButtonPinSelect', '11'));
+      cbBtnActionSelect.ItemIndex :=
+        cbBtnActionSelect.Items.IndexOf(ini.ReadString('ButtonActionSelect', 'click'));
+      cbBtnHome.ItemIndex :=
+        cbBtnHome.Items.IndexOf(ini.ReadString('ButtonPinHome', '11'));
+      cbBtnActionHome.ItemIndex :=
+        cbBtnActionHome.Items.IndexOf(ini.ReadString('ButtonActionHome',
+        'doubleclick'));
+      cbBtnShortcut.ItemIndex :=
+        cbBtnShortcut.Items.IndexOf(ini.ReadString('ButtonPinShortcut', '11'));
+
+      edBtnDblClickTOut.Text := ini.ReadString('DoubleClickTimeout', '400');
+      edBtnLngPressTOut.Text := ini.ReadString('LongPressTimeout', '400');
+
       swDbgMIDIDump.Checked := boolean(ini.ReadInteger('MIDIDumpEnabled', 0) and 1);
       swDbgProfile.Checked := boolean(ini.ReadInteger('ProfileEnabled', 0) and 1);
       swPerfSelToLoad.Checked :=
@@ -2083,6 +2429,8 @@ end;
 procedure TfrmMain.tbbtSaveINIFilesClick(Sender: TObject);
 var
   ini: TMiniINIFile;
+  resWidth: string;
+  resHeight: string;
 begin
   if SaveMiniDexedINI.Execute then
   begin
@@ -2130,11 +2478,25 @@ begin
       begin
         if ini.NameExists('MIDIThru') then ini.Comment('MIDIThru');
       end;
+      //display
       if rbDisplayNone.Checked then ini.WriteString('LCDEnabled', '0');
-      if rbDisplayi2c.Checked then
+      if rbDisplayi2cHD44780.Checked then
       begin
         ini.WriteString('LCDEnabled', '1');
         ini.WriteString('LCDI2CAddress', StrToCHex(edDisplayi2sAddr.Text));
+        ini.WriteString('LCDColumns', edDisplayi2sCols.Text);
+        ini.WriteString('LCDRows', edDisplayi2sRows.Text);
+      end;
+      if rbDisplayi2cSSD1306.Checked then
+      begin
+        resWidth := copy(cbDisplayResolution.Text, 1, 3);
+        resHeight := copy(cbDisplayResolution.Text, 5, 2);
+        ini.WriteString('LCDEnabled', '1');
+        ini.WriteString('SSD1306LCDI2CAddress', StrToCHex(edDisplayi2sAddr.Text));
+        ini.WriteString('SSD1306LCDWidth', resWidth);
+        ini.WriteString('SSD1306LCDHeight', resHeight);
+        ini.WriteString('LCDColumns', edDisplayi2sCols.Text);
+        ini.WriteString('LCDRows', edDisplayi2sRows.Text);
       end;
       if rbDisplayDiscrete.Checked then
       begin
@@ -2147,15 +2509,32 @@ begin
         ini.WriteString('LCDPinData5', cbDisplayPinD5.Text);
         ini.WriteString('LCDPinData6', cbDisplayPinD6.Text);
         ini.WriteString('LCDPinData7', cbDisplayPinD7.Text);
+        ini.WriteString('LCDColumns', edDisplayi2sCols.Text);
+        ini.WriteString('LCDRows', edDisplayi2sRows.Text);
       end;
+      //encoder
       if rbEncoderNone.Checked then ini.WriteInteger('EncoderEnabled', 0);
       if rbEncoderDiscrete.Checked then
       begin
         ini.WriteInteger('EncoderEnabled', 1);
         ini.WriteString('EncoderPinClock', cbEncoderClockPin.Text);
         ini.WriteString('EncoderPinData', cbEncoderDataPin.Text);
-        ini.WriteString('EncoderPinSwitch', cbEncoderSwPin.Text);
       end;
+      //buttons
+      ini.WriteString('ButtonPinPrev', cbBtnPrev.Text);
+      ini.WriteString('ButtonActionPrev', cbBtnActionPrev.Text);
+      ini.WriteString('ButtonPinNext', cbBtnNext.Text);
+      ini.WriteString('ButtonActionNext', cbBtnActionNext.Text);
+      ini.WriteString('ButtonPinBack', cbBtnBack.Text);
+      ini.WriteString('ButtonActionBack', cbBtnActionBack.Text);
+      ini.WriteString('ButtonPinSelect', cbBtnSelect.Text);
+      ini.WriteString('ButtonActionSelect', cbBtnActionSelect.Text);
+      ini.WriteString('ButtonPinHome', cbBtnHome.Text);
+      ini.WriteString('ButtonActionHome', cbBtnActionHome.Text);
+      ini.WriteString('ButtonPinShortcut', cbBtnShortcut.Text);
+      ini.WriteString('DoubleClickTimeout', edBtnDblClickTOut.Text);
+      ini.WriteString('LongPressTimeout', edBtnLngPressTOut.Text);
+      //debug
       ini.WriteInteger('MIDIDumpEnabled', integer(swDbgMIDIDump.Checked));
       ini.WriteInteger('ProfileEnabled', integer(swDbgProfile.Checked));
       ini.WriteInteger('PerformanceSelectToLoad', integer(swPerfSelToLoad.Checked));

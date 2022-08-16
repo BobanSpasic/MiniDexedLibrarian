@@ -37,6 +37,7 @@ type
     function GetChecksum: integer;
     function SaveBankToSysExFile(aFile: string): boolean;
     procedure SysExBankToStream(var aStream: TMemoryStream);
+    function CalculateHash(aVoiceNr: integer): string;
   end;
 
 implementation
@@ -191,6 +192,14 @@ begin
     FDX7BankParams[i].SavePackedVoiceToStream(aStream);
   aStream.WriteByte(GetChecksum);
   aStream.WriteByte($F7);
+end;
+
+function TDX7BankContainer.CalculateHash(aVoiceNr: integer): string;
+begin
+  if (aVoiceNr > 0) and (aVoiceNr < 33) then
+    Result := FDX7BankParams[aVoiceNr - 1].CalculateHash
+  else
+    Result := '';
 end;
 
 end.

@@ -1806,19 +1806,144 @@ object frmMain: TfrmMain
                 ImageIndex = 2
                 OnClick = tbbtSendVoiceDumpClick
               end
-              object ToolButton1: TToolButton
+              object tbSpace1: TToolButton
                 Left = 47
                 Top = 0
-                Caption = 'ToolButton1'
+                Caption = 'tbSpace1'
+              end
+              object tbStoreToDB: TToolButton
+                Left = 93
+                Top = 0
+                Caption = 'tbStoreToDB'
+                OnClick = tbStoreToDBClick
               end
             end
             object Label10: TLabel
               Left = 16
               Height = 14
               Top = 544
-              Width = 259
-              Caption = 'Double-click to send voices over MIDI'
+              Width = 322
+              Caption = 'Double-click to send voices over MIDI channel:'
               ParentColor = False
+            end
+            object cbLibMIDIChannel: TBCComboBox
+              AnchorSideLeft.Control = lbMidiIn
+              AnchorSideTop.Control = Label10
+              AnchorSideTop.Side = asrCenter
+              Cursor = crHandPoint
+              Left = 344
+              Height = 20
+              Top = 541
+              Width = 80
+              Items.Strings = (
+                '1'
+                '2'
+                '3'
+                '4'
+                '5'
+                '6'
+                '7'
+                '8'
+                '9'
+                '10'
+                '11'
+                '12'
+                '13'
+                '14'
+                '15'
+                '16'
+              )
+              ItemIndex = 0
+              ArrowSize = 8
+              ArrowWidth = 16
+              FocusBorderColor = 5162664
+              FocusBorderOpacity = 0
+              DropDownBorderColor = 5162664
+              DropDownHighlight = 5162664
+              GlobalOpacity = 255
+              MemoryUsage = bmuHigh
+              Rounding.RoundX = 12
+              Rounding.RoundY = 12
+              StateClicked.Background.Color = 5162664
+              StateClicked.Background.Gradient1.StartColor = 8404992
+              StateClicked.Background.Gradient1.EndColor = 4194304
+              StateClicked.Background.Gradient1.GradientType = gtRadial
+              StateClicked.Background.Gradient1.Point1XPercent = 50
+              StateClicked.Background.Gradient1.Point1YPercent = 100
+              StateClicked.Background.Gradient1.Point2XPercent = 0
+              StateClicked.Background.Gradient1.Point2YPercent = 0
+              StateClicked.Background.Gradient2.StartColor = clWhite
+              StateClicked.Background.Gradient2.EndColor = clBlack
+              StateClicked.Background.Gradient2.GradientType = gtLinear
+              StateClicked.Background.Gradient2.Point1XPercent = 0
+              StateClicked.Background.Gradient2.Point1YPercent = 0
+              StateClicked.Background.Gradient2.Point2XPercent = 0
+              StateClicked.Background.Gradient2.Point2YPercent = 100
+              StateClicked.Background.Gradient1EndPercent = 100
+              StateClicked.Background.Style = bbsColor
+              StateClicked.Border.Style = bboNone
+              StateClicked.FontEx.Color = 2900284
+              StateClicked.FontEx.FontQuality = fqSystemClearType
+              StateClicked.FontEx.Name = 'consolas'
+              StateClicked.FontEx.Shadow = False
+              StateClicked.FontEx.ShadowRadius = 2
+              StateClicked.FontEx.ShadowOffsetX = 1
+              StateClicked.FontEx.ShadowOffsetY = 1
+              StateClicked.FontEx.Style = [fsBold, fsUnderline]
+              StateHover.Background.Color = 5162664
+              StateHover.Background.Gradient1.StartColor = 16744448
+              StateHover.Background.Gradient1.EndColor = 8404992
+              StateHover.Background.Gradient1.GradientType = gtRadial
+              StateHover.Background.Gradient1.Point1XPercent = 50
+              StateHover.Background.Gradient1.Point1YPercent = 100
+              StateHover.Background.Gradient1.Point2XPercent = 0
+              StateHover.Background.Gradient1.Point2YPercent = 0
+              StateHover.Background.Gradient2.StartColor = clWhite
+              StateHover.Background.Gradient2.EndColor = clBlack
+              StateHover.Background.Gradient2.GradientType = gtLinear
+              StateHover.Background.Gradient2.Point1XPercent = 0
+              StateHover.Background.Gradient2.Point1YPercent = 0
+              StateHover.Background.Gradient2.Point2XPercent = 0
+              StateHover.Background.Gradient2.Point2YPercent = 100
+              StateHover.Background.Gradient1EndPercent = 100
+              StateHover.Background.Style = bbsColor
+              StateHover.Border.Style = bboNone
+              StateHover.FontEx.Color = 2900284
+              StateHover.FontEx.FontQuality = fqSystemClearType
+              StateHover.FontEx.Name = 'consolas'
+              StateHover.FontEx.Shadow = False
+              StateHover.FontEx.ShadowRadius = 2
+              StateHover.FontEx.ShadowOffsetX = 1
+              StateHover.FontEx.ShadowOffsetY = 1
+              StateHover.FontEx.Style = [fsBold]
+              StateNormal.Background.Color = 5162664
+              StateNormal.Background.Gradient1.StartColor = 4194304
+              StateNormal.Background.Gradient1.EndColor = 8405056
+              StateNormal.Background.Gradient1.GradientType = gtLinear
+              StateNormal.Background.Gradient1.Point1XPercent = 0
+              StateNormal.Background.Gradient1.Point1YPercent = 0
+              StateNormal.Background.Gradient1.Point2XPercent = 0
+              StateNormal.Background.Gradient1.Point2YPercent = 100
+              StateNormal.Background.Gradient2.StartColor = 5162664
+              StateNormal.Background.Gradient2.EndColor = 4194304
+              StateNormal.Background.Gradient2.GradientType = gtRadial
+              StateNormal.Background.Gradient2.Point1XPercent = 50
+              StateNormal.Background.Gradient2.Point1YPercent = 100
+              StateNormal.Background.Gradient2.Point2XPercent = 0
+              StateNormal.Background.Gradient2.Point2YPercent = 0
+              StateNormal.Background.Gradient1EndPercent = 60
+              StateNormal.Background.Style = bbsColor
+              StateNormal.Border.Style = bboNone
+              StateNormal.FontEx.Color = 2900284
+              StateNormal.FontEx.FontQuality = fqSystemClearType
+              StateNormal.FontEx.Name = 'consolas'
+              StateNormal.FontEx.Shadow = False
+              StateNormal.FontEx.ShadowRadius = 2
+              StateNormal.FontEx.ShadowOffsetX = 1
+              StateNormal.FontEx.ShadowOffsetY = 1
+              StateNormal.FontEx.Style = []
+              StaticButton = False
+              TabOrder = 33
             end
           end
           object tsPerformanceSlots: TTabSheet
@@ -15401,8 +15526,6 @@ object frmMain: TfrmMain
                 ParentShowHint = False
                 ShowHint = True
                 TabOrder = 3
-                OnDragDrop = edSlotDragDrop
-                OnDragOver = edSlotDragOver
                 Appearance.NormalBgColor = 5162664
                 Appearance.NormalTextColor = 3163457
                 Appearance.FocusedBgColor = 3163457
@@ -15457,8 +15580,6 @@ object frmMain: TfrmMain
                 ParentShowHint = False
                 ShowHint = True
                 TabOrder = 5
-                OnDragDrop = edSlotDragDrop
-                OnDragOver = edSlotDragOver
                 Appearance.NormalBgColor = 5162664
                 Appearance.NormalTextColor = 3163457
                 Appearance.FocusedBgColor = 3163457
@@ -15779,8 +15900,6 @@ object frmMain: TfrmMain
                 ParentFont = False
                 ParentShowHint = False
                 TabOrder = 0
-                OnDragDrop = edSlotDragDrop
-                OnDragOver = edSlotDragOver
                 Appearance.NormalBgColor = 5162664
                 Appearance.NormalTextColor = 3163457
                 Appearance.FocusedBgColor = 3163457
@@ -16098,11 +16217,11 @@ object frmMain: TfrmMain
             end
             object pnDisplay: TPanel
               Left = 288
-              Height = 328
+              Height = 408
               Top = 48
               Width = 260
               BevelColor = clBlack
-              ClientHeight = 328
+              ClientHeight = 408
               ClientWidth = 260
               Font.Color = 5162664
               Font.Name = 'Consolas'
@@ -16121,14 +16240,14 @@ object frmMain: TfrmMain
                 TabOrder = 2
                 TabStop = True
               end
-              object rbDisplayi2c: TRadioButton
+              object rbDisplayi2cHD44780: TRadioButton
                 Left = 16
                 Height = 19
-                Hint = 'For devices based on'#13#10'PCM5102A and PCM5122'
+                Hint = 'For devices based on'#13#10' HD44780'
                 Top = 48
-                Width = 41
-                Caption = 'i2c'
-                OnChange = rbDisplayi2cChange
+                Width = 97
+                Caption = 'i2c HD44780'
+                OnChange = rbDisplayi2cHD44780Change
                 ParentShowHint = False
                 ShowHint = True
                 TabOrder = 0
@@ -16137,7 +16256,7 @@ object frmMain: TfrmMain
                 Left = 16
                 Height = 19
                 Hint = 'Use Pi''s HDMI output'#13#10'for sound output'
-                Top = 64
+                Top = 80
                 Width = 76
                 Caption = 'Discrete'
                 OnChange = rbDisplayDiscreteChange
@@ -16145,7 +16264,7 @@ object frmMain: TfrmMain
                 ShowHint = True
                 TabOrder = 1
               end
-              object lbSoundDev1: TLabel
+              object lbDisplay: TLabel
                 Left = 8
                 Height = 14
                 Top = 8
@@ -16160,11 +16279,11 @@ object frmMain: TfrmMain
                 Transparent = False
               end
               object edDisplayi2sAddr: TJppEdit
-                AnchorSideTop.Control = rbDisplayi2c
+                AnchorSideTop.Control = rbDisplayi2cHD44780
                 AnchorSideTop.Side = asrCenter
                 Left = 160
                 Height = 14
-                Hint = 'Enter i2c address in decimal form.'#13#10#13#10'It will be set to zero if no i2c'#13#10'device is used'
+                Hint = 'Enter i2c address in decimal form.'#13#10'Usual addresses are:'#13#10'HD 44780: 39'#13#10'SSD 1306: 60'#13#10#13#10'It will be set to zero if no i2c'#13#10'device is used'
                 Top = 50
                 Width = 80
                 Alignment = taCenter
@@ -16179,8 +16298,6 @@ object frmMain: TfrmMain
                 ParentShowHint = False
                 ShowHint = True
                 TabOrder = 3
-                OnDragDrop = edSlotDragDrop
-                OnDragOver = edSlotDragOver
                 Appearance.NormalBgColor = 5162664
                 Appearance.NormalTextColor = 3163457
                 Appearance.FocusedBgColor = 3163457
@@ -16206,7 +16323,7 @@ object frmMain: TfrmMain
                 Cursor = crHandPoint
                 Left = 160
                 Height = 20
-                Top = 100
+                Top = 180
                 Width = 80
                 Items.Strings = (
                   '0'
@@ -16315,7 +16432,7 @@ object frmMain: TfrmMain
                 AnchorSideTop.Side = asrCenter
                 Left = 102
                 Height = 14
-                Top = 103
+                Top = 183
                 Width = 49
                 Caption = 'Pin RW:'
                 ParentColor = False
@@ -16325,7 +16442,7 @@ object frmMain: TfrmMain
                 Cursor = crHandPoint
                 Left = 160
                 Height = 20
-                Top = 132
+                Top = 212
                 Width = 80
                 Items.Strings = (
                   '0'
@@ -16434,7 +16551,7 @@ object frmMain: TfrmMain
                 AnchorSideTop.Side = asrCenter
                 Left = 102
                 Height = 14
-                Top = 135
+                Top = 215
                 Width = 49
                 Caption = 'Pin RS:'
                 ParentColor = False
@@ -16444,7 +16561,7 @@ object frmMain: TfrmMain
                 Cursor = crHandPoint
                 Left = 160
                 Height = 20
-                Top = 196
+                Top = 276
                 Width = 80
                 Items.Strings = (
                   '0'
@@ -16553,7 +16670,7 @@ object frmMain: TfrmMain
                 AnchorSideTop.Side = asrCenter
                 Left = 102
                 Height = 14
-                Top = 199
+                Top = 279
                 Width = 49
                 Caption = 'Pin D4:'
                 ParentColor = False
@@ -16563,7 +16680,7 @@ object frmMain: TfrmMain
                 AnchorSideTop.Side = asrCenter
                 Left = 102
                 Height = 14
-                Top = 231
+                Top = 311
                 Width = 49
                 Caption = 'Pin D5:'
                 ParentColor = False
@@ -16573,7 +16690,7 @@ object frmMain: TfrmMain
                 Cursor = crHandPoint
                 Left = 160
                 Height = 20
-                Top = 228
+                Top = 308
                 Width = 80
                 Items.Strings = (
                   '0'
@@ -16682,7 +16799,7 @@ object frmMain: TfrmMain
                 AnchorSideTop.Side = asrCenter
                 Left = 102
                 Height = 14
-                Top = 263
+                Top = 343
                 Width = 49
                 Caption = 'Pin D6:'
                 ParentColor = False
@@ -16692,7 +16809,7 @@ object frmMain: TfrmMain
                 Cursor = crHandPoint
                 Left = 160
                 Height = 20
-                Top = 260
+                Top = 340
                 Width = 80
                 Items.Strings = (
                   '0'
@@ -16801,7 +16918,7 @@ object frmMain: TfrmMain
                 AnchorSideTop.Side = asrCenter
                 Left = 102
                 Height = 14
-                Top = 295
+                Top = 375
                 Width = 49
                 Caption = 'Pin D7:'
                 ParentColor = False
@@ -16811,7 +16928,7 @@ object frmMain: TfrmMain
                 Cursor = crHandPoint
                 Left = 160
                 Height = 20
-                Top = 292
+                Top = 372
                 Width = 80
                 Items.Strings = (
                   '0'
@@ -16920,7 +17037,7 @@ object frmMain: TfrmMain
                 AnchorSideTop.Side = asrCenter
                 Left = 102
                 Height = 14
-                Top = 167
+                Top = 247
                 Width = 49
                 Caption = 'Pin EN:'
                 ParentColor = False
@@ -16930,7 +17047,7 @@ object frmMain: TfrmMain
                 Cursor = crHandPoint
                 Left = 160
                 Height = 20
-                Top = 164
+                Top = 244
                 Width = 80
                 Items.Strings = (
                   '0'
@@ -17034,11 +17151,216 @@ object frmMain: TfrmMain
                 OnChange = cbDisplayEncoderChange
                 TabOrder = 10
               end
+              object rbDisplayi2cSSD1306: TRadioButton
+                Left = 16
+                Height = 19
+                Hint = 'For devices based on SSD1306 OLED'
+                Top = 64
+                Width = 97
+                Caption = 'i2c SSD1306'
+                OnChange = rbDisplayi2cSSD1306Change
+                ParentShowHint = False
+                ShowHint = True
+                TabOrder = 11
+              end
+              object edDisplayi2sCols: TJppEdit
+                AnchorSideTop.Control = rbDisplayDiscrete
+                AnchorSideTop.Side = asrCenter
+                Left = 160
+                Height = 14
+                Hint = 'Number of display columns'
+                Top = 82
+                Width = 80
+                Alignment = taCenter
+                AutoSize = False
+                BorderStyle = bsNone
+                DragMode = dmAutomatic
+                Font.Color = 3163457
+                Font.Name = 'Consolas'
+                Font.Pitch = fpFixed
+                NumbersOnly = True
+                ParentFont = False
+                ParentShowHint = False
+                ShowHint = True
+                TabOrder = 12
+                Appearance.NormalBgColor = 5162664
+                Appearance.NormalTextColor = 3163457
+                Appearance.FocusedBgColor = 3163457
+                Appearance.FocusedTextColor = 5162664
+                Appearance.HotBgColor = 3163457
+                Appearance.HotTextColor = 5162664
+                Appearance.DisabledBgColor = 3163457
+                Appearance.DisabledTextColor = 5162664
+                TabOnEnter = False
+                BoundLabel.Height = 14
+                BoundLabel.Width = 35
+                BoundLabel.Caption = 'Cols:'
+                BoundLabel.Font.Color = 5162664
+                BoundLabel.Font.Name = 'Consolas'
+                BoundLabel.Font.Pitch = fpFixed
+                BoundLabel.ParentColor = False
+                BoundLabel.ParentFont = False
+                BoundLabel.FocusControl = edDisplayi2sCols
+                BoundLabelSpacing = 8
+              end
+              object edDisplayi2sRows: TJppEdit
+                AnchorSideTop.Side = asrCenter
+                Left = 160
+                Height = 14
+                Hint = 'Number of display rows'
+                Top = 112
+                Width = 80
+                Alignment = taCenter
+                AutoSize = False
+                BorderStyle = bsNone
+                DragMode = dmAutomatic
+                Font.Color = 3163457
+                Font.Name = 'Consolas'
+                Font.Pitch = fpFixed
+                NumbersOnly = True
+                ParentFont = False
+                ParentShowHint = False
+                ShowHint = True
+                TabOrder = 13
+                Appearance.NormalBgColor = 5162664
+                Appearance.NormalTextColor = 3163457
+                Appearance.FocusedBgColor = 3163457
+                Appearance.FocusedTextColor = 5162664
+                Appearance.HotBgColor = 3163457
+                Appearance.HotTextColor = 5162664
+                Appearance.DisabledBgColor = 3163457
+                Appearance.DisabledTextColor = 5162664
+                TabOnEnter = False
+                BoundLabel.Height = 14
+                BoundLabel.Width = 35
+                BoundLabel.Caption = 'Rows:'
+                BoundLabel.Font.Color = 5162664
+                BoundLabel.Font.Name = 'Consolas'
+                BoundLabel.Font.Pitch = fpFixed
+                BoundLabel.ParentColor = False
+                BoundLabel.ParentFont = False
+                BoundLabel.FocusControl = edDisplayi2sRows
+                BoundLabelSpacing = 8
+              end
+              object cbDisplayResolution: TBCComboBox
+                AnchorSideLeft.Control = lbMidiIn
+                Cursor = crHandPoint
+                Left = 160
+                Height = 20
+                Top = 144
+                Width = 80
+                Items.Strings = (
+                  '128x32'
+                  '128x64'
+                )
+                ItemIndex = 0
+                ArrowSize = 8
+                ArrowWidth = 16
+                FocusBorderColor = 5162664
+                FocusBorderOpacity = 0
+                DropDownBorderColor = 5162664
+                DropDownHighlight = 5162664
+                GlobalOpacity = 255
+                MemoryUsage = bmuHigh
+                Rounding.RoundX = 12
+                Rounding.RoundY = 12
+                StateClicked.Background.Color = 5162664
+                StateClicked.Background.Gradient1.StartColor = 8404992
+                StateClicked.Background.Gradient1.EndColor = 4194304
+                StateClicked.Background.Gradient1.GradientType = gtRadial
+                StateClicked.Background.Gradient1.Point1XPercent = 50
+                StateClicked.Background.Gradient1.Point1YPercent = 100
+                StateClicked.Background.Gradient1.Point2XPercent = 0
+                StateClicked.Background.Gradient1.Point2YPercent = 0
+                StateClicked.Background.Gradient2.StartColor = clWhite
+                StateClicked.Background.Gradient2.EndColor = clBlack
+                StateClicked.Background.Gradient2.GradientType = gtLinear
+                StateClicked.Background.Gradient2.Point1XPercent = 0
+                StateClicked.Background.Gradient2.Point1YPercent = 0
+                StateClicked.Background.Gradient2.Point2XPercent = 0
+                StateClicked.Background.Gradient2.Point2YPercent = 100
+                StateClicked.Background.Gradient1EndPercent = 100
+                StateClicked.Background.Style = bbsColor
+                StateClicked.Border.Style = bboNone
+                StateClicked.FontEx.Color = 2900284
+                StateClicked.FontEx.FontQuality = fqSystemClearType
+                StateClicked.FontEx.Name = 'consolas'
+                StateClicked.FontEx.Shadow = False
+                StateClicked.FontEx.ShadowRadius = 2
+                StateClicked.FontEx.ShadowOffsetX = 1
+                StateClicked.FontEx.ShadowOffsetY = 1
+                StateClicked.FontEx.Style = [fsBold, fsUnderline]
+                StateHover.Background.Color = 5162664
+                StateHover.Background.Gradient1.StartColor = 16744448
+                StateHover.Background.Gradient1.EndColor = 8404992
+                StateHover.Background.Gradient1.GradientType = gtRadial
+                StateHover.Background.Gradient1.Point1XPercent = 50
+                StateHover.Background.Gradient1.Point1YPercent = 100
+                StateHover.Background.Gradient1.Point2XPercent = 0
+                StateHover.Background.Gradient1.Point2YPercent = 0
+                StateHover.Background.Gradient2.StartColor = clWhite
+                StateHover.Background.Gradient2.EndColor = clBlack
+                StateHover.Background.Gradient2.GradientType = gtLinear
+                StateHover.Background.Gradient2.Point1XPercent = 0
+                StateHover.Background.Gradient2.Point1YPercent = 0
+                StateHover.Background.Gradient2.Point2XPercent = 0
+                StateHover.Background.Gradient2.Point2YPercent = 100
+                StateHover.Background.Gradient1EndPercent = 100
+                StateHover.Background.Style = bbsColor
+                StateHover.Border.Style = bboNone
+                StateHover.FontEx.Color = 2900284
+                StateHover.FontEx.FontQuality = fqSystemClearType
+                StateHover.FontEx.Name = 'consolas'
+                StateHover.FontEx.Shadow = False
+                StateHover.FontEx.ShadowRadius = 2
+                StateHover.FontEx.ShadowOffsetX = 1
+                StateHover.FontEx.ShadowOffsetY = 1
+                StateHover.FontEx.Style = [fsBold]
+                StateNormal.Background.Color = 5162664
+                StateNormal.Background.Gradient1.StartColor = 4194304
+                StateNormal.Background.Gradient1.EndColor = 8405056
+                StateNormal.Background.Gradient1.GradientType = gtLinear
+                StateNormal.Background.Gradient1.Point1XPercent = 0
+                StateNormal.Background.Gradient1.Point1YPercent = 0
+                StateNormal.Background.Gradient1.Point2XPercent = 0
+                StateNormal.Background.Gradient1.Point2YPercent = 100
+                StateNormal.Background.Gradient2.StartColor = 5162664
+                StateNormal.Background.Gradient2.EndColor = 4194304
+                StateNormal.Background.Gradient2.GradientType = gtRadial
+                StateNormal.Background.Gradient2.Point1XPercent = 50
+                StateNormal.Background.Gradient2.Point1YPercent = 100
+                StateNormal.Background.Gradient2.Point2XPercent = 0
+                StateNormal.Background.Gradient2.Point2YPercent = 0
+                StateNormal.Background.Gradient1EndPercent = 60
+                StateNormal.Background.Style = bbsColor
+                StateNormal.Border.Style = bboNone
+                StateNormal.FontEx.Color = 2900284
+                StateNormal.FontEx.FontQuality = fqSystemClearType
+                StateNormal.FontEx.Name = 'consolas'
+                StateNormal.FontEx.Shadow = False
+                StateNormal.FontEx.ShadowRadius = 2
+                StateNormal.FontEx.ShadowOffsetX = 1
+                StateNormal.FontEx.ShadowOffsetY = 1
+                StateNormal.FontEx.Style = []
+                StaticButton = False
+                OnChange = cbDisplayResolutionChange
+                TabOrder = 14
+              end
+              object lbDIsplayResolution: TLabel
+                AnchorSideTop.Control = cbDisplayResolution
+                AnchorSideTop.Side = asrCenter
+                Left = 18
+                Height = 14
+                Top = 147
+                Width = 133
+                Caption = 'SSD1306 resolution:'
+                ParentColor = False
+              end
             end
             object pnEncoder: TPanel
-              Left = 288
+              Left = 560
               Height = 184
-              Top = 384
+              Top = 272
               Width = 260
               BevelColor = clBlack
               ClientHeight = 184
@@ -17072,7 +17394,7 @@ object frmMain: TfrmMain
                 ShowHint = True
                 TabOrder = 0
               end
-              object lbSoundDev2: TLabel
+              object lbRotaryEncoder: TLabel
                 Left = 8
                 Height = 14
                 Top = 8
@@ -17316,122 +17638,6 @@ object frmMain: TfrmMain
                 Top = 119
                 Width = 63
                 Caption = 'Pin Data:'
-                ParentColor = False
-              end
-              object cbEncoderSwPin: TBCComboBox
-                AnchorSideLeft.Control = lbMidiIn
-                Cursor = crHandPoint
-                Left = 160
-                Height = 20
-                Top = 148
-                Width = 80
-                Items.Strings = (
-                  '0'
-                  '9'
-                  '10'
-                  '11'
-                )
-                ItemIndex = 0
-                ArrowSize = 8
-                ArrowWidth = 16
-                FocusBorderColor = 5162664
-                FocusBorderOpacity = 0
-                DropDownBorderColor = 5162664
-                DropDownHighlight = 5162664
-                GlobalOpacity = 255
-                MemoryUsage = bmuHigh
-                Rounding.RoundX = 12
-                Rounding.RoundY = 12
-                StateClicked.Background.Color = 5162664
-                StateClicked.Background.Gradient1.StartColor = 8404992
-                StateClicked.Background.Gradient1.EndColor = 4194304
-                StateClicked.Background.Gradient1.GradientType = gtRadial
-                StateClicked.Background.Gradient1.Point1XPercent = 50
-                StateClicked.Background.Gradient1.Point1YPercent = 100
-                StateClicked.Background.Gradient1.Point2XPercent = 0
-                StateClicked.Background.Gradient1.Point2YPercent = 0
-                StateClicked.Background.Gradient2.StartColor = clWhite
-                StateClicked.Background.Gradient2.EndColor = clBlack
-                StateClicked.Background.Gradient2.GradientType = gtLinear
-                StateClicked.Background.Gradient2.Point1XPercent = 0
-                StateClicked.Background.Gradient2.Point1YPercent = 0
-                StateClicked.Background.Gradient2.Point2XPercent = 0
-                StateClicked.Background.Gradient2.Point2YPercent = 100
-                StateClicked.Background.Gradient1EndPercent = 100
-                StateClicked.Background.Style = bbsColor
-                StateClicked.Border.Style = bboNone
-                StateClicked.FontEx.Color = 2900284
-                StateClicked.FontEx.FontQuality = fqSystemClearType
-                StateClicked.FontEx.Name = 'consolas'
-                StateClicked.FontEx.Shadow = False
-                StateClicked.FontEx.ShadowRadius = 2
-                StateClicked.FontEx.ShadowOffsetX = 1
-                StateClicked.FontEx.ShadowOffsetY = 1
-                StateClicked.FontEx.Style = [fsBold, fsUnderline]
-                StateHover.Background.Color = 5162664
-                StateHover.Background.Gradient1.StartColor = 16744448
-                StateHover.Background.Gradient1.EndColor = 8404992
-                StateHover.Background.Gradient1.GradientType = gtRadial
-                StateHover.Background.Gradient1.Point1XPercent = 50
-                StateHover.Background.Gradient1.Point1YPercent = 100
-                StateHover.Background.Gradient1.Point2XPercent = 0
-                StateHover.Background.Gradient1.Point2YPercent = 0
-                StateHover.Background.Gradient2.StartColor = clWhite
-                StateHover.Background.Gradient2.EndColor = clBlack
-                StateHover.Background.Gradient2.GradientType = gtLinear
-                StateHover.Background.Gradient2.Point1XPercent = 0
-                StateHover.Background.Gradient2.Point1YPercent = 0
-                StateHover.Background.Gradient2.Point2XPercent = 0
-                StateHover.Background.Gradient2.Point2YPercent = 100
-                StateHover.Background.Gradient1EndPercent = 100
-                StateHover.Background.Style = bbsColor
-                StateHover.Border.Style = bboNone
-                StateHover.FontEx.Color = 2900284
-                StateHover.FontEx.FontQuality = fqSystemClearType
-                StateHover.FontEx.Name = 'consolas'
-                StateHover.FontEx.Shadow = False
-                StateHover.FontEx.ShadowRadius = 2
-                StateHover.FontEx.ShadowOffsetX = 1
-                StateHover.FontEx.ShadowOffsetY = 1
-                StateHover.FontEx.Style = [fsBold]
-                StateNormal.Background.Color = 5162664
-                StateNormal.Background.Gradient1.StartColor = 4194304
-                StateNormal.Background.Gradient1.EndColor = 8405056
-                StateNormal.Background.Gradient1.GradientType = gtLinear
-                StateNormal.Background.Gradient1.Point1XPercent = 0
-                StateNormal.Background.Gradient1.Point1YPercent = 0
-                StateNormal.Background.Gradient1.Point2XPercent = 0
-                StateNormal.Background.Gradient1.Point2YPercent = 100
-                StateNormal.Background.Gradient2.StartColor = 5162664
-                StateNormal.Background.Gradient2.EndColor = 4194304
-                StateNormal.Background.Gradient2.GradientType = gtRadial
-                StateNormal.Background.Gradient2.Point1XPercent = 50
-                StateNormal.Background.Gradient2.Point1YPercent = 100
-                StateNormal.Background.Gradient2.Point2XPercent = 0
-                StateNormal.Background.Gradient2.Point2YPercent = 0
-                StateNormal.Background.Gradient1EndPercent = 60
-                StateNormal.Background.Style = bbsColor
-                StateNormal.Border.Style = bboNone
-                StateNormal.FontEx.Color = 2900284
-                StateNormal.FontEx.FontQuality = fqSystemClearType
-                StateNormal.FontEx.Name = 'consolas'
-                StateNormal.FontEx.Shadow = False
-                StateNormal.FontEx.ShadowRadius = 2
-                StateNormal.FontEx.ShadowOffsetX = 1
-                StateNormal.FontEx.ShadowOffsetY = 1
-                StateNormal.FontEx.Style = []
-                StaticButton = False
-                OnChange = cbDisplayEncoderChange
-                TabOrder = 4
-              end
-              object lbEncoderSwPin: TLabel
-                AnchorSideTop.Control = cbEncoderSwPin
-                AnchorSideTop.Side = asrCenter
-                Left = 74
-                Height = 14
-                Top = 151
-                Width = 77
-                Caption = 'Pin Switch:'
                 ParentColor = False
               end
             end
@@ -17811,6 +18017,1338 @@ object frmMain: TfrmMain
               ParentFont = False
               Transparent = False
             end
+            object pnButtons: TPanel
+              Left = 280
+              Height = 232
+              Top = 464
+              Width = 532
+              BevelColor = clBlack
+              ClientHeight = 232
+              ClientWidth = 532
+              Font.Color = 5162664
+              Font.Name = 'Consolas'
+              ParentFont = False
+              TabOrder = 9
+              object lbButtons: TLabel
+                Left = 8
+                Height = 14
+                Top = 8
+                Width = 56
+                Alignment = taCenter
+                Caption = 'Buttons:'
+                Color = 5162664
+                Font.Color = clBlack
+                Font.Name = 'Consolas'
+                ParentColor = False
+                ParentFont = False
+                Transparent = False
+              end
+              object cbBtnPrev: TBCComboBox
+                AnchorSideLeft.Control = lbMidiIn
+                Cursor = crHandPoint
+                Left = 160
+                Height = 20
+                Top = 36
+                Width = 80
+                Items.Strings = (
+                  '0'
+                  '9'
+                  '10'
+                  '11'
+                )
+                ItemIndex = 0
+                ArrowSize = 8
+                ArrowWidth = 16
+                FocusBorderColor = 5162664
+                FocusBorderOpacity = 0
+                DropDownBorderColor = 5162664
+                DropDownHighlight = 5162664
+                GlobalOpacity = 255
+                MemoryUsage = bmuHigh
+                Rounding.RoundX = 12
+                Rounding.RoundY = 12
+                StateClicked.Background.Color = 5162664
+                StateClicked.Background.Gradient1.StartColor = 8404992
+                StateClicked.Background.Gradient1.EndColor = 4194304
+                StateClicked.Background.Gradient1.GradientType = gtRadial
+                StateClicked.Background.Gradient1.Point1XPercent = 50
+                StateClicked.Background.Gradient1.Point1YPercent = 100
+                StateClicked.Background.Gradient1.Point2XPercent = 0
+                StateClicked.Background.Gradient1.Point2YPercent = 0
+                StateClicked.Background.Gradient2.StartColor = clWhite
+                StateClicked.Background.Gradient2.EndColor = clBlack
+                StateClicked.Background.Gradient2.GradientType = gtLinear
+                StateClicked.Background.Gradient2.Point1XPercent = 0
+                StateClicked.Background.Gradient2.Point1YPercent = 0
+                StateClicked.Background.Gradient2.Point2XPercent = 0
+                StateClicked.Background.Gradient2.Point2YPercent = 100
+                StateClicked.Background.Gradient1EndPercent = 100
+                StateClicked.Background.Style = bbsColor
+                StateClicked.Border.Style = bboNone
+                StateClicked.FontEx.Color = 2900284
+                StateClicked.FontEx.FontQuality = fqSystemClearType
+                StateClicked.FontEx.Name = 'consolas'
+                StateClicked.FontEx.Shadow = False
+                StateClicked.FontEx.ShadowRadius = 2
+                StateClicked.FontEx.ShadowOffsetX = 1
+                StateClicked.FontEx.ShadowOffsetY = 1
+                StateClicked.FontEx.Style = [fsBold, fsUnderline]
+                StateHover.Background.Color = 5162664
+                StateHover.Background.Gradient1.StartColor = 16744448
+                StateHover.Background.Gradient1.EndColor = 8404992
+                StateHover.Background.Gradient1.GradientType = gtRadial
+                StateHover.Background.Gradient1.Point1XPercent = 50
+                StateHover.Background.Gradient1.Point1YPercent = 100
+                StateHover.Background.Gradient1.Point2XPercent = 0
+                StateHover.Background.Gradient1.Point2YPercent = 0
+                StateHover.Background.Gradient2.StartColor = clWhite
+                StateHover.Background.Gradient2.EndColor = clBlack
+                StateHover.Background.Gradient2.GradientType = gtLinear
+                StateHover.Background.Gradient2.Point1XPercent = 0
+                StateHover.Background.Gradient2.Point1YPercent = 0
+                StateHover.Background.Gradient2.Point2XPercent = 0
+                StateHover.Background.Gradient2.Point2YPercent = 100
+                StateHover.Background.Gradient1EndPercent = 100
+                StateHover.Background.Style = bbsColor
+                StateHover.Border.Style = bboNone
+                StateHover.FontEx.Color = 2900284
+                StateHover.FontEx.FontQuality = fqSystemClearType
+                StateHover.FontEx.Name = 'consolas'
+                StateHover.FontEx.Shadow = False
+                StateHover.FontEx.ShadowRadius = 2
+                StateHover.FontEx.ShadowOffsetX = 1
+                StateHover.FontEx.ShadowOffsetY = 1
+                StateHover.FontEx.Style = [fsBold]
+                StateNormal.Background.Color = 5162664
+                StateNormal.Background.Gradient1.StartColor = 4194304
+                StateNormal.Background.Gradient1.EndColor = 8405056
+                StateNormal.Background.Gradient1.GradientType = gtLinear
+                StateNormal.Background.Gradient1.Point1XPercent = 0
+                StateNormal.Background.Gradient1.Point1YPercent = 0
+                StateNormal.Background.Gradient1.Point2XPercent = 0
+                StateNormal.Background.Gradient1.Point2YPercent = 100
+                StateNormal.Background.Gradient2.StartColor = 5162664
+                StateNormal.Background.Gradient2.EndColor = 4194304
+                StateNormal.Background.Gradient2.GradientType = gtRadial
+                StateNormal.Background.Gradient2.Point1XPercent = 50
+                StateNormal.Background.Gradient2.Point1YPercent = 100
+                StateNormal.Background.Gradient2.Point2XPercent = 0
+                StateNormal.Background.Gradient2.Point2YPercent = 0
+                StateNormal.Background.Gradient1EndPercent = 60
+                StateNormal.Background.Style = bbsColor
+                StateNormal.Border.Style = bboNone
+                StateNormal.FontEx.Color = 2900284
+                StateNormal.FontEx.FontQuality = fqSystemClearType
+                StateNormal.FontEx.Name = 'consolas'
+                StateNormal.FontEx.Shadow = False
+                StateNormal.FontEx.ShadowRadius = 2
+                StateNormal.FontEx.ShadowOffsetX = 1
+                StateNormal.FontEx.ShadowOffsetY = 1
+                StateNormal.FontEx.Style = []
+                StaticButton = False
+                OnChange = cbDisplayEncoderChange
+                TabOrder = 0
+              end
+              object lbBtnPrev: TLabel
+                AnchorSideTop.Control = cbBtnPrev
+                AnchorSideTop.Side = asrCenter
+                Left = 116
+                Height = 14
+                Top = 39
+                Width = 35
+                Caption = 'Prev:'
+                ParentColor = False
+              end
+              object cbBtnNext: TBCComboBox
+                AnchorSideLeft.Control = lbMidiIn
+                Cursor = crHandPoint
+                Left = 160
+                Height = 20
+                Top = 68
+                Width = 80
+                Items.Strings = (
+                  '0'
+                  '9'
+                  '10'
+                  '11'
+                )
+                ItemIndex = 0
+                ArrowSize = 8
+                ArrowWidth = 16
+                FocusBorderColor = 5162664
+                FocusBorderOpacity = 0
+                DropDownBorderColor = 5162664
+                DropDownHighlight = 5162664
+                GlobalOpacity = 255
+                MemoryUsage = bmuHigh
+                Rounding.RoundX = 12
+                Rounding.RoundY = 12
+                StateClicked.Background.Color = 5162664
+                StateClicked.Background.Gradient1.StartColor = 8404992
+                StateClicked.Background.Gradient1.EndColor = 4194304
+                StateClicked.Background.Gradient1.GradientType = gtRadial
+                StateClicked.Background.Gradient1.Point1XPercent = 50
+                StateClicked.Background.Gradient1.Point1YPercent = 100
+                StateClicked.Background.Gradient1.Point2XPercent = 0
+                StateClicked.Background.Gradient1.Point2YPercent = 0
+                StateClicked.Background.Gradient2.StartColor = clWhite
+                StateClicked.Background.Gradient2.EndColor = clBlack
+                StateClicked.Background.Gradient2.GradientType = gtLinear
+                StateClicked.Background.Gradient2.Point1XPercent = 0
+                StateClicked.Background.Gradient2.Point1YPercent = 0
+                StateClicked.Background.Gradient2.Point2XPercent = 0
+                StateClicked.Background.Gradient2.Point2YPercent = 100
+                StateClicked.Background.Gradient1EndPercent = 100
+                StateClicked.Background.Style = bbsColor
+                StateClicked.Border.Style = bboNone
+                StateClicked.FontEx.Color = 2900284
+                StateClicked.FontEx.FontQuality = fqSystemClearType
+                StateClicked.FontEx.Name = 'consolas'
+                StateClicked.FontEx.Shadow = False
+                StateClicked.FontEx.ShadowRadius = 2
+                StateClicked.FontEx.ShadowOffsetX = 1
+                StateClicked.FontEx.ShadowOffsetY = 1
+                StateClicked.FontEx.Style = [fsBold, fsUnderline]
+                StateHover.Background.Color = 5162664
+                StateHover.Background.Gradient1.StartColor = 16744448
+                StateHover.Background.Gradient1.EndColor = 8404992
+                StateHover.Background.Gradient1.GradientType = gtRadial
+                StateHover.Background.Gradient1.Point1XPercent = 50
+                StateHover.Background.Gradient1.Point1YPercent = 100
+                StateHover.Background.Gradient1.Point2XPercent = 0
+                StateHover.Background.Gradient1.Point2YPercent = 0
+                StateHover.Background.Gradient2.StartColor = clWhite
+                StateHover.Background.Gradient2.EndColor = clBlack
+                StateHover.Background.Gradient2.GradientType = gtLinear
+                StateHover.Background.Gradient2.Point1XPercent = 0
+                StateHover.Background.Gradient2.Point1YPercent = 0
+                StateHover.Background.Gradient2.Point2XPercent = 0
+                StateHover.Background.Gradient2.Point2YPercent = 100
+                StateHover.Background.Gradient1EndPercent = 100
+                StateHover.Background.Style = bbsColor
+                StateHover.Border.Style = bboNone
+                StateHover.FontEx.Color = 2900284
+                StateHover.FontEx.FontQuality = fqSystemClearType
+                StateHover.FontEx.Name = 'consolas'
+                StateHover.FontEx.Shadow = False
+                StateHover.FontEx.ShadowRadius = 2
+                StateHover.FontEx.ShadowOffsetX = 1
+                StateHover.FontEx.ShadowOffsetY = 1
+                StateHover.FontEx.Style = [fsBold]
+                StateNormal.Background.Color = 5162664
+                StateNormal.Background.Gradient1.StartColor = 4194304
+                StateNormal.Background.Gradient1.EndColor = 8405056
+                StateNormal.Background.Gradient1.GradientType = gtLinear
+                StateNormal.Background.Gradient1.Point1XPercent = 0
+                StateNormal.Background.Gradient1.Point1YPercent = 0
+                StateNormal.Background.Gradient1.Point2XPercent = 0
+                StateNormal.Background.Gradient1.Point2YPercent = 100
+                StateNormal.Background.Gradient2.StartColor = 5162664
+                StateNormal.Background.Gradient2.EndColor = 4194304
+                StateNormal.Background.Gradient2.GradientType = gtRadial
+                StateNormal.Background.Gradient2.Point1XPercent = 50
+                StateNormal.Background.Gradient2.Point1YPercent = 100
+                StateNormal.Background.Gradient2.Point2XPercent = 0
+                StateNormal.Background.Gradient2.Point2YPercent = 0
+                StateNormal.Background.Gradient1EndPercent = 60
+                StateNormal.Background.Style = bbsColor
+                StateNormal.Border.Style = bboNone
+                StateNormal.FontEx.Color = 2900284
+                StateNormal.FontEx.FontQuality = fqSystemClearType
+                StateNormal.FontEx.Name = 'consolas'
+                StateNormal.FontEx.Shadow = False
+                StateNormal.FontEx.ShadowRadius = 2
+                StateNormal.FontEx.ShadowOffsetX = 1
+                StateNormal.FontEx.ShadowOffsetY = 1
+                StateNormal.FontEx.Style = []
+                StaticButton = False
+                OnChange = cbDisplayEncoderChange
+                TabOrder = 1
+              end
+              object lbBtnNext: TLabel
+                AnchorSideTop.Control = cbBtnNext
+                AnchorSideTop.Side = asrCenter
+                Left = 116
+                Height = 14
+                Top = 71
+                Width = 35
+                Caption = 'Next:'
+                ParentColor = False
+              end
+              object cbBtnBack: TBCComboBox
+                AnchorSideLeft.Control = lbMidiIn
+                Cursor = crHandPoint
+                Left = 160
+                Height = 20
+                Top = 100
+                Width = 80
+                Items.Strings = (
+                  '0'
+                  '9'
+                  '10'
+                  '11'
+                )
+                ItemIndex = 0
+                ArrowSize = 8
+                ArrowWidth = 16
+                FocusBorderColor = 5162664
+                FocusBorderOpacity = 0
+                DropDownBorderColor = 5162664
+                DropDownHighlight = 5162664
+                GlobalOpacity = 255
+                MemoryUsage = bmuHigh
+                Rounding.RoundX = 12
+                Rounding.RoundY = 12
+                StateClicked.Background.Color = 5162664
+                StateClicked.Background.Gradient1.StartColor = 8404992
+                StateClicked.Background.Gradient1.EndColor = 4194304
+                StateClicked.Background.Gradient1.GradientType = gtRadial
+                StateClicked.Background.Gradient1.Point1XPercent = 50
+                StateClicked.Background.Gradient1.Point1YPercent = 100
+                StateClicked.Background.Gradient1.Point2XPercent = 0
+                StateClicked.Background.Gradient1.Point2YPercent = 0
+                StateClicked.Background.Gradient2.StartColor = clWhite
+                StateClicked.Background.Gradient2.EndColor = clBlack
+                StateClicked.Background.Gradient2.GradientType = gtLinear
+                StateClicked.Background.Gradient2.Point1XPercent = 0
+                StateClicked.Background.Gradient2.Point1YPercent = 0
+                StateClicked.Background.Gradient2.Point2XPercent = 0
+                StateClicked.Background.Gradient2.Point2YPercent = 100
+                StateClicked.Background.Gradient1EndPercent = 100
+                StateClicked.Background.Style = bbsColor
+                StateClicked.Border.Style = bboNone
+                StateClicked.FontEx.Color = 2900284
+                StateClicked.FontEx.FontQuality = fqSystemClearType
+                StateClicked.FontEx.Name = 'consolas'
+                StateClicked.FontEx.Shadow = False
+                StateClicked.FontEx.ShadowRadius = 2
+                StateClicked.FontEx.ShadowOffsetX = 1
+                StateClicked.FontEx.ShadowOffsetY = 1
+                StateClicked.FontEx.Style = [fsBold, fsUnderline]
+                StateHover.Background.Color = 5162664
+                StateHover.Background.Gradient1.StartColor = 16744448
+                StateHover.Background.Gradient1.EndColor = 8404992
+                StateHover.Background.Gradient1.GradientType = gtRadial
+                StateHover.Background.Gradient1.Point1XPercent = 50
+                StateHover.Background.Gradient1.Point1YPercent = 100
+                StateHover.Background.Gradient1.Point2XPercent = 0
+                StateHover.Background.Gradient1.Point2YPercent = 0
+                StateHover.Background.Gradient2.StartColor = clWhite
+                StateHover.Background.Gradient2.EndColor = clBlack
+                StateHover.Background.Gradient2.GradientType = gtLinear
+                StateHover.Background.Gradient2.Point1XPercent = 0
+                StateHover.Background.Gradient2.Point1YPercent = 0
+                StateHover.Background.Gradient2.Point2XPercent = 0
+                StateHover.Background.Gradient2.Point2YPercent = 100
+                StateHover.Background.Gradient1EndPercent = 100
+                StateHover.Background.Style = bbsColor
+                StateHover.Border.Style = bboNone
+                StateHover.FontEx.Color = 2900284
+                StateHover.FontEx.FontQuality = fqSystemClearType
+                StateHover.FontEx.Name = 'consolas'
+                StateHover.FontEx.Shadow = False
+                StateHover.FontEx.ShadowRadius = 2
+                StateHover.FontEx.ShadowOffsetX = 1
+                StateHover.FontEx.ShadowOffsetY = 1
+                StateHover.FontEx.Style = [fsBold]
+                StateNormal.Background.Color = 5162664
+                StateNormal.Background.Gradient1.StartColor = 4194304
+                StateNormal.Background.Gradient1.EndColor = 8405056
+                StateNormal.Background.Gradient1.GradientType = gtLinear
+                StateNormal.Background.Gradient1.Point1XPercent = 0
+                StateNormal.Background.Gradient1.Point1YPercent = 0
+                StateNormal.Background.Gradient1.Point2XPercent = 0
+                StateNormal.Background.Gradient1.Point2YPercent = 100
+                StateNormal.Background.Gradient2.StartColor = 5162664
+                StateNormal.Background.Gradient2.EndColor = 4194304
+                StateNormal.Background.Gradient2.GradientType = gtRadial
+                StateNormal.Background.Gradient2.Point1XPercent = 50
+                StateNormal.Background.Gradient2.Point1YPercent = 100
+                StateNormal.Background.Gradient2.Point2XPercent = 0
+                StateNormal.Background.Gradient2.Point2YPercent = 0
+                StateNormal.Background.Gradient1EndPercent = 60
+                StateNormal.Background.Style = bbsColor
+                StateNormal.Border.Style = bboNone
+                StateNormal.FontEx.Color = 2900284
+                StateNormal.FontEx.FontQuality = fqSystemClearType
+                StateNormal.FontEx.Name = 'consolas'
+                StateNormal.FontEx.Shadow = False
+                StateNormal.FontEx.ShadowRadius = 2
+                StateNormal.FontEx.ShadowOffsetX = 1
+                StateNormal.FontEx.ShadowOffsetY = 1
+                StateNormal.FontEx.Style = []
+                StaticButton = False
+                OnChange = cbDisplayEncoderChange
+                TabOrder = 2
+              end
+              object lbBtnBack: TLabel
+                AnchorSideTop.Control = cbBtnBack
+                AnchorSideTop.Side = asrCenter
+                Left = 116
+                Height = 14
+                Top = 103
+                Width = 35
+                Caption = 'Back:'
+                ParentColor = False
+              end
+              object lbBtnSelect: TLabel
+                AnchorSideTop.Control = cbBtnSelect
+                AnchorSideTop.Side = asrCenter
+                Left = 102
+                Height = 14
+                Top = 135
+                Width = 49
+                Caption = 'Select:'
+                ParentColor = False
+              end
+              object cbBtnSelect: TBCComboBox
+                AnchorSideLeft.Control = lbMidiIn
+                Cursor = crHandPoint
+                Left = 160
+                Height = 20
+                Top = 132
+                Width = 80
+                Items.Strings = (
+                  '0'
+                  '9'
+                  '10'
+                  '11'
+                )
+                ItemIndex = 0
+                ArrowSize = 8
+                ArrowWidth = 16
+                FocusBorderColor = 5162664
+                FocusBorderOpacity = 0
+                DropDownBorderColor = 5162664
+                DropDownHighlight = 5162664
+                GlobalOpacity = 255
+                MemoryUsage = bmuHigh
+                Rounding.RoundX = 12
+                Rounding.RoundY = 12
+                StateClicked.Background.Color = 5162664
+                StateClicked.Background.Gradient1.StartColor = 8404992
+                StateClicked.Background.Gradient1.EndColor = 4194304
+                StateClicked.Background.Gradient1.GradientType = gtRadial
+                StateClicked.Background.Gradient1.Point1XPercent = 50
+                StateClicked.Background.Gradient1.Point1YPercent = 100
+                StateClicked.Background.Gradient1.Point2XPercent = 0
+                StateClicked.Background.Gradient1.Point2YPercent = 0
+                StateClicked.Background.Gradient2.StartColor = clWhite
+                StateClicked.Background.Gradient2.EndColor = clBlack
+                StateClicked.Background.Gradient2.GradientType = gtLinear
+                StateClicked.Background.Gradient2.Point1XPercent = 0
+                StateClicked.Background.Gradient2.Point1YPercent = 0
+                StateClicked.Background.Gradient2.Point2XPercent = 0
+                StateClicked.Background.Gradient2.Point2YPercent = 100
+                StateClicked.Background.Gradient1EndPercent = 100
+                StateClicked.Background.Style = bbsColor
+                StateClicked.Border.Style = bboNone
+                StateClicked.FontEx.Color = 2900284
+                StateClicked.FontEx.FontQuality = fqSystemClearType
+                StateClicked.FontEx.Name = 'consolas'
+                StateClicked.FontEx.Shadow = False
+                StateClicked.FontEx.ShadowRadius = 2
+                StateClicked.FontEx.ShadowOffsetX = 1
+                StateClicked.FontEx.ShadowOffsetY = 1
+                StateClicked.FontEx.Style = [fsBold, fsUnderline]
+                StateHover.Background.Color = 5162664
+                StateHover.Background.Gradient1.StartColor = 16744448
+                StateHover.Background.Gradient1.EndColor = 8404992
+                StateHover.Background.Gradient1.GradientType = gtRadial
+                StateHover.Background.Gradient1.Point1XPercent = 50
+                StateHover.Background.Gradient1.Point1YPercent = 100
+                StateHover.Background.Gradient1.Point2XPercent = 0
+                StateHover.Background.Gradient1.Point2YPercent = 0
+                StateHover.Background.Gradient2.StartColor = clWhite
+                StateHover.Background.Gradient2.EndColor = clBlack
+                StateHover.Background.Gradient2.GradientType = gtLinear
+                StateHover.Background.Gradient2.Point1XPercent = 0
+                StateHover.Background.Gradient2.Point1YPercent = 0
+                StateHover.Background.Gradient2.Point2XPercent = 0
+                StateHover.Background.Gradient2.Point2YPercent = 100
+                StateHover.Background.Gradient1EndPercent = 100
+                StateHover.Background.Style = bbsColor
+                StateHover.Border.Style = bboNone
+                StateHover.FontEx.Color = 2900284
+                StateHover.FontEx.FontQuality = fqSystemClearType
+                StateHover.FontEx.Name = 'consolas'
+                StateHover.FontEx.Shadow = False
+                StateHover.FontEx.ShadowRadius = 2
+                StateHover.FontEx.ShadowOffsetX = 1
+                StateHover.FontEx.ShadowOffsetY = 1
+                StateHover.FontEx.Style = [fsBold]
+                StateNormal.Background.Color = 5162664
+                StateNormal.Background.Gradient1.StartColor = 4194304
+                StateNormal.Background.Gradient1.EndColor = 8405056
+                StateNormal.Background.Gradient1.GradientType = gtLinear
+                StateNormal.Background.Gradient1.Point1XPercent = 0
+                StateNormal.Background.Gradient1.Point1YPercent = 0
+                StateNormal.Background.Gradient1.Point2XPercent = 0
+                StateNormal.Background.Gradient1.Point2YPercent = 100
+                StateNormal.Background.Gradient2.StartColor = 5162664
+                StateNormal.Background.Gradient2.EndColor = 4194304
+                StateNormal.Background.Gradient2.GradientType = gtRadial
+                StateNormal.Background.Gradient2.Point1XPercent = 50
+                StateNormal.Background.Gradient2.Point1YPercent = 100
+                StateNormal.Background.Gradient2.Point2XPercent = 0
+                StateNormal.Background.Gradient2.Point2YPercent = 0
+                StateNormal.Background.Gradient1EndPercent = 60
+                StateNormal.Background.Style = bbsColor
+                StateNormal.Border.Style = bboNone
+                StateNormal.FontEx.Color = 2900284
+                StateNormal.FontEx.FontQuality = fqSystemClearType
+                StateNormal.FontEx.Name = 'consolas'
+                StateNormal.FontEx.Shadow = False
+                StateNormal.FontEx.ShadowRadius = 2
+                StateNormal.FontEx.ShadowOffsetX = 1
+                StateNormal.FontEx.ShadowOffsetY = 1
+                StateNormal.FontEx.Style = []
+                StaticButton = False
+                OnChange = cbDisplayEncoderChange
+                TabOrder = 3
+              end
+              object lbBtnHome: TLabel
+                AnchorSideTop.Control = cbBtnHome
+                AnchorSideTop.Side = asrCenter
+                Left = 116
+                Height = 14
+                Top = 167
+                Width = 35
+                Caption = 'Home:'
+                ParentColor = False
+              end
+              object cbBtnHome: TBCComboBox
+                AnchorSideLeft.Control = lbMidiIn
+                Cursor = crHandPoint
+                Left = 160
+                Height = 20
+                Top = 164
+                Width = 80
+                Items.Strings = (
+                  '0'
+                  '9'
+                  '10'
+                  '11'
+                )
+                ItemIndex = 0
+                ArrowSize = 8
+                ArrowWidth = 16
+                FocusBorderColor = 5162664
+                FocusBorderOpacity = 0
+                DropDownBorderColor = 5162664
+                DropDownHighlight = 5162664
+                GlobalOpacity = 255
+                MemoryUsage = bmuHigh
+                Rounding.RoundX = 12
+                Rounding.RoundY = 12
+                StateClicked.Background.Color = 5162664
+                StateClicked.Background.Gradient1.StartColor = 8404992
+                StateClicked.Background.Gradient1.EndColor = 4194304
+                StateClicked.Background.Gradient1.GradientType = gtRadial
+                StateClicked.Background.Gradient1.Point1XPercent = 50
+                StateClicked.Background.Gradient1.Point1YPercent = 100
+                StateClicked.Background.Gradient1.Point2XPercent = 0
+                StateClicked.Background.Gradient1.Point2YPercent = 0
+                StateClicked.Background.Gradient2.StartColor = clWhite
+                StateClicked.Background.Gradient2.EndColor = clBlack
+                StateClicked.Background.Gradient2.GradientType = gtLinear
+                StateClicked.Background.Gradient2.Point1XPercent = 0
+                StateClicked.Background.Gradient2.Point1YPercent = 0
+                StateClicked.Background.Gradient2.Point2XPercent = 0
+                StateClicked.Background.Gradient2.Point2YPercent = 100
+                StateClicked.Background.Gradient1EndPercent = 100
+                StateClicked.Background.Style = bbsColor
+                StateClicked.Border.Style = bboNone
+                StateClicked.FontEx.Color = 2900284
+                StateClicked.FontEx.FontQuality = fqSystemClearType
+                StateClicked.FontEx.Name = 'consolas'
+                StateClicked.FontEx.Shadow = False
+                StateClicked.FontEx.ShadowRadius = 2
+                StateClicked.FontEx.ShadowOffsetX = 1
+                StateClicked.FontEx.ShadowOffsetY = 1
+                StateClicked.FontEx.Style = [fsBold, fsUnderline]
+                StateHover.Background.Color = 5162664
+                StateHover.Background.Gradient1.StartColor = 16744448
+                StateHover.Background.Gradient1.EndColor = 8404992
+                StateHover.Background.Gradient1.GradientType = gtRadial
+                StateHover.Background.Gradient1.Point1XPercent = 50
+                StateHover.Background.Gradient1.Point1YPercent = 100
+                StateHover.Background.Gradient1.Point2XPercent = 0
+                StateHover.Background.Gradient1.Point2YPercent = 0
+                StateHover.Background.Gradient2.StartColor = clWhite
+                StateHover.Background.Gradient2.EndColor = clBlack
+                StateHover.Background.Gradient2.GradientType = gtLinear
+                StateHover.Background.Gradient2.Point1XPercent = 0
+                StateHover.Background.Gradient2.Point1YPercent = 0
+                StateHover.Background.Gradient2.Point2XPercent = 0
+                StateHover.Background.Gradient2.Point2YPercent = 100
+                StateHover.Background.Gradient1EndPercent = 100
+                StateHover.Background.Style = bbsColor
+                StateHover.Border.Style = bboNone
+                StateHover.FontEx.Color = 2900284
+                StateHover.FontEx.FontQuality = fqSystemClearType
+                StateHover.FontEx.Name = 'consolas'
+                StateHover.FontEx.Shadow = False
+                StateHover.FontEx.ShadowRadius = 2
+                StateHover.FontEx.ShadowOffsetX = 1
+                StateHover.FontEx.ShadowOffsetY = 1
+                StateHover.FontEx.Style = [fsBold]
+                StateNormal.Background.Color = 5162664
+                StateNormal.Background.Gradient1.StartColor = 4194304
+                StateNormal.Background.Gradient1.EndColor = 8405056
+                StateNormal.Background.Gradient1.GradientType = gtLinear
+                StateNormal.Background.Gradient1.Point1XPercent = 0
+                StateNormal.Background.Gradient1.Point1YPercent = 0
+                StateNormal.Background.Gradient1.Point2XPercent = 0
+                StateNormal.Background.Gradient1.Point2YPercent = 100
+                StateNormal.Background.Gradient2.StartColor = 5162664
+                StateNormal.Background.Gradient2.EndColor = 4194304
+                StateNormal.Background.Gradient2.GradientType = gtRadial
+                StateNormal.Background.Gradient2.Point1XPercent = 50
+                StateNormal.Background.Gradient2.Point1YPercent = 100
+                StateNormal.Background.Gradient2.Point2XPercent = 0
+                StateNormal.Background.Gradient2.Point2YPercent = 0
+                StateNormal.Background.Gradient1EndPercent = 60
+                StateNormal.Background.Style = bbsColor
+                StateNormal.Border.Style = bboNone
+                StateNormal.FontEx.Color = 2900284
+                StateNormal.FontEx.FontQuality = fqSystemClearType
+                StateNormal.FontEx.Name = 'consolas'
+                StateNormal.FontEx.Shadow = False
+                StateNormal.FontEx.ShadowRadius = 2
+                StateNormal.FontEx.ShadowOffsetX = 1
+                StateNormal.FontEx.ShadowOffsetY = 1
+                StateNormal.FontEx.Style = []
+                StaticButton = False
+                OnChange = cbDisplayEncoderChange
+                TabOrder = 4
+              end
+              object lbBtnShortcut: TLabel
+                AnchorSideTop.Control = cbBtnShortcut
+                AnchorSideTop.Side = asrCenter
+                Left = 88
+                Height = 14
+                Top = 199
+                Width = 63
+                Caption = 'Shortcut:'
+                ParentColor = False
+              end
+              object cbBtnShortcut: TBCComboBox
+                AnchorSideLeft.Control = lbMidiIn
+                Cursor = crHandPoint
+                Left = 160
+                Height = 20
+                Top = 196
+                Width = 80
+                Items.Strings = (
+                  '0'
+                  '9'
+                  '10'
+                  '11'
+                )
+                ItemIndex = 0
+                ArrowSize = 8
+                ArrowWidth = 16
+                FocusBorderColor = 5162664
+                FocusBorderOpacity = 0
+                DropDownBorderColor = 5162664
+                DropDownHighlight = 5162664
+                GlobalOpacity = 255
+                MemoryUsage = bmuHigh
+                Rounding.RoundX = 12
+                Rounding.RoundY = 12
+                StateClicked.Background.Color = 5162664
+                StateClicked.Background.Gradient1.StartColor = 8404992
+                StateClicked.Background.Gradient1.EndColor = 4194304
+                StateClicked.Background.Gradient1.GradientType = gtRadial
+                StateClicked.Background.Gradient1.Point1XPercent = 50
+                StateClicked.Background.Gradient1.Point1YPercent = 100
+                StateClicked.Background.Gradient1.Point2XPercent = 0
+                StateClicked.Background.Gradient1.Point2YPercent = 0
+                StateClicked.Background.Gradient2.StartColor = clWhite
+                StateClicked.Background.Gradient2.EndColor = clBlack
+                StateClicked.Background.Gradient2.GradientType = gtLinear
+                StateClicked.Background.Gradient2.Point1XPercent = 0
+                StateClicked.Background.Gradient2.Point1YPercent = 0
+                StateClicked.Background.Gradient2.Point2XPercent = 0
+                StateClicked.Background.Gradient2.Point2YPercent = 100
+                StateClicked.Background.Gradient1EndPercent = 100
+                StateClicked.Background.Style = bbsColor
+                StateClicked.Border.Style = bboNone
+                StateClicked.FontEx.Color = 2900284
+                StateClicked.FontEx.FontQuality = fqSystemClearType
+                StateClicked.FontEx.Name = 'consolas'
+                StateClicked.FontEx.Shadow = False
+                StateClicked.FontEx.ShadowRadius = 2
+                StateClicked.FontEx.ShadowOffsetX = 1
+                StateClicked.FontEx.ShadowOffsetY = 1
+                StateClicked.FontEx.Style = [fsBold, fsUnderline]
+                StateHover.Background.Color = 5162664
+                StateHover.Background.Gradient1.StartColor = 16744448
+                StateHover.Background.Gradient1.EndColor = 8404992
+                StateHover.Background.Gradient1.GradientType = gtRadial
+                StateHover.Background.Gradient1.Point1XPercent = 50
+                StateHover.Background.Gradient1.Point1YPercent = 100
+                StateHover.Background.Gradient1.Point2XPercent = 0
+                StateHover.Background.Gradient1.Point2YPercent = 0
+                StateHover.Background.Gradient2.StartColor = clWhite
+                StateHover.Background.Gradient2.EndColor = clBlack
+                StateHover.Background.Gradient2.GradientType = gtLinear
+                StateHover.Background.Gradient2.Point1XPercent = 0
+                StateHover.Background.Gradient2.Point1YPercent = 0
+                StateHover.Background.Gradient2.Point2XPercent = 0
+                StateHover.Background.Gradient2.Point2YPercent = 100
+                StateHover.Background.Gradient1EndPercent = 100
+                StateHover.Background.Style = bbsColor
+                StateHover.Border.Style = bboNone
+                StateHover.FontEx.Color = 2900284
+                StateHover.FontEx.FontQuality = fqSystemClearType
+                StateHover.FontEx.Name = 'consolas'
+                StateHover.FontEx.Shadow = False
+                StateHover.FontEx.ShadowRadius = 2
+                StateHover.FontEx.ShadowOffsetX = 1
+                StateHover.FontEx.ShadowOffsetY = 1
+                StateHover.FontEx.Style = [fsBold]
+                StateNormal.Background.Color = 5162664
+                StateNormal.Background.Gradient1.StartColor = 4194304
+                StateNormal.Background.Gradient1.EndColor = 8405056
+                StateNormal.Background.Gradient1.GradientType = gtLinear
+                StateNormal.Background.Gradient1.Point1XPercent = 0
+                StateNormal.Background.Gradient1.Point1YPercent = 0
+                StateNormal.Background.Gradient1.Point2XPercent = 0
+                StateNormal.Background.Gradient1.Point2YPercent = 100
+                StateNormal.Background.Gradient2.StartColor = 5162664
+                StateNormal.Background.Gradient2.EndColor = 4194304
+                StateNormal.Background.Gradient2.GradientType = gtRadial
+                StateNormal.Background.Gradient2.Point1XPercent = 50
+                StateNormal.Background.Gradient2.Point1YPercent = 100
+                StateNormal.Background.Gradient2.Point2XPercent = 0
+                StateNormal.Background.Gradient2.Point2YPercent = 0
+                StateNormal.Background.Gradient1EndPercent = 60
+                StateNormal.Background.Style = bbsColor
+                StateNormal.Border.Style = bboNone
+                StateNormal.FontEx.Color = 2900284
+                StateNormal.FontEx.FontQuality = fqSystemClearType
+                StateNormal.FontEx.Name = 'consolas'
+                StateNormal.FontEx.Shadow = False
+                StateNormal.FontEx.ShadowRadius = 2
+                StateNormal.FontEx.ShadowOffsetX = 1
+                StateNormal.FontEx.ShadowOffsetY = 1
+                StateNormal.FontEx.Style = []
+                StaticButton = False
+                OnChange = cbDisplayEncoderChange
+                TabOrder = 5
+              end
+              object cbBtnActionPrev: TBCComboBox
+                AnchorSideLeft.Control = lbMidiIn
+                Cursor = crHandPoint
+                Left = 256
+                Height = 20
+                Top = 36
+                Width = 100
+                Items.Strings = (
+                  'click'
+                  'doubleclick'
+                  'longpress'
+                )
+                ItemIndex = 0
+                ArrowSize = 8
+                ArrowWidth = 16
+                FocusBorderColor = 5162664
+                FocusBorderOpacity = 0
+                DropDownBorderColor = 5162664
+                DropDownHighlight = 5162664
+                GlobalOpacity = 255
+                MemoryUsage = bmuHigh
+                Rounding.RoundX = 12
+                Rounding.RoundY = 12
+                StateClicked.Background.Color = 5162664
+                StateClicked.Background.Gradient1.StartColor = 8404992
+                StateClicked.Background.Gradient1.EndColor = 4194304
+                StateClicked.Background.Gradient1.GradientType = gtRadial
+                StateClicked.Background.Gradient1.Point1XPercent = 50
+                StateClicked.Background.Gradient1.Point1YPercent = 100
+                StateClicked.Background.Gradient1.Point2XPercent = 0
+                StateClicked.Background.Gradient1.Point2YPercent = 0
+                StateClicked.Background.Gradient2.StartColor = clWhite
+                StateClicked.Background.Gradient2.EndColor = clBlack
+                StateClicked.Background.Gradient2.GradientType = gtLinear
+                StateClicked.Background.Gradient2.Point1XPercent = 0
+                StateClicked.Background.Gradient2.Point1YPercent = 0
+                StateClicked.Background.Gradient2.Point2XPercent = 0
+                StateClicked.Background.Gradient2.Point2YPercent = 100
+                StateClicked.Background.Gradient1EndPercent = 100
+                StateClicked.Background.Style = bbsColor
+                StateClicked.Border.Style = bboNone
+                StateClicked.FontEx.Color = 2900284
+                StateClicked.FontEx.FontQuality = fqSystemClearType
+                StateClicked.FontEx.Name = 'consolas'
+                StateClicked.FontEx.Shadow = False
+                StateClicked.FontEx.ShadowRadius = 2
+                StateClicked.FontEx.ShadowOffsetX = 1
+                StateClicked.FontEx.ShadowOffsetY = 1
+                StateClicked.FontEx.Style = [fsBold, fsUnderline]
+                StateHover.Background.Color = 5162664
+                StateHover.Background.Gradient1.StartColor = 16744448
+                StateHover.Background.Gradient1.EndColor = 8404992
+                StateHover.Background.Gradient1.GradientType = gtRadial
+                StateHover.Background.Gradient1.Point1XPercent = 50
+                StateHover.Background.Gradient1.Point1YPercent = 100
+                StateHover.Background.Gradient1.Point2XPercent = 0
+                StateHover.Background.Gradient1.Point2YPercent = 0
+                StateHover.Background.Gradient2.StartColor = clWhite
+                StateHover.Background.Gradient2.EndColor = clBlack
+                StateHover.Background.Gradient2.GradientType = gtLinear
+                StateHover.Background.Gradient2.Point1XPercent = 0
+                StateHover.Background.Gradient2.Point1YPercent = 0
+                StateHover.Background.Gradient2.Point2XPercent = 0
+                StateHover.Background.Gradient2.Point2YPercent = 100
+                StateHover.Background.Gradient1EndPercent = 100
+                StateHover.Background.Style = bbsColor
+                StateHover.Border.Style = bboNone
+                StateHover.FontEx.Color = 2900284
+                StateHover.FontEx.FontQuality = fqSystemClearType
+                StateHover.FontEx.Name = 'consolas'
+                StateHover.FontEx.Shadow = False
+                StateHover.FontEx.ShadowRadius = 2
+                StateHover.FontEx.ShadowOffsetX = 1
+                StateHover.FontEx.ShadowOffsetY = 1
+                StateHover.FontEx.Style = [fsBold]
+                StateNormal.Background.Color = 5162664
+                StateNormal.Background.Gradient1.StartColor = 4194304
+                StateNormal.Background.Gradient1.EndColor = 8405056
+                StateNormal.Background.Gradient1.GradientType = gtLinear
+                StateNormal.Background.Gradient1.Point1XPercent = 0
+                StateNormal.Background.Gradient1.Point1YPercent = 0
+                StateNormal.Background.Gradient1.Point2XPercent = 0
+                StateNormal.Background.Gradient1.Point2YPercent = 100
+                StateNormal.Background.Gradient2.StartColor = 5162664
+                StateNormal.Background.Gradient2.EndColor = 4194304
+                StateNormal.Background.Gradient2.GradientType = gtRadial
+                StateNormal.Background.Gradient2.Point1XPercent = 50
+                StateNormal.Background.Gradient2.Point1YPercent = 100
+                StateNormal.Background.Gradient2.Point2XPercent = 0
+                StateNormal.Background.Gradient2.Point2YPercent = 0
+                StateNormal.Background.Gradient1EndPercent = 60
+                StateNormal.Background.Style = bbsColor
+                StateNormal.Border.Style = bboNone
+                StateNormal.FontEx.Color = 2900284
+                StateNormal.FontEx.FontQuality = fqSystemClearType
+                StateNormal.FontEx.Name = 'consolas'
+                StateNormal.FontEx.Shadow = False
+                StateNormal.FontEx.ShadowRadius = 2
+                StateNormal.FontEx.ShadowOffsetX = 1
+                StateNormal.FontEx.ShadowOffsetY = 1
+                StateNormal.FontEx.Style = []
+                StaticButton = False
+                TabOrder = 6
+              end
+              object cbBtnActionNext: TBCComboBox
+                AnchorSideLeft.Control = lbMidiIn
+                Cursor = crHandPoint
+                Left = 256
+                Height = 20
+                Top = 68
+                Width = 100
+                Items.Strings = (
+                  'click'
+                  'doubleclick'
+                  'longpress'
+                )
+                ItemIndex = 0
+                ArrowSize = 8
+                ArrowWidth = 16
+                FocusBorderColor = 5162664
+                FocusBorderOpacity = 0
+                DropDownBorderColor = 5162664
+                DropDownHighlight = 5162664
+                GlobalOpacity = 255
+                MemoryUsage = bmuHigh
+                Rounding.RoundX = 12
+                Rounding.RoundY = 12
+                StateClicked.Background.Color = 5162664
+                StateClicked.Background.Gradient1.StartColor = 8404992
+                StateClicked.Background.Gradient1.EndColor = 4194304
+                StateClicked.Background.Gradient1.GradientType = gtRadial
+                StateClicked.Background.Gradient1.Point1XPercent = 50
+                StateClicked.Background.Gradient1.Point1YPercent = 100
+                StateClicked.Background.Gradient1.Point2XPercent = 0
+                StateClicked.Background.Gradient1.Point2YPercent = 0
+                StateClicked.Background.Gradient2.StartColor = clWhite
+                StateClicked.Background.Gradient2.EndColor = clBlack
+                StateClicked.Background.Gradient2.GradientType = gtLinear
+                StateClicked.Background.Gradient2.Point1XPercent = 0
+                StateClicked.Background.Gradient2.Point1YPercent = 0
+                StateClicked.Background.Gradient2.Point2XPercent = 0
+                StateClicked.Background.Gradient2.Point2YPercent = 100
+                StateClicked.Background.Gradient1EndPercent = 100
+                StateClicked.Background.Style = bbsColor
+                StateClicked.Border.Style = bboNone
+                StateClicked.FontEx.Color = 2900284
+                StateClicked.FontEx.FontQuality = fqSystemClearType
+                StateClicked.FontEx.Name = 'consolas'
+                StateClicked.FontEx.Shadow = False
+                StateClicked.FontEx.ShadowRadius = 2
+                StateClicked.FontEx.ShadowOffsetX = 1
+                StateClicked.FontEx.ShadowOffsetY = 1
+                StateClicked.FontEx.Style = [fsBold, fsUnderline]
+                StateHover.Background.Color = 5162664
+                StateHover.Background.Gradient1.StartColor = 16744448
+                StateHover.Background.Gradient1.EndColor = 8404992
+                StateHover.Background.Gradient1.GradientType = gtRadial
+                StateHover.Background.Gradient1.Point1XPercent = 50
+                StateHover.Background.Gradient1.Point1YPercent = 100
+                StateHover.Background.Gradient1.Point2XPercent = 0
+                StateHover.Background.Gradient1.Point2YPercent = 0
+                StateHover.Background.Gradient2.StartColor = clWhite
+                StateHover.Background.Gradient2.EndColor = clBlack
+                StateHover.Background.Gradient2.GradientType = gtLinear
+                StateHover.Background.Gradient2.Point1XPercent = 0
+                StateHover.Background.Gradient2.Point1YPercent = 0
+                StateHover.Background.Gradient2.Point2XPercent = 0
+                StateHover.Background.Gradient2.Point2YPercent = 100
+                StateHover.Background.Gradient1EndPercent = 100
+                StateHover.Background.Style = bbsColor
+                StateHover.Border.Style = bboNone
+                StateHover.FontEx.Color = 2900284
+                StateHover.FontEx.FontQuality = fqSystemClearType
+                StateHover.FontEx.Name = 'consolas'
+                StateHover.FontEx.Shadow = False
+                StateHover.FontEx.ShadowRadius = 2
+                StateHover.FontEx.ShadowOffsetX = 1
+                StateHover.FontEx.ShadowOffsetY = 1
+                StateHover.FontEx.Style = [fsBold]
+                StateNormal.Background.Color = 5162664
+                StateNormal.Background.Gradient1.StartColor = 4194304
+                StateNormal.Background.Gradient1.EndColor = 8405056
+                StateNormal.Background.Gradient1.GradientType = gtLinear
+                StateNormal.Background.Gradient1.Point1XPercent = 0
+                StateNormal.Background.Gradient1.Point1YPercent = 0
+                StateNormal.Background.Gradient1.Point2XPercent = 0
+                StateNormal.Background.Gradient1.Point2YPercent = 100
+                StateNormal.Background.Gradient2.StartColor = 5162664
+                StateNormal.Background.Gradient2.EndColor = 4194304
+                StateNormal.Background.Gradient2.GradientType = gtRadial
+                StateNormal.Background.Gradient2.Point1XPercent = 50
+                StateNormal.Background.Gradient2.Point1YPercent = 100
+                StateNormal.Background.Gradient2.Point2XPercent = 0
+                StateNormal.Background.Gradient2.Point2YPercent = 0
+                StateNormal.Background.Gradient1EndPercent = 60
+                StateNormal.Background.Style = bbsColor
+                StateNormal.Border.Style = bboNone
+                StateNormal.FontEx.Color = 2900284
+                StateNormal.FontEx.FontQuality = fqSystemClearType
+                StateNormal.FontEx.Name = 'consolas'
+                StateNormal.FontEx.Shadow = False
+                StateNormal.FontEx.ShadowRadius = 2
+                StateNormal.FontEx.ShadowOffsetX = 1
+                StateNormal.FontEx.ShadowOffsetY = 1
+                StateNormal.FontEx.Style = []
+                StaticButton = False
+                TabOrder = 7
+              end
+              object cbBtnActionBack: TBCComboBox
+                AnchorSideLeft.Control = lbMidiIn
+                Cursor = crHandPoint
+                Left = 256
+                Height = 20
+                Top = 100
+                Width = 100
+                Items.Strings = (
+                  'click'
+                  'doubleclick'
+                  'longpress'
+                )
+                ItemIndex = 0
+                ArrowSize = 8
+                ArrowWidth = 16
+                FocusBorderColor = 5162664
+                FocusBorderOpacity = 0
+                DropDownBorderColor = 5162664
+                DropDownHighlight = 5162664
+                GlobalOpacity = 255
+                MemoryUsage = bmuHigh
+                Rounding.RoundX = 12
+                Rounding.RoundY = 12
+                StateClicked.Background.Color = 5162664
+                StateClicked.Background.Gradient1.StartColor = 8404992
+                StateClicked.Background.Gradient1.EndColor = 4194304
+                StateClicked.Background.Gradient1.GradientType = gtRadial
+                StateClicked.Background.Gradient1.Point1XPercent = 50
+                StateClicked.Background.Gradient1.Point1YPercent = 100
+                StateClicked.Background.Gradient1.Point2XPercent = 0
+                StateClicked.Background.Gradient1.Point2YPercent = 0
+                StateClicked.Background.Gradient2.StartColor = clWhite
+                StateClicked.Background.Gradient2.EndColor = clBlack
+                StateClicked.Background.Gradient2.GradientType = gtLinear
+                StateClicked.Background.Gradient2.Point1XPercent = 0
+                StateClicked.Background.Gradient2.Point1YPercent = 0
+                StateClicked.Background.Gradient2.Point2XPercent = 0
+                StateClicked.Background.Gradient2.Point2YPercent = 100
+                StateClicked.Background.Gradient1EndPercent = 100
+                StateClicked.Background.Style = bbsColor
+                StateClicked.Border.Style = bboNone
+                StateClicked.FontEx.Color = 2900284
+                StateClicked.FontEx.FontQuality = fqSystemClearType
+                StateClicked.FontEx.Name = 'consolas'
+                StateClicked.FontEx.Shadow = False
+                StateClicked.FontEx.ShadowRadius = 2
+                StateClicked.FontEx.ShadowOffsetX = 1
+                StateClicked.FontEx.ShadowOffsetY = 1
+                StateClicked.FontEx.Style = [fsBold, fsUnderline]
+                StateHover.Background.Color = 5162664
+                StateHover.Background.Gradient1.StartColor = 16744448
+                StateHover.Background.Gradient1.EndColor = 8404992
+                StateHover.Background.Gradient1.GradientType = gtRadial
+                StateHover.Background.Gradient1.Point1XPercent = 50
+                StateHover.Background.Gradient1.Point1YPercent = 100
+                StateHover.Background.Gradient1.Point2XPercent = 0
+                StateHover.Background.Gradient1.Point2YPercent = 0
+                StateHover.Background.Gradient2.StartColor = clWhite
+                StateHover.Background.Gradient2.EndColor = clBlack
+                StateHover.Background.Gradient2.GradientType = gtLinear
+                StateHover.Background.Gradient2.Point1XPercent = 0
+                StateHover.Background.Gradient2.Point1YPercent = 0
+                StateHover.Background.Gradient2.Point2XPercent = 0
+                StateHover.Background.Gradient2.Point2YPercent = 100
+                StateHover.Background.Gradient1EndPercent = 100
+                StateHover.Background.Style = bbsColor
+                StateHover.Border.Style = bboNone
+                StateHover.FontEx.Color = 2900284
+                StateHover.FontEx.FontQuality = fqSystemClearType
+                StateHover.FontEx.Name = 'consolas'
+                StateHover.FontEx.Shadow = False
+                StateHover.FontEx.ShadowRadius = 2
+                StateHover.FontEx.ShadowOffsetX = 1
+                StateHover.FontEx.ShadowOffsetY = 1
+                StateHover.FontEx.Style = [fsBold]
+                StateNormal.Background.Color = 5162664
+                StateNormal.Background.Gradient1.StartColor = 4194304
+                StateNormal.Background.Gradient1.EndColor = 8405056
+                StateNormal.Background.Gradient1.GradientType = gtLinear
+                StateNormal.Background.Gradient1.Point1XPercent = 0
+                StateNormal.Background.Gradient1.Point1YPercent = 0
+                StateNormal.Background.Gradient1.Point2XPercent = 0
+                StateNormal.Background.Gradient1.Point2YPercent = 100
+                StateNormal.Background.Gradient2.StartColor = 5162664
+                StateNormal.Background.Gradient2.EndColor = 4194304
+                StateNormal.Background.Gradient2.GradientType = gtRadial
+                StateNormal.Background.Gradient2.Point1XPercent = 50
+                StateNormal.Background.Gradient2.Point1YPercent = 100
+                StateNormal.Background.Gradient2.Point2XPercent = 0
+                StateNormal.Background.Gradient2.Point2YPercent = 0
+                StateNormal.Background.Gradient1EndPercent = 60
+                StateNormal.Background.Style = bbsColor
+                StateNormal.Border.Style = bboNone
+                StateNormal.FontEx.Color = 2900284
+                StateNormal.FontEx.FontQuality = fqSystemClearType
+                StateNormal.FontEx.Name = 'consolas'
+                StateNormal.FontEx.Shadow = False
+                StateNormal.FontEx.ShadowRadius = 2
+                StateNormal.FontEx.ShadowOffsetX = 1
+                StateNormal.FontEx.ShadowOffsetY = 1
+                StateNormal.FontEx.Style = []
+                StaticButton = False
+                TabOrder = 8
+              end
+              object cbBtnActionSelect: TBCComboBox
+                AnchorSideLeft.Control = lbMidiIn
+                Cursor = crHandPoint
+                Left = 256
+                Height = 20
+                Top = 132
+                Width = 100
+                Items.Strings = (
+                  'click'
+                  'doubleclick'
+                  'longpress'
+                )
+                ItemIndex = 0
+                ArrowSize = 8
+                ArrowWidth = 16
+                FocusBorderColor = 5162664
+                FocusBorderOpacity = 0
+                DropDownBorderColor = 5162664
+                DropDownHighlight = 5162664
+                GlobalOpacity = 255
+                MemoryUsage = bmuHigh
+                Rounding.RoundX = 12
+                Rounding.RoundY = 12
+                StateClicked.Background.Color = 5162664
+                StateClicked.Background.Gradient1.StartColor = 8404992
+                StateClicked.Background.Gradient1.EndColor = 4194304
+                StateClicked.Background.Gradient1.GradientType = gtRadial
+                StateClicked.Background.Gradient1.Point1XPercent = 50
+                StateClicked.Background.Gradient1.Point1YPercent = 100
+                StateClicked.Background.Gradient1.Point2XPercent = 0
+                StateClicked.Background.Gradient1.Point2YPercent = 0
+                StateClicked.Background.Gradient2.StartColor = clWhite
+                StateClicked.Background.Gradient2.EndColor = clBlack
+                StateClicked.Background.Gradient2.GradientType = gtLinear
+                StateClicked.Background.Gradient2.Point1XPercent = 0
+                StateClicked.Background.Gradient2.Point1YPercent = 0
+                StateClicked.Background.Gradient2.Point2XPercent = 0
+                StateClicked.Background.Gradient2.Point2YPercent = 100
+                StateClicked.Background.Gradient1EndPercent = 100
+                StateClicked.Background.Style = bbsColor
+                StateClicked.Border.Style = bboNone
+                StateClicked.FontEx.Color = 2900284
+                StateClicked.FontEx.FontQuality = fqSystemClearType
+                StateClicked.FontEx.Name = 'consolas'
+                StateClicked.FontEx.Shadow = False
+                StateClicked.FontEx.ShadowRadius = 2
+                StateClicked.FontEx.ShadowOffsetX = 1
+                StateClicked.FontEx.ShadowOffsetY = 1
+                StateClicked.FontEx.Style = [fsBold, fsUnderline]
+                StateHover.Background.Color = 5162664
+                StateHover.Background.Gradient1.StartColor = 16744448
+                StateHover.Background.Gradient1.EndColor = 8404992
+                StateHover.Background.Gradient1.GradientType = gtRadial
+                StateHover.Background.Gradient1.Point1XPercent = 50
+                StateHover.Background.Gradient1.Point1YPercent = 100
+                StateHover.Background.Gradient1.Point2XPercent = 0
+                StateHover.Background.Gradient1.Point2YPercent = 0
+                StateHover.Background.Gradient2.StartColor = clWhite
+                StateHover.Background.Gradient2.EndColor = clBlack
+                StateHover.Background.Gradient2.GradientType = gtLinear
+                StateHover.Background.Gradient2.Point1XPercent = 0
+                StateHover.Background.Gradient2.Point1YPercent = 0
+                StateHover.Background.Gradient2.Point2XPercent = 0
+                StateHover.Background.Gradient2.Point2YPercent = 100
+                StateHover.Background.Gradient1EndPercent = 100
+                StateHover.Background.Style = bbsColor
+                StateHover.Border.Style = bboNone
+                StateHover.FontEx.Color = 2900284
+                StateHover.FontEx.FontQuality = fqSystemClearType
+                StateHover.FontEx.Name = 'consolas'
+                StateHover.FontEx.Shadow = False
+                StateHover.FontEx.ShadowRadius = 2
+                StateHover.FontEx.ShadowOffsetX = 1
+                StateHover.FontEx.ShadowOffsetY = 1
+                StateHover.FontEx.Style = [fsBold]
+                StateNormal.Background.Color = 5162664
+                StateNormal.Background.Gradient1.StartColor = 4194304
+                StateNormal.Background.Gradient1.EndColor = 8405056
+                StateNormal.Background.Gradient1.GradientType = gtLinear
+                StateNormal.Background.Gradient1.Point1XPercent = 0
+                StateNormal.Background.Gradient1.Point1YPercent = 0
+                StateNormal.Background.Gradient1.Point2XPercent = 0
+                StateNormal.Background.Gradient1.Point2YPercent = 100
+                StateNormal.Background.Gradient2.StartColor = 5162664
+                StateNormal.Background.Gradient2.EndColor = 4194304
+                StateNormal.Background.Gradient2.GradientType = gtRadial
+                StateNormal.Background.Gradient2.Point1XPercent = 50
+                StateNormal.Background.Gradient2.Point1YPercent = 100
+                StateNormal.Background.Gradient2.Point2XPercent = 0
+                StateNormal.Background.Gradient2.Point2YPercent = 0
+                StateNormal.Background.Gradient1EndPercent = 60
+                StateNormal.Background.Style = bbsColor
+                StateNormal.Border.Style = bboNone
+                StateNormal.FontEx.Color = 2900284
+                StateNormal.FontEx.FontQuality = fqSystemClearType
+                StateNormal.FontEx.Name = 'consolas'
+                StateNormal.FontEx.Shadow = False
+                StateNormal.FontEx.ShadowRadius = 2
+                StateNormal.FontEx.ShadowOffsetX = 1
+                StateNormal.FontEx.ShadowOffsetY = 1
+                StateNormal.FontEx.Style = []
+                StaticButton = False
+                TabOrder = 9
+              end
+              object cbBtnActionHome: TBCComboBox
+                AnchorSideLeft.Control = lbMidiIn
+                Cursor = crHandPoint
+                Left = 256
+                Height = 20
+                Top = 164
+                Width = 100
+                Items.Strings = (
+                  'click'
+                  'doubleclick'
+                  'longpress'
+                )
+                ItemIndex = 0
+                ArrowSize = 8
+                ArrowWidth = 16
+                FocusBorderColor = 5162664
+                FocusBorderOpacity = 0
+                DropDownBorderColor = 5162664
+                DropDownHighlight = 5162664
+                GlobalOpacity = 255
+                MemoryUsage = bmuHigh
+                Rounding.RoundX = 12
+                Rounding.RoundY = 12
+                StateClicked.Background.Color = 5162664
+                StateClicked.Background.Gradient1.StartColor = 8404992
+                StateClicked.Background.Gradient1.EndColor = 4194304
+                StateClicked.Background.Gradient1.GradientType = gtRadial
+                StateClicked.Background.Gradient1.Point1XPercent = 50
+                StateClicked.Background.Gradient1.Point1YPercent = 100
+                StateClicked.Background.Gradient1.Point2XPercent = 0
+                StateClicked.Background.Gradient1.Point2YPercent = 0
+                StateClicked.Background.Gradient2.StartColor = clWhite
+                StateClicked.Background.Gradient2.EndColor = clBlack
+                StateClicked.Background.Gradient2.GradientType = gtLinear
+                StateClicked.Background.Gradient2.Point1XPercent = 0
+                StateClicked.Background.Gradient2.Point1YPercent = 0
+                StateClicked.Background.Gradient2.Point2XPercent = 0
+                StateClicked.Background.Gradient2.Point2YPercent = 100
+                StateClicked.Background.Gradient1EndPercent = 100
+                StateClicked.Background.Style = bbsColor
+                StateClicked.Border.Style = bboNone
+                StateClicked.FontEx.Color = 2900284
+                StateClicked.FontEx.FontQuality = fqSystemClearType
+                StateClicked.FontEx.Name = 'consolas'
+                StateClicked.FontEx.Shadow = False
+                StateClicked.FontEx.ShadowRadius = 2
+                StateClicked.FontEx.ShadowOffsetX = 1
+                StateClicked.FontEx.ShadowOffsetY = 1
+                StateClicked.FontEx.Style = [fsBold, fsUnderline]
+                StateHover.Background.Color = 5162664
+                StateHover.Background.Gradient1.StartColor = 16744448
+                StateHover.Background.Gradient1.EndColor = 8404992
+                StateHover.Background.Gradient1.GradientType = gtRadial
+                StateHover.Background.Gradient1.Point1XPercent = 50
+                StateHover.Background.Gradient1.Point1YPercent = 100
+                StateHover.Background.Gradient1.Point2XPercent = 0
+                StateHover.Background.Gradient1.Point2YPercent = 0
+                StateHover.Background.Gradient2.StartColor = clWhite
+                StateHover.Background.Gradient2.EndColor = clBlack
+                StateHover.Background.Gradient2.GradientType = gtLinear
+                StateHover.Background.Gradient2.Point1XPercent = 0
+                StateHover.Background.Gradient2.Point1YPercent = 0
+                StateHover.Background.Gradient2.Point2XPercent = 0
+                StateHover.Background.Gradient2.Point2YPercent = 100
+                StateHover.Background.Gradient1EndPercent = 100
+                StateHover.Background.Style = bbsColor
+                StateHover.Border.Style = bboNone
+                StateHover.FontEx.Color = 2900284
+                StateHover.FontEx.FontQuality = fqSystemClearType
+                StateHover.FontEx.Name = 'consolas'
+                StateHover.FontEx.Shadow = False
+                StateHover.FontEx.ShadowRadius = 2
+                StateHover.FontEx.ShadowOffsetX = 1
+                StateHover.FontEx.ShadowOffsetY = 1
+                StateHover.FontEx.Style = [fsBold]
+                StateNormal.Background.Color = 5162664
+                StateNormal.Background.Gradient1.StartColor = 4194304
+                StateNormal.Background.Gradient1.EndColor = 8405056
+                StateNormal.Background.Gradient1.GradientType = gtLinear
+                StateNormal.Background.Gradient1.Point1XPercent = 0
+                StateNormal.Background.Gradient1.Point1YPercent = 0
+                StateNormal.Background.Gradient1.Point2XPercent = 0
+                StateNormal.Background.Gradient1.Point2YPercent = 100
+                StateNormal.Background.Gradient2.StartColor = 5162664
+                StateNormal.Background.Gradient2.EndColor = 4194304
+                StateNormal.Background.Gradient2.GradientType = gtRadial
+                StateNormal.Background.Gradient2.Point1XPercent = 50
+                StateNormal.Background.Gradient2.Point1YPercent = 100
+                StateNormal.Background.Gradient2.Point2XPercent = 0
+                StateNormal.Background.Gradient2.Point2YPercent = 0
+                StateNormal.Background.Gradient1EndPercent = 60
+                StateNormal.Background.Style = bbsColor
+                StateNormal.Border.Style = bboNone
+                StateNormal.FontEx.Color = 2900284
+                StateNormal.FontEx.FontQuality = fqSystemClearType
+                StateNormal.FontEx.Name = 'consolas'
+                StateNormal.FontEx.Shadow = False
+                StateNormal.FontEx.ShadowRadius = 2
+                StateNormal.FontEx.ShadowOffsetX = 1
+                StateNormal.FontEx.ShadowOffsetY = 1
+                StateNormal.FontEx.Style = []
+                StaticButton = False
+                TabOrder = 10
+              end
+              object edBtnDblClickTOut: TJppEdit
+                AnchorSideTop.Control = rbDisplayi2cHD44780
+                AnchorSideTop.Side = asrCenter
+                Left = 440
+                Height = 14
+                Hint = 'Enter timeout in ms'
+                Top = 39
+                Width = 80
+                Alignment = taCenter
+                AutoSize = False
+                BorderStyle = bsNone
+                DragMode = dmAutomatic
+                Font.Color = 3163457
+                Font.Name = 'Consolas'
+                Font.Pitch = fpFixed
+                NumbersOnly = True
+                ParentFont = False
+                ParentShowHint = False
+                ShowHint = True
+                TabOrder = 11
+                Appearance.NormalBgColor = 5162664
+                Appearance.NormalTextColor = 3163457
+                Appearance.FocusedBgColor = 3163457
+                Appearance.FocusedTextColor = 5162664
+                Appearance.HotBgColor = 3163457
+                Appearance.HotTextColor = 5162664
+                Appearance.DisabledBgColor = 3163457
+                Appearance.DisabledTextColor = 5162664
+                TabOnEnter = False
+                BoundLabel.Height = 14
+                BoundLabel.Width = 63
+                BoundLabel.Caption = 'DblClick:'
+                BoundLabel.Font.Color = 5162664
+                BoundLabel.Font.Name = 'Consolas'
+                BoundLabel.Font.Pitch = fpFixed
+                BoundLabel.ParentColor = False
+                BoundLabel.ParentFont = False
+                BoundLabel.FocusControl = edBtnDblClickTOut
+                BoundLabelSpacing = 8
+              end
+              object edBtnLngPressTOut: TJppEdit
+                AnchorSideTop.Control = rbDisplayi2cHD44780
+                AnchorSideTop.Side = asrCenter
+                Left = 440
+                Height = 14
+                Hint = 'Enter timeout in ms'
+                Top = 71
+                Width = 80
+                Alignment = taCenter
+                AutoSize = False
+                BorderStyle = bsNone
+                DragMode = dmAutomatic
+                Font.Color = 3163457
+                Font.Name = 'Consolas'
+                Font.Pitch = fpFixed
+                NumbersOnly = True
+                ParentFont = False
+                ParentShowHint = False
+                ShowHint = True
+                TabOrder = 12
+                Appearance.NormalBgColor = 5162664
+                Appearance.NormalTextColor = 3163457
+                Appearance.FocusedBgColor = 3163457
+                Appearance.FocusedTextColor = 5162664
+                Appearance.HotBgColor = 3163457
+                Appearance.HotTextColor = 5162664
+                Appearance.DisabledBgColor = 3163457
+                Appearance.DisabledTextColor = 5162664
+                TabOnEnter = False
+                BoundLabel.Height = 14
+                BoundLabel.Width = 63
+                BoundLabel.Caption = 'LngPress:'
+                BoundLabel.Font.Color = 5162664
+                BoundLabel.Font.Name = 'Consolas'
+                BoundLabel.Font.Pitch = fpFixed
+                BoundLabel.ParentColor = False
+                BoundLabel.ParentFont = False
+                BoundLabel.FocusControl = edBtnLngPressTOut
+                BoundLabelSpacing = 8
+              end
+              object lbBtnTimeouts: TLabel
+                AnchorSideTop.Side = asrCenter
+                Left = 432
+                Height = 14
+                Top = 16
+                Width = 91
+                Caption = 'Timeouts (ms)'
+                ParentColor = False
+              end
+            end
           end
           object tsSyxFiles: TTabSheet
             Caption = 'Syx Files'
@@ -18147,5 +19685,26 @@ object frmMain: TfrmMain
   object SelectSDCardDirectoryDialog1: TSelectDirectoryDialog
     Title = 'Select SD Card root directory'
     Left = 768
+  end
+  object SQLite3Con: TSQLite3Connection
+    Connected = False
+    LoginPrompt = False
+    KeepConnection = False
+    Transaction = SQLTrans
+    AlwaysUseBigint = False
+    Left = 877
+  end
+  object SQLTrans: TSQLTransaction
+    Active = False
+    Database = SQLite3Con
+    Left = 960
+  end
+  object SQLQuery: TSQLQuery
+    FieldDefs = <>
+    Database = SQLite3Con
+    Transaction = SQLTrans
+    Params = <>
+    Macros = <>
+    Left = 1040
   end
 end
