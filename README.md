@@ -17,10 +17,10 @@ Working:
 - store collections to SQL-DB (eliminating duplicates etc.)
 
 ToDo:
-- send SysEx bulk dumps to MiniDexed
-- edit DX7 voices
-- import DX7II supplement (ACED/AMEM) and performances (PMEM)
-- conversion of various 4OP voice files to DX7 format
+- send SysEx bulk dumps to MiniDexed (Feature missing in MiniDexed)
+- edit DX7 voices (Not a priority. There are a lot of DX7-Editors on the net)
+- import DX7II supplement (ACED/AMEM) and performances (PMEM) - (ACED/AMEM import is partially implemented)
+- conversion of various 4OP voice files to DX7 format (Low priority. Alternative: DXconvert from http://dxconvert.martintarenskeen.nl/ )
 
 
 The current state of the development can be tested on Windows 64-bit. The compiled files are in the BIN directory.
@@ -46,5 +46,13 @@ External components needed to build the MiniDexed Control Center are available t
 - EyeCandyControls
 - HashLib4Pascal
 
+## Linux notes
+libQt5pas distributed with Ubuntu and derivates is know to cause problems. 
 
+Please use the builds from David Bannon: https://github.com/davidbannon/libqt5pas/releases
 
+For Linux on 64-bit PC, you'll need libqt5pas1_2.11-1_amd64.deb 
+
+## Windows notes
+On Windows, the PortMidi library is not used. I did't found any working 64-bit version of portmidi.dll on the internet.
+It means, MIDI on Windows is accessed through native Windows' MultiMedia System (MMSYSTEM).
