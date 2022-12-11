@@ -19,7 +19,7 @@
       <UseVersionInfo Value="True"/>
       <AutoIncrementBuild Value="True"/>
       <MajorVersionNr Value="1"/>
-      <BuildNr Value="16"/>
+      <BuildNr Value="18"/>
       <Attributes pvaPreRelease="True"/>
       <StringTable FileDescription="MiniDexed Control Center" LegalCopyright="Boban Spasic" OriginalFilename="MiniDexedCC"/>
     </VersionInfo>
