@@ -11,6 +11,7 @@
       <UseXPManifest Value="True"/>
       <XPManifest>
         <DpiAware Value="True"/>
+        <LongPathAware Value="True"/>
       </XPManifest>
       <Icon Value="0"/>
     </General>
@@ -18,85 +19,16 @@
       <UseVersionInfo Value="True"/>
       <AutoIncrementBuild Value="True"/>
       <MajorVersionNr Value="1"/>
-      <BuildNr Value="7"/>
+      <BuildNr Value="16"/>
       <Attributes pvaPreRelease="True"/>
       <StringTable FileDescription="MiniDexed Control Center" LegalCopyright="Boban Spasic" OriginalFilename="MiniDexedCC"/>
     </VersionInfo>
     <BuildModes>
-      <Item Name="Default" Default="True"/>
-      <Item Name="Debug">
-        <CompilerOptions>
-          <Version Value="11"/>
-          <PathDelim Value="\"/>
-          <Target>
-            <Filename Value="..\bin\MiniDexedCC_dbg"/>
-          </Target>
-          <SearchPaths>
-            <IncludeFiles Value="$(ProjOutDir)"/>
-            <OtherUnitFiles Value="..\ext_units;..\units"/>
-            <UnitOutputDirectory Value="..\lib\$(TargetCPU)-$(TargetOS)"/>
-          </SearchPaths>
-          <Parsing>
-            <SyntaxOptions>
-              <IncludeAssertionCode Value="True"/>
-            </SyntaxOptions>
-          </Parsing>
-          <CodeGeneration>
-            <Checks>
-              <IOChecks Value="True"/>
-              <RangeChecks Value="True"/>
-              <OverflowChecks Value="True"/>
-              <StackChecks Value="True"/>
-            </Checks>
-            <VerifyObjMethodCallValidity Value="True"/>
-          </CodeGeneration>
-          <Linking>
-            <Debugging>
-              <DebugInfoType Value="dsDwarf3"/>
-              <UseHeaptrc Value="True"/>
-              <TrashVariables Value="True"/>
-              <UseExternalDbgSyms Value="True"/>
-            </Debugging>
-            <Options>
-              <Win32>
-                <GraphicApplication Value="True"/>
-              </Win32>
-            </Options>
-          </Linking>
-        </CompilerOptions>
-      </Item>
-      <Item Name="Release">
-        <CompilerOptions>
-          <Version Value="11"/>
-          <PathDelim Value="\"/>
-          <Target>
-            <Filename Value="..\bin\MiniDexedCC"/>
-          </Target>
-          <SearchPaths>
-            <IncludeFiles Value="$(ProjOutDir)"/>
-            <OtherUnitFiles Value="..\ext_units;..\units"/>
-            <UnitOutputDirectory Value="..\lib\$(TargetCPU)-$(TargetOS)"/>
-          </SearchPaths>
-          <CodeGeneration>
-            <SmartLinkUnit Value="True"/>
-            <Optimizations>
-              <OptimizationLevel Value="3"/>
-            </Optimizations>
-          </CodeGeneration>
-          <Linking>
-            <Debugging>
-              <GenerateDebugInfo Value="False"/>
-              <DebugInfoType Value="dsDwarf2Set"/>
-            </Debugging>
-            <LinkSmart Value="True"/>
-            <Options>
-              <Win32>
-                <GraphicApplication Value="True"/>
-              </Win32>
-            </Options>
-          </Linking>
-        </CompilerOptions>
-      </Item>
+      <Item Name="Debug" Default="True"/>
+      <SharedMatrixOptions Count="2">
+        <Item1 ID="491199598748" Type="IDEMacro" MacroName="LCLWidgetType" Value="qt"/>
+        <Item2 ID="536535886330" Type="IDEMacro" MacroName="LCLWidgetType" Value="qt5"/>
+      </SharedMatrixOptions>
     </BuildModes>
     <PublishOptions>
       <Version Value="2"/>
@@ -113,25 +45,10 @@
         <PackageName Value="FCL"/>
       </Item>
       <Item>
-        <PackageName Value="uEControls"/>
-      </Item>
-      <Item>
-        <PackageName Value="rxnew"/>
-      </Item>
-      <Item>
-        <PackageName Value="jppacklcl"/>
-      </Item>
-      <Item>
         <PackageName Value="ATShapeLine_package"/>
       </Item>
       <Item>
-        <PackageName Value="pl_Cindy"/>
-      </Item>
-      <Item>
         <PackageName Value="eccontrols"/>
-      </Item>
-      <Item>
-        <PackageName Value="bgracontrols"/>
       </Item>
       <Item>
         <PackageName Value="LCL"/>
@@ -143,47 +60,56 @@
         <IsPartOfProject Value="True"/>
       </Unit>
       <Unit>
-        <Filename Value="untmain.pas"/>
+        <Filename Value="..\units\untUtils.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit>
+      <Unit>
+        <Filename Value="..\units\untMiniINI.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit>
+      <Unit>
+        <Filename Value="..\units\untDX7Voice.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit>
+      <Unit>
+        <Filename Value="..\units\untDX7Bank.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit>
+      <Unit>
+        <Filename Value="untPopUp.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit>
+      <Unit>
+        <Filename Value="untMain.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="frmMain"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
-        <UnitName Value="untMain"/>
       </Unit>
       <Unit>
-        <Filename Value="..\units\untdx7bank.pas"/>
+        <Filename Value="..\ext_units\portmidi.pp"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="untDX7Bank"/>
+        <UnitName Value="PortMidi"/>
       </Unit>
       <Unit>
-        <Filename Value="..\units\untdx7sysexdefs.pas"/>
+        <Filename Value="..\units\untDX7SysExDefs.pas"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="untDX7SysExDefs"/>
       </Unit>
       <Unit>
-        <Filename Value="..\units\untdx7utils.pas"/>
+        <Filename Value="..\units\untDXUtils.pas"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="untDX7Utils"/>
       </Unit>
       <Unit>
-        <Filename Value="..\units\untdx7voice.pas"/>
+        <Filename Value="..\units\untUnPortMIDI.pas"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="untDX7Voice"/>
       </Unit>
       <Unit>
-        <Filename Value="..\units\untutils.pas"/>
+        <Filename Value="..\units\untDX7IISupplement.pas"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="untUtils"/>
       </Unit>
       <Unit>
-        <Filename Value="..\units\untminiini.pas"/>
+        <Filename Value="..\units\untDX7IISupplBank.pas"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="untMiniINI"/>
-      </Unit>
-      <Unit>
-        <Filename Value="untpopup.pas"/>
-        <IsPartOfProject Value="True"/>
-        <UnitName Value="untPopUp"/>
       </Unit>
     </Units>
   </ProjectOptions>
@@ -191,16 +117,39 @@
     <Version Value="11"/>
     <PathDelim Value="\"/>
     <Target>
-      <Filename Value="MiniDexedCC"/>
+      <Filename Value="..\bin\MiniDexedCC_dbg"/>
     </Target>
     <SearchPaths>
       <IncludeFiles Value="$(ProjOutDir)"/>
-      <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)"/>
+      <OtherUnitFiles Value="..\units;..\ext_units"/>
+      <UnitOutputDirectory Value="..\lib\$(TargetCPU)-$(TargetOS)"/>
     </SearchPaths>
+    <Parsing>
+      <SyntaxOptions>
+        <IncludeAssertionCode Value="True"/>
+      </SyntaxOptions>
+    </Parsing>
+    <CodeGeneration>
+      <SmartLinkUnit Value="True"/>
+      <Checks>
+        <IOChecks Value="True"/>
+        <RangeChecks Value="True"/>
+        <OverflowChecks Value="True"/>
+        <StackChecks Value="True"/>
+      </Checks>
+      <VerifyObjMethodCallValidity Value="True"/>
+      <Optimizations>
+        <OptimizationLevel Value="3"/>
+      </Optimizations>
+    </CodeGeneration>
     <Linking>
       <Debugging>
-        <DebugInfoType Value="dsDwarf2Set"/>
+        <DebugInfoType Value="dsDwarf2"/>
+        <UseHeaptrc Value="True"/>
+        <TrashVariables Value="True"/>
+        <UseExternalDbgSyms Value="True"/>
       </Debugging>
+      <LinkSmart Value="True"/>
       <Options>
         <Win32>
           <GraphicApplication Value="True"/>

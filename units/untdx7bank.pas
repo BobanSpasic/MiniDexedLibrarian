@@ -16,11 +16,10 @@ unit untDX7Bank;
 interface
 
 uses
-  Classes, TypInfo, SysUtils, untDX7Voice;
+  Classes, SysUtils, TypInfo, untDX7Voice;
 
 type
-  TDX7PackedBankDump = array [0..31] of TDX7PackedVoiceDump;
-  TDX7ExpandedBankDump = array [0..31] of TDX7ExpandedVoiceDump;
+  TDX7_VMEM_BankDump   = array [0..31] of TDX7_VMEM_Dump;
 
 type
   TDX7BankContainer = class(TPersistent)
@@ -29,7 +28,7 @@ type
   public
     constructor Create;
     destructor Destroy; override;
-    function LoadPackedBank(aPar: TDX7PackedBankDump): boolean;
+    //function Load_VMEM_Bank(aPar: TDX7_VMEM_BankDump): boolean;
     procedure LoadBankFromStream(var aStream: TMemoryStream; Position: integer);
     function GetVoiceName(aVoiceNr: integer): string;
     function GetVoice(aVoiceNr: integer; var FDX7Voice: TDX7VoiceContainer): boolean;
@@ -93,7 +92,7 @@ begin
     Result := False;
 end;
 
-function TDX7BankContainer.LoadPackedBank(aPar: TDX7PackedBankDump): boolean;
+{function TDX7BankContainer.Load_VMEM_Bank(aPar: TDX7_VMEM_BankDump): boolean;
 var
   i, j: integer;
 begin
@@ -105,7 +104,7 @@ begin
   except
     on e: Exception do Result := False;
   end;
-end;
+end; }
 
 procedure TDX7BankContainer.LoadBankFromStream(var aStream: TMemoryStream;
   Position: integer);
@@ -120,7 +119,7 @@ begin
     for  j := 0 to 31 do
     begin
       if assigned(FDX7BankParams[j]) then
-        FDX7BankParams[j].LoadPackedVoiceFromStream(aStream, aStream.Position);
+        FDX7BankParams[j].Load_VMEM_FromStream(aStream, aStream.Position);
     end;
   except
 
@@ -165,7 +164,7 @@ begin
     tmpStream.WriteByte($20);
     tmpStream.WriteByte($00);
     for i := 0 to 31 do
-      if FDX7BankParams[i].SavePackedVoiceToStream(tmpStream) = False then
+      if FDX7BankParams[i].Save_VMEM_ToStream(tmpStream) = False then
         Result := False;
     tmpStream.WriteByte(GetChecksum);
     tmpStream.WriteByte($F7);
@@ -189,7 +188,7 @@ begin
   aStream.WriteByte($20);
   aStream.WriteByte($00);
   for i := 0 to 31 do
-    FDX7BankParams[i].SavePackedVoiceToStream(aStream);
+    FDX7BankParams[i].Save_VMEM_ToStream(aStream);
   aStream.WriteByte(GetChecksum);
   aStream.WriteByte($F7);
 end;

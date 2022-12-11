@@ -3,24 +3,33 @@ program prMiniDexedCC;
 {$mode objfpc}{$H+}
 
 uses
-  {$IFDEF UNIX}
+ {$IFDEF UNIX}
   cthreads,
   {$ENDIF}
-  {$IFDEF HASAMIGA}
+ {$IFDEF HASAMIGA}
   athreads,
   {$ENDIF}
+  Forms,
   Interfaces, // this includes the LCL widgetset
-  Forms, rxnew, uecontrols, untMain, untDX7Bank, untDX7SysExDefs, untDX7Utils,
-  untDX7Voice, untUtils, untMiniINI, untPopUp;
+  untDX7Bank,
+  untDX7Voice,
+  untMain,
+  untMiniINI,
+  untPopUp,
+  untUtils,
+  untDX7SysExDefs,
+  untDXUtils,
+  untUnPortMIDI,
+  untDX7IISupplement,
+  untDX7IISupplBank;
 
 {$R *.res}
 
 begin
-  RequireDerivedFormResource:=True;
+  RequireDerivedFormResource := True;
   Application.Title:='MiniDexed Control Center';
   Application.Scaled:=True;
   Application.Initialize;
   Application.CreateForm(TfrmMain, frmMain);
   Application.Run;
 end.
-

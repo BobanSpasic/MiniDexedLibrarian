@@ -44,13 +44,12 @@ unit MIDI;
 interface
 
 uses
-  {$ifdef FPC}
   Interfaces,
-  JWAwindows,
-  {$else}
+  {$IFDEF WINDOWS}
+  //JWAwindows,
   Windows,
-  {$endif}
-  Forms, Classes, Messages, SysUtils, Math, Contnrs, MMSystem, Dialogs;
+  {$ENDIF}
+  Classes, Contnrs, Dialogs, Forms, Math, Messages, MMSystem, SysUtils;
 
 
 // -------------------------- WARNING --------------------------
@@ -76,7 +75,7 @@ type
   TMIDIDataWord = 0..$3FFF;         // 14 bits
   TMIDIStatusByte = $80..$FF;
   TMIDIVelocity = TMIDIDataByte;
-  TMIDIKey = TMIDIDataByte;
+  TMIDIKey  = TMIDIDataByte;
   TMIDINote = TMIDIKey;
 
 type
@@ -104,7 +103,7 @@ type
     // whack the devices
     destructor Destroy; override;
     // open a specific device
-    procedure Open(const aDeviceIndex: integer); virtual; abstract;
+    function Open(const aDeviceIndex: integer): integer; virtual; abstract;
     // close a specific device
     procedure Close(const aDeviceIndex: integer); virtual; abstract;
     // close all devices
@@ -130,7 +129,7 @@ type
     // what the input devices
     destructor Destroy; override;
     // open a specific input device
-    procedure Open(const aDeviceIndex: integer); override;
+    function Open(const aDeviceIndex: integer): integer; override;
     // close a specific device
     procedure Close(const aDeviceIndex: integer); override;
     // midi data event - ATTENTION - This code is executed inside a CALLBACK PROCEDURE !!!
@@ -143,7 +142,7 @@ type
   TMidiOutput = class(TMidiDevices)
     constructor Create; override;
     // open a specific input device
-    procedure Open(const aDeviceIndex: integer); override;
+    function Open(const aDeviceIndex: integer): integer; override;
     // close a specific device
     procedure Close(const aDeviceIndex: integer); override;
     // send some midi data to the indexed device
@@ -151,9 +150,10 @@ type
     procedure SendSystemReset(const aDeviceIndex: integer);
     procedure SendAllSoundOff(const aDeviceIndex: integer; const channel: byte);
     // send system exclusive data to a device
-    procedure SendSysEx(const aDeviceIndex: integer; const aStream: TMemoryStream);
+    function SendSysEx(const aDeviceIndex: integer;
+      const aStream: TMemoryStream): integer;
       overload;
-    procedure SendSysEx(const aDeviceIndex: integer; const aString: ansistring);
+    function SendSysEx(const aDeviceIndex: integer; const aString: ansistring): integer;
       overload;
   end;
 
@@ -361,16 +361,22 @@ begin
 end;
 
 
-procedure TMidiInput.Open(const aDeviceIndex: integer);
+function TMidiInput.Open(const aDeviceIndex: integer): integer;
 var
   lSysExData: TSysExData;
   lHandle: THandle;
+  err: MMRESULT;
 begin
-  if GetHandle(aDeviceIndex) <> 0 then Exit;
-
+  if GetHandle(aDeviceIndex) <> 0 then
+  begin
+    Result := -10002;
+    Exit;
+  end;
+  err := 0;
   MidiResult := midiInOpen(@lHandle, aDeviceIndex, {%H-}PtrUInt(
     @midiInCallback),  // changed from cardinal to PtrUInt 2020-12-24 - thanks to J.M.
     aDeviceIndex, CALLBACK_FUNCTION);
+  if MidiResult <> 0 then err := MidiResult;
 
   fDevices.Objects[aDeviceIndex] := TObject(lHandle);
   lSysExData := TSysExData(fSysExData[aDeviceIndex]);
@@ -380,8 +386,12 @@ begin
   // DRAGONS:  why are the function returns not checked on errors here ?
   MidiResult := midiInPrepareHeader(lHandle, @lSysExData.SysExHeader,
     SizeOf(TMidiHdr));
+  if MidiResult <> 0 then err := MidiResult;
   MidiResult := midiInAddBuffer(lHandle, @lSysExData.SysExHeader, SizeOf(TMidiHdr));
+  if MidiResult <> 0 then err := MidiResult;
   MidiResult := midiInStart(lHandle);
+  if MidiResult <> 0 then err := MidiResult;
+  Result := err;
 end;
 
 
@@ -437,7 +447,7 @@ begin
 end;
 
 
-procedure TMidiOutput.Open(const aDeviceIndex: integer);
+function TMidiOutput.Open(const aDeviceIndex: integer): integer;
 var
   lHandle: THandle;
 begin
@@ -445,10 +455,15 @@ begin
   inherited;  // Lazarus doesn't like this, so for Delphi only ..
   {$endif}
   // device already open;
-  if GetHandle(aDeviceIndex) <> 0 then Exit;
+  if GetHandle(aDeviceIndex) <> 0 then
+  begin
+    Result := -10002;
+    Exit;
+  end;
 
   MidiResult := midiOutOpen(@lHandle, aDeviceIndex, 0, 0, CALLBACK_NULL);
   fDevices.Objects[aDeviceIndex] := TObject(lHandle);
+  Result := MidiResult;
 end;
 
 
@@ -537,28 +552,32 @@ end;
 
 
 { ***** TMidiOutput - SysEx ************************************************** }
-procedure TMidiOutput.SendSysEx(const aDeviceIndex: integer;
-  const aString: ansistring);
+function TMidiOutput.SendSysEx(const aDeviceIndex: integer;
+  const aString: ansistring): integer;
 var
   lStream: TMemoryStream;
 begin
   lStream := TMemoryStream.Create;
   try
     StrToSysExStream(aString, lStream);
-    SendSysEx(aDeviceIndex, lStream);
+    Result := SendSysEx(aDeviceIndex, lStream);
   finally
     FreeAndNil(lStream);
   end;
 end;
 
 
-procedure TMidiOutput.SendSysEx(const aDeviceIndex: integer;
-  const aStream: TMemoryStream);
+function TMidiOutput.SendSysEx(const aDeviceIndex: integer;
+  const aStream: TMemoryStream): integer;
 var
   lSysExHeader: TMidiHdr;
 begin
   // exit here if DeviceIndex is not open !
-  if not assigned(fDevices.Objects[aDeviceIndex]) then exit;
+  if not assigned(fDevices.Objects[aDeviceIndex]) then
+  begin
+    Result := -10001;
+    Exit;
+  end;
   // Breakoutbox added this 2013-06-15
 
   aStream.Position := 0;
@@ -578,6 +597,7 @@ begin
     @lSysExHeader, SizeOf(TMidiHdr));
   {$ifdef DebugSysEx}  ShowMessage( '3 - ' +IntToStr(MidiResult));  {$endif}
   {$ifdef DebugSysEx}  ShowMessage( '4 - ' +aStream.ReadAnsiString);  {$endif}//read behind the end of the stream
+  Result := MidiResult;
 end;
 
 
@@ -596,7 +616,7 @@ begin
 end;
 
 
-{ ***** Helper Funktions ***************************************************** }
+{ ***** Helper Functions ***************************************************** }
 function SysExStreamToStr(const aStream: TMemoryStream): ansistring;
 var
   i: integer;
@@ -617,13 +637,13 @@ var
   L: integer;
 begin
   // check on errors  - added by BREAKOUTBOX 2009-07-30
-  L := length(aString);
+  lStr := StringReplace(AnsiUpperCase(aString), ' ', '', [rfReplaceAll]);
+  L := length(lStr);
   if not (L mod 2 = 0) // as HEX every byte must be two AnsiChars long, for example '0F'
   then raise EMidiDevices.Create('SysEx string corrupted')
   else if l < 10  // shortest System Exclusive Message = 5 bytes = 10 hex AnsiChars
   then raise EMidiDevices.Create('SysEx string too short');
 
-  lStr := StringReplace(AnsiUpperCase(aString), ' ', '', [rfReplaceAll]);
   aStream.Size := Length(lStr) div 2; // ' - 1' removed by BREAKOUTBOX 2009-07-15
   aStream.Position := 0;
 

@@ -8,14 +8,14 @@
 
 }
 
-unit untDX7Utils;
+unit untDXUtils;
 
 {$mode ObjFPC}{$H+}
 
 interface
 
 uses
-  Classes, SysUtils, StrUtils;
+  Classes, StrUtils, SysUtils;
 
 type
   TDXSysExHeader = record
@@ -30,12 +30,12 @@ type
     f: byte;
     {
     f=0 - single_voice DX7
-    f=1 -
-    f=2 -
-    f=3 - single voice DX11/TX81z/V50/DX21
+    f=1 - single_performance TX7
+    f=2 - bulk_performance TX7
+    f=3 - single_voice DX11/TX81z/V50/DX21
     f=4 - bulk_voice DX11/TX81z/V50/DX21
-    f=5 - single_supplement DX7
-    f=6 - bulk_supplement DX7
+    f=5 - single_supplement DX7II
+    f=6 - bulk_supplement DX7II
     f=7 -
     f=8 -
     f=9 - bulk_voice DX7
@@ -44,12 +44,12 @@ type
     msb: byte; // MSB packet size
     lsb: byte; // LSB packet size
     {
-    MSB/LSB=155 - single_voice DX7      expanded VCED
-    MSB/LSB=93 - single_voice V50/DX21  expanded VCED
-    MSB/LSB=49 - single_supplement DX7  expanded ACED
-    MSB/LSB=1120 - bulk_supplement DX7  packed AMEM
-    MSB/LSB=4096 - bulk_voice DX7       packed VMEM
-    MSB/LSB=4096 - bulk_voice V50/DX21  packed VMEM
+    MSB/LSB=155 - single_voice DX7        expanded VCED
+    MSB/LSB=93 - single_voice V50/DX21    expanded VCED
+    MSB/LSB=49 - single_supplement DX7II  expanded ACED
+    MSB/LSB=1120 - bulk_supplement DX7II  packed AMEM
+    MSB/LSB=4096 - bulk_voice DX7         packed VMEM
+    MSB/LSB=4096 - bulk_voice V50/DX21    packed VMEM
     }
   end;
 
@@ -89,13 +89,18 @@ type
 
 function ContainsDX7VoiceDump(dmp: TMemoryStream;
   var StartPos, StartDmp: integer): boolean;
+function ContainsDX7IISupplementDump(dmp: TMemoryStream;
+  var StartPos, StartDmp: integer): boolean;
 function ContainsDX7BankDump(dmp: TMemoryStream;
+  var StartPos, StartDmp: integer): boolean;
+function ContainsDX7IISupplBankDump(dmp: TMemoryStream;
   var StartPos, StartDmp: integer): boolean;
 function ContainsDXData(dmp: TMemoryStream; var StartPos: integer;
   const Report: TStrings): boolean;
+
 function Printable(c: char): char;
-function ExpandedHexToStream(aHex: string; var aStream: TMemoryStream): boolean;
-function StreamToExpandedHex(var aStream: TMemoryStream): string;
+function VCEDHexToStream(aHex: string; var aStream: TMemoryStream): boolean;
+function StreamToVCEDHex(var aStream: TMemoryStream): string;
 
 implementation
 
@@ -133,6 +138,48 @@ begin
       if not (dummy = $01) then StartPos := -1;     // byte count MS
       dummy := dmp.ReadByte;
       if not (dummy = $1B) then StartPos := -1;     // byte count LS
+    end;
+    if StartPos <> -1 then
+    begin
+      Result := True;
+      StartDmp := StartPos + 6;
+    end
+    else
+    begin
+      Result := False;
+      StartDmp := -1;
+    end;
+  end
+  else
+  begin
+    StartPos := -1;
+    Result := False;
+  end;
+end;
+
+function ContainsDX7IISupplementDump(dmp: TMemoryStream;
+  var StartPos, StartDmp: integer): boolean;
+var
+  dummy: byte;
+begin
+  if StartPos <= dmp.Size then
+  begin
+    dmp.Position := StartPos;
+    StartPos := -1;
+    while (StartPos = -1) and (dmp.Position < dmp.Size) do
+      if dmp.ReadByte = $F0 then                  // $F0 - SysEx
+        StartPos := dmp.Position - 1;
+    if StartPos <> -1 then
+    begin
+      dummy := dmp.ReadByte;
+      if not (dummy = $43) then StartPos := -1;     // $43 - Yamaha
+      dummy := dmp.ReadByte;                        // sub-status + channel number
+      dummy := dmp.ReadByte;
+      if not (dummy = $05) then StartPos := -1;     // $05 - 1 ACED
+      dummy := dmp.ReadByte;
+      if not (dummy = $00) then StartPos := -1;     // byte count MS
+      dummy := dmp.ReadByte;
+      if not (dummy = $23) then StartPos := -1;     // byte count LS
     end;
     if StartPos <> -1 then
     begin
@@ -194,12 +241,54 @@ begin
   end;
 end;
 
+function ContainsDX7IISupplBankDump(dmp: TMemoryStream;
+  var StartPos, StartDmp: integer): boolean;
+var
+  dummy: byte;
+begin
+  if StartPos <= dmp.Size then
+  begin
+    dmp.Position := StartPos;
+    StartPos := -1;
+    while (StartPos = -1) and (dmp.Position < dmp.Size) do
+      if dmp.ReadByte = $F0 then                  // $F0 - SysEx
+        StartPos := dmp.Position - 1;
+    if StartPos <> -1 then
+    begin
+      dummy := dmp.ReadByte;
+      if not (dummy = $43) then StartPos := -1;     // $43 - Yamaha
+      dummy := dmp.ReadByte;                        // sub-status + channel number
+      dummy := dmp.ReadByte;
+      if not (dummy = $06) then StartPos := -1;     // $06 - 32 ACED dump
+      dummy := dmp.ReadByte;
+      if not (dummy = $08) then StartPos := -1;     // byte count MS
+      dummy := dmp.ReadByte;
+      if not (dummy = $60) then StartPos := -1;     // byte count LS
+    end;
+    if StartPos <> -1 then
+    begin
+      Result := True;
+      StartDmp := StartPos + 6;
+    end
+    else
+    begin
+      Result := False;
+      StartDmp := -1;
+    end;
+  end
+  else
+  begin
+    StartPos := -1;
+    Result := False;
+  end;
+end;
+
 function ContainsDXData(dmp: TMemoryStream; var StartPos: integer;
   const Report: TStrings): boolean;
 var
   strStream: TStringStream;
   rHeader: TDXSysExHeader;
-  fValues: array [0..7] of byte = ($00, $03, $04, $05, $06, $09, $0A, $7E);
+  fValues: array [0..9] of byte = ($00, $01, $02, $03, $04, $05, $06, $09, $0A, $7E);
   tmpPosition: int64;
   tmpList: TStringList;
 begin
@@ -231,13 +320,15 @@ begin
           end;
           if (rHeader.f0 = $F0) and (rHeader.id = $43) and (rHeader.f in fValues) then
           begin
-            if rHeader.f = $00 then tmpList.Add('DX7 Voice');
-            if rHeader.f = $03 then tmpList.Add('DX11/TX81z/V50/DX21 Voice');
-            if rHeader.f = $04 then tmpList.Add('DX11/TX81z/V50/DX21 Voice Bank');
-            if rHeader.f = $05 then tmpList.Add('DX7II Voice supplement');
-            if rHeader.f = $06 then tmpList.Add('DX7II Voice Bank supplement');
-            if rHeader.f = $09 then tmpList.Add('DX7 Voice Bank');
-            if rHeader.f = $0A then tmpList.Add('4OP Bank');   //??
+            if rHeader.f = $00 then tmpList.Add('DX7 Voice - VCED');
+            if rHeader.f = $01 then tmpList.Add('TX7 Performance - PCED');
+            if rHeader.f = $02 then tmpList.Add('TX7 Performance Bank - PMEM');
+            if rHeader.f = $03 then tmpList.Add('DX11/TX81z/V50/DX21 Voice - VCED');
+            if rHeader.f = $04 then tmpList.Add('DX11/TX81z/V50/DX21 Voice Bank - VMEM');
+            if rHeader.f = $05 then tmpList.Add('DX7II Voice Supplement - ACED');
+            if rHeader.f = $06 then tmpList.Add('DX7II Voice Bank Supplement - AMEM');
+            if rHeader.f = $09 then tmpList.Add('DX7 Voice Bank - VMEM');
+            if rHeader.f = $0A then tmpList.Add('Sequencer Bulk Dump');
             if rHeader.f = $7E then
             begin
               tmpPosition := dmp.Position;
@@ -247,9 +338,9 @@ begin
               strStream.CopyFrom(dmp, dmp.Size - dmp.Position);
 
               if PosEx('LM  8973PE', strStream.DataString, 1) > 0 then
-                tmpList.Add('DX7II Performance Edit Buffer');
+                tmpList.Add('DX7II Performance - PCED');
               if PosEx('LM  9873PM', strStream.DataString, 1) > 0 then
-                tmpList.Add('DX7II Packed 32 Performance');
+                tmpList.Add('DX7II Performance Bank - PMEM');
               if PosEx('LM  8973S ', strStream.DataString, 1) > 0 then
                 tmpList.Add('DX7II System Set-up');
               if PosEx('LM  MCRYE ', strStream.DataString, 1) > 0 then
@@ -263,29 +354,29 @@ begin
               if PosEx('LM  FKSYC ', strStream.DataString, 1) > 0 then
                 tmpList.Add('DX7II Fractional Scaling in Cartridge with Memory #');
               if PosEx('LM  8976AE', strStream.DataString, 1) > 0 then
-                tmpList.Add('TX81Z Voice');
+                tmpList.Add('TX81Z Supplement - ACED');
               if PosEx('LM  8023AE', strStream.DataString, 1) > 0 then
-                tmpList.Add('DX11 Voice');
+                tmpList.Add('DX11 Supplement - ACED2');
               if PosEx('LM  8073AE', strStream.DataString, 1) > 0 then
-                tmpList.Add('V50 Voice');
+                tmpList.Add('V50 Supplement - ACED3');
               if PosEx('LM  8976PE', strStream.DataString, 1) > 0 then
-                tmpList.Add('DX11 Performance');
+                tmpList.Add('DX11 Performance - PCED');
               if PosEx('LM  8073PE', strStream.DataString, 1) > 0 then
-                tmpList.Add('V50 Performance');
+                tmpList.Add('V50 Performance - PCED2');
               if PosEx('LM  8976PM', strStream.DataString, 1) > 0 then
-                tmpList.Add('DX11 Performance Bank');
+                tmpList.Add('DX11 Performance Bank - PMEM');
               if PosEx('LM  8073PM', strStream.DataString, 1) > 0 then
-                tmpList.Add('V50 Performance Bank');
+                tmpList.Add('V50 Performance Bank - PMEM2');
               if PosEx('LM  8976S', strStream.DataString, 1) > 0 then
-                tmpList.Add('DX11 System');
+                tmpList.Add('DX11 System - SYSx');
               if PosEx('LM  MCRTE0', strStream.DataString, 1) > 0 then
-                tmpList.Add('Micro Tuning Edit Buffer OCT');
+                tmpList.Add('Micro Tuning Edit Buffer - OCT');
               if PosEx('LM  MCRTE1', strStream.DataString, 1) > 0 then
-                tmpList.Add('Micro Tuning Edit Buffer FULL');
+                tmpList.Add('Micro Tuning Edit Buffer - FULL');
               if PosEx('LM  8023S0', strStream.DataString, 1) > 0 then
-                tmpList.Add('DX11 System Set-up');
+                tmpList.Add('DX11 System Set-up - SYS2');
               if PosEx('LM  8073S0', strStream.DataString, 1) > 0 then
-                tmpList.Add('V50 System Set-up');
+                tmpList.Add('V50 System Set-up - SYS3');
               strStream.Free;
               dmp.Position := tmpPosition;
             end;
@@ -311,17 +402,17 @@ begin
     Result := #32;
 end;
 
-function ExpandedHexToStream(aHex: string; var aStream: TMemoryStream): boolean;
+function VCEDHexToStream(aHex: string; var aStream: TMemoryStream): boolean;
 var
   s: string;
   partS: string;
-  buffer: array [0..155] of byte;
+  buffer: array [0..156] of byte;
   i: integer;
 begin
   try
     s := ReplaceStr(aHex, ' ', '');
     aStream.Clear;
-    for i := 0 to 154 do
+    for i := 0 to 155 do
     begin
       partS := '$' + Copy(s, i * 2 + 1, 2);
       buffer[i] := byte(Hex2Dec(partS));
@@ -333,7 +424,7 @@ begin
   end;
 end;
 
-function StreamToExpandedHex(var aStream: TMemoryStream): string;
+function StreamToVCEDHex(var aStream: TMemoryStream): string;
 var
   i: integer;
 begin

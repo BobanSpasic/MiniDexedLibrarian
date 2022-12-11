@@ -5,7 +5,7 @@ unit untPopUp;
 interface
 
 uses
-  Classes, SysUtils, Forms, StdCtrls, LCLIntf, LCLType, Controls, Graphics, Types;
+  Classes, Controls, Forms, Graphics, LCLIntf, LCLType, StdCtrls, SysUtils, Types;
 
 procedure PopUp(const AText: string; ADuration: integer);
 
@@ -18,6 +18,16 @@ var
   DialogUnits: TPoint;
   nX, Lines: integer;
   ABitmap: TBitmap;
+  sl: TStringList;
+
+  function LongestLine(sl: TStringList): string;
+  var
+    i: integer;
+  begin
+    Result := '';
+    for i := 0 to sl.Count - 1 do
+      if Length(sl[i]) > Length(Result) then Result := sl[i];
+  end;
 
   function GetAveCharSize(Canvas: TCanvas): TPoint;
   var
@@ -33,7 +43,8 @@ var
 begin
   Form := TForm.Create(Application);
   Lines := 0;
-
+  sl := TStringList.Create;
+  sl.Text := AText;
   for nX := 1 to Length(AText) do
     if AText[nX] = #13 then Inc(Lines);
 
@@ -43,7 +54,7 @@ begin
       Font.Name := 'Consolas';
       Font.Size := 20;
       Font.Style := [fsBold];
-      Font.Color := $002D423E;
+      Font.Color := clDefault; //$002D423E;
       Canvas.Font := Font;
       DialogUnits := GetAveCharSize(Canvas);
       BorderStyle := bsNone;
@@ -52,7 +63,9 @@ begin
       ClientHeight := MulDiv(23 + (Lines * 10), DialogUnits.Y, 8);
       Position := poScreenCenter;
       //AutoSize := True;
-
+      {$IFDEF LCLGTK2}
+      Show;
+      {$ENDIF}
       Prompt := TLabel.Create(Form);
       with Prompt do
       begin
@@ -63,7 +76,7 @@ begin
         Top := MulDiv(8, DialogUnits.Y, 8);
       end;
 
-      Form.Width := Prompt.Width + Prompt.Left + Prompt.Left;
+      Form.Width := Prompt.Canvas.GetTextWidth(LongestLine(sl)) + 2 * Prompt.Left;
       ABitmap := TBitmap.Create;
       ABitmap.Monochrome := True;
       ABitmap.Width := Width; // or Form.Width
@@ -72,13 +85,19 @@ begin
       ABitmap.Canvas.FillRect(0, 0, Width, Height);
       ABitmap.Canvas.Brush.Color := clWhite;
       ABitmap.Canvas.RoundRect(0, 0, Width, Height, 50, 50);
+      {$IFDEF LCLGTK2}
+      SetShape(ABitmap);
+      {$ENDIF}
+      {$IFNDEF LCLGTK2}
       Canvas.Draw(0, 0, ABitmap);
       SetShape(ABitmap);
       Show;
+      {$ENDIF}
       Application.ProcessMessages;
     finally
       Sleep(ADuration * 1000);
       ABitmap.Free;
+      sl.Free;
       Form.Free;
     end;
 end;

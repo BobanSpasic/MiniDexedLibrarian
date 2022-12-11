@@ -15,14 +15,14 @@ unit untDX7Voice;
 interface
 
 uses
-  Classes, SysUtils, untDX7Utils, HlpHashFactory;
+  Classes, HlpHashFactory, SysUtils, untDXUtils;
 
 type
-  TDX7PackedVoiceDump = array [0..127] of byte;
-  TDX7ExpandedVoiceDump = array [0..154] of byte;
+  TDX7_VMEM_Dump   = array [0..127] of byte;
+  TDX7_VCED_Dump = array [0..155] of byte;
 
 type
-  TDX7ExpandedVoiceParams = record
+  TDX7_VCED_Params = record
     OP6_EG_rate_1: byte;              //       0-99
     OP6_EG_rate_2: byte;              //       0-99
     OP6_EG_rate_3: byte;              //       0-99
@@ -185,7 +185,7 @@ type
     //       ... / bit 0: OP6
   end;
 
-  TDX7PackedVoiceParams = record
+  TDX7_VMEM_Params = record
     OP6_EG_rate_1: byte;              //       0-99
     OP6_EG_rate_2: byte;              //       0-99
     OP6_EG_rate_3: byte;              //       0-99
@@ -319,35 +319,35 @@ type
 type
   TDX7VoiceContainer = class(TPersistent)
   private
-    FDX7ExpandedVoiceParams: TDX7ExpandedVoiceParams;
-    FDX7PackedVoiceParams: TDX7PackedVoiceParams;
+    FDX7_VCED_Params: TDX7_VCED_Params;
+    FDX7_VMEM_Params: TDX7_VMEM_Params;
   public
-    function LoadPackedVoice(aPar: TDX7PackedVoiceDump): boolean;
-    function LoadExpandedVoice(aPar: TDX7ExpandedVoiceDump): boolean;
-    function LoadPackedVoiceFromStream(var aStream: TMemoryStream;
+    //function Load_VMEM_(aPar: TDX7_VMEM_Dump): boolean;
+    //function Load_VCED_(aPar: TDX7_VCED_Dump): boolean;
+    function Load_VMEM_FromStream(var aStream: TMemoryStream;
       Position: integer): boolean;
-    function LoadExpandedVoiceFromStream(var aStream: TMemoryStream;
+    function Load_VCED_FromStream(var aStream: TMemoryStream;
       Position: integer): boolean;
     procedure InitVoice; //set defaults
     function GetVoiceName: string;
-    function GetVoiceParams: TDX7PackedVoiceParams;
-    function SetVoiceParams(aParams: TDX7PackedVoiceParams): boolean;
-    function SavePackedVoiceToStream(var aStream: TMemoryStream): boolean;
-    function SaveExpandedVoiceToStream(var aStream: TMemoryStream): boolean;
+    function GetVoiceParams: TDX7_VMEM_Params;
+    function SetVoiceParams(aParams: TDX7_VMEM_Params): boolean;
+    function Save_VMEM_ToStream(var aStream: TMemoryStream): boolean;
+    function Save_VCED_ToStream(var aStream: TMemoryStream): boolean;
     function GetChecksumPart: integer;
     function GetChecksum: integer;
     procedure SysExVoiceToStream(ch: integer; var aStream: TMemoryStream);
     function CalculateHash: string;
   end;
 
-function Expanded2PackedVoice(aPar: TDX7ExpandedVoiceParams): TDX7PackedVoiceParams;
-function Packed2ExpandedVoice(aPar: TDX7PackedVoiceParams): TDX7ExpandedVoiceParams;
+function VCEDtoVMEM(aPar: TDX7_VCED_Params): TDX7_VMEM_Params;
+function VMEMtoVCED(aPar: TDX7_VMEM_Params): TDX7_VCED_Params;
 
 implementation
 
-function Expanded2PackedVoice(aPar: TDX7ExpandedVoiceParams): TDX7PackedVoiceParams;
+function VCEDtoVMEM(aPar: TDX7_VCED_Params): TDX7_VMEM_Params;
 var
-  t: TDX7PackedVoiceParams;
+  t: TDX7_VMEM_Params;
 begin
   //first the parameters without conversion
   t.OP6_EG_rate_1 := aPar.OP6_EG_rate_1;
@@ -507,9 +507,9 @@ begin
   Result := t;
 end;
 
-function Packed2ExpandedVoice(aPar: TDX7PackedVoiceParams): TDX7ExpandedVoiceParams;
+function VMEMtoVCED(aPar: TDX7_VMEM_Params): TDX7_VCED_Params;
 var
-  t: TDX7ExpandedVoiceParams;
+  t: TDX7_VCED_Params;
 begin
   //first the parameters without conversion
   t.OP6_EG_rate_1 := aPar.OP6_EG_rate_1;
@@ -685,45 +685,45 @@ begin
   t.VOICE_NAME_CHAR_8 := aPar.VOICE_NAME_CHAR_8;
   t.VOICE_NAME_CHAR_9 := aPar.VOICE_NAME_CHAR_9;
   t.VOICE_NAME_CHAR_10 := aPar.VOICE_NAME_CHAR_10;
-
+  t.OPERATOR_ON_OFF := 63; //just set to all OP=on
   Result := t;
 end;
 
-function TDX7VoiceContainer.LoadPackedVoice(aPar: TDX7PackedVoiceDump): boolean;
+{function TDX7VoiceContainer.Load_VMEM_(aPar: TDX7_VMEM_Dump): boolean;
 var
   i: integer;
 begin
   Result := True;
   try
     for i := low(aPar) to high(aPar) do
-      FillByte(FDX7PackedVoiceParams, SizeOf(byte), aPar[i]);
-    FDX7ExpandedVoiceParams := Packed2ExpandedVoice(FDX7PackedVoiceParams);
+      FillByte(FDX7_VMEM_Params, SizeOf(byte), aPar[i]);
+    FDX7_VCED_Params := VMEMtoVCED(FDX7_VMEM_Params);
   except
     on e: Exception do Result := False;
   end;
-end;
+end; }
 
-function TDX7VoiceContainer.LoadExpandedVoice(aPar: TDX7ExpandedVoiceDump): boolean;
+{function TDX7VoiceContainer.Load_VCED_(aPar: TDX7_VCED_Dump): boolean;
 var
   i: integer;
 begin
   Result := True;
   try
     for i := low(aPar) to high(aPar) do
-      FillByte(FDX7ExpandedVoiceParams, SizeOf(byte), aPar[i]);
-    FDX7PackedVoiceParams := Expanded2PackedVoice(FDX7ExpandedVoiceParams);
+      FillByte(FDX7_VCED_Params, SizeOf(byte), aPar[i]);
+    FDX7_VMEM_Params := VCEDtoVMEM(FDX7_VCED_Params);
   except
     on e: Exception do Result := False;
   end;
-end;
+end; }
 
-function TDX7VoiceContainer.LoadPackedVoiceFromStream(var aStream: TMemoryStream;
+function TDX7VoiceContainer.Load_VMEM_FromStream(var aStream: TMemoryStream;
   Position: integer): boolean;
 begin
   if Position < aStream.Size then
     aStream.Position := Position;
   try
-    with FDX7PackedVoiceParams do
+    with FDX7_VMEM_Params do
     begin
       OP6_EG_rate_1 := aStream.ReadByte;
       OP6_EG_rate_2 := aStream.ReadByte;
@@ -854,14 +854,14 @@ begin
       VOICE_NAME_CHAR_9 := aStream.ReadByte;
       VOICE_NAME_CHAR_10 := aStream.ReadByte;
     end;
-    FDX7ExpandedVoiceParams := Packed2ExpandedVoice(FDX7PackedVoiceParams);
+    FDX7_VCED_Params := VMEMtoVCED(FDX7_VMEM_Params);
     Result := True;
   except
     Result := False;
   end;
 end;
 
-function TDX7VoiceContainer.LoadExpandedVoiceFromStream(var aStream: TMemoryStream;
+function TDX7VoiceContainer.Load_VCED_FromStream(var aStream: TMemoryStream;
   Position: integer): boolean;
 begin
   if (Position + 155) <= aStream.Size then
@@ -869,7 +869,7 @@ begin
   else
     Exit;
   try
-    with FDX7ExpandedVoiceParams do
+    with FDX7_VCED_Params do
     begin
       OP6_EG_rate_1 := aStream.ReadByte;
       OP6_EG_rate_2 := aStream.ReadByte;
@@ -1032,17 +1032,18 @@ begin
       VOICE_NAME_CHAR_8 := aStream.ReadByte;
       VOICE_NAME_CHAR_9 := aStream.ReadByte;
       VOICE_NAME_CHAR_10 := aStream.ReadByte;
+      OPERATOR_ON_OFF := aStream.ReadByte;
     end;
-    FDX7PackedVoiceParams := Expanded2PackedVoice(FDX7ExpandedVoiceParams);
+    FDX7_VMEM_Params := VCEDtoVMEM(FDX7_VCED_Params);
     Result := True;
   except
-    Result := True;
+    Result := False;
   end;
 end;
 
 procedure TDX7VoiceContainer.InitVoice;
 begin
-  with FDX7ExpandedVoiceParams do
+  with FDX7_VCED_Params do
   begin
     OP6_EG_rate_1 := 99;
     OP6_EG_rate_2 := 99;
@@ -1205,19 +1206,20 @@ begin
     VOICE_NAME_CHAR_8 := 73;
     VOICE_NAME_CHAR_9 := 67;
     VOICE_NAME_CHAR_10 := 69;
+    OPERATOR_ON_OFF := 63; //all the OPs are on
   end;
-  FDX7PackedVoiceParams := Expanded2PackedVoice(FDX7ExpandedVoiceParams);
+  FDX7_VMEM_Params := VCEDtoVMEM(FDX7_VCED_Params);
 end;
 
-function TDX7VoiceContainer.GetVoiceParams: TDX7PackedVoiceParams;
+function TDX7VoiceContainer.GetVoiceParams: TDX7_VMEM_Params;
 begin
-  Result := FDX7PackedVoiceParams;
+  Result := FDX7_VMEM_Params;
 end;
 
-function TDX7VoiceContainer.SetVoiceParams(aParams: TDX7PackedVoiceParams): boolean;
+function TDX7VoiceContainer.SetVoiceParams(aParams: TDX7_VMEM_Params): boolean;
 begin
-  FDX7PackedVoiceParams := aParams;
-  FDX7ExpandedVoiceParams := Packed2ExpandedVoice(FDX7PackedVoiceParams);
+  FDX7_VMEM_Params := aParams;
+  FDX7_VCED_Params := VMEMtoVCED(FDX7_VMEM_Params);
   Result := True;
 end;
 
@@ -1226,25 +1228,25 @@ var
   s: string;
 begin
   s := '';
-  s := s + Printable(chr(FDX7PackedVoiceParams.VOICE_NAME_CHAR_1));
-  s := s + Printable(chr(FDX7PackedVoiceParams.VOICE_NAME_CHAR_2));
-  s := s + Printable(chr(FDX7PackedVoiceParams.VOICE_NAME_CHAR_3));
-  s := s + Printable(chr(FDX7PackedVoiceParams.VOICE_NAME_CHAR_4));
-  s := s + Printable(chr(FDX7PackedVoiceParams.VOICE_NAME_CHAR_5));
-  s := s + Printable(chr(FDX7PackedVoiceParams.VOICE_NAME_CHAR_6));
-  s := s + Printable(chr(FDX7PackedVoiceParams.VOICE_NAME_CHAR_7));
-  s := s + Printable(chr(FDX7PackedVoiceParams.VOICE_NAME_CHAR_8));
-  s := s + Printable(chr(FDX7PackedVoiceParams.VOICE_NAME_CHAR_9));
-  s := s + Printable(chr(FDX7PackedVoiceParams.VOICE_NAME_CHAR_10));
+  s := s + Printable(chr(FDX7_VMEM_Params.VOICE_NAME_CHAR_1));
+  s := s + Printable(chr(FDX7_VMEM_Params.VOICE_NAME_CHAR_2));
+  s := s + Printable(chr(FDX7_VMEM_Params.VOICE_NAME_CHAR_3));
+  s := s + Printable(chr(FDX7_VMEM_Params.VOICE_NAME_CHAR_4));
+  s := s + Printable(chr(FDX7_VMEM_Params.VOICE_NAME_CHAR_5));
+  s := s + Printable(chr(FDX7_VMEM_Params.VOICE_NAME_CHAR_6));
+  s := s + Printable(chr(FDX7_VMEM_Params.VOICE_NAME_CHAR_7));
+  s := s + Printable(chr(FDX7_VMEM_Params.VOICE_NAME_CHAR_8));
+  s := s + Printable(chr(FDX7_VMEM_Params.VOICE_NAME_CHAR_9));
+  s := s + Printable(chr(FDX7_VMEM_Params.VOICE_NAME_CHAR_10));
   Result := s;
 end;
 
-function TDX7VoiceContainer.SavePackedVoiceToStream(var aStream: TMemoryStream): boolean;
+function TDX7VoiceContainer.Save_VMEM_ToStream(var aStream: TMemoryStream): boolean;
 begin
   //dont clear the stream here or else bulk dump won't work
   if Assigned(aStream) then
   begin
-    with FDX7PackedVoiceParams do
+    with FDX7_VMEM_Params do
     begin
       aStream.WriteByte(OP6_EG_rate_1);
       aStream.WriteByte(OP6_EG_rate_2);
@@ -1381,12 +1383,13 @@ begin
     Result := False;
 end;
 
-function TDX7VoiceContainer.SaveExpandedVoiceToStream(
+function TDX7VoiceContainer.Save_VCED_ToStream(
   var aStream: TMemoryStream): boolean;
 begin
   if Assigned(aStream) then
   begin
-    with FDX7ExpandedVoiceParams do
+    aStream.Clear;
+    with FDX7_VCED_Params do
     begin
       aStream.WriteByte(OP6_EG_rate_1);
       aStream.WriteByte(OP6_EG_rate_2);
@@ -1549,6 +1552,7 @@ begin
       aStream.WriteByte(VOICE_NAME_CHAR_8);
       aStream.WriteByte(VOICE_NAME_CHAR_9);
       aStream.WriteByte(VOICE_NAME_CHAR_10);
+      aStream.WriteByte(OPERATOR_ON_OFF);
       Result := True;
     end;
   end
@@ -1561,7 +1565,7 @@ var
   aStream: TMemoryStream;
 begin
   aStream := TMemoryStream.Create;
-  with FDX7ExpandedVoiceParams do
+  with FDX7_VCED_Params do
   begin
     aStream.WriteByte(OP6_EG_rate_1);
     aStream.WriteByte(OP6_EG_rate_2);
@@ -1713,6 +1717,7 @@ begin
     aStream.WriteByte(LFO_SYNC);
     aStream.WriteByte(LFO_WAVEFORM);
     aStream.WriteByte(PITCH_MOD_SENSITIVITY);
+    aStream.WriteByte(OPERATOR_ON_OFF);
   end;
   aStream.Position := 0;
   Result := THashFactory.TCrypto.CreateSHA2_256().ComputeStream(aStream).ToString();
@@ -1727,7 +1732,7 @@ var
 begin
   checksum := 0;
   tmpStream := TMemoryStream.Create;
-  SavePackedVoiceToStream(tmpStream);
+  Save_VMEM_ToStream(tmpStream);
   tmpStream.Position := 0;
   for i := 0 to tmpStream.Size - 1 do
     checksum := checksum + tmpStream.ReadByte;
@@ -1758,7 +1763,7 @@ begin
   aStream.WriteByte($00);
   aStream.WriteByte($01);
   aStream.WriteByte($1B);
-  SaveExpandedVoiceToStream(aStream);
+  Save_VCED_ToStream(aStream);
   aStream.WriteByte(GetChecksum);
   aStream.WriteByte($F7);
 end;

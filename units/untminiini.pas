@@ -15,7 +15,7 @@ unit untMiniINI;
 interface
 
 uses
-  Classes, SysUtils, StrUtils;
+  Classes, StrUtils, SysUtils;
 
 type
   TNotes = array[0..127] of string;
@@ -33,7 +33,7 @@ type
     function ReadString(aName: string; aDefault: string): string;
     procedure WriteInteger(aName: string; aVal: integer);
     procedure WriteString(aName, aVal: string);
-    procedure InitPerformance;
+    procedure InitPerformance(comments: boolean);
     procedure InitMiniDexedINI;
     procedure Comment(aName: string);
     procedure Uncomment(aName: string);
@@ -182,7 +182,7 @@ begin
   Result := FMiniINI.IndexOfName(aName) <> -1;
 end;
 
-procedure TMiniINIFile.InitPerformance;
+procedure TMiniINIFile.InitPerformance(comments: boolean);
 begin
   FMiniINI.Clear;
   FMiniINI.Add('#');
@@ -193,35 +193,43 @@ begin
   FMiniINI.Add('#  https://github.com/BobanSpasic/MiniDexedLibrarian');
   FMiniINI.Add('#');
   FMiniINI.Add('');
-  FMiniINI.Add('# TG#');
-  FMiniINI.Add('#BankNumber#=0		# 0 .. 127');
-  FMiniINI.Add('#VoiceNumber#=1		# 1 .. 32');
-  FMiniINI.Add('#MIDIChannel#=1		# 1 .. 16, 0: off, >16: omni mode');
-  FMiniINI.Add('#Volume#=100		# 0 .. 127');
-  FMiniINI.Add('#Pan#=64		# 0 .. 127');
-  FMiniINI.Add('#Detune#=0		# -99 .. 99');
-  FMiniINI.Add('#Cutoff#=99		# 0 .. 99');
-  FMiniINI.Add('#Resonance#=0		# 0 .. 99');
-  FMiniINI.Add('#NoteLimitLow#=0	# 0 .. 127, C-2 .. G8');
-  FMiniINI.Add('#NoteLimitHigh#=127	# 0 .. 127, C-2 .. G8');
-  FMiniINI.Add('#NoteShift#=0		# -24 .. 24');
-  FMiniINI.Add('#ReverbSend#=0		# 0 .. 99');
-  FMiniINI.Add('#PitchBendRange#=2 # 0 .. 12');
-  FMiniINI.Add('#PitchBendStep#=0 # 0 .. 12');
-  FMiniINI.Add('#PortamentoMode#=0 # 0 .. 1');
-  FMiniINI.Add('#PortamentoGlissando#=0 # 0 .. 1');
-  FMiniINI.Add('#PortamentoTime#=0 # 0 .. 99');
-  FMiniINI.Add(
-    '#VoiceData#= # space separated hex numbers of 156 voice parameters. Example: 5F 1D 14 32 63 [....] 20 55');
-  FMiniINI.Add('#MonoMode#=0 # 0-off .. 1-On');
-  FMiniINI.Add('#ModulationWheelRange#=99 # 0..99');
-  FMiniINI.Add('#ModulationWheelTarget#=1 # 0..7');
-  FMiniINI.Add('#FootControlRange#=99 # 0..99');
-  FMiniINI.Add('#FootControlTarget#=0 # 0..7');
-  FMiniINI.Add('#BreathControlRange#=99 # 0..99');
-  FMiniINI.Add('#BreathControlTarget#=0 # 0..7');
-  FMiniINI.Add('#AftertouchRange#=99 # 0..99');
-  FMiniINI.Add('#AftertouchTarget#=0 # 0..7');
+  if comments then
+  begin
+    FMiniINI.Add('# TG#');
+    FMiniINI.Add('#BankNumber#=0		# 0 .. 127');
+    FMiniINI.Add('#VoiceNumber#=1		# 1 .. 32');
+    FMiniINI.Add('#MIDIChannel#=1		# 1 .. 16, 0: off, >16: omni mode');
+    FMiniINI.Add('#Volume#=100		# 0 .. 127');
+    FMiniINI.Add('#Pan#=64		# 0 .. 127');
+    FMiniINI.Add('#Detune#=0		# -99 .. 99');
+    FMiniINI.Add('#Cutoff#=99		# 0 .. 99');
+    FMiniINI.Add('#Resonance#=0		# 0 .. 99');
+    FMiniINI.Add('#NoteLimitLow#=0	# 0 .. 127, C-2 .. G8');
+    FMiniINI.Add('#NoteLimitHigh#=127	# 0 .. 127, C-2 .. G8');
+    FMiniINI.Add('#NoteShift#=0		# -24 .. 24');
+    FMiniINI.Add('#ReverbSend#=0		# 0 .. 99');
+    FMiniINI.Add('#PitchBendRange#=2 # 0 .. 12');
+    FMiniINI.Add('#PitchBendStep#=0 # 0 .. 12');
+    FMiniINI.Add('#PortamentoMode#=0 # 0 .. 1');
+    FMiniINI.Add('#PortamentoGlissando#=0 # 0 .. 1');
+    FMiniINI.Add('#PortamentoTime#=0 # 0 .. 99');
+    FMiniINI.Add(
+      '#VoiceData#= # space separated hex numbers of 156 voice parameters. Example: 5F 1D 14 32 63 [....] 20 55');
+    FMiniINI.Add('#MonoMode#=0 # 0-off .. 1-On');
+    FMiniINI.Add('#ModulationWheelRange#=99 # 0..99');
+    FMiniINI.Add('#ModulationWheelTarget#=1 # 0..7');
+    FMiniINI.Add('#FootControlRange#=99 # 0..99');
+    FMiniINI.Add('#FootControlTarget#=0 # 0..7');
+    FMiniINI.Add('#BreathControlRange#=99 # 0..99');
+    FMiniINI.Add('#BreathControlTarget#=0 # 0..7');
+    FMiniINI.Add('#AftertouchRange#=99 # 0..99');
+    FMiniINI.Add('#AftertouchTarget#=0 # 0..7');
+    FMiniINI.Add('');
+  end;
+  FMiniINI.Add('# General');
+  FMiniINI.Add('Name=INIT');
+  FMiniINI.Add('Category=None');
+  FMiniINI.Add('Origin=Unknown');
   FMiniINI.Add('');
   FMiniINI.Add('# TG1');
   FMiniINI.Add('BankNumber1=0');
@@ -455,16 +463,19 @@ begin
   FMiniINI.Add('AftertouchRange8=99');
   FMiniINI.Add('AftertouchTarget8=0');
   FMiniINI.Add('');
-  FMiniINI.Add('# Effects');
-  FMiniINI.Add('#CompressorEnable=1	# 0: off, 1: on');
-  FMiniINI.Add('#ReverbEnable=1		# 0: off, 1: on');
-  FMiniINI.Add('#ReverbSize=70		# 0 .. 99');
-  FMiniINI.Add('#ReverbHighDamp=50	# 0 .. 99');
-  FMiniINI.Add('#ReverbLowDamp=50	# 0 .. 99');
-  FMiniINI.Add('#ReverbLowPass=30	# 0 .. 99');
-  FMiniINI.Add('#ReverbDiffusion=65	# 0 .. 99');
-  FMiniINI.Add('#ReverbLevel=80		# 0 .. 99');
-  FMiniINI.Add('');
+  if comments then
+  begin
+    FMiniINI.Add('# Effects');
+    FMiniINI.Add('#CompressorEnable=1	# 0: off, 1: on');
+    FMiniINI.Add('#ReverbEnable=1		# 0: off, 1: on');
+    FMiniINI.Add('#ReverbSize=70		# 0 .. 99');
+    FMiniINI.Add('#ReverbHighDamp=50	# 0 .. 99');
+    FMiniINI.Add('#ReverbLowDamp=50	# 0 .. 99');
+    FMiniINI.Add('#ReverbLowPass=30	# 0 .. 99');
+    FMiniINI.Add('#ReverbDiffusion=65	# 0 .. 99');
+    FMiniINI.Add('#ReverbLevel=80		# 0 .. 99');
+    FMiniINI.Add('');
+  end;
   FMiniINI.Add('# Effects');
   FMiniINI.Add('CompressorEnable=1');
   FMiniINI.Add('ReverbEnable=1');
