@@ -33,7 +33,9 @@ Windows 10:
 
 ## Dependencies
 Windows 64 - SQLite3 (dll included in download folder)
+
 Linux Qt5 - libsqlite3, libportmidi, libQt5pas
+
 Linux GTK2 - libsqlite3, libportmidi
 
 ## Compiling
