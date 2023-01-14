@@ -2,7 +2,7 @@
 <CONFIG>
   <ProjectSession>
     <Version Value="12"/>
-    <BuildModes Active="Release Darwin">
+    <BuildModes Active="Release Win64">
       <Item Name="Release Win64">
         <CompilerOptions>
           <Version Value="11"/>
@@ -400,14 +400,6 @@
         <ComponentName Value="frmMDXView"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
-        <UsageCount Value="22"/>
-      </Unit>
-      <Unit>
-        <Filename Value="untmdxview.pas"/>
-        <ComponentName Value="frmMDXView"/>
-        <HasResources Value="True"/>
-        <ResourceBaseClass Value="Form"/>
-        <UnitName Value="untMDXView"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="5"/>
         <CursorPos X="18" Y="103"/>

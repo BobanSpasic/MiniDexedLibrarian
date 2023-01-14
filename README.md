@@ -50,6 +50,7 @@ External components needed to build the MiniDexed Control Center are available t
 - ATShapeLine
 - EyeCandyControls
 - HashLib4Pascal
+- IndustrialStuff
 
 ## Linux notes
 libQt5pas distributed with Ubuntu and derivates is know to cause problems. 

@@ -26,6 +26,38 @@
     </VersionInfo>
     <BuildModes>
       <Item Name="Debug" Default="True"/>
+      <Item Name="Release FreeBSD QT5">
+        <CompilerOptions>
+          <Version Value="11"/>
+          <PathDelim Value="\"/>
+          <Target>
+            <Filename Value="..\bin\FreeBSD13Qt5\MiniDexedCC"/>
+          </Target>
+          <SearchPaths>
+            <IncludeFiles Value="$(ProjOutDir)"/>
+            <OtherUnitFiles Value="..\units;..\ext_units"/>
+            <UnitOutputDirectory Value="..\lib\$(TargetCPU)-$(TargetOS)"/>
+          </SearchPaths>
+          <CodeGeneration>
+            <SmartLinkUnit Value="True"/>
+            <Optimizations>
+              <OptimizationLevel Value="3"/>
+            </Optimizations>
+          </CodeGeneration>
+          <Linking>
+            <Debugging>
+              <GenerateDebugInfo Value="False"/>
+              <DebugInfoType Value="dsDwarf2Set"/>
+            </Debugging>
+            <LinkSmart Value="True"/>
+            <Options>
+              <Win32>
+                <GraphicApplication Value="True"/>
+              </Win32>
+            </Options>
+          </Linking>
+        </CompilerOptions>
+      </Item>
       <SharedMatrixOptions Count="2">
         <Item1 ID="491199598748" Type="IDEMacro" MacroName="LCLWidgetType" Value="qt"/>
         <Item2 ID="536535886330" Type="IDEMacro" MacroName="LCLWidgetType" Value="qt5"/>
