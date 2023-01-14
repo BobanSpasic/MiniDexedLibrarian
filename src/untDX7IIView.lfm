@@ -1,0 +1,47 @@
+object frmDX7IIView: TfrmDX7IIView
+  Left = 595
+  Height = 800
+  Top = 146
+  Width = 650
+  Caption = 'DX7IIView'
+  ClientHeight = 800
+  ClientWidth = 650
+  OnCreate = FormCreate
+  Position = poMainFormCenter
+  LCLVersion = '2.2.4.0'
+  object sgView: TStringGrid
+    Left = 0
+    Height = 800
+    Top = 0
+    Width = 650
+    Align = alClient
+    AutoFillColumns = True
+    ColCount = 4
+    Columns = <    
+      item
+        SizePriority = 0
+        Title.Caption = 'Parameter'
+        Width = 200
+      end    
+      item
+        ReadOnly = True
+        Title.Caption = 'DX7II Suppl.'
+        Width = 190
+      end    
+      item
+        Title.Caption = 'INIT Values'
+        Width = 191
+      end>
+    Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goRangeSelect, goThumbTracking, goSmoothScroll]
+    RowCount = 75
+    TabOrder = 0
+    OnHeaderClick = sgViewHeaderClick
+    OnPrepareCanvas = sgViewPrepareCanvas
+    ColWidths = (
+      48
+      200
+      190
+      191
+    )
+  end
+end

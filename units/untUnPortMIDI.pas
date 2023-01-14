@@ -1,3 +1,16 @@
+{
+ *****************************************************************************
+  See the file COPYING.modifiedLGPL.txt, included in this distribution,
+  for details about the license.
+ *****************************************************************************
+
+ Author: Boban Spasic
+
+ Unit description:
+ Implement functions found in portmidi.pas, but missing in midi.pas
+ Less IFDEFs in untMain.
+}
+
 unit untUnPortMIDI;
 
 {$mode ObjFPC}{$H+}

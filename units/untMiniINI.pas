@@ -6,6 +6,12 @@
 
  Author: Boban Spasic
 
+ Unit description:
+ Implementing the MiniDexed's INI-File reader/writter.
+ Compared to standard INI-Files, the implementation in MiniDexed
+ does not have or use [Sections] in INI-Files.
+ Two helper functions to initialize minidexed.ini and performance.ini
+ are included.
 }
 
 unit untMiniINI;
@@ -33,7 +39,7 @@ type
     function ReadString(aName: string; aDefault: string): string;
     procedure WriteInteger(aName: string; aVal: integer);
     procedure WriteString(aName, aVal: string);
-    procedure InitPerformance(comments: boolean);
+    procedure InitPerformance(aComments: boolean);
     procedure InitMiniDexedINI;
     procedure Comment(aName: string);
     procedure Uncomment(aName: string);
@@ -182,7 +188,7 @@ begin
   Result := FMiniINI.IndexOfName(aName) <> -1;
 end;
 
-procedure TMiniINIFile.InitPerformance(comments: boolean);
+procedure TMiniINIFile.InitPerformance(aComments: boolean);
 begin
   FMiniINI.Clear;
   FMiniINI.Add('#');
@@ -193,7 +199,7 @@ begin
   FMiniINI.Add('#  https://github.com/BobanSpasic/MiniDexedLibrarian');
   FMiniINI.Add('#');
   FMiniINI.Add('');
-  if comments then
+  if aComments then
   begin
     FMiniINI.Add('# TG#');
     FMiniINI.Add('#BankNumber#=0		# 0 .. 127');
@@ -230,6 +236,7 @@ begin
   FMiniINI.Add('Name=INIT');
   FMiniINI.Add('Category=None');
   FMiniINI.Add('Origin=Unknown');
+  FMiniINI.Add('Version=1');
   FMiniINI.Add('');
   FMiniINI.Add('# TG1');
   FMiniINI.Add('BankNumber1=0');
@@ -463,7 +470,7 @@ begin
   FMiniINI.Add('AftertouchRange8=99');
   FMiniINI.Add('AftertouchTarget8=0');
   FMiniINI.Add('');
-  if comments then
+  if aComments then
   begin
     FMiniINI.Add('# Effects');
     FMiniINI.Add('#CompressorEnable=1	# 0: off, 1: on');

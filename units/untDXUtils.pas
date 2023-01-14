@@ -6,6 +6,11 @@
 
  Author: Boban Spasic
 
+ Unit description:
+ This unit implements the detection/recognition of DX-Series SysEx Messages.
+ Sequencer and some other (for me less important) headers are not implemented.
+ Not all the MSB/LSB Data could be found in Yamaha's documentation. I've got some
+ of them by inspecting various SysEx dumps.
 }
 
 unit untDXUtils;
@@ -30,8 +35,8 @@ type
     f: byte;
     {
     f=0 - single_voice DX7
-    f=1 - single_performance TX7
-    f=2 - bulk_performance TX7
+    f=1 - single_function TX7
+    f=2 - bulk_function TX7
     f=3 - single_voice DX11/TX81z/V50/DX21
     f=4 - bulk_voice DX11/TX81z/V50/DX21
     f=5 - single_supplement DX7II
@@ -91,9 +96,13 @@ function ContainsDX7VoiceDump(dmp: TMemoryStream;
   var StartPos, StartDmp: integer): boolean;
 function ContainsDX7IISupplementDump(dmp: TMemoryStream;
   var StartPos, StartDmp: integer): boolean;
+function ContainsTX7FunctionDump(dmp: TMemoryStream;
+  var StartPos, StartDmp: integer): boolean;
 function ContainsDX7BankDump(dmp: TMemoryStream;
   var StartPos, StartDmp: integer): boolean;
 function ContainsDX7IISupplBankDump(dmp: TMemoryStream;
+  var StartPos, StartDmp: integer): boolean;
+function ContainsTX7FunctBankDump(dmp: TMemoryStream;
   var StartPos, StartDmp: integer): boolean;
 function ContainsDXData(dmp: TMemoryStream; var StartPos: integer;
   const Report: TStrings): boolean;
@@ -199,6 +208,48 @@ begin
   end;
 end;
 
+function ContainsTX7FunctionDump(dmp: TMemoryStream;
+  var StartPos, StartDmp: integer): boolean;
+var
+  dummy: byte;
+begin
+  if StartPos <= dmp.Size then
+  begin
+    dmp.Position := StartPos;
+    StartPos := -1;
+    while (StartPos = -1) and (dmp.Position < dmp.Size) do
+      if dmp.ReadByte = $F0 then                  // $F0 - SysEx
+        StartPos := dmp.Position - 1;
+    if StartPos <> -1 then
+    begin
+      dummy := dmp.ReadByte;
+      if not (dummy = $43) then StartPos := -1;     // $43 - Yamaha
+      dummy := dmp.ReadByte;                        // sub-status + channel number
+      dummy := dmp.ReadByte;
+      if not (dummy = $01) then StartPos := -1;     // $01 - 1 PCED
+      dummy := dmp.ReadByte;
+      if not (dummy = $00) then StartPos := -1;     // byte count MS
+      dummy := dmp.ReadByte;
+      if not (dummy = $23) then StartPos := -1;     // byte count LS
+    end;
+    if StartPos <> -1 then
+    begin
+      Result := True;
+      StartDmp := StartPos + 6;
+    end
+    else
+    begin
+      Result := False;
+      StartDmp := -1;
+    end;
+  end
+  else
+  begin
+    StartPos := -1;
+    Result := False;
+  end;
+end;
+
 function ContainsDX7BankDump(dmp: TMemoryStream;
   var StartPos, StartDmp: integer): boolean;
 var
@@ -259,11 +310,53 @@ begin
       if not (dummy = $43) then StartPos := -1;     // $43 - Yamaha
       dummy := dmp.ReadByte;                        // sub-status + channel number
       dummy := dmp.ReadByte;
-      if not (dummy = $06) then StartPos := -1;     // $06 - 32 ACED dump
+      if not (dummy = $06) then StartPos := -1;     // $06 - 32 AMEM dump
       dummy := dmp.ReadByte;
       if not (dummy = $08) then StartPos := -1;     // byte count MS
       dummy := dmp.ReadByte;
       if not (dummy = $60) then StartPos := -1;     // byte count LS
+    end;
+    if StartPos <> -1 then
+    begin
+      Result := True;
+      StartDmp := StartPos + 6;
+    end
+    else
+    begin
+      Result := False;
+      StartDmp := -1;
+    end;
+  end
+  else
+  begin
+    StartPos := -1;
+    Result := False;
+  end;
+end;
+
+function ContainsTX7FunctBankDump(dmp: TMemoryStream;
+  var StartPos, StartDmp: integer): boolean;
+var
+  dummy: byte;
+begin
+  if StartPos <= dmp.Size then
+  begin
+    dmp.Position := StartPos;
+    StartPos := -1;
+    while (StartPos = -1) and (dmp.Position < dmp.Size) do
+      if dmp.ReadByte = $F0 then                  // $F0 - SysEx
+        StartPos := dmp.Position - 1;
+    if StartPos <> -1 then
+    begin
+      dummy := dmp.ReadByte;
+      if not (dummy = $43) then StartPos := -1;     // $43 - Yamaha
+      dummy := dmp.ReadByte;                        // sub-status + channel number
+      dummy := dmp.ReadByte;
+      if not (dummy = $02) then StartPos := -1;     // $02 - 32 PMEM dump
+      dummy := dmp.ReadByte;
+      if not (dummy = $20) then StartPos := -1;     // byte count MS
+      dummy := dmp.ReadByte;
+      if not (dummy = $00) then StartPos := -1;     // byte count LS
     end;
     if StartPos <> -1 then
     begin
@@ -320,14 +413,14 @@ begin
           end;
           if (rHeader.f0 = $F0) and (rHeader.id = $43) and (rHeader.f in fValues) then
           begin
-            if rHeader.f = $00 then tmpList.Add('DX7 Voice - VCED');
-            if rHeader.f = $01 then tmpList.Add('TX7 Performance - PCED');
-            if rHeader.f = $02 then tmpList.Add('TX7 Performance Bank - PMEM');
+            if rHeader.f = $00 then tmpList.Add('DX7/DX9 Voice - VCED');
+            if rHeader.f = $01 then tmpList.Add('TX7/TX816 Performance - PCED');
+            if rHeader.f = $02 then tmpList.Add('TX7/TX816 Performance Bank - PMEM');
             if rHeader.f = $03 then tmpList.Add('DX11/TX81z/V50/DX21 Voice - VCED');
             if rHeader.f = $04 then tmpList.Add('DX11/TX81z/V50/DX21 Voice Bank - VMEM');
             if rHeader.f = $05 then tmpList.Add('DX7II Voice Supplement - ACED');
             if rHeader.f = $06 then tmpList.Add('DX7II Voice Bank Supplement - AMEM');
-            if rHeader.f = $09 then tmpList.Add('DX7 Voice Bank - VMEM');
+            if rHeader.f = $09 then tmpList.Add('DX7/DX9 Voice Bank - VMEM');
             if rHeader.f = $0A then tmpList.Add('Sequencer Bulk Dump');
             if rHeader.f = $7E then
             begin

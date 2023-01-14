@@ -15,15 +15,15 @@ Working:
 - save/open current state on closing/opening the app
 - organize SysEx and performance files on MiniDexed SD Card
 - store collections to SQL-DB (eliminating duplicates etc.)
+- import DX7II supplement (ACED/AMEM) and performances (PMEM)
 
 ToDo:
 - send SysEx bulk dumps to MiniDexed (Feature missing in MiniDexed)
 - edit DX7 voices (Not a priority. There are a lot of DX7-Editors on the net)
-- import DX7II supplement (ACED/AMEM) and performances (PMEM) - (ACED/AMEM import is partially implemented)
 - conversion of various 4OP voice files to DX7 format (Low priority. Alternative: DXconvert from http://dxconvert.martintarenskeen.nl/ )
 
 
-The current state of the development can be tested on Windows 10 and Linux (I use Linux Mint). The compiled files are in the BIN directory.
+The current state of the development can be tested on Windows 10, Linux (I use Linux Mint) and FreeBSD 13. The compiled files are in the BIN directory.
 
 Linux Qt5:
 ![MDCC_Lin_Qt5](https://user-images.githubusercontent.com/68187526/206912419-a7c5030b-384e-4a50-96f4-b10689b12255.png)
@@ -31,12 +31,17 @@ Linux Qt5:
 Windows 10:
 ![MDCC_Win](https://user-images.githubusercontent.com/68187526/206912420-94a95b11-3b01-4602-bca4-869dbca8e1cf.png)
 
+FreeBSD 13:
+![MDCC_FreeBSD](https://user-images.githubusercontent.com/2480569/207942721-f913b43e-6b71-422f-b776-1a625e0ff62b.png)
+
 ## Dependencies
-Windows 64 - SQLite3 (dll included in download folder)
+Windows 64 - SQLite3 (dll included in download)
 
-Linux Qt5 - libsqlite3, libportmidi, libQt5pas
+Linux Qt5 - Libc6, sqlite3, portmidi, libQt5Pas
 
-Linux GTK2 - libsqlite3, libportmidi
+Linux GTK2 - Libc6, sqlite3, portmidi
+
+FreeBSD - Libc6, sqlite3, portmidi, Qt5Pas and optional alsa_seq_server to access MIDI ports.
 
 ## Compiling
 Developed by using [Lazarus/Freepascal.](https://www.lazarus-ide.org/)

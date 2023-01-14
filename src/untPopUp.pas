@@ -1,3 +1,15 @@
+{
+ *****************************************************************************
+  See the file COPYING.modifiedLGPL.txt, included in this distribution,
+  for details about the license.
+ *****************************************************************************
+
+ Author: Boban Spasic
+
+ Unit description:
+ A self-closing pop-up message
+}
+
 unit untPopUp;
 
 {$mode ObjFPC}{$H+}
@@ -34,6 +46,7 @@ var
     I: integer;
     Buffer: array[0..51] of char;
   begin
+    Result := Default(TPoint);
     for I := 0 to 25 do Buffer[I] := Chr(I + Ord('A'));
     for I := 0 to 25 do Buffer[I + 26] := Chr(I + Ord('a'));
     GetTextExtentPoint(Canvas.Handle, Buffer, 52, TSize(Result));
@@ -54,7 +67,7 @@ begin
       Font.Name := 'Consolas';
       Font.Size := 20;
       Font.Style := [fsBold];
-      Font.Color := clDefault; //$002D423E;
+      Font.Color := clDefault; // hex 002D423E;
       Canvas.Font := Font;
       DialogUnits := GetAveCharSize(Canvas);
       BorderStyle := bsNone;

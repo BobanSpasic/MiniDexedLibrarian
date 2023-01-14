@@ -1,3 +1,15 @@
+{
+ *****************************************************************************
+  See the file COPYING.modifiedLGPL.txt, included in this distribution,
+  for details about the license.
+ *****************************************************************************
+
+ Author: Boban Spasic
+
+ Unit description:
+ bring the portmidi.pp API to be the same as for midi.pas for Windows (less IFDEFs in untMain)
+}
+
 unit untLinuxMIDI;
 
 interface
@@ -47,10 +59,6 @@ type
     function SendSysEx(const aDeviceIndex: integer;
       const aStream: TMemoryStream): PmError;
   end;
-
-function SysExStreamToStr(const aStream: TMemoryStream): ansistring;
-function SysExStreamToByteStr(const aStream: TMemoryStream): ansistring;
-procedure StrToSysExStream(const aString: ansistring; const aStream: TMemoryStream);
 
 function MidiInput: TMidiInput;
 function MidiOutput: TMidiOutput;
@@ -191,53 +199,6 @@ begin
     Result := Pm_WriteSysEx(FDevices.Objects[aDeviceIndex], 0, PChar(buffer));
   end;
 end;
-
-
-{ ***** Helper Functions ***************************************************** }
-function SysExStreamToStr(const aStream: TMemoryStream): ansistring;
-var
-  i: integer;
-begin
-  Result := '';
-  aStream.Position := 0;
-  for i := 0 to aStream.Size - 1 do
-    Result := Result + Format('%.2x ', [byte(pansichar(aStream.Memory)[i])]);
-end;
-
-function SysExStreamToByteStr(const aStream: TMemoryStream): ansistring;
-var
-  i: integer;
-begin
-  Result := '';
-  aStream.Position := 0;
-  for i := 0 to aStream.Size - 1 do
-    Result := Result + Format('%.2x', [byte(pansichar(aStream.Memory)[i])]);
-end;
-
-procedure StrToSysExStream(const aString: ansistring; const aStream: TMemoryStream);
-const
-  cHex: ansistring = '123456789ABCDEF';
-var
-  lStr: ansistring;
-  i: integer;
-  L: integer;
-begin
-  // check on errors  - added by BREAKOUTBOX 2009-07-30
-  L := length(aString);
-  if not (L mod 2 = 0) // as HEX every byte must be two AnsiChars long, for example '0F'
-  then raise EMidiDevices.Create('SysEx string corrupted')
-  else if l < 10  // shortest System Exclusive Message = 5 bytes = 10 hex AnsiChars
-  then raise EMidiDevices.Create('SysEx string too short');
-
-  lStr := StringReplace(AnsiUpperCase(aString), ' ', '', [rfReplaceAll]);
-  aStream.Size := Length(lStr) div 2; // ' - 1' removed by BREAKOUTBOX 2009-07-15
-  aStream.Position := 0;
-
-  for i := 1 to aStream.Size do
-    pansichar(aStream.Memory)[i - 1] :=
-      ansichar(AnsiPos(lStr[i * 2 - 1], cHex) shl 4 + AnsiPos(lStr[i * 2], cHex));
-end;
-
 
 initialization
   Pm_Initialize;

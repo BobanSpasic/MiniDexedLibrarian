@@ -6,6 +6,10 @@
 
  Author: Boban Spasic
 
+ Unit description:
+ Class implementing DX7 Voice Bank Data and related functions for 32 Voices.
+
+ See the comments in the untDX7Voice about the Checksumm and CalculateHash functions.
 }
 
 unit untDX7Bank;
@@ -19,23 +23,23 @@ uses
   Classes, SysUtils, TypInfo, untDX7Voice;
 
 type
-  TDX7_VMEM_BankDump   = array [0..31] of TDX7_VMEM_Dump;
+  TDX7_VMEM_BankDump = array [1..32] of TDX7_VMEM_Dump;
 
 type
   TDX7BankContainer = class(TPersistent)
   private
-    FDX7BankParams: array [0..31] of TDX7VoiceContainer;
+    FDX7BankParams: array [1..32] of TDX7VoiceContainer;
   public
     constructor Create;
     destructor Destroy; override;
-    //function Load_VMEM_Bank(aPar: TDX7_VMEM_BankDump): boolean;
-    procedure LoadBankFromStream(var aStream: TMemoryStream; Position: integer);
-    function GetVoiceName(aVoiceNr: integer): string;
     function GetVoice(aVoiceNr: integer; var FDX7Voice: TDX7VoiceContainer): boolean;
     function SetVoice(aVoiceNr: integer; var FDX7Voice: TDX7VoiceContainer): boolean;
+    procedure LoadBankFromStream(var aStream: TMemoryStream; Position: integer);
+    function GetVoiceName(aVoiceNr: integer): string;
     function GetChecksum: integer;
     function SaveBankToSysExFile(aFile: string): boolean;
     procedure SysExBankToStream(var aStream: TMemoryStream);
+    procedure AppendSysExBankToStream(var aStream: TMemoryStream);
     function CalculateHash(aVoiceNr: integer): string;
   end;
 
@@ -46,7 +50,7 @@ var
   i: integer;
 begin
   inherited;
-  for i := 0 to 31 do
+  for i := 1 to 32 do
   begin
     FDX7BankParams[i] := TDX7VoiceContainer.Create;
     FDX7BankParams[i].InitVoice;
@@ -57,7 +61,7 @@ destructor TDX7BankContainer.Destroy;
 var
   i: integer;
 begin
-  for i := 31 downto 0 do
+  for i := 32 downto 1 do
     if Assigned(FDX7BankParams[i]) then
       FDX7BankParams[i].Destroy;
   inherited;
@@ -68,9 +72,9 @@ function TDX7BankContainer.GetVoice(aVoiceNr: integer;
 begin
   if (aVoiceNr > 0) and (aVoiceNr < 33) then
   begin
-    if Assigned(FDX7BankParams[aVoiceNr - 1]) then
+    if Assigned(FDX7BankParams[aVoiceNr]) then
     begin
-      FDX7Voice.SetVoiceParams(FDX7BankParams[aVoiceNr - 1].GetVoiceParams);
+      FDX7Voice.Set_VMEM_Params(FDX7BankParams[aVoiceNr].Get_VMEM_Params);
       Result := True;
     end
     else
@@ -85,26 +89,12 @@ function TDX7BankContainer.SetVoice(aVoiceNr: integer;
 begin
   if (aVoiceNr > 0) and (aVoiceNr < 33) then
   begin
-    FDX7BankParams[aVoiceNr - 1].SetVoiceParams(FDX7Voice.GetVoiceParams);
+    FDX7BankParams[aVoiceNr].Set_VMEM_Params(FDX7Voice.Get_VMEM_Params);
     Result := True;
   end
   else
     Result := False;
 end;
-
-{function TDX7BankContainer.Load_VMEM_Bank(aPar: TDX7_VMEM_BankDump): boolean;
-var
-  i, j: integer;
-begin
-  Result := True;
-  try
-    for j := 0 to 31 do
-      for i := low(aPar[j]) to high(aPar[j]) do
-        FillByte(FDX7BankParams[j], SizeOf(byte), aPar[j][i]);
-  except
-    on e: Exception do Result := False;
-  end;
-end; }
 
 procedure TDX7BankContainer.LoadBankFromStream(var aStream: TMemoryStream;
   Position: integer);
@@ -116,7 +106,7 @@ begin
   else
     Exit;
   try
-    for  j := 0 to 31 do
+    for  j := 1 to 32 do
     begin
       if assigned(FDX7BankParams[j]) then
         FDX7BankParams[j].Load_VMEM_FromStream(aStream, aStream.Position);
@@ -129,7 +119,7 @@ end;
 function TDX7BankContainer.GetVoiceName(aVoiceNr: integer): string;
 begin
   if (aVoiceNr > 0) and (aVoiceNr < 33) then
-    Result := FDX7BankParams[aVoiceNr - 1].GetVoiceName
+    Result := FDX7BankParams[aVoiceNr].GetVoiceName
   else
     Result := '';
 end;
@@ -141,7 +131,7 @@ var
 begin
   checksum := 0;
   try
-    for i := 0 to 31 do
+    for i := 1 to 32 do
       checksum := checksum + FDX7BankParams[i].GetChecksumPart;
     Result := ((not (checksum and 255)) and 127) + 1;
   except
@@ -163,7 +153,7 @@ begin
     tmpStream.WriteByte($09);
     tmpStream.WriteByte($20);
     tmpStream.WriteByte($00);
-    for i := 0 to 31 do
+    for i := 1 to 32 do
       if FDX7BankParams[i].Save_VMEM_ToStream(tmpStream) = False then
         Result := False;
     tmpStream.WriteByte(GetChecksum);
@@ -187,7 +177,23 @@ begin
   aStream.WriteByte($09);
   aStream.WriteByte($20);
   aStream.WriteByte($00);
-  for i := 0 to 31 do
+  for i := 1 to 32 do
+    FDX7BankParams[i].Save_VMEM_ToStream(aStream);
+  aStream.WriteByte(GetChecksum);
+  aStream.WriteByte($F7);
+end;
+
+procedure TDX7BankContainer.AppendSysExBankToStream(var aStream: TMemoryStream);
+var
+  i: integer;
+begin
+  aStream.WriteByte($F0);
+  aStream.WriteByte($43);
+  aStream.WriteByte($00);
+  aStream.WriteByte($09);
+  aStream.WriteByte($20);
+  aStream.WriteByte($00);
+  for i := 1 to 32 do
     FDX7BankParams[i].Save_VMEM_ToStream(aStream);
   aStream.WriteByte(GetChecksum);
   aStream.WriteByte($F7);
@@ -196,7 +202,7 @@ end;
 function TDX7BankContainer.CalculateHash(aVoiceNr: integer): string;
 begin
   if (aVoiceNr > 0) and (aVoiceNr < 33) then
-    Result := FDX7BankParams[aVoiceNr - 1].CalculateHash
+    Result := FDX7BankParams[aVoiceNr].CalculateHash
   else
     Result := '';
 end;

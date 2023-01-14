@@ -37,6 +37,7 @@ unit MIDI;
 * 2020-12-24  bugfix for 64 bit Lazarus - thanks to J.M.                       *
 * 2020-12-25  reformatting, deactivate PostMessage() which was a mess          *
 * 2020-12-26  change and edit some comments about how this unit works ..       *
+* 2023-01-01  some code refractoring - helper functions moved to untSysExUtils *
 *       -                                                                      *
 *******************************************************************************}
 
@@ -49,7 +50,7 @@ uses
   //JWAwindows,
   Windows,
   {$ENDIF}
-  Classes, Contnrs, Dialogs, Forms, Math, Messages, MMSystem, SysUtils;
+  Classes, Contnrs, Dialogs, Forms, Math, Messages, MMSystem, SysUtils, untSysExUtils;
 
 
 // -------------------------- WARNING --------------------------
@@ -158,9 +159,10 @@ type
   end;
 
 // convert the stream into xx xx xx xx AnsiString
-function SysExStreamToStr(const aStream: TMemoryStream): ansistring;
+// function SysExStreamToStr(const aStream: TMemoryStream): ansistring;
 // fill the AnsiString in a xx xx xx xx into the stream
-procedure StrToSysExStream(const aString: ansistring; const aStream: TMemoryStream);
+// procedure StrToSysExStream(const aString: ansistring; const aStream: TMemoryStream);
+// 2023.01.01 - moved to separate unit
 
 
 // access MIDI input devices - see local VAR gMidiInput in implementation section
@@ -614,44 +616,6 @@ destructor TSysExData.Destroy;
 begin
   FreeAndNil(fSysExStream);
 end;
-
-
-{ ***** Helper Functions ***************************************************** }
-function SysExStreamToStr(const aStream: TMemoryStream): ansistring;
-var
-  i: integer;
-begin
-  Result := '';
-  aStream.Position := 0;
-  for i := 0 to aStream.Size - 1 do
-    Result := Result + Format('%.2x ', [byte(pansichar(aStream.Memory)[i])]);
-end;
-
-
-procedure StrToSysExStream(const aString: ansistring; const aStream: TMemoryStream);
-const
-  cHex: ansistring = '123456789ABCDEF';
-var
-  lStr: ansistring;
-  i: integer;
-  L: integer;
-begin
-  // check on errors  - added by BREAKOUTBOX 2009-07-30
-  lStr := StringReplace(AnsiUpperCase(aString), ' ', '', [rfReplaceAll]);
-  L := length(lStr);
-  if not (L mod 2 = 0) // as HEX every byte must be two AnsiChars long, for example '0F'
-  then raise EMidiDevices.Create('SysEx string corrupted')
-  else if l < 10  // shortest System Exclusive Message = 5 bytes = 10 hex AnsiChars
-  then raise EMidiDevices.Create('SysEx string too short');
-
-  aStream.Size := Length(lStr) div 2; // ' - 1' removed by BREAKOUTBOX 2009-07-15
-  aStream.Position := 0;
-
-  for i := 1 to aStream.Size do
-    pansichar(aStream.Memory)[i - 1] :=
-      ansichar(AnsiPos(lStr[i * 2 - 1], cHex) shl 4 + AnsiPos(lStr[i * 2], cHex));
-end;
-
 
 initialization
   gMidiInput := nil;

@@ -6,6 +6,20 @@
 
  Author: Boban Spasic
 
+ Unit description:
+ Class implementing DX7 Voice Data and related functions for one Voice.
+
+
+ - function GetChecksum implements the calculation of Checksum for one Voice.
+
+ - function GetChecksumPart implements partial Checksum for use in calculating the
+ checksum of a whole bank.
+
+ - function CalculateHash is used for calculating a unique identifier for use
+ in database storage.
+ It does not take Voice Name into calculation, just the synth parameters.
+ It is done on purpose to eliminite the dupplicates even if the names differ.
+ It is not DX-related function.
 }
 
 unit untDX7Voice;
@@ -15,305 +29,313 @@ unit untDX7Voice;
 interface
 
 uses
-  Classes, HlpHashFactory, SysUtils, untDXUtils;
+  Classes, HlpHashFactory, SysUtils, untDXUtils, untParConst;
 
 type
-  TDX7_VMEM_Dump   = array [0..127] of byte;
+  TDX7_VMEM_Dump = array [0..127] of byte;
   TDX7_VCED_Dump = array [0..155] of byte;
 
 type
-  TDX7_VCED_Params = record
-    OP6_EG_rate_1: byte;              //       0-99
-    OP6_EG_rate_2: byte;              //       0-99
-    OP6_EG_rate_3: byte;              //       0-99
-    OP6_EG_rate_4: byte;              //       0-99
-    OP6_EG_level_1: byte;             //       0-99
-    OP6_EG_level_2: byte;             //       0-99
-    OP6_EG_level_3: byte;             //       0-99
-    OP6_EG_level_4: byte;             //       0-99
-    OP6_KBD_LEV_SCL_BRK_PT: byte;     //       0-99   C3= $27
-    OP6_KBD_LEV_SCL_LFT_DEPTH: byte;  //       0-99   C3= $27
-    OP6_KBD_LEV_SCL_RHT_DEPTH: byte;  //       0-99   C3= $27
-    OP6_KBD_LEV_SCL_LFT_CURVE: byte;  //       0-3    0=-LIN, -EXP, +EXP, +LIN
-    OP6_KBD_LEV_SCL_RHT_CURVE: byte;  //       0-3    0=-LIN, -EXP, +EXP, +LIN
-    OP6_KBD_RATE_SCALING: byte;       //       0-7
-    OP6_AMP_MOD_SENSITIVITY: byte;    //       0-3
-    OP6_KEY_VEL_SENSITIVITY: byte;    //       0-7
-    OP6_OPERATOR_OUTPUT_LEVEL: byte;  //       0-99
-    OP6_OSC_MODE: byte;               //       0-1    (fixed/ratio)   0=ratio
-    OP6_OSC_FREQ_COARSE: byte;        //       0-31
-    OP6_OSC_FREQ_FINE: byte;          //       0-99
-    OP6_OSC_DETUNE: byte;             //       0-14   0: det=-7
-    OP5_EG_rate_1: byte;              //       0-99
-    OP5_EG_rate_2: byte;              //       0-99
-    OP5_EG_rate_3: byte;              //       0-99
-    OP5_EG_rate_4: byte;              //       0-99
-    OP5_EG_level_1: byte;             //       0-99
-    OP5_EG_level_2: byte;             //       0-99
-    OP5_EG_level_3: byte;             //       0-99
-    OP5_EG_level_4: byte;             //       0-99
-    OP5_KBD_LEV_SCL_BRK_PT: byte;     //       0-99   C3= $27
-    OP5_KBD_LEV_SCL_LFT_DEPTH: byte;  //       0-99   C3= $27
-    OP5_KBD_LEV_SCL_RHT_DEPTH: byte;  //       0-99   C3= $27
-    OP5_KBD_LEV_SCL_LFT_CURVE: byte;  //       0-3    0=-LIN, -EXP, +EXP, +LIN
-    OP5_KBD_LEV_SCL_RHT_CURVE: byte;  //       0-3    0=-LIN, -EXP, +EXP, +LIN
-    OP5_KBD_RATE_SCALING: byte;       //       0-7
-    OP5_AMP_MOD_SENSITIVITY: byte;    //       0-3
-    OP5_KEY_VEL_SENSITIVITY: byte;    //       0-7
-    OP5_OPERATOR_OUTPUT_LEVEL: byte;  //       0-99
-    OP5_OSC_MODE: byte;               //       0-1    (fixed/ratio)   0=ratio
-    OP5_OSC_FREQ_COARSE: byte;        //       0-31
-    OP5_OSC_FREQ_FINE: byte;          //       0-99
-    OP5_OSC_DETUNE: byte;             //       0-14   0: det=-7
-    OP4_EG_rate_1: byte;              //       0-99
-    OP4_EG_rate_2: byte;              //       0-99
-    OP4_EG_rate_3: byte;              //       0-99
-    OP4_EG_rate_4: byte;              //       0-99
-    OP4_EG_level_1: byte;             //       0-99
-    OP4_EG_level_2: byte;             //       0-99
-    OP4_EG_level_3: byte;             //       0-99
-    OP4_EG_level_4: byte;             //       0-99
-    OP4_KBD_LEV_SCL_BRK_PT: byte;     //       0-99   C3= $27
-    OP4_KBD_LEV_SCL_LFT_DEPTH: byte;  //       0-99   C3= $27
-    OP4_KBD_LEV_SCL_RHT_DEPTH: byte;  //       0-99   C3= $27
-    OP4_KBD_LEV_SCL_LFT_CURVE: byte;  //       0-3    0=-LIN, -EXP, +EXP, +LIN
-    OP4_KBD_LEV_SCL_RHT_CURVE: byte;  //       0-3    0=-LIN, -EXP, +EXP, +LIN
-    OP4_KBD_RATE_SCALING: byte;       //       0-7
-    OP4_AMP_MOD_SENSITIVITY: byte;    //       0-3
-    OP4_KEY_VEL_SENSITIVITY: byte;    //       0-7
-    OP4_OPERATOR_OUTPUT_LEVEL: byte;  //       0-99
-    OP4_OSC_MODE: byte;               //       0-1    (fixed/ratio)   0=ratio
-    OP4_OSC_FREQ_COARSE: byte;        //       0-31
-    OP4_OSC_FREQ_FINE: byte;          //       0-99
-    OP4_OSC_DETUNE: byte;             //       0-14   0: det=-7
-    OP3_EG_rate_1: byte;              //       0-99
-    OP3_EG_rate_2: byte;              //       0-99
-    OP3_EG_rate_3: byte;              //       0-99
-    OP3_EG_rate_4: byte;              //       0-99
-    OP3_EG_level_1: byte;             //       0-99
-    OP3_EG_level_2: byte;             //       0-99
-    OP3_EG_level_3: byte;             //       0-99
-    OP3_EG_level_4: byte;             //       0-99
-    OP3_KBD_LEV_SCL_BRK_PT: byte;     //       0-99   C3= $27
-    OP3_KBD_LEV_SCL_LFT_DEPTH: byte;  //       0-99   C3= $27
-    OP3_KBD_LEV_SCL_RHT_DEPTH: byte;  //       0-99   C3= $27
-    OP3_KBD_LEV_SCL_LFT_CURVE: byte;  //       0-3    0=-LIN, -EXP, +EXP, +LIN
-    OP3_KBD_LEV_SCL_RHT_CURVE: byte;  //       0-3    0=-LIN, -EXP, +EXP, +LIN
-    OP3_KBD_RATE_SCALING: byte;       //       0-7
-    OP3_AMP_MOD_SENSITIVITY: byte;    //       0-3
-    OP3_KEY_VEL_SENSITIVITY: byte;    //       0-7
-    OP3_OPERATOR_OUTPUT_LEVEL: byte;  //       0-99
-    OP3_OSC_MODE: byte;               //       0-1    (fixed/ratio)   0=ratio
-    OP3_OSC_FREQ_COARSE: byte;        //       0-31
-    OP3_OSC_FREQ_FINE: byte;          //       0-99
-    OP3_OSC_DETUNE: byte;             //       0-14   0: det=-7
-    OP2_EG_rate_1: byte;              //       0-99
-    OP2_EG_rate_2: byte;              //       0-99
-    OP2_EG_rate_3: byte;              //       0-99
-    OP2_EG_rate_4: byte;              //       0-99
-    OP2_EG_level_1: byte;             //       0-99
-    OP2_EG_level_2: byte;             //       0-99
-    OP2_EG_level_3: byte;             //       0-99
-    OP2_EG_level_4: byte;             //       0-99
-    OP2_KBD_LEV_SCL_BRK_PT: byte;     //       0-99   C3= $27
-    OP2_KBD_LEV_SCL_LFT_DEPTH: byte;  //       0-99   C3= $27
-    OP2_KBD_LEV_SCL_RHT_DEPTH: byte;  //       0-99   C3= $27
-    OP2_KBD_LEV_SCL_LFT_CURVE: byte;  //       0-3    0=-LIN, -EXP, +EXP, +LIN
-    OP2_KBD_LEV_SCL_RHT_CURVE: byte;  //       0-3    0=-LIN, -EXP, +EXP, +LIN
-    OP2_KBD_RATE_SCALING: byte;       //       0-7
-    OP2_AMP_MOD_SENSITIVITY: byte;    //       0-3
-    OP2_KEY_VEL_SENSITIVITY: byte;    //       0-7
-    OP2_OPERATOR_OUTPUT_LEVEL: byte;  //       0-99
-    OP2_OSC_MODE: byte;               //       0-1    (fixed/ratio)   0=ratio
-    OP2_OSC_FREQ_COARSE: byte;        //       0-31
-    OP2_OSC_FREQ_FINE: byte;          //       0-99
-    OP2_OSC_DETUNE: byte;             //       0-14   0: det=-7
-    OP1_EG_rate_1: byte;              //       0-99
-    OP1_EG_rate_2: byte;              //       0-99
-    OP1_EG_rate_3: byte;              //       0-99
-    OP1_EG_rate_4: byte;              //       0-99
-    OP1_EG_level_1: byte;             //       0-99
-    OP1_EG_level_2: byte;             //       0-99
-    OP1_EG_level_3: byte;             //       0-99
-    OP1_EG_level_4: byte;             //       0-99
-    OP1_KBD_LEV_SCL_BRK_PT: byte;     //       0-99   C3= $27
-    OP1_KBD_LEV_SCL_LFT_DEPTH: byte;  //       0-99   C3= $27
-    OP1_KBD_LEV_SCL_RHT_DEPTH: byte;  //       0-99   C3= $27
-    OP1_KBD_LEV_SCL_LFT_CURVE: byte;  //       0-3    0=-LIN, -EXP, +EXP, +LIN
-    OP1_KBD_LEV_SCL_RHT_CURVE: byte;  //       0-3    0=-LIN, -EXP, +EXP, +LIN
-    OP1_KBD_RATE_SCALING: byte;       //       0-7
-    OP1_AMP_MOD_SENSITIVITY: byte;    //       0-3
-    OP1_KEY_VEL_SENSITIVITY: byte;    //       0-7
-    OP1_OPERATOR_OUTPUT_LEVEL: byte;  //       0-99
-    OP1_OSC_MODE: byte;               //       0-1    (fixed/ratio)   0=ratio
-    OP1_OSC_FREQ_COARSE: byte;        //       0-31
-    OP1_OSC_FREQ_FINE: byte;          //       0-99
-    OP1_OSC_DETUNE: byte;             //       0-14       0: det=-7
+  TDX7_VCED_Params = packed record
+    case asArray: boolean of
+      True: (params: TDX7_VCED_Dump);
+      False: (
+        OP6_EG_rate_1: byte;              //       0-99
+        OP6_EG_rate_2: byte;              //       0-99
+        OP6_EG_rate_3: byte;              //       0-99
+        OP6_EG_rate_4: byte;              //       0-99
+        OP6_EG_level_1: byte;             //       0-99
+        OP6_EG_level_2: byte;             //       0-99
+        OP6_EG_level_3: byte;             //       0-99
+        OP6_EG_level_4: byte;             //       0-99
+        OP6_KBD_LEV_SCL_BRK_PT: byte;     //       0-99   C3= $27
+        OP6_KBD_LEV_SCL_LFT_DEPTH: byte;  //       0-99   C3= $27
+        OP6_KBD_LEV_SCL_RHT_DEPTH: byte;  //       0-99   C3= $27
+        OP6_KBD_LEV_SCL_LFT_CURVE: byte;  //       0-3    0=-LIN, -EXP, +EXP, +LIN
+        OP6_KBD_LEV_SCL_RHT_CURVE: byte;  //       0-3    0=-LIN, -EXP, +EXP, +LIN
+        OP6_KBD_RATE_SCALING: byte;       //       0-7
+        OP6_AMP_MOD_SENSITIVITY: byte;    //       0-3
+        OP6_KEY_VEL_SENSITIVITY: byte;    //       0-7
+        OP6_OPERATOR_OUTPUT_LEVEL: byte;  //       0-99
+        OP6_OSC_MODE: byte;               //       0-1    (fixed/ratio)   0=ratio
+        OP6_OSC_FREQ_COARSE: byte;        //       0-31
+        OP6_OSC_FREQ_FINE: byte;          //       0-99
+        OP6_OSC_DETUNE: byte;             //       0-14   0: det=-7
+        OP5_EG_rate_1: byte;              //       0-99
+        OP5_EG_rate_2: byte;              //       0-99
+        OP5_EG_rate_3: byte;              //       0-99
+        OP5_EG_rate_4: byte;              //       0-99
+        OP5_EG_level_1: byte;             //       0-99
+        OP5_EG_level_2: byte;             //       0-99
+        OP5_EG_level_3: byte;             //       0-99
+        OP5_EG_level_4: byte;             //       0-99
+        OP5_KBD_LEV_SCL_BRK_PT: byte;     //       0-99   C3= $27
+        OP5_KBD_LEV_SCL_LFT_DEPTH: byte;  //       0-99   C3= $27
+        OP5_KBD_LEV_SCL_RHT_DEPTH: byte;  //       0-99   C3= $27
+        OP5_KBD_LEV_SCL_LFT_CURVE: byte;  //       0-3    0=-LIN, -EXP, +EXP, +LIN
+        OP5_KBD_LEV_SCL_RHT_CURVE: byte;  //       0-3    0=-LIN, -EXP, +EXP, +LIN
+        OP5_KBD_RATE_SCALING: byte;       //       0-7
+        OP5_AMP_MOD_SENSITIVITY: byte;    //       0-3
+        OP5_KEY_VEL_SENSITIVITY: byte;    //       0-7
+        OP5_OPERATOR_OUTPUT_LEVEL: byte;  //       0-99
+        OP5_OSC_MODE: byte;               //       0-1    (fixed/ratio)   0=ratio
+        OP5_OSC_FREQ_COARSE: byte;        //       0-31
+        OP5_OSC_FREQ_FINE: byte;          //       0-99
+        OP5_OSC_DETUNE: byte;             //       0-14   0: det=-7
+        OP4_EG_rate_1: byte;              //       0-99
+        OP4_EG_rate_2: byte;              //       0-99
+        OP4_EG_rate_3: byte;              //       0-99
+        OP4_EG_rate_4: byte;              //       0-99
+        OP4_EG_level_1: byte;             //       0-99
+        OP4_EG_level_2: byte;             //       0-99
+        OP4_EG_level_3: byte;             //       0-99
+        OP4_EG_level_4: byte;             //       0-99
+        OP4_KBD_LEV_SCL_BRK_PT: byte;     //       0-99   C3= $27
+        OP4_KBD_LEV_SCL_LFT_DEPTH: byte;  //       0-99   C3= $27
+        OP4_KBD_LEV_SCL_RHT_DEPTH: byte;  //       0-99   C3= $27
+        OP4_KBD_LEV_SCL_LFT_CURVE: byte;  //       0-3    0=-LIN, -EXP, +EXP, +LIN
+        OP4_KBD_LEV_SCL_RHT_CURVE: byte;  //       0-3    0=-LIN, -EXP, +EXP, +LIN
+        OP4_KBD_RATE_SCALING: byte;       //       0-7
+        OP4_AMP_MOD_SENSITIVITY: byte;    //       0-3
+        OP4_KEY_VEL_SENSITIVITY: byte;    //       0-7
+        OP4_OPERATOR_OUTPUT_LEVEL: byte;  //       0-99
+        OP4_OSC_MODE: byte;               //       0-1    (fixed/ratio)   0=ratio
+        OP4_OSC_FREQ_COARSE: byte;        //       0-31
+        OP4_OSC_FREQ_FINE: byte;          //       0-99
+        OP4_OSC_DETUNE: byte;             //       0-14   0: det=-7
+        OP3_EG_rate_1: byte;              //       0-99
+        OP3_EG_rate_2: byte;              //       0-99
+        OP3_EG_rate_3: byte;              //       0-99
+        OP3_EG_rate_4: byte;              //       0-99
+        OP3_EG_level_1: byte;             //       0-99
+        OP3_EG_level_2: byte;             //       0-99
+        OP3_EG_level_3: byte;             //       0-99
+        OP3_EG_level_4: byte;             //       0-99
+        OP3_KBD_LEV_SCL_BRK_PT: byte;     //       0-99   C3= $27
+        OP3_KBD_LEV_SCL_LFT_DEPTH: byte;  //       0-99   C3= $27
+        OP3_KBD_LEV_SCL_RHT_DEPTH: byte;  //       0-99   C3= $27
+        OP3_KBD_LEV_SCL_LFT_CURVE: byte;  //       0-3    0=-LIN, -EXP, +EXP, +LIN
+        OP3_KBD_LEV_SCL_RHT_CURVE: byte;  //       0-3    0=-LIN, -EXP, +EXP, +LIN
+        OP3_KBD_RATE_SCALING: byte;       //       0-7
+        OP3_AMP_MOD_SENSITIVITY: byte;    //       0-3
+        OP3_KEY_VEL_SENSITIVITY: byte;    //       0-7
+        OP3_OPERATOR_OUTPUT_LEVEL: byte;  //       0-99
+        OP3_OSC_MODE: byte;               //       0-1    (fixed/ratio)   0=ratio
+        OP3_OSC_FREQ_COARSE: byte;        //       0-31
+        OP3_OSC_FREQ_FINE: byte;          //       0-99
+        OP3_OSC_DETUNE: byte;             //       0-14   0: det=-7
+        OP2_EG_rate_1: byte;              //       0-99
+        OP2_EG_rate_2: byte;              //       0-99
+        OP2_EG_rate_3: byte;              //       0-99
+        OP2_EG_rate_4: byte;              //       0-99
+        OP2_EG_level_1: byte;             //       0-99
+        OP2_EG_level_2: byte;             //       0-99
+        OP2_EG_level_3: byte;             //       0-99
+        OP2_EG_level_4: byte;             //       0-99
+        OP2_KBD_LEV_SCL_BRK_PT: byte;     //       0-99   C3= $27
+        OP2_KBD_LEV_SCL_LFT_DEPTH: byte;  //       0-99   C3= $27
+        OP2_KBD_LEV_SCL_RHT_DEPTH: byte;  //       0-99   C3= $27
+        OP2_KBD_LEV_SCL_LFT_CURVE: byte;  //       0-3    0=-LIN, -EXP, +EXP, +LIN
+        OP2_KBD_LEV_SCL_RHT_CURVE: byte;  //       0-3    0=-LIN, -EXP, +EXP, +LIN
+        OP2_KBD_RATE_SCALING: byte;       //       0-7
+        OP2_AMP_MOD_SENSITIVITY: byte;    //       0-3
+        OP2_KEY_VEL_SENSITIVITY: byte;    //       0-7
+        OP2_OPERATOR_OUTPUT_LEVEL: byte;  //       0-99
+        OP2_OSC_MODE: byte;               //       0-1    (fixed/ratio)   0=ratio
+        OP2_OSC_FREQ_COARSE: byte;        //       0-31
+        OP2_OSC_FREQ_FINE: byte;          //       0-99
+        OP2_OSC_DETUNE: byte;             //       0-14   0: det=-7
+        OP1_EG_rate_1: byte;              //       0-99
+        OP1_EG_rate_2: byte;              //       0-99
+        OP1_EG_rate_3: byte;              //       0-99
+        OP1_EG_rate_4: byte;              //       0-99
+        OP1_EG_level_1: byte;             //       0-99
+        OP1_EG_level_2: byte;             //       0-99
+        OP1_EG_level_3: byte;             //       0-99
+        OP1_EG_level_4: byte;             //       0-99
+        OP1_KBD_LEV_SCL_BRK_PT: byte;     //       0-99   C3= $27
+        OP1_KBD_LEV_SCL_LFT_DEPTH: byte;  //       0-99   C3= $27
+        OP1_KBD_LEV_SCL_RHT_DEPTH: byte;  //       0-99   C3= $27
+        OP1_KBD_LEV_SCL_LFT_CURVE: byte;  //       0-3    0=-LIN, -EXP, +EXP, +LIN
+        OP1_KBD_LEV_SCL_RHT_CURVE: byte;  //       0-3    0=-LIN, -EXP, +EXP, +LIN
+        OP1_KBD_RATE_SCALING: byte;       //       0-7
+        OP1_AMP_MOD_SENSITIVITY: byte;    //       0-3
+        OP1_KEY_VEL_SENSITIVITY: byte;    //       0-7
+        OP1_OPERATOR_OUTPUT_LEVEL: byte;  //       0-99
+        OP1_OSC_MODE: byte;               //       0-1    (fixed/ratio)   0=ratio
+        OP1_OSC_FREQ_COARSE: byte;        //       0-31
+        OP1_OSC_FREQ_FINE: byte;          //       0-99
+        OP1_OSC_DETUNE: byte;             //       0-14   0: det=-7
 
-    PITCH_EG_RATE_1: byte;            //       0-99
-    PITCH_EG_RATE_2: byte;            //       0-99
-    PITCH_EG_RATE_3: byte;            //       0-99
-    PITCH_EG_RATE_4: byte;            //       0-99
-    PITCH_EG_LEVEL_1: byte;           //       0-99
-    PITCH_EG_LEVEL_2: byte;           //       0-99
-    PITCH_EG_LEVEL_3: byte;           //       0-99
-    PITCH_EG_LEVEL_4: byte;           //       0-99
-    ALGORITHM: byte;                  //       0-31
-    FEEDBACK: byte;                   //       0-7
-    OSCILLATOR_SYNC: byte;            //       0-1
-    LFO_SPEED: byte;                  //       0-99
-    LFO_DELAY: byte;                  //       0-99
-    LFO_PITCH_MOD_DEPTH: byte;        //       0-99
-    LFO_AMP_MOD_DEPTH: byte;          //       0-99
-    LFO_SYNC: byte;                   //       0-1
-    LFO_WAVEFORM: byte;               //       0-5, (data sheet claims 9-4 ?!?)
-    //       0:TR, 1:SD, 2:SU,
-    //       3:SQ, 4:SI, 5:SH
-    PITCH_MOD_SENSITIVITY: byte;      //       0-7
-    TRANSPOSE: byte;                  //       0-48   12 = C2
-    VOICE_NAME_CHAR_1: byte;          //       ASCII
-    VOICE_NAME_CHAR_2: byte;          //       ASCII
-    VOICE_NAME_CHAR_3: byte;          //       ASCII
-    VOICE_NAME_CHAR_4: byte;          //       ASCII
-    VOICE_NAME_CHAR_5: byte;          //       ASCII
-    VOICE_NAME_CHAR_6: byte;          //       ASCII
-    VOICE_NAME_CHAR_7: byte;          //       ASCII
-    VOICE_NAME_CHAR_8: byte;          //       ASCII
-    VOICE_NAME_CHAR_9: byte;          //       ASCII
-    VOICE_NAME_CHAR_10: byte;         //       ASCII
-    OPERATOR_ON_OFF: byte;            //       bit6 = 0 / bit 5: OP1 / .. .
-    //       ... / bit 0: OP6
+        PITCH_EG_RATE_1: byte;            //       0-99
+        PITCH_EG_RATE_2: byte;            //       0-99
+        PITCH_EG_RATE_3: byte;            //       0-99
+        PITCH_EG_RATE_4: byte;            //       0-99
+        PITCH_EG_LEVEL_1: byte;           //       0-99
+        PITCH_EG_LEVEL_2: byte;           //       0-99
+        PITCH_EG_LEVEL_3: byte;           //       0-99
+        PITCH_EG_LEVEL_4: byte;           //       0-99
+        ALGORITHM: byte;                  //       0-31
+        FEEDBACK: byte;                   //       0-7
+        OSCILLATOR_SYNC: byte;            //       0-1
+        LFO_SPEED: byte;                  //       0-99
+        LFO_DELAY: byte;                  //       0-99
+        LFO_PITCH_MOD_DEPTH: byte;        //       0-99
+        LFO_AMP_MOD_DEPTH: byte;          //       0-99
+        LFO_SYNC: byte;                   //       0-1
+        LFO_WAVEFORM: byte;               //       0-5, (data sheet claims 9-4 ?!?)
+        //       0:TR, 1:SD, 2:SU,
+        //       3:SQ, 4:SI, 5:SH
+        PITCH_MOD_SENSITIVITY: byte;      //       0-7
+        TRANSPOSE: byte;                  //       0-48   12 = C2
+        VOICE_NAME_CHAR_1: byte;          //       ASCII
+        VOICE_NAME_CHAR_2: byte;          //       ASCII
+        VOICE_NAME_CHAR_3: byte;          //       ASCII
+        VOICE_NAME_CHAR_4: byte;          //       ASCII
+        VOICE_NAME_CHAR_5: byte;          //       ASCII
+        VOICE_NAME_CHAR_6: byte;          //       ASCII
+        VOICE_NAME_CHAR_7: byte;          //       ASCII
+        VOICE_NAME_CHAR_8: byte;          //       ASCII
+        VOICE_NAME_CHAR_9: byte;          //       ASCII
+        VOICE_NAME_CHAR_10: byte;         //       ASCII
+        OPERATOR_ON_OFF: byte;            //       bit6 = 0 / bit 5: OP1 / .. .
+        //       ... / bit 0: OP6
+      );
   end;
 
-  TDX7_VMEM_Params = record
-    OP6_EG_rate_1: byte;              //       0-99
-    OP6_EG_rate_2: byte;              //       0-99
-    OP6_EG_rate_3: byte;              //       0-99
-    OP6_EG_rate_4: byte;              //       0-99
-    OP6_EG_level_1: byte;             //       0-99
-    OP6_EG_level_2: byte;             //       0-99
-    OP6_EG_level_3: byte;             //       0-99
-    OP6_EG_level_4: byte;             //       0-99
-    OP6_KBD_LEV_SCL_BRK_PT: byte;     //       0-99   C3= $27
-    OP6_KBD_LEV_SCL_LFT_DEPTH: byte;  //       0-99   C3= $27
-    OP6_KBD_LEV_SCL_RHT_DEPTH: byte;  //       0-99   C3= $27
-    OP6_KBD_LEV_SCL_RC_LC: byte;      //  | 0   0   0 |  RC   |   LC  |
-    OP6_OSC_DET_RS: byte;             //  |      DET      |     RS    |
-    OP6_KVS_AMS: byte;                //  | 0   0 |    KVS    |  AMS  |
-    OP6_OPERATOR_OUTPUT_LEVEL: byte;  //       0-99
-    OP6_FC_M: byte;                   //  | 0 |         FC        | M |
-    OP6_OSC_FREQ_FINE: byte;          //       0-99
-    OP5_EG_rate_1: byte;              //       0-99
-    OP5_EG_rate_2: byte;              //       0-99
-    OP5_EG_rate_3: byte;              //       0-99
-    OP5_EG_rate_4: byte;              //       0-99
-    OP5_EG_level_1: byte;             //       0-99
-    OP5_EG_level_2: byte;             //       0-99
-    OP5_EG_level_3: byte;             //       0-99
-    OP5_EG_level_4: byte;             //       0-99
-    OP5_KBD_LEV_SCL_BRK_PT: byte;     //       0-99   C3= $27
-    OP5_KBD_LEV_SCL_LFT_DEPTH: byte;  //       0-99   C3= $27
-    OP5_KBD_LEV_SCL_RHT_DEPTH: byte;  //       0-99   C3= $27
-    OP5_KBD_LEV_SCL_RC_LC: byte;      //  | 0   0   0 |  RC   |   LC  |
-    OP5_OSC_DET_RS: byte;             //  |      DET      |     RS    |
-    OP5_KVS_AMS: byte;                //  | 0   0 |    KVS    |  AMS  |
-    OP5_OPERATOR_OUTPUT_LEVEL: byte;  //       0-99
-    OP5_FC_M: byte;                   //  | 0 |         FC        | M |
-    OP5_OSC_FREQ_FINE: byte;          //       0-99
-    OP4_EG_rate_1: byte;              //       0-99
-    OP4_EG_rate_2: byte;              //       0-99
-    OP4_EG_rate_3: byte;              //       0-99
-    OP4_EG_rate_4: byte;              //       0-99
-    OP4_EG_level_1: byte;             //       0-99
-    OP4_EG_level_2: byte;             //       0-99
-    OP4_EG_level_3: byte;             //       0-99
-    OP4_EG_level_4: byte;             //       0-99
-    OP4_KBD_LEV_SCL_BRK_PT: byte;     //       0-99   C3= $27
-    OP4_KBD_LEV_SCL_LFT_DEPTH: byte;  //       0-99   C3= $27
-    OP4_KBD_LEV_SCL_RHT_DEPTH: byte;  //       0-99   C3= $27
-    OP4_KBD_LEV_SCL_RC_LC: byte;      //  | 0   0   0 |  RC   |   LC  |
-    OP4_OSC_DET_RS: byte;             //  |      DET      |     RS    |
-    OP4_KVS_AMS: byte;                //  | 0   0 |    KVS    |  AMS  |
-    OP4_OPERATOR_OUTPUT_LEVEL: byte;  //       0-99
-    OP4_FC_M: byte;                   //  | 0 |         FC        | M |
-    OP4_OSC_FREQ_FINE: byte;          //       0-99
-    OP3_EG_rate_1: byte;              //       0-99
-    OP3_EG_rate_2: byte;              //       0-99
-    OP3_EG_rate_3: byte;              //       0-99
-    OP3_EG_rate_4: byte;              //       0-99
-    OP3_EG_level_1: byte;             //       0-99
-    OP3_EG_level_2: byte;             //       0-99
-    OP3_EG_level_3: byte;             //       0-99
-    OP3_EG_level_4: byte;             //       0-99
-    OP3_KBD_LEV_SCL_BRK_PT: byte;     //       0-99   C3= $27
-    OP3_KBD_LEV_SCL_LFT_DEPTH: byte;  //       0-99   C3= $27
-    OP3_KBD_LEV_SCL_RHT_DEPTH: byte;  //       0-99   C3= $27
-    OP3_KBD_LEV_SCL_RC_LC: byte;      //  | 0   0   0 |  RC   |   LC  |
-    OP3_OSC_DET_RS: byte;             //  |      DET      |     RS    |
-    OP3_KVS_AMS: byte;                //  | 0   0 |    KVS    |  AMS  |
-    OP3_OPERATOR_OUTPUT_LEVEL: byte;  //       0-99
-    OP3_FC_M: byte;                   //  | 0 |         FC        | M |
-    OP3_OSC_FREQ_FINE: byte;          //       0-99
-    OP2_EG_rate_1: byte;              //       0-99
-    OP2_EG_rate_2: byte;              //       0-99
-    OP2_EG_rate_3: byte;              //       0-99
-    OP2_EG_rate_4: byte;              //       0-99
-    OP2_EG_level_1: byte;             //       0-99
-    OP2_EG_level_2: byte;             //       0-99
-    OP2_EG_level_3: byte;             //       0-99
-    OP2_EG_level_4: byte;             //       0-99
-    OP2_KBD_LEV_SCL_BRK_PT: byte;     //       0-99   C3= $27
-    OP2_KBD_LEV_SCL_LFT_DEPTH: byte;  //       0-99   C3= $27
-    OP2_KBD_LEV_SCL_RHT_DEPTH: byte;  //       0-99   C3= $27
-    OP2_KBD_LEV_SCL_RC_LC: byte;      //  | 0   0   0 |  RC   |   LC  |
-    OP2_OSC_DET_RS: byte;             //  |      DET      |     RS    |
-    OP2_KVS_AMS: byte;                //  | 0   0 |    KVS    |  AMS  |
-    OP2_OPERATOR_OUTPUT_LEVEL: byte;  //       0-99
-    OP2_FC_M: byte;                   //  | 0 |         FC        | M |
-    OP2_OSC_FREQ_FINE: byte;          //       0-99
-    OP1_EG_rate_1: byte;              //       0-99
-    OP1_EG_rate_2: byte;              //       0-99
-    OP1_EG_rate_3: byte;              //       0-99
-    OP1_EG_rate_4: byte;              //       0-99
-    OP1_EG_level_1: byte;             //       0-99
-    OP1_EG_level_2: byte;             //       0-99
-    OP1_EG_level_3: byte;             //       0-99
-    OP1_EG_level_4: byte;             //       0-99
-    OP1_KBD_LEV_SCL_BRK_PT: byte;     //       0-99   C3= $27
-    OP1_KBD_LEV_SCL_LFT_DEPTH: byte;  //       0-99   C3= $27
-    OP1_KBD_LEV_SCL_RHT_DEPTH: byte;  //       0-99   C3= $27
-    OP1_KBD_LEV_SCL_RC_LC: byte;      //  | 0   0   0 |  RC   |   LC  |
-    OP1_OSC_DET_RS: byte;             //  |      DET      |     RS    |
-    OP1_KVS_AMS: byte;                //  | 0   0 |    KVS    |  AMS  |
-    OP1_OPERATOR_OUTPUT_LEVEL: byte;  //       0-99
-    OP1_FC_M: byte;                   //  | 0 |         FC        | M |
-    OP1_OSC_FREQ_FINE: byte;          //       0-99
-    PITCH_EG_RATE_1: byte;            //       0-99
-    PITCH_EG_RATE_2: byte;            //       0-99
-    PITCH_EG_RATE_3: byte;            //       0-99
-    PITCH_EG_RATE_4: byte;            //       0-99
-    PITCH_EG_LEVEL_1: byte;           //       0-99
-    PITCH_EG_LEVEL_2: byte;           //       0-99
-    PITCH_EG_LEVEL_3: byte;           //       0-99
-    PITCH_EG_LEVEL_4: byte;           //       0-99
-    ALGORITHM: byte;                  //       0-31
-    OSCSYNC_FEEDBACK: byte;           //   | 0   0   0 |OKS|    FB     |
-    LFO_SPEED: byte;                  //       0-99
-    LFO_DELAY: byte;                  //       0-99
-    LFO_PITCH_MOD_DEPTH: byte;        //       0-99
-    LFO_AMP_MOD_DEPTH: byte;          //       0-99
-    PMS_WAVE_SYNC: byte;              //   |  LPMS |      LFW      |LKS|
-    TRANSPOSE: byte;                  //       0-48   12 = C2
-    VOICE_NAME_CHAR_1: byte;          //       ASCII
-    VOICE_NAME_CHAR_2: byte;          //       ASCII
-    VOICE_NAME_CHAR_3: byte;          //       ASCII
-    VOICE_NAME_CHAR_4: byte;          //       ASCII
-    VOICE_NAME_CHAR_5: byte;          //       ASCII
-    VOICE_NAME_CHAR_6: byte;          //       ASCII
-    VOICE_NAME_CHAR_7: byte;          //       ASCII
-    VOICE_NAME_CHAR_8: byte;          //       ASCII
-    VOICE_NAME_CHAR_9: byte;          //       ASCII
-    VOICE_NAME_CHAR_10: byte;         //       ASCII
+  TDX7_VMEM_Params = packed record
+    case asArray: boolean of
+      True: (params: TDX7_VMEM_Dump);
+      False: (
+        OP6_EG_rate_1: byte;              //       0-99
+        OP6_EG_rate_2: byte;              //       0-99
+        OP6_EG_rate_3: byte;              //       0-99
+        OP6_EG_rate_4: byte;              //       0-99
+        OP6_EG_level_1: byte;             //       0-99
+        OP6_EG_level_2: byte;             //       0-99
+        OP6_EG_level_3: byte;             //       0-99
+        OP6_EG_level_4: byte;             //       0-99
+        OP6_KBD_LEV_SCL_BRK_PT: byte;     //       0-99   C3= $27
+        OP6_KBD_LEV_SCL_LFT_DEPTH: byte;  //       0-99   C3= $27
+        OP6_KBD_LEV_SCL_RHT_DEPTH: byte;  //       0-99   C3= $27
+        OP6_KBD_LEV_SCL_RC_LC: byte;      //  | 0   0   0 |  RC   |   LC  |
+        OP6_OSC_DET_RS: byte;             //  |      DET      |     RS    |
+        OP6_KVS_AMS: byte;                //  | 0   0 |    KVS    |  AMS  |
+        OP6_OPERATOR_OUTPUT_LEVEL: byte;  //       0-99
+        OP6_FC_M: byte;                   //  | 0 |         FC        | M |
+        OP6_OSC_FREQ_FINE: byte;          //       0-99
+        OP5_EG_rate_1: byte;              //       0-99
+        OP5_EG_rate_2: byte;              //       0-99
+        OP5_EG_rate_3: byte;              //       0-99
+        OP5_EG_rate_4: byte;              //       0-99
+        OP5_EG_level_1: byte;             //       0-99
+        OP5_EG_level_2: byte;             //       0-99
+        OP5_EG_level_3: byte;             //       0-99
+        OP5_EG_level_4: byte;             //       0-99
+        OP5_KBD_LEV_SCL_BRK_PT: byte;     //       0-99   C3= $27
+        OP5_KBD_LEV_SCL_LFT_DEPTH: byte;  //       0-99   C3= $27
+        OP5_KBD_LEV_SCL_RHT_DEPTH: byte;  //       0-99   C3= $27
+        OP5_KBD_LEV_SCL_RC_LC: byte;      //  | 0   0   0 |  RC   |   LC  |
+        OP5_OSC_DET_RS: byte;             //  |      DET      |     RS    |
+        OP5_KVS_AMS: byte;                //  | 0   0 |    KVS    |  AMS  |
+        OP5_OPERATOR_OUTPUT_LEVEL: byte;  //       0-99
+        OP5_FC_M: byte;                   //  | 0 |         FC        | M |
+        OP5_OSC_FREQ_FINE: byte;          //       0-99
+        OP4_EG_rate_1: byte;              //       0-99
+        OP4_EG_rate_2: byte;              //       0-99
+        OP4_EG_rate_3: byte;              //       0-99
+        OP4_EG_rate_4: byte;              //       0-99
+        OP4_EG_level_1: byte;             //       0-99
+        OP4_EG_level_2: byte;             //       0-99
+        OP4_EG_level_3: byte;             //       0-99
+        OP4_EG_level_4: byte;             //       0-99
+        OP4_KBD_LEV_SCL_BRK_PT: byte;     //       0-99   C3= $27
+        OP4_KBD_LEV_SCL_LFT_DEPTH: byte;  //       0-99   C3= $27
+        OP4_KBD_LEV_SCL_RHT_DEPTH: byte;  //       0-99   C3= $27
+        OP4_KBD_LEV_SCL_RC_LC: byte;      //  | 0   0   0 |  RC   |   LC  |
+        OP4_OSC_DET_RS: byte;             //  |      DET      |     RS    |
+        OP4_KVS_AMS: byte;                //  | 0   0 |    KVS    |  AMS  |
+        OP4_OPERATOR_OUTPUT_LEVEL: byte;  //       0-99
+        OP4_FC_M: byte;                   //  | 0 |         FC        | M |
+        OP4_OSC_FREQ_FINE: byte;          //       0-99
+        OP3_EG_rate_1: byte;              //       0-99
+        OP3_EG_rate_2: byte;              //       0-99
+        OP3_EG_rate_3: byte;              //       0-99
+        OP3_EG_rate_4: byte;              //       0-99
+        OP3_EG_level_1: byte;             //       0-99
+        OP3_EG_level_2: byte;             //       0-99
+        OP3_EG_level_3: byte;             //       0-99
+        OP3_EG_level_4: byte;             //       0-99
+        OP3_KBD_LEV_SCL_BRK_PT: byte;     //       0-99   C3= $27
+        OP3_KBD_LEV_SCL_LFT_DEPTH: byte;  //       0-99   C3= $27
+        OP3_KBD_LEV_SCL_RHT_DEPTH: byte;  //       0-99   C3= $27
+        OP3_KBD_LEV_SCL_RC_LC: byte;      //  | 0   0   0 |  RC   |   LC  |
+        OP3_OSC_DET_RS: byte;             //  |      DET      |     RS    |
+        OP3_KVS_AMS: byte;                //  | 0   0 |    KVS    |  AMS  |
+        OP3_OPERATOR_OUTPUT_LEVEL: byte;  //       0-99
+        OP3_FC_M: byte;                   //  | 0 |         FC        | M |
+        OP3_OSC_FREQ_FINE: byte;          //       0-99
+        OP2_EG_rate_1: byte;              //       0-99
+        OP2_EG_rate_2: byte;              //       0-99
+        OP2_EG_rate_3: byte;              //       0-99
+        OP2_EG_rate_4: byte;              //       0-99
+        OP2_EG_level_1: byte;             //       0-99
+        OP2_EG_level_2: byte;             //       0-99
+        OP2_EG_level_3: byte;             //       0-99
+        OP2_EG_level_4: byte;             //       0-99
+        OP2_KBD_LEV_SCL_BRK_PT: byte;     //       0-99   C3= $27
+        OP2_KBD_LEV_SCL_LFT_DEPTH: byte;  //       0-99   C3= $27
+        OP2_KBD_LEV_SCL_RHT_DEPTH: byte;  //       0-99   C3= $27
+        OP2_KBD_LEV_SCL_RC_LC: byte;      //  | 0   0   0 |  RC   |   LC  |
+        OP2_OSC_DET_RS: byte;             //  |      DET      |     RS    |
+        OP2_KVS_AMS: byte;                //  | 0   0 |    KVS    |  AMS  |
+        OP2_OPERATOR_OUTPUT_LEVEL: byte;  //       0-99
+        OP2_FC_M: byte;                   //  | 0 |         FC        | M |
+        OP2_OSC_FREQ_FINE: byte;          //       0-99
+        OP1_EG_rate_1: byte;              //       0-99
+        OP1_EG_rate_2: byte;              //       0-99
+        OP1_EG_rate_3: byte;              //       0-99
+        OP1_EG_rate_4: byte;              //       0-99
+        OP1_EG_level_1: byte;             //       0-99
+        OP1_EG_level_2: byte;             //       0-99
+        OP1_EG_level_3: byte;             //       0-99
+        OP1_EG_level_4: byte;             //       0-99
+        OP1_KBD_LEV_SCL_BRK_PT: byte;     //       0-99   C3= $27
+        OP1_KBD_LEV_SCL_LFT_DEPTH: byte;  //       0-99   C3= $27
+        OP1_KBD_LEV_SCL_RHT_DEPTH: byte;  //       0-99   C3= $27
+        OP1_KBD_LEV_SCL_RC_LC: byte;      //  | 0   0   0 |  RC   |   LC  |
+        OP1_OSC_DET_RS: byte;             //  |      DET      |     RS    |
+        OP1_KVS_AMS: byte;                //  | 0   0 |    KVS    |  AMS  |
+        OP1_OPERATOR_OUTPUT_LEVEL: byte;  //       0-99
+        OP1_FC_M: byte;                   //  | 0 |         FC        | M |
+        OP1_OSC_FREQ_FINE: byte;          //       0-99
+        PITCH_EG_RATE_1: byte;            //       0-99
+        PITCH_EG_RATE_2: byte;            //       0-99
+        PITCH_EG_RATE_3: byte;            //       0-99
+        PITCH_EG_RATE_4: byte;            //       0-99
+        PITCH_EG_LEVEL_1: byte;           //       0-99
+        PITCH_EG_LEVEL_2: byte;           //       0-99
+        PITCH_EG_LEVEL_3: byte;           //       0-99
+        PITCH_EG_LEVEL_4: byte;           //       0-99
+        ALGORITHM: byte;                  //       0-31
+        OSCSYNC_FEEDBACK: byte;           //   | 0   0   0 |OKS|    FB     |
+        LFO_SPEED: byte;                  //       0-99
+        LFO_DELAY: byte;                  //       0-99
+        LFO_PITCH_MOD_DEPTH: byte;        //       0-99
+        LFO_AMP_MOD_DEPTH: byte;          //       0-99
+        PMS_WAVE_SYNC: byte;              //   |  LPMS |      LFW      |LKS|
+        TRANSPOSE: byte;                  //       0-48   12 = C2
+        VOICE_NAME_CHAR_1: byte;          //       ASCII
+        VOICE_NAME_CHAR_2: byte;          //       ASCII
+        VOICE_NAME_CHAR_3: byte;          //       ASCII
+        VOICE_NAME_CHAR_4: byte;          //       ASCII
+        VOICE_NAME_CHAR_5: byte;          //       ASCII
+        VOICE_NAME_CHAR_6: byte;          //       ASCII
+        VOICE_NAME_CHAR_7: byte;          //       ASCII
+        VOICE_NAME_CHAR_8: byte;          //       ASCII
+        VOICE_NAME_CHAR_9: byte;          //       ASCII
+        VOICE_NAME_CHAR_10: byte;         //       ASCII
+      );
   end;
 
 type
@@ -322,16 +344,16 @@ type
     FDX7_VCED_Params: TDX7_VCED_Params;
     FDX7_VMEM_Params: TDX7_VMEM_Params;
   public
-    //function Load_VMEM_(aPar: TDX7_VMEM_Dump): boolean;
-    //function Load_VCED_(aPar: TDX7_VCED_Dump): boolean;
     function Load_VMEM_FromStream(var aStream: TMemoryStream;
       Position: integer): boolean;
     function Load_VCED_FromStream(var aStream: TMemoryStream;
       Position: integer): boolean;
     procedure InitVoice; //set defaults
     function GetVoiceName: string;
-    function GetVoiceParams: TDX7_VMEM_Params;
-    function SetVoiceParams(aParams: TDX7_VMEM_Params): boolean;
+    function Get_VMEM_Params: TDX7_VMEM_Params;
+    function Get_VCED_Params: TDX7_VCED_Params;
+    function Set_VMEM_Params(aParams: TDX7_VMEM_Params): boolean;
+    function Set_VCED_Params(aParams: TDX7_VCED_Params): boolean;
     function Save_VMEM_ToStream(var aStream: TMemoryStream): boolean;
     function Save_VCED_ToStream(var aStream: TMemoryStream): boolean;
     function GetChecksumPart: integer;
@@ -349,6 +371,9 @@ function VCEDtoVMEM(aPar: TDX7_VCED_Params): TDX7_VMEM_Params;
 var
   t: TDX7_VMEM_Params;
 begin
+  Result.asArray := False;
+  t.asArray := False;
+
   //first the parameters without conversion
   t.OP6_EG_rate_1 := aPar.OP6_EG_rate_1;
   t.OP6_EG_rate_2 := aPar.OP6_EG_rate_2;
@@ -490,7 +515,7 @@ begin
   t.LFO_DELAY := aPar.LFO_DELAY;
   t.LFO_PITCH_MOD_DEPTH := aPar.LFO_PITCH_MOD_DEPTH;
   t.LFO_AMP_MOD_DEPTH := aPar.LFO_AMP_MOD_DEPTH;
-  t.PMS_WAVE_SYNC := (aPar.PITCH_MOD_SENSITIVITY shl 5) +
+  t.PMS_WAVE_SYNC := (aPar.PITCH_MOD_SENSITIVITY shl 4) +
     (aPar.LFO_WAVEFORM shl 1) + aPar.LFO_SYNC;
   t.TRANSPOSE := aPar.TRANSPOSE;
   t.VOICE_NAME_CHAR_1 := aPar.VOICE_NAME_CHAR_1;
@@ -511,6 +536,9 @@ function VMEMtoVCED(aPar: TDX7_VMEM_Params): TDX7_VCED_Params;
 var
   t: TDX7_VCED_Params;
 begin
+  Result.asArray := False;
+  t.asArray := False;
+
   //first the parameters without conversion
   t.OP6_EG_rate_1 := aPar.OP6_EG_rate_1;
   t.OP6_EG_rate_2 := aPar.OP6_EG_rate_2;
@@ -671,8 +699,8 @@ begin
   t.LFO_DELAY := aPar.LFO_DELAY;
   t.LFO_PITCH_MOD_DEPTH := aPar.LFO_PITCH_MOD_DEPTH;
   t.LFO_AMP_MOD_DEPTH := aPar.LFO_AMP_MOD_DEPTH;
-  t.PITCH_MOD_SENSITIVITY := aPar.PMS_WAVE_SYNC shr 5;
-  t.LFO_WAVEFORM := (aPar.PMS_WAVE_SYNC shr 1) and 15;
+  t.PITCH_MOD_SENSITIVITY := aPar.PMS_WAVE_SYNC shr 4;
+  t.LFO_WAVEFORM := (aPar.PMS_WAVE_SYNC shr 1) and 7;
   t.LFO_SYNC := aPar.PMS_WAVE_SYNC and 1;
   t.TRANSPOSE := aPar.TRANSPOSE;
   t.VOICE_NAME_CHAR_1 := aPar.VOICE_NAME_CHAR_1;
@@ -685,175 +713,25 @@ begin
   t.VOICE_NAME_CHAR_8 := aPar.VOICE_NAME_CHAR_8;
   t.VOICE_NAME_CHAR_9 := aPar.VOICE_NAME_CHAR_9;
   t.VOICE_NAME_CHAR_10 := aPar.VOICE_NAME_CHAR_10;
-  t.OPERATOR_ON_OFF := 63; //just set to all OP=on
+  t.OPERATOR_ON_OFF := 63; //just set to all OP=on; not part of VMEM
   Result := t;
 end;
 
-{function TDX7VoiceContainer.Load_VMEM_(aPar: TDX7_VMEM_Dump): boolean;
-var
-  i: integer;
-begin
-  Result := True;
-  try
-    for i := low(aPar) to high(aPar) do
-      FillByte(FDX7_VMEM_Params, SizeOf(byte), aPar[i]);
-    FDX7_VCED_Params := VMEMtoVCED(FDX7_VMEM_Params);
-  except
-    on e: Exception do Result := False;
-  end;
-end; }
-
-{function TDX7VoiceContainer.Load_VCED_(aPar: TDX7_VCED_Dump): boolean;
-var
-  i: integer;
-begin
-  Result := True;
-  try
-    for i := low(aPar) to high(aPar) do
-      FillByte(FDX7_VCED_Params, SizeOf(byte), aPar[i]);
-    FDX7_VMEM_Params := VCEDtoVMEM(FDX7_VCED_Params);
-  except
-    on e: Exception do Result := False;
-  end;
-end; }
-
 function TDX7VoiceContainer.Load_VMEM_FromStream(var aStream: TMemoryStream;
   Position: integer): boolean;
+var
+  i: integer;
 begin
-  if Position < aStream.Size then
-    aStream.Position := Position;
+  Result := False;
+  if (Position + 127) <= aStream.Size then
+    aStream.Position := Position
+  else
+    Exit;
   try
-    with FDX7_VMEM_Params do
-    begin
-      OP6_EG_rate_1 := aStream.ReadByte;
-      OP6_EG_rate_2 := aStream.ReadByte;
-      OP6_EG_rate_3 := aStream.ReadByte;
-      OP6_EG_rate_4 := aStream.ReadByte;
-      OP6_EG_level_1 := aStream.ReadByte;
-      OP6_EG_level_2 := aStream.ReadByte;
-      OP6_EG_level_3 := aStream.ReadByte;
-      OP6_EG_level_4 := aStream.ReadByte;
-      OP6_KBD_LEV_SCL_BRK_PT := aStream.ReadByte;
-      OP6_KBD_LEV_SCL_LFT_DEPTH := aStream.ReadByte;
-      OP6_KBD_LEV_SCL_RHT_DEPTH := aStream.ReadByte;
-      OP6_KBD_LEV_SCL_RC_LC := aStream.ReadByte;
-      OP6_OSC_DET_RS := aStream.ReadByte;
-      OP6_KVS_AMS := aStream.ReadByte;
-      OP6_OPERATOR_OUTPUT_LEVEL := aStream.ReadByte;
-      OP6_FC_M := aStream.ReadByte;
-      OP6_OSC_FREQ_FINE := aStream.ReadByte;
-      OP5_EG_rate_1 := aStream.ReadByte;
-      OP5_EG_rate_2 := aStream.ReadByte;
-      OP5_EG_rate_3 := aStream.ReadByte;
-      OP5_EG_rate_4 := aStream.ReadByte;
-      OP5_EG_level_1 := aStream.ReadByte;
-      OP5_EG_level_2 := aStream.ReadByte;
-      OP5_EG_level_3 := aStream.ReadByte;
-      OP5_EG_level_4 := aStream.ReadByte;
-      OP5_KBD_LEV_SCL_BRK_PT := aStream.ReadByte;
-      OP5_KBD_LEV_SCL_LFT_DEPTH := aStream.ReadByte;
-      OP5_KBD_LEV_SCL_RHT_DEPTH := aStream.ReadByte;
-      OP5_KBD_LEV_SCL_RC_LC := aStream.ReadByte;
-      OP5_OSC_DET_RS := aStream.ReadByte;
-      OP5_KVS_AMS := aStream.ReadByte;
-      OP5_OPERATOR_OUTPUT_LEVEL := aStream.ReadByte;
-      OP5_FC_M := aStream.ReadByte;
-      OP5_OSC_FREQ_FINE := aStream.ReadByte;
-      OP4_EG_rate_1 := aStream.ReadByte;
-      OP4_EG_rate_2 := aStream.ReadByte;
-      OP4_EG_rate_3 := aStream.ReadByte;
-      OP4_EG_rate_4 := aStream.ReadByte;
-      OP4_EG_level_1 := aStream.ReadByte;
-      OP4_EG_level_2 := aStream.ReadByte;
-      OP4_EG_level_3 := aStream.ReadByte;
-      OP4_EG_level_4 := aStream.ReadByte;
-      OP4_KBD_LEV_SCL_BRK_PT := aStream.ReadByte;
-      OP4_KBD_LEV_SCL_LFT_DEPTH := aStream.ReadByte;
-      OP4_KBD_LEV_SCL_RHT_DEPTH := aStream.ReadByte;
-      OP4_KBD_LEV_SCL_RC_LC := aStream.ReadByte;
-      OP4_OSC_DET_RS := aStream.ReadByte;
-      OP4_KVS_AMS := aStream.ReadByte;
-      OP4_OPERATOR_OUTPUT_LEVEL := aStream.ReadByte;
-      OP4_FC_M := aStream.ReadByte;
-      OP4_OSC_FREQ_FINE := aStream.ReadByte;
-      OP3_EG_rate_1 := aStream.ReadByte;
-      OP3_EG_rate_2 := aStream.ReadByte;
-      OP3_EG_rate_3 := aStream.ReadByte;
-      OP3_EG_rate_4 := aStream.ReadByte;
-      OP3_EG_level_1 := aStream.ReadByte;
-      OP3_EG_level_2 := aStream.ReadByte;
-      OP3_EG_level_3 := aStream.ReadByte;
-      OP3_EG_level_4 := aStream.ReadByte;
-      OP3_KBD_LEV_SCL_BRK_PT := aStream.ReadByte;
-      OP3_KBD_LEV_SCL_LFT_DEPTH := aStream.ReadByte;
-      OP3_KBD_LEV_SCL_RHT_DEPTH := aStream.ReadByte;
-      OP3_KBD_LEV_SCL_RC_LC := aStream.ReadByte;
-      OP3_OSC_DET_RS := aStream.ReadByte;
-      OP3_KVS_AMS := aStream.ReadByte;
-      OP3_OPERATOR_OUTPUT_LEVEL := aStream.ReadByte;
-      OP3_FC_M := aStream.ReadByte;
-      OP3_OSC_FREQ_FINE := aStream.ReadByte;
-      OP2_EG_rate_1 := aStream.ReadByte;
-      OP2_EG_rate_2 := aStream.ReadByte;
-      OP2_EG_rate_3 := aStream.ReadByte;
-      OP2_EG_rate_4 := aStream.ReadByte;
-      OP2_EG_level_1 := aStream.ReadByte;
-      OP2_EG_level_2 := aStream.ReadByte;
-      OP2_EG_level_3 := aStream.ReadByte;
-      OP2_EG_level_4 := aStream.ReadByte;
-      OP2_KBD_LEV_SCL_BRK_PT := aStream.ReadByte;
-      OP2_KBD_LEV_SCL_LFT_DEPTH := aStream.ReadByte;
-      OP2_KBD_LEV_SCL_RHT_DEPTH := aStream.ReadByte;
-      OP2_KBD_LEV_SCL_RC_LC := aStream.ReadByte;
-      OP2_OSC_DET_RS := aStream.ReadByte;
-      OP2_KVS_AMS := aStream.ReadByte;
-      OP2_OPERATOR_OUTPUT_LEVEL := aStream.ReadByte;
-      OP2_FC_M := aStream.ReadByte;
-      OP2_OSC_FREQ_FINE := aStream.ReadByte;
-      OP1_EG_rate_1 := aStream.ReadByte;
-      OP1_EG_rate_2 := aStream.ReadByte;
-      OP1_EG_rate_3 := aStream.ReadByte;
-      OP1_EG_rate_4 := aStream.ReadByte;
-      OP1_EG_level_1 := aStream.ReadByte;
-      OP1_EG_level_2 := aStream.ReadByte;
-      OP1_EG_level_3 := aStream.ReadByte;
-      OP1_EG_level_4 := aStream.ReadByte;
-      OP1_KBD_LEV_SCL_BRK_PT := aStream.ReadByte;
-      OP1_KBD_LEV_SCL_LFT_DEPTH := aStream.ReadByte;
-      OP1_KBD_LEV_SCL_RHT_DEPTH := aStream.ReadByte;
-      OP1_KBD_LEV_SCL_RC_LC := aStream.ReadByte;
-      OP1_OSC_DET_RS := aStream.ReadByte;
-      OP1_KVS_AMS := aStream.ReadByte;
-      OP1_OPERATOR_OUTPUT_LEVEL := aStream.ReadByte;
-      OP1_FC_M := aStream.ReadByte;
-      OP1_OSC_FREQ_FINE := aStream.ReadByte;
-      PITCH_EG_RATE_1 := aStream.ReadByte;
-      PITCH_EG_RATE_2 := aStream.ReadByte;
-      PITCH_EG_RATE_3 := aStream.ReadByte;
-      PITCH_EG_RATE_4 := aStream.ReadByte;
-      PITCH_EG_LEVEL_1 := aStream.ReadByte;
-      PITCH_EG_LEVEL_2 := aStream.ReadByte;
-      PITCH_EG_LEVEL_3 := aStream.ReadByte;
-      PITCH_EG_LEVEL_4 := aStream.ReadByte;
-      ALGORITHM := aStream.ReadByte;
-      OSCSYNC_FEEDBACK := aStream.ReadByte;
-      LFO_SPEED := aStream.ReadByte;
-      LFO_DELAY := aStream.ReadByte;
-      LFO_PITCH_MOD_DEPTH := aStream.ReadByte;
-      LFO_AMP_MOD_DEPTH := aStream.ReadByte;
-      PMS_WAVE_SYNC := aStream.ReadByte;
-      TRANSPOSE := aStream.ReadByte;
-      VOICE_NAME_CHAR_1 := aStream.ReadByte;
-      VOICE_NAME_CHAR_2 := aStream.ReadByte;
-      VOICE_NAME_CHAR_3 := aStream.ReadByte;
-      VOICE_NAME_CHAR_4 := aStream.ReadByte;
-      VOICE_NAME_CHAR_5 := aStream.ReadByte;
-      VOICE_NAME_CHAR_6 := aStream.ReadByte;
-      VOICE_NAME_CHAR_7 := aStream.ReadByte;
-      VOICE_NAME_CHAR_8 := aStream.ReadByte;
-      VOICE_NAME_CHAR_9 := aStream.ReadByte;
-      VOICE_NAME_CHAR_10 := aStream.ReadByte;
-    end;
+    FDX7_VMEM_Params.asArray := True;
+    for i := 0 to 127 do
+      FDX7_VMEM_Params.params[i] := aStream.ReadByte;
+
     FDX7_VCED_Params := VMEMtoVCED(FDX7_VMEM_Params);
     Result := True;
   except
@@ -863,177 +741,19 @@ end;
 
 function TDX7VoiceContainer.Load_VCED_FromStream(var aStream: TMemoryStream;
   Position: integer): boolean;
+var
+  i: integer;
 begin
+  Result := False;
   if (Position + 155) <= aStream.Size then
     aStream.Position := Position
   else
     Exit;
   try
-    with FDX7_VCED_Params do
-    begin
-      OP6_EG_rate_1 := aStream.ReadByte;
-      OP6_EG_rate_2 := aStream.ReadByte;
-      OP6_EG_rate_3 := aStream.ReadByte;
-      OP6_EG_rate_4 := aStream.ReadByte;
-      OP6_EG_level_1 := aStream.ReadByte;
-      OP6_EG_level_2 := aStream.ReadByte;
-      OP6_EG_level_3 := aStream.ReadByte;
-      OP6_EG_level_4 := aStream.ReadByte;
-      OP6_KBD_LEV_SCL_BRK_PT := aStream.ReadByte;
-      OP6_KBD_LEV_SCL_LFT_DEPTH := aStream.ReadByte;
-      OP6_KBD_LEV_SCL_RHT_DEPTH := aStream.ReadByte;
-      OP6_KBD_LEV_SCL_LFT_CURVE := aStream.ReadByte;
-      OP6_KBD_LEV_SCL_RHT_CURVE := aStream.ReadByte;
-      OP6_KBD_RATE_SCALING := aStream.ReadByte;
-      OP6_AMP_MOD_SENSITIVITY := aStream.ReadByte;
-      OP6_KEY_VEL_SENSITIVITY := aStream.ReadByte;
-      OP6_OPERATOR_OUTPUT_LEVEL := aStream.ReadByte;
-      OP6_OSC_MODE := aStream.ReadByte;
-      OP6_OSC_FREQ_COARSE := aStream.ReadByte;
-      OP6_OSC_FREQ_FINE := aStream.ReadByte;
-      OP6_OSC_DETUNE := aStream.ReadByte;
+    FDX7_VCED_Params.asArray := True;
+    for i := 0 to 155 do
+      FDX7_VCED_Params.params[i] := aStream.ReadByte;
 
-      OP5_EG_rate_1 := aStream.ReadByte;
-      OP5_EG_rate_2 := aStream.ReadByte;
-      OP5_EG_rate_3 := aStream.ReadByte;
-      OP5_EG_rate_4 := aStream.ReadByte;
-      OP5_EG_level_1 := aStream.ReadByte;
-      OP5_EG_level_2 := aStream.ReadByte;
-      OP5_EG_level_3 := aStream.ReadByte;
-      OP5_EG_level_4 := aStream.ReadByte;
-      OP5_KBD_LEV_SCL_BRK_PT := aStream.ReadByte;
-      OP5_KBD_LEV_SCL_LFT_DEPTH := aStream.ReadByte;
-      OP5_KBD_LEV_SCL_RHT_DEPTH := aStream.ReadByte;
-      OP5_KBD_LEV_SCL_LFT_CURVE := aStream.ReadByte;
-      OP5_KBD_LEV_SCL_RHT_CURVE := aStream.ReadByte;
-      OP5_KBD_RATE_SCALING := aStream.ReadByte;
-      OP5_AMP_MOD_SENSITIVITY := aStream.ReadByte;
-      OP5_KEY_VEL_SENSITIVITY := aStream.ReadByte;
-      OP5_OPERATOR_OUTPUT_LEVEL := aStream.ReadByte;
-      OP5_OSC_MODE := aStream.ReadByte;
-      OP5_OSC_FREQ_COARSE := aStream.ReadByte;
-      OP5_OSC_FREQ_FINE := aStream.ReadByte;
-      OP5_OSC_DETUNE := aStream.ReadByte;
-
-      OP4_EG_rate_1 := aStream.ReadByte;
-      OP4_EG_rate_2 := aStream.ReadByte;
-      OP4_EG_rate_3 := aStream.ReadByte;
-      OP4_EG_rate_4 := aStream.ReadByte;
-      OP4_EG_level_1 := aStream.ReadByte;
-      OP4_EG_level_2 := aStream.ReadByte;
-      OP4_EG_level_3 := aStream.ReadByte;
-      OP4_EG_level_4 := aStream.ReadByte;
-      OP4_KBD_LEV_SCL_BRK_PT := aStream.ReadByte;
-      OP4_KBD_LEV_SCL_LFT_DEPTH := aStream.ReadByte;
-      OP4_KBD_LEV_SCL_RHT_DEPTH := aStream.ReadByte;
-      OP4_KBD_LEV_SCL_LFT_CURVE := aStream.ReadByte;
-      OP4_KBD_LEV_SCL_RHT_CURVE := aStream.ReadByte;
-      OP4_KBD_RATE_SCALING := aStream.ReadByte;
-      OP4_AMP_MOD_SENSITIVITY := aStream.ReadByte;
-      OP4_KEY_VEL_SENSITIVITY := aStream.ReadByte;
-      OP4_OPERATOR_OUTPUT_LEVEL := aStream.ReadByte;
-      OP4_OSC_MODE := aStream.ReadByte;
-      OP4_OSC_FREQ_COARSE := aStream.ReadByte;
-      OP4_OSC_FREQ_FINE := aStream.ReadByte;
-      OP4_OSC_DETUNE := aStream.ReadByte;
-
-      OP3_EG_rate_1 := aStream.ReadByte;
-      OP3_EG_rate_2 := aStream.ReadByte;
-      OP3_EG_rate_3 := aStream.ReadByte;
-      OP3_EG_rate_4 := aStream.ReadByte;
-      OP3_EG_level_1 := aStream.ReadByte;
-      OP3_EG_level_2 := aStream.ReadByte;
-      OP3_EG_level_3 := aStream.ReadByte;
-      OP3_EG_level_4 := aStream.ReadByte;
-      OP3_KBD_LEV_SCL_BRK_PT := aStream.ReadByte;
-      OP3_KBD_LEV_SCL_LFT_DEPTH := aStream.ReadByte;
-      OP3_KBD_LEV_SCL_RHT_DEPTH := aStream.ReadByte;
-      OP3_KBD_LEV_SCL_LFT_CURVE := aStream.ReadByte;
-      OP3_KBD_LEV_SCL_RHT_CURVE := aStream.ReadByte;
-      OP3_KBD_RATE_SCALING := aStream.ReadByte;
-      OP3_AMP_MOD_SENSITIVITY := aStream.ReadByte;
-      OP3_KEY_VEL_SENSITIVITY := aStream.ReadByte;
-      OP3_OPERATOR_OUTPUT_LEVEL := aStream.ReadByte;
-      OP3_OSC_MODE := aStream.ReadByte;
-      OP3_OSC_FREQ_COARSE := aStream.ReadByte;
-      OP3_OSC_FREQ_FINE := aStream.ReadByte;
-      OP3_OSC_DETUNE := aStream.ReadByte;
-
-      OP2_EG_rate_1 := aStream.ReadByte;
-      OP2_EG_rate_2 := aStream.ReadByte;
-      OP2_EG_rate_3 := aStream.ReadByte;
-      OP2_EG_rate_4 := aStream.ReadByte;
-      OP2_EG_level_1 := aStream.ReadByte;
-      OP2_EG_level_2 := aStream.ReadByte;
-      OP2_EG_level_3 := aStream.ReadByte;
-      OP2_EG_level_4 := aStream.ReadByte;
-      OP2_KBD_LEV_SCL_BRK_PT := aStream.ReadByte;
-      OP2_KBD_LEV_SCL_LFT_DEPTH := aStream.ReadByte;
-      OP2_KBD_LEV_SCL_RHT_DEPTH := aStream.ReadByte;
-      OP2_KBD_LEV_SCL_LFT_CURVE := aStream.ReadByte;
-      OP2_KBD_LEV_SCL_RHT_CURVE := aStream.ReadByte;
-      OP2_KBD_RATE_SCALING := aStream.ReadByte;
-      OP2_AMP_MOD_SENSITIVITY := aStream.ReadByte;
-      OP2_KEY_VEL_SENSITIVITY := aStream.ReadByte;
-      OP2_OPERATOR_OUTPUT_LEVEL := aStream.ReadByte;
-      OP2_OSC_MODE := aStream.ReadByte;
-      OP2_OSC_FREQ_COARSE := aStream.ReadByte;
-      OP2_OSC_FREQ_FINE := aStream.ReadByte;
-      OP2_OSC_DETUNE := aStream.ReadByte;
-
-      OP1_EG_rate_1 := aStream.ReadByte;
-      OP1_EG_rate_2 := aStream.ReadByte;
-      OP1_EG_rate_3 := aStream.ReadByte;
-      OP1_EG_rate_4 := aStream.ReadByte;
-      OP1_EG_level_1 := aStream.ReadByte;
-      OP1_EG_level_2 := aStream.ReadByte;
-      OP1_EG_level_3 := aStream.ReadByte;
-      OP1_EG_level_4 := aStream.ReadByte;
-      OP1_KBD_LEV_SCL_BRK_PT := aStream.ReadByte;
-      OP1_KBD_LEV_SCL_LFT_DEPTH := aStream.ReadByte;
-      OP1_KBD_LEV_SCL_RHT_DEPTH := aStream.ReadByte;
-      OP1_KBD_LEV_SCL_LFT_CURVE := aStream.ReadByte;
-      OP1_KBD_LEV_SCL_RHT_CURVE := aStream.ReadByte;
-      OP1_KBD_RATE_SCALING := aStream.ReadByte;
-      OP1_AMP_MOD_SENSITIVITY := aStream.ReadByte;
-      OP1_KEY_VEL_SENSITIVITY := aStream.ReadByte;
-      OP1_OPERATOR_OUTPUT_LEVEL := aStream.ReadByte;
-      OP1_OSC_MODE := aStream.ReadByte;
-      OP1_OSC_FREQ_COARSE := aStream.ReadByte;
-      OP1_OSC_FREQ_FINE := aStream.ReadByte;
-      OP1_OSC_DETUNE := aStream.ReadByte;
-
-      PITCH_EG_RATE_1 := aStream.ReadByte;
-      PITCH_EG_RATE_2 := aStream.ReadByte;
-      PITCH_EG_RATE_3 := aStream.ReadByte;
-      PITCH_EG_RATE_4 := aStream.ReadByte;
-      PITCH_EG_LEVEL_1 := aStream.ReadByte;
-      PITCH_EG_LEVEL_2 := aStream.ReadByte;
-      PITCH_EG_LEVEL_3 := aStream.ReadByte;
-      PITCH_EG_LEVEL_4 := aStream.ReadByte;
-      ALGORITHM := aStream.ReadByte;
-      FEEDBACK := aStream.ReadByte;
-      OSCILLATOR_SYNC := aStream.ReadByte;
-      LFO_SPEED := aStream.ReadByte;
-      LFO_DELAY := aStream.ReadByte;
-      LFO_PITCH_MOD_DEPTH := aStream.ReadByte;
-      LFO_AMP_MOD_DEPTH := aStream.ReadByte;
-      LFO_SYNC := aStream.ReadByte;
-      LFO_WAVEFORM := aStream.ReadByte;
-      PITCH_MOD_SENSITIVITY := aStream.ReadByte;
-      TRANSPOSE := aStream.ReadByte;
-      VOICE_NAME_CHAR_1 := aStream.ReadByte;
-      VOICE_NAME_CHAR_2 := aStream.ReadByte;
-      VOICE_NAME_CHAR_3 := aStream.ReadByte;
-      VOICE_NAME_CHAR_4 := aStream.ReadByte;
-      VOICE_NAME_CHAR_5 := aStream.ReadByte;
-      VOICE_NAME_CHAR_6 := aStream.ReadByte;
-      VOICE_NAME_CHAR_7 := aStream.ReadByte;
-      VOICE_NAME_CHAR_8 := aStream.ReadByte;
-      VOICE_NAME_CHAR_9 := aStream.ReadByte;
-      VOICE_NAME_CHAR_10 := aStream.ReadByte;
-      OPERATOR_ON_OFF := aStream.ReadByte;
-    end;
     FDX7_VMEM_Params := VCEDtoVMEM(FDX7_VCED_Params);
     Result := True;
   except
@@ -1043,184 +763,33 @@ end;
 
 procedure TDX7VoiceContainer.InitVoice;
 begin
-  with FDX7_VCED_Params do
-  begin
-    OP6_EG_rate_1 := 99;
-    OP6_EG_rate_2 := 99;
-    OP6_EG_rate_3 := 99;
-    OP6_EG_rate_4 := 99;
-    OP6_EG_level_1 := 99;
-    OP6_EG_level_2 := 99;
-    OP6_EG_level_3 := 99;
-    OP6_EG_level_4 := 00;
-    OP6_KBD_LEV_SCL_BRK_PT := 39;
-    OP6_KBD_LEV_SCL_LFT_DEPTH := 0;
-    OP6_KBD_LEV_SCL_RHT_DEPTH := 0;
-    OP6_KBD_LEV_SCL_LFT_CURVE := 0;
-    OP6_KBD_LEV_SCL_RHT_CURVE := 0;
-    OP6_KBD_RATE_SCALING := 0;
-    OP6_AMP_MOD_SENSITIVITY := 0;
-    OP6_KEY_VEL_SENSITIVITY := 0;
-    OP6_OPERATOR_OUTPUT_LEVEL := 0;
-    OP6_OSC_MODE := 0;
-    OP6_OSC_FREQ_COARSE := 1;
-    OP6_OSC_FREQ_FINE := 0;
-    OP6_OSC_DETUNE := 7;
-
-    OP5_EG_rate_1 := 99;
-    OP5_EG_rate_2 := 99;
-    OP5_EG_rate_3 := 99;
-    OP5_EG_rate_4 := 99;
-    OP5_EG_level_1 := 99;
-    OP5_EG_level_2 := 99;
-    OP5_EG_level_3 := 99;
-    OP5_EG_level_4 := 00;
-    OP5_KBD_LEV_SCL_BRK_PT := 39;
-    OP5_KBD_LEV_SCL_LFT_DEPTH := 0;
-    OP5_KBD_LEV_SCL_RHT_DEPTH := 0;
-    OP5_KBD_LEV_SCL_LFT_CURVE := 0;
-    OP5_KBD_LEV_SCL_RHT_CURVE := 0;
-    OP5_KBD_RATE_SCALING := 0;
-    OP5_AMP_MOD_SENSITIVITY := 0;
-    OP5_KEY_VEL_SENSITIVITY := 0;
-    OP5_OPERATOR_OUTPUT_LEVEL := 0;
-    OP5_OSC_MODE := 0;
-    OP5_OSC_FREQ_COARSE := 1;
-    OP5_OSC_FREQ_FINE := 0;
-    OP5_OSC_DETUNE := 7;
-
-    OP4_EG_rate_1 := 99;
-    OP4_EG_rate_2 := 99;
-    OP4_EG_rate_3 := 99;
-    OP4_EG_rate_4 := 99;
-    OP4_EG_level_1 := 99;
-    OP4_EG_level_2 := 99;
-    OP4_EG_level_3 := 99;
-    OP4_EG_level_4 := 00;
-    OP4_KBD_LEV_SCL_BRK_PT := 39;
-    OP4_KBD_LEV_SCL_LFT_DEPTH := 0;
-    OP4_KBD_LEV_SCL_RHT_DEPTH := 0;
-    OP4_KBD_LEV_SCL_LFT_CURVE := 0;
-    OP4_KBD_LEV_SCL_RHT_CURVE := 0;
-    OP4_KBD_RATE_SCALING := 0;
-    OP4_AMP_MOD_SENSITIVITY := 0;
-    OP4_KEY_VEL_SENSITIVITY := 0;
-    OP4_OPERATOR_OUTPUT_LEVEL := 0;
-    OP4_OSC_MODE := 0;
-    OP4_OSC_FREQ_COARSE := 1;
-    OP4_OSC_FREQ_FINE := 0;
-    OP4_OSC_DETUNE := 7;
-
-    OP3_EG_rate_1 := 99;
-    OP3_EG_rate_2 := 99;
-    OP3_EG_rate_3 := 99;
-    OP3_EG_rate_4 := 99;
-    OP3_EG_level_1 := 99;
-    OP3_EG_level_2 := 99;
-    OP3_EG_level_3 := 99;
-    OP3_EG_level_4 := 0;
-    OP3_KBD_LEV_SCL_BRK_PT := 39;
-    OP3_KBD_LEV_SCL_LFT_DEPTH := 0;
-    OP3_KBD_LEV_SCL_RHT_DEPTH := 0;
-    OP3_KBD_LEV_SCL_LFT_CURVE := 0;
-    OP3_KBD_LEV_SCL_RHT_CURVE := 0;
-    OP3_KBD_RATE_SCALING := 0;
-    OP3_AMP_MOD_SENSITIVITY := 0;
-    OP3_KEY_VEL_SENSITIVITY := 0;
-    OP3_OPERATOR_OUTPUT_LEVEL := 0;
-    OP3_OSC_MODE := 0;
-    OP3_OSC_FREQ_COARSE := 1;
-    OP3_OSC_FREQ_FINE := 0;
-    OP3_OSC_DETUNE := 7;
-
-    OP2_EG_rate_1 := 99;
-    OP2_EG_rate_2 := 99;
-    OP2_EG_rate_3 := 99;
-    OP2_EG_rate_4 := 99;
-    OP2_EG_level_1 := 99;
-    OP2_EG_level_2 := 99;
-    OP2_EG_level_3 := 99;
-    OP2_EG_level_4 := 00;
-    OP2_KBD_LEV_SCL_BRK_PT := 39;
-    OP2_KBD_LEV_SCL_LFT_DEPTH := 0;
-    OP2_KBD_LEV_SCL_RHT_DEPTH := 0;
-    OP2_KBD_LEV_SCL_LFT_CURVE := 0;
-    OP2_KBD_LEV_SCL_RHT_CURVE := 0;
-    OP2_KBD_RATE_SCALING := 0;
-    OP2_AMP_MOD_SENSITIVITY := 0;
-    OP2_KEY_VEL_SENSITIVITY := 0;
-    OP2_OPERATOR_OUTPUT_LEVEL := 0;
-    OP2_OSC_MODE := 0;
-    OP2_OSC_FREQ_COARSE := 1;
-    OP2_OSC_FREQ_FINE := 0;
-    OP2_OSC_DETUNE := 7;
-
-    OP1_EG_rate_1 := 99;
-    OP1_EG_rate_2 := 99;
-    OP1_EG_rate_3 := 99;
-    OP1_EG_rate_4 := 99;
-    OP1_EG_level_1 := 99;
-    OP1_EG_level_2 := 99;
-    OP1_EG_level_3 := 99;
-    OP1_EG_level_4 := 00;
-    OP1_KBD_LEV_SCL_BRK_PT := 39;
-    OP1_KBD_LEV_SCL_LFT_DEPTH := 0;
-    OP1_KBD_LEV_SCL_RHT_DEPTH := 0;
-    OP1_KBD_LEV_SCL_LFT_CURVE := 0;
-    OP1_KBD_LEV_SCL_RHT_CURVE := 0;
-    OP1_KBD_RATE_SCALING := 0;
-    OP1_AMP_MOD_SENSITIVITY := 0;
-    OP1_KEY_VEL_SENSITIVITY := 0;
-    OP1_OPERATOR_OUTPUT_LEVEL := 99;
-    OP1_OSC_MODE := 0;
-    OP1_OSC_FREQ_COARSE := 1;
-    OP1_OSC_FREQ_FINE := 0;
-    OP1_OSC_DETUNE := 7;
-
-    PITCH_EG_RATE_1 := 99;
-    PITCH_EG_RATE_2 := 99;
-    PITCH_EG_RATE_3 := 99;
-    PITCH_EG_RATE_4 := 99;
-    PITCH_EG_LEVEL_1 := 50;
-    PITCH_EG_LEVEL_2 := 50;
-    PITCH_EG_LEVEL_3 := 50;
-    PITCH_EG_LEVEL_4 := 50;
-    ALGORITHM := 0;
-    FEEDBACK := 0;
-    OSCILLATOR_SYNC := 1;
-    LFO_SPEED := 35;
-    LFO_DELAY := 0;
-    LFO_PITCH_MOD_DEPTH := 0;
-    LFO_AMP_MOD_DEPTH := 0;
-    LFO_SYNC := 0;
-    LFO_WAVEFORM := 1;
-    PITCH_MOD_SENSITIVITY := 3;
-    TRANSPOSE := 24;
-    VOICE_NAME_CHAR_1 := 73;
-    VOICE_NAME_CHAR_2 := 78;
-    VOICE_NAME_CHAR_3 := 73;
-    VOICE_NAME_CHAR_4 := 84;
-    VOICE_NAME_CHAR_5 := 32;
-    VOICE_NAME_CHAR_6 := 86;
-    VOICE_NAME_CHAR_7 := 79;
-    VOICE_NAME_CHAR_8 := 73;
-    VOICE_NAME_CHAR_9 := 67;
-    VOICE_NAME_CHAR_10 := 69;
-    OPERATOR_ON_OFF := 63; //all the OPs are on
-  end;
+  FDX7_VCED_Params.asArray := True;
+  GetDefinedValues(DX7, fInit, FDX7_VCED_Params.params);
   FDX7_VMEM_Params := VCEDtoVMEM(FDX7_VCED_Params);
 end;
 
-function TDX7VoiceContainer.GetVoiceParams: TDX7_VMEM_Params;
+function TDX7VoiceContainer.Get_VMEM_Params: TDX7_VMEM_Params;
 begin
   Result := FDX7_VMEM_Params;
 end;
 
-function TDX7VoiceContainer.SetVoiceParams(aParams: TDX7_VMEM_Params): boolean;
+function TDX7VoiceContainer.Set_VMEM_Params(aParams: TDX7_VMEM_Params): boolean;
 begin
   FDX7_VMEM_Params := aParams;
   FDX7_VCED_Params := VMEMtoVCED(FDX7_VMEM_Params);
   Result := True;
+end;
+
+function TDX7VoiceContainer.Set_VCED_Params(aParams: TDX7_VCED_Params): boolean;
+begin
+  FDX7_VCED_Params := aParams;
+  FDX7_VMEM_Params := VCEDtoVMEM(FDX7_VCED_Params);
+  Result := True;
+end;
+
+function TDX7VoiceContainer.Get_VCED_Params: TDX7_VCED_Params;
+begin
+  Result := FDX7_VCED_Params;
 end;
 
 function TDX7VoiceContainer.GetVoiceName: string;
@@ -1242,319 +811,32 @@ begin
 end;
 
 function TDX7VoiceContainer.Save_VMEM_ToStream(var aStream: TMemoryStream): boolean;
+var
+  i: integer;
 begin
   //dont clear the stream here or else bulk dump won't work
   if Assigned(aStream) then
   begin
-    with FDX7_VMEM_Params do
-    begin
-      aStream.WriteByte(OP6_EG_rate_1);
-      aStream.WriteByte(OP6_EG_rate_2);
-      aStream.WriteByte(OP6_EG_rate_3);
-      aStream.WriteByte(OP6_EG_rate_4);
-      aStream.WriteByte(OP6_EG_level_1);
-      aStream.WriteByte(OP6_EG_level_2);
-      aStream.WriteByte(OP6_EG_level_3);
-      aStream.WriteByte(OP6_EG_level_4);
-      aStream.WriteByte(OP6_KBD_LEV_SCL_BRK_PT);
-      aStream.WriteByte(OP6_KBD_LEV_SCL_LFT_DEPTH);
-      aStream.WriteByte(OP6_KBD_LEV_SCL_RHT_DEPTH);
-      aStream.WriteByte(OP6_KBD_LEV_SCL_RC_LC);
-      aStream.WriteByte(OP6_OSC_DET_RS);
-      aStream.WriteByte(OP6_KVS_AMS);
-      aStream.WriteByte(OP6_OPERATOR_OUTPUT_LEVEL);
-      aStream.WriteByte(OP6_FC_M);
-      aStream.WriteByte(OP6_OSC_FREQ_FINE);
-      aStream.WriteByte(OP5_EG_rate_1);
-      aStream.WriteByte(OP5_EG_rate_2);
-      aStream.WriteByte(OP5_EG_rate_3);
-      aStream.WriteByte(OP5_EG_rate_4);
-      aStream.WriteByte(OP5_EG_level_1);
-      aStream.WriteByte(OP5_EG_level_2);
-      aStream.WriteByte(OP5_EG_level_3);
-      aStream.WriteByte(OP5_EG_level_4);
-      aStream.WriteByte(OP5_KBD_LEV_SCL_BRK_PT);
-      aStream.WriteByte(OP5_KBD_LEV_SCL_LFT_DEPTH);
-      aStream.WriteByte(OP5_KBD_LEV_SCL_RHT_DEPTH);
-      aStream.WriteByte(OP5_KBD_LEV_SCL_RC_LC);
-      aStream.WriteByte(OP5_OSC_DET_RS);
-      aStream.WriteByte(OP5_KVS_AMS);
-      aStream.WriteByte(OP5_OPERATOR_OUTPUT_LEVEL);
-      aStream.WriteByte(OP5_FC_M);
-      aStream.WriteByte(OP5_OSC_FREQ_FINE);
-      aStream.WriteByte(OP4_EG_rate_1);
-      aStream.WriteByte(OP4_EG_rate_2);
-      aStream.WriteByte(OP4_EG_rate_3);
-      aStream.WriteByte(OP4_EG_rate_4);
-      aStream.WriteByte(OP4_EG_level_1);
-      aStream.WriteByte(OP4_EG_level_2);
-      aStream.WriteByte(OP4_EG_level_3);
-      aStream.WriteByte(OP4_EG_level_4);
-      aStream.WriteByte(OP4_KBD_LEV_SCL_BRK_PT);
-      aStream.WriteByte(OP4_KBD_LEV_SCL_LFT_DEPTH);
-      aStream.WriteByte(OP4_KBD_LEV_SCL_RHT_DEPTH);
-      aStream.WriteByte(OP4_KBD_LEV_SCL_RC_LC);
-      aStream.WriteByte(OP4_OSC_DET_RS);
-      aStream.WriteByte(OP4_KVS_AMS);
-      aStream.WriteByte(OP4_OPERATOR_OUTPUT_LEVEL);
-      aStream.WriteByte(OP4_FC_M);
-      aStream.WriteByte(OP4_OSC_FREQ_FINE);
-      aStream.WriteByte(OP3_EG_rate_1);
-      aStream.WriteByte(OP3_EG_rate_2);
-      aStream.WriteByte(OP3_EG_rate_3);
-      aStream.WriteByte(OP3_EG_rate_4);
-      aStream.WriteByte(OP3_EG_level_1);
-      aStream.WriteByte(OP3_EG_level_2);
-      aStream.WriteByte(OP3_EG_level_3);
-      aStream.WriteByte(OP3_EG_level_4);
-      aStream.WriteByte(OP3_KBD_LEV_SCL_BRK_PT);
-      aStream.WriteByte(OP3_KBD_LEV_SCL_LFT_DEPTH);
-      aStream.WriteByte(OP3_KBD_LEV_SCL_RHT_DEPTH);
-      aStream.WriteByte(OP3_KBD_LEV_SCL_RC_LC);
-      aStream.WriteByte(OP3_OSC_DET_RS);
-      aStream.WriteByte(OP3_KVS_AMS);
-      aStream.WriteByte(OP3_OPERATOR_OUTPUT_LEVEL);
-      aStream.WriteByte(OP3_FC_M);
-      aStream.WriteByte(OP3_OSC_FREQ_FINE);
-      aStream.WriteByte(OP2_EG_rate_1);
-      aStream.WriteByte(OP2_EG_rate_2);
-      aStream.WriteByte(OP2_EG_rate_3);
-      aStream.WriteByte(OP2_EG_rate_4);
-      aStream.WriteByte(OP2_EG_level_1);
-      aStream.WriteByte(OP2_EG_level_2);
-      aStream.WriteByte(OP2_EG_level_3);
-      aStream.WriteByte(OP2_EG_level_4);
-      aStream.WriteByte(OP2_KBD_LEV_SCL_BRK_PT);
-      aStream.WriteByte(OP2_KBD_LEV_SCL_LFT_DEPTH);
-      aStream.WriteByte(OP2_KBD_LEV_SCL_RHT_DEPTH);
-      aStream.WriteByte(OP2_KBD_LEV_SCL_RC_LC);
-      aStream.WriteByte(OP2_OSC_DET_RS);
-      aStream.WriteByte(OP2_KVS_AMS);
-      aStream.WriteByte(OP2_OPERATOR_OUTPUT_LEVEL);
-      aStream.WriteByte(OP2_FC_M);
-      aStream.WriteByte(OP2_OSC_FREQ_FINE);
-      aStream.WriteByte(OP1_EG_rate_1);
-      aStream.WriteByte(OP1_EG_rate_2);
-      aStream.WriteByte(OP1_EG_rate_3);
-      aStream.WriteByte(OP1_EG_rate_4);
-      aStream.WriteByte(OP1_EG_level_1);
-      aStream.WriteByte(OP1_EG_level_2);
-      aStream.WriteByte(OP1_EG_level_3);
-      aStream.WriteByte(OP1_EG_level_4);
-      aStream.WriteByte(OP1_KBD_LEV_SCL_BRK_PT);
-      aStream.WriteByte(OP1_KBD_LEV_SCL_LFT_DEPTH);
-      aStream.WriteByte(OP1_KBD_LEV_SCL_RHT_DEPTH);
-      aStream.WriteByte(OP1_KBD_LEV_SCL_RC_LC);
-      aStream.WriteByte(OP1_OSC_DET_RS);
-      aStream.WriteByte(OP1_KVS_AMS);
-      aStream.WriteByte(OP1_OPERATOR_OUTPUT_LEVEL);
-      aStream.WriteByte(OP1_FC_M);
-      aStream.WriteByte(OP1_OSC_FREQ_FINE);
-      aStream.WriteByte(PITCH_EG_RATE_1);
-      aStream.WriteByte(PITCH_EG_RATE_2);
-      aStream.WriteByte(PITCH_EG_RATE_3);
-      aStream.WriteByte(PITCH_EG_RATE_4);
-      aStream.WriteByte(PITCH_EG_LEVEL_1);
-      aStream.WriteByte(PITCH_EG_LEVEL_2);
-      aStream.WriteByte(PITCH_EG_LEVEL_3);
-      aStream.WriteByte(PITCH_EG_LEVEL_4);
-      aStream.WriteByte(ALGORITHM);
-      aStream.WriteByte(OSCSYNC_FEEDBACK);
-      aStream.WriteByte(LFO_SPEED);
-      aStream.WriteByte(LFO_DELAY);
-      aStream.WriteByte(LFO_PITCH_MOD_DEPTH);
-      aStream.WriteByte(LFO_AMP_MOD_DEPTH);
-      aStream.WriteByte(PMS_WAVE_SYNC);
-      aStream.WriteByte(TRANSPOSE);
-      aStream.WriteByte(VOICE_NAME_CHAR_1);
-      aStream.WriteByte(VOICE_NAME_CHAR_2);
-      aStream.WriteByte(VOICE_NAME_CHAR_3);
-      aStream.WriteByte(VOICE_NAME_CHAR_4);
-      aStream.WriteByte(VOICE_NAME_CHAR_5);
-      aStream.WriteByte(VOICE_NAME_CHAR_6);
-      aStream.WriteByte(VOICE_NAME_CHAR_7);
-      aStream.WriteByte(VOICE_NAME_CHAR_8);
-      aStream.WriteByte(VOICE_NAME_CHAR_9);
-      aStream.WriteByte(VOICE_NAME_CHAR_10);
-      Result := True;
-    end;
+    FDX7_VMEM_Params.asArray := True;
+    for i := 0 to 127 do
+      aStream.WriteByte(FDX7_VMEM_Params.params[i]);
+    Result := True;
   end
   else
     Result := False;
 end;
 
-function TDX7VoiceContainer.Save_VCED_ToStream(
-  var aStream: TMemoryStream): boolean;
+function TDX7VoiceContainer.Save_VCED_ToStream(var aStream: TMemoryStream): boolean;
+var
+  i: integer;
 begin
   if Assigned(aStream) then
   begin
     aStream.Clear;
-    with FDX7_VCED_Params do
-    begin
-      aStream.WriteByte(OP6_EG_rate_1);
-      aStream.WriteByte(OP6_EG_rate_2);
-      aStream.WriteByte(OP6_EG_rate_3);
-      aStream.WriteByte(OP6_EG_rate_4);
-      aStream.WriteByte(OP6_EG_level_1);
-      aStream.WriteByte(OP6_EG_level_2);
-      aStream.WriteByte(OP6_EG_level_3);
-      aStream.WriteByte(OP6_EG_level_4);
-      aStream.WriteByte(OP6_KBD_LEV_SCL_BRK_PT);
-      aStream.WriteByte(OP6_KBD_LEV_SCL_LFT_DEPTH);
-      aStream.WriteByte(OP6_KBD_LEV_SCL_RHT_DEPTH);
-      aStream.WriteByte(OP6_KBD_LEV_SCL_LFT_CURVE);
-      aStream.WriteByte(OP6_KBD_LEV_SCL_RHT_CURVE);
-      aStream.WriteByte(OP6_KBD_RATE_SCALING);
-      aStream.WriteByte(OP6_AMP_MOD_SENSITIVITY);
-      aStream.WriteByte(OP6_KEY_VEL_SENSITIVITY);
-      aStream.WriteByte(OP6_OPERATOR_OUTPUT_LEVEL);
-      aStream.WriteByte(OP6_OSC_MODE);
-      aStream.WriteByte(OP6_OSC_FREQ_COARSE);
-      aStream.WriteByte(OP6_OSC_FREQ_FINE);
-      aStream.WriteByte(OP6_OSC_DETUNE);
-
-      aStream.WriteByte(OP5_EG_rate_1);
-      aStream.WriteByte(OP5_EG_rate_2);
-      aStream.WriteByte(OP5_EG_rate_3);
-      aStream.WriteByte(OP5_EG_rate_4);
-      aStream.WriteByte(OP5_EG_level_1);
-      aStream.WriteByte(OP5_EG_level_2);
-      aStream.WriteByte(OP5_EG_level_3);
-      aStream.WriteByte(OP5_EG_level_4);
-      aStream.WriteByte(OP5_KBD_LEV_SCL_BRK_PT);
-      aStream.WriteByte(OP5_KBD_LEV_SCL_LFT_DEPTH);
-      aStream.WriteByte(OP5_KBD_LEV_SCL_RHT_DEPTH);
-      aStream.WriteByte(OP5_KBD_LEV_SCL_LFT_CURVE);
-      aStream.WriteByte(OP5_KBD_LEV_SCL_RHT_CURVE);
-      aStream.WriteByte(OP5_KBD_RATE_SCALING);
-      aStream.WriteByte(OP5_AMP_MOD_SENSITIVITY);
-      aStream.WriteByte(OP5_KEY_VEL_SENSITIVITY);
-      aStream.WriteByte(OP5_OPERATOR_OUTPUT_LEVEL);
-      aStream.WriteByte(OP5_OSC_MODE);
-      aStream.WriteByte(OP5_OSC_FREQ_COARSE);
-      aStream.WriteByte(OP5_OSC_FREQ_FINE);
-      aStream.WriteByte(OP5_OSC_DETUNE);
-
-      aStream.WriteByte(OP4_EG_rate_1);
-      aStream.WriteByte(OP4_EG_rate_2);
-      aStream.WriteByte(OP4_EG_rate_3);
-      aStream.WriteByte(OP4_EG_rate_4);
-      aStream.WriteByte(OP4_EG_level_1);
-      aStream.WriteByte(OP4_EG_level_2);
-      aStream.WriteByte(OP4_EG_level_3);
-      aStream.WriteByte(OP4_EG_level_4);
-      aStream.WriteByte(OP4_KBD_LEV_SCL_BRK_PT);
-      aStream.WriteByte(OP4_KBD_LEV_SCL_LFT_DEPTH);
-      aStream.WriteByte(OP4_KBD_LEV_SCL_RHT_DEPTH);
-      aStream.WriteByte(OP4_KBD_LEV_SCL_LFT_CURVE);
-      aStream.WriteByte(OP4_KBD_LEV_SCL_RHT_CURVE);
-      aStream.WriteByte(OP4_KBD_RATE_SCALING);
-      aStream.WriteByte(OP4_AMP_MOD_SENSITIVITY);
-      aStream.WriteByte(OP4_KEY_VEL_SENSITIVITY);
-      aStream.WriteByte(OP4_OPERATOR_OUTPUT_LEVEL);
-      aStream.WriteByte(OP4_OSC_MODE);
-      aStream.WriteByte(OP4_OSC_FREQ_COARSE);
-      aStream.WriteByte(OP4_OSC_FREQ_FINE);
-      aStream.WriteByte(OP4_OSC_DETUNE);
-
-      aStream.WriteByte(OP3_EG_rate_1);
-      aStream.WriteByte(OP3_EG_rate_2);
-      aStream.WriteByte(OP3_EG_rate_3);
-      aStream.WriteByte(OP3_EG_rate_4);
-      aStream.WriteByte(OP3_EG_level_1);
-      aStream.WriteByte(OP3_EG_level_2);
-      aStream.WriteByte(OP3_EG_level_3);
-      aStream.WriteByte(OP3_EG_level_4);
-      aStream.WriteByte(OP3_KBD_LEV_SCL_BRK_PT);
-      aStream.WriteByte(OP3_KBD_LEV_SCL_LFT_DEPTH);
-      aStream.WriteByte(OP3_KBD_LEV_SCL_RHT_DEPTH);
-      aStream.WriteByte(OP3_KBD_LEV_SCL_LFT_CURVE);
-      aStream.WriteByte(OP3_KBD_LEV_SCL_RHT_CURVE);
-      aStream.WriteByte(OP3_KBD_RATE_SCALING);
-      aStream.WriteByte(OP3_AMP_MOD_SENSITIVITY);
-      aStream.WriteByte(OP3_KEY_VEL_SENSITIVITY);
-      aStream.WriteByte(OP3_OPERATOR_OUTPUT_LEVEL);
-      aStream.WriteByte(OP3_OSC_MODE);
-      aStream.WriteByte(OP3_OSC_FREQ_COARSE);
-      aStream.WriteByte(OP3_OSC_FREQ_FINE);
-      aStream.WriteByte(OP3_OSC_DETUNE);
-
-      aStream.WriteByte(OP2_EG_rate_1);
-      aStream.WriteByte(OP2_EG_rate_2);
-      aStream.WriteByte(OP2_EG_rate_3);
-      aStream.WriteByte(OP2_EG_rate_4);
-      aStream.WriteByte(OP2_EG_level_1);
-      aStream.WriteByte(OP2_EG_level_2);
-      aStream.WriteByte(OP2_EG_level_3);
-      aStream.WriteByte(OP2_EG_level_4);
-      aStream.WriteByte(OP2_KBD_LEV_SCL_BRK_PT);
-      aStream.WriteByte(OP2_KBD_LEV_SCL_LFT_DEPTH);
-      aStream.WriteByte(OP2_KBD_LEV_SCL_RHT_DEPTH);
-      aStream.WriteByte(OP2_KBD_LEV_SCL_LFT_CURVE);
-      aStream.WriteByte(OP2_KBD_LEV_SCL_RHT_CURVE);
-      aStream.WriteByte(OP2_KBD_RATE_SCALING);
-      aStream.WriteByte(OP2_AMP_MOD_SENSITIVITY);
-      aStream.WriteByte(OP2_KEY_VEL_SENSITIVITY);
-      aStream.WriteByte(OP2_OPERATOR_OUTPUT_LEVEL);
-      aStream.WriteByte(OP2_OSC_MODE);
-      aStream.WriteByte(OP2_OSC_FREQ_COARSE);
-      aStream.WriteByte(OP2_OSC_FREQ_FINE);
-      aStream.WriteByte(OP2_OSC_DETUNE);
-
-      aStream.WriteByte(OP1_EG_rate_1);
-      aStream.WriteByte(OP1_EG_rate_2);
-      aStream.WriteByte(OP1_EG_rate_3);
-      aStream.WriteByte(OP1_EG_rate_4);
-      aStream.WriteByte(OP1_EG_level_1);
-      aStream.WriteByte(OP1_EG_level_2);
-      aStream.WriteByte(OP1_EG_level_3);
-      aStream.WriteByte(OP1_EG_level_4);
-      aStream.WriteByte(OP1_KBD_LEV_SCL_BRK_PT);
-      aStream.WriteByte(OP1_KBD_LEV_SCL_LFT_DEPTH);
-      aStream.WriteByte(OP1_KBD_LEV_SCL_RHT_DEPTH);
-      aStream.WriteByte(OP1_KBD_LEV_SCL_LFT_CURVE);
-      aStream.WriteByte(OP1_KBD_LEV_SCL_RHT_CURVE);
-      aStream.WriteByte(OP1_KBD_RATE_SCALING);
-      aStream.WriteByte(OP1_AMP_MOD_SENSITIVITY);
-      aStream.WriteByte(OP1_KEY_VEL_SENSITIVITY);
-      aStream.WriteByte(OP1_OPERATOR_OUTPUT_LEVEL);
-      aStream.WriteByte(OP1_OSC_MODE);
-      aStream.WriteByte(OP1_OSC_FREQ_COARSE);
-      aStream.WriteByte(OP1_OSC_FREQ_FINE);
-      aStream.WriteByte(OP1_OSC_DETUNE);
-
-      aStream.WriteByte(PITCH_EG_RATE_1);
-      aStream.WriteByte(PITCH_EG_RATE_2);
-      aStream.WriteByte(PITCH_EG_RATE_3);
-      aStream.WriteByte(PITCH_EG_RATE_4);
-      aStream.WriteByte(PITCH_EG_LEVEL_1);
-      aStream.WriteByte(PITCH_EG_LEVEL_2);
-      aStream.WriteByte(PITCH_EG_LEVEL_3);
-      aStream.WriteByte(PITCH_EG_LEVEL_4);
-      aStream.WriteByte(ALGORITHM);
-      aStream.WriteByte(FEEDBACK);
-      aStream.WriteByte(OSCILLATOR_SYNC);
-      aStream.WriteByte(LFO_SPEED);
-      aStream.WriteByte(LFO_DELAY);
-      aStream.WriteByte(LFO_PITCH_MOD_DEPTH);
-      aStream.WriteByte(LFO_AMP_MOD_DEPTH);
-      aStream.WriteByte(LFO_SYNC);
-      aStream.WriteByte(LFO_WAVEFORM);
-      aStream.WriteByte(PITCH_MOD_SENSITIVITY);
-      aStream.WriteByte(TRANSPOSE);
-      aStream.WriteByte(VOICE_NAME_CHAR_1);
-      aStream.WriteByte(VOICE_NAME_CHAR_2);
-      aStream.WriteByte(VOICE_NAME_CHAR_3);
-      aStream.WriteByte(VOICE_NAME_CHAR_4);
-      aStream.WriteByte(VOICE_NAME_CHAR_5);
-      aStream.WriteByte(VOICE_NAME_CHAR_6);
-      aStream.WriteByte(VOICE_NAME_CHAR_7);
-      aStream.WriteByte(VOICE_NAME_CHAR_8);
-      aStream.WriteByte(VOICE_NAME_CHAR_9);
-      aStream.WriteByte(VOICE_NAME_CHAR_10);
-      aStream.WriteByte(OPERATOR_ON_OFF);
-      Result := True;
-    end;
+    FDX7_VCED_Params.asArray := True;
+    for i := 0 to 155 do
+      aStream.WriteByte(FDX7_VCED_Params.params[i]);
+    Result := True;
   end
   else
     Result := False;
@@ -1563,162 +845,14 @@ end;
 function TDX7VoiceContainer.CalculateHash: string;
 var
   aStream: TMemoryStream;
+  i: integer;
 begin
+  //do not take Transpose and VoiceName into calculation
   aStream := TMemoryStream.Create;
-  with FDX7_VCED_Params do
-  begin
-    aStream.WriteByte(OP6_EG_rate_1);
-    aStream.WriteByte(OP6_EG_rate_2);
-    aStream.WriteByte(OP6_EG_rate_3);
-    aStream.WriteByte(OP6_EG_rate_4);
-    aStream.WriteByte(OP6_EG_level_1);
-    aStream.WriteByte(OP6_EG_level_2);
-    aStream.WriteByte(OP6_EG_level_3);
-    aStream.WriteByte(OP6_EG_level_4);
-    aStream.WriteByte(OP6_KBD_LEV_SCL_BRK_PT);
-    aStream.WriteByte(OP6_KBD_LEV_SCL_LFT_DEPTH);
-    aStream.WriteByte(OP6_KBD_LEV_SCL_RHT_DEPTH);
-    aStream.WriteByte(OP6_KBD_LEV_SCL_LFT_CURVE);
-    aStream.WriteByte(OP6_KBD_LEV_SCL_RHT_CURVE);
-    aStream.WriteByte(OP6_KBD_RATE_SCALING);
-    aStream.WriteByte(OP6_AMP_MOD_SENSITIVITY);
-    aStream.WriteByte(OP6_KEY_VEL_SENSITIVITY);
-    aStream.WriteByte(OP6_OPERATOR_OUTPUT_LEVEL);
-    aStream.WriteByte(OP6_OSC_MODE);
-    aStream.WriteByte(OP6_OSC_FREQ_COARSE);
-    aStream.WriteByte(OP6_OSC_FREQ_FINE);
-    aStream.WriteByte(OP6_OSC_DETUNE);
-
-    aStream.WriteByte(OP5_EG_rate_1);
-    aStream.WriteByte(OP5_EG_rate_2);
-    aStream.WriteByte(OP5_EG_rate_3);
-    aStream.WriteByte(OP5_EG_rate_4);
-    aStream.WriteByte(OP5_EG_level_1);
-    aStream.WriteByte(OP5_EG_level_2);
-    aStream.WriteByte(OP5_EG_level_3);
-    aStream.WriteByte(OP5_EG_level_4);
-    aStream.WriteByte(OP5_KBD_LEV_SCL_BRK_PT);
-    aStream.WriteByte(OP5_KBD_LEV_SCL_LFT_DEPTH);
-    aStream.WriteByte(OP5_KBD_LEV_SCL_RHT_DEPTH);
-    aStream.WriteByte(OP5_KBD_LEV_SCL_LFT_CURVE);
-    aStream.WriteByte(OP5_KBD_LEV_SCL_RHT_CURVE);
-    aStream.WriteByte(OP5_KBD_RATE_SCALING);
-    aStream.WriteByte(OP5_AMP_MOD_SENSITIVITY);
-    aStream.WriteByte(OP5_KEY_VEL_SENSITIVITY);
-    aStream.WriteByte(OP5_OPERATOR_OUTPUT_LEVEL);
-    aStream.WriteByte(OP5_OSC_MODE);
-    aStream.WriteByte(OP5_OSC_FREQ_COARSE);
-    aStream.WriteByte(OP5_OSC_FREQ_FINE);
-    aStream.WriteByte(OP5_OSC_DETUNE);
-
-    aStream.WriteByte(OP4_EG_rate_1);
-    aStream.WriteByte(OP4_EG_rate_2);
-    aStream.WriteByte(OP4_EG_rate_3);
-    aStream.WriteByte(OP4_EG_rate_4);
-    aStream.WriteByte(OP4_EG_level_1);
-    aStream.WriteByte(OP4_EG_level_2);
-    aStream.WriteByte(OP4_EG_level_3);
-    aStream.WriteByte(OP4_EG_level_4);
-    aStream.WriteByte(OP4_KBD_LEV_SCL_BRK_PT);
-    aStream.WriteByte(OP4_KBD_LEV_SCL_LFT_DEPTH);
-    aStream.WriteByte(OP4_KBD_LEV_SCL_RHT_DEPTH);
-    aStream.WriteByte(OP4_KBD_LEV_SCL_LFT_CURVE);
-    aStream.WriteByte(OP4_KBD_LEV_SCL_RHT_CURVE);
-    aStream.WriteByte(OP4_KBD_RATE_SCALING);
-    aStream.WriteByte(OP4_AMP_MOD_SENSITIVITY);
-    aStream.WriteByte(OP4_KEY_VEL_SENSITIVITY);
-    aStream.WriteByte(OP4_OPERATOR_OUTPUT_LEVEL);
-    aStream.WriteByte(OP4_OSC_MODE);
-    aStream.WriteByte(OP4_OSC_FREQ_COARSE);
-    aStream.WriteByte(OP4_OSC_FREQ_FINE);
-    aStream.WriteByte(OP4_OSC_DETUNE);
-
-    aStream.WriteByte(OP3_EG_rate_1);
-    aStream.WriteByte(OP3_EG_rate_2);
-    aStream.WriteByte(OP3_EG_rate_3);
-    aStream.WriteByte(OP3_EG_rate_4);
-    aStream.WriteByte(OP3_EG_level_1);
-    aStream.WriteByte(OP3_EG_level_2);
-    aStream.WriteByte(OP3_EG_level_3);
-    aStream.WriteByte(OP3_EG_level_4);
-    aStream.WriteByte(OP3_KBD_LEV_SCL_BRK_PT);
-    aStream.WriteByte(OP3_KBD_LEV_SCL_LFT_DEPTH);
-    aStream.WriteByte(OP3_KBD_LEV_SCL_RHT_DEPTH);
-    aStream.WriteByte(OP3_KBD_LEV_SCL_LFT_CURVE);
-    aStream.WriteByte(OP3_KBD_LEV_SCL_RHT_CURVE);
-    aStream.WriteByte(OP3_KBD_RATE_SCALING);
-    aStream.WriteByte(OP3_AMP_MOD_SENSITIVITY);
-    aStream.WriteByte(OP3_KEY_VEL_SENSITIVITY);
-    aStream.WriteByte(OP3_OPERATOR_OUTPUT_LEVEL);
-    aStream.WriteByte(OP3_OSC_MODE);
-    aStream.WriteByte(OP3_OSC_FREQ_COARSE);
-    aStream.WriteByte(OP3_OSC_FREQ_FINE);
-    aStream.WriteByte(OP3_OSC_DETUNE);
-
-    aStream.WriteByte(OP2_EG_rate_1);
-    aStream.WriteByte(OP2_EG_rate_2);
-    aStream.WriteByte(OP2_EG_rate_3);
-    aStream.WriteByte(OP2_EG_rate_4);
-    aStream.WriteByte(OP2_EG_level_1);
-    aStream.WriteByte(OP2_EG_level_2);
-    aStream.WriteByte(OP2_EG_level_3);
-    aStream.WriteByte(OP2_EG_level_4);
-    aStream.WriteByte(OP2_KBD_LEV_SCL_BRK_PT);
-    aStream.WriteByte(OP2_KBD_LEV_SCL_LFT_DEPTH);
-    aStream.WriteByte(OP2_KBD_LEV_SCL_RHT_DEPTH);
-    aStream.WriteByte(OP2_KBD_LEV_SCL_LFT_CURVE);
-    aStream.WriteByte(OP2_KBD_LEV_SCL_RHT_CURVE);
-    aStream.WriteByte(OP2_KBD_RATE_SCALING);
-    aStream.WriteByte(OP2_AMP_MOD_SENSITIVITY);
-    aStream.WriteByte(OP2_KEY_VEL_SENSITIVITY);
-    aStream.WriteByte(OP2_OPERATOR_OUTPUT_LEVEL);
-    aStream.WriteByte(OP2_OSC_MODE);
-    aStream.WriteByte(OP2_OSC_FREQ_COARSE);
-    aStream.WriteByte(OP2_OSC_FREQ_FINE);
-    aStream.WriteByte(OP2_OSC_DETUNE);
-
-    aStream.WriteByte(OP1_EG_rate_1);
-    aStream.WriteByte(OP1_EG_rate_2);
-    aStream.WriteByte(OP1_EG_rate_3);
-    aStream.WriteByte(OP1_EG_rate_4);
-    aStream.WriteByte(OP1_EG_level_1);
-    aStream.WriteByte(OP1_EG_level_2);
-    aStream.WriteByte(OP1_EG_level_3);
-    aStream.WriteByte(OP1_EG_level_4);
-    aStream.WriteByte(OP1_KBD_LEV_SCL_BRK_PT);
-    aStream.WriteByte(OP1_KBD_LEV_SCL_LFT_DEPTH);
-    aStream.WriteByte(OP1_KBD_LEV_SCL_RHT_DEPTH);
-    aStream.WriteByte(OP1_KBD_LEV_SCL_LFT_CURVE);
-    aStream.WriteByte(OP1_KBD_LEV_SCL_RHT_CURVE);
-    aStream.WriteByte(OP1_KBD_RATE_SCALING);
-    aStream.WriteByte(OP1_AMP_MOD_SENSITIVITY);
-    aStream.WriteByte(OP1_KEY_VEL_SENSITIVITY);
-    aStream.WriteByte(OP1_OPERATOR_OUTPUT_LEVEL);
-    aStream.WriteByte(OP1_OSC_MODE);
-    aStream.WriteByte(OP1_OSC_FREQ_COARSE);
-    aStream.WriteByte(OP1_OSC_FREQ_FINE);
-    aStream.WriteByte(OP1_OSC_DETUNE);
-
-    aStream.WriteByte(PITCH_EG_RATE_1);
-    aStream.WriteByte(PITCH_EG_RATE_2);
-    aStream.WriteByte(PITCH_EG_RATE_3);
-    aStream.WriteByte(PITCH_EG_RATE_4);
-    aStream.WriteByte(PITCH_EG_LEVEL_1);
-    aStream.WriteByte(PITCH_EG_LEVEL_2);
-    aStream.WriteByte(PITCH_EG_LEVEL_3);
-    aStream.WriteByte(PITCH_EG_LEVEL_4);
-    aStream.WriteByte(ALGORITHM);
-    aStream.WriteByte(FEEDBACK);
-    aStream.WriteByte(OSCILLATOR_SYNC);
-    aStream.WriteByte(LFO_SPEED);
-    aStream.WriteByte(LFO_DELAY);
-    aStream.WriteByte(LFO_PITCH_MOD_DEPTH);
-    aStream.WriteByte(LFO_AMP_MOD_DEPTH);
-    aStream.WriteByte(LFO_SYNC);
-    aStream.WriteByte(LFO_WAVEFORM);
-    aStream.WriteByte(PITCH_MOD_SENSITIVITY);
-    aStream.WriteByte(OPERATOR_ON_OFF);
-  end;
+  FDX7_VCED_Params.asArray := True;
+  for i := 0 to 143 do
+    aStream.WriteByte(FDX7_VCED_Params.params[i]);
+  aStream.WriteByte(FDX7_VCED_Params.params[155]);
   aStream.Position := 0;
   Result := THashFactory.TCrypto.CreateSHA2_256().ComputeStream(aStream).ToString();
   aStream.Free;

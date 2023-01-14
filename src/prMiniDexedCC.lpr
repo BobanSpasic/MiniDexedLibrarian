@@ -5,11 +5,11 @@ program prMiniDexedCC;
 uses
  {$IFDEF UNIX}
   cthreads,
-  {$ENDIF}
- {$IFDEF HASAMIGA}
+     {$ENDIF} {$IFDEF HASAMIGA}
   athreads,
-  {$ENDIF}
+     {$ENDIF}
   Forms,
+  lazcontrols,
   Interfaces, // this includes the LCL widgetset
   untDX7Bank,
   untDX7Voice,
@@ -21,7 +21,20 @@ uses
   untDXUtils,
   untUnPortMIDI,
   untDX7IISupplement,
-  untDX7IISupplBank;
+  untDX7IISupplBank,
+  untMDXSupplement,
+  untMDXPerformance,
+  untTX7Function,
+  untTX7FunctBank,
+  untSysExUtils,
+  untSQLProxy,
+  untCCVoice,
+  untCCBank,
+  untDX7IIView,
+  untTX7View,
+  untParConst,
+  untDX7View,
+  untMDXView;
 
 {$R *.res}
 
@@ -31,5 +44,9 @@ begin
   Application.Scaled:=True;
   Application.Initialize;
   Application.CreateForm(TfrmMain, frmMain);
+  Application.CreateForm(TfrmDX7IIView, frmDX7IIView);
+  Application.CreateForm(TfrmTX7View, frmTX7View);
+  Application.CreateForm(TfrmDX7View, frmDX7View);
+  Application.CreateForm(TfrmMDXView, frmMDXView);
   Application.Run;
 end.

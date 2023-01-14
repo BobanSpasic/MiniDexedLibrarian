@@ -1,7 +1,7 @@
 object frmMain: TfrmMain
-  Left = 352
+  Left = 393
   Height = 859
-  Top = 110
+  Top = 0
   Width = 1510
   Caption = 'MiniDexed Control Center'
   ClientHeight = 859
@@ -45,9 +45,9 @@ object frmMain: TfrmMain
     Hint = 'Drag&Drop to re-arrange'#13#10'Double-click for sending to Librarian tab'
     Top = 0
     Width = 1510
-    ActivePage = tsSettings
+    ActivePage = tsLibrarian
     Align = alClient
-    TabIndex = 3
+    TabIndex = 0
     TabOrder = 1
     object tsLibrarian: TTabSheet
       Caption = 'Librarian'
@@ -199,26 +199,31 @@ object frmMain: TfrmMain
               Width = 672
               Align = alClient
               AutoFillColumns = True
-              ColCount = 4
               ColumnClickSorts = True
               Columns = <              
                 item
                   Title.Caption = 'Voice'
-                  Width = 217
+                  Width = 200
                 end              
                 item
                   ButtonStyle = cbsPickList
                   Title.Caption = 'Category'
-                  Width = 217
+                  Width = 200
                 end              
                 item
                   Title.Caption = 'Origin'
-                  Width = 217
+                  Width = 200
                 end              
                 item
                   Title.Caption = 'ID'
                   Width = 0
                   Visible = False
+                end              
+                item
+                  ReadOnly = True
+                  SizePriority = 0
+                  Title.Caption = 'Type'
+                  Width = 50
                 end>
               DragMode = dmAutomatic
               FixedCols = 0
@@ -230,10 +235,11 @@ object frmMain: TfrmMain
               OnEditingDone = sgDBEditingDone
               OnStartDrag = sgDBStartDrag
               ColWidths = (
-                217
-                217
-                217
+                200
+                200
+                200
                 0
+                50
               )
             end
             object tbDatabase: TToolBar
@@ -246,17 +252,23 @@ object frmMain: TfrmMain
               TabOrder = 1
               object tbbtRefresh: TToolButton
                 Left = 1
+                Hint = 'Refresh the list (load from DB)'
                 Top = 2
                 Caption = 'Refresh'
                 ImageIndex = 4
                 OnClick = tbbtRefreshClick
+                ParentShowHint = False
+                ShowHint = True
               end
               object tbbtCommit: TToolButton
                 Left = 29
+                Hint = 'Save changes to DB'
                 Top = 2
                 Caption = 'Commit'
                 ImageIndex = 5
                 OnClick = tbbtCommitClick
+                ParentShowHint = False
+                ShowHint = True
               end
               object tbSeparator2: TToolButton
                 Left = 24
@@ -284,24 +296,27 @@ object frmMain: TfrmMain
           Height = 833
           Top = 1
           Width = 812
-          ActivePage = tsBankSlots
+          ActivePage = tsPerformanceSlots
           Align = alClient
-          TabIndex = 0
+          TabIndex = 1
           TabOrder = 0
           object tsBankSlots: TTabSheet
             Caption = 'Bank'
             ClientHeight = 809
             ClientWidth = 804
             object pnSlot01: TPanel
+              Tag = 1
               Left = 16
               Height = 20
               Top = 56
-              Width = 160
+              Width = 220
               BevelColor = clBlack
               ClientHeight = 20
-              ClientWidth = 160
+              ClientWidth = 220
               TabOrder = 0
+              OnClick = pnSlotClick
               object edSlot01: TLabeledEdit
+                Tag = 1
                 Left = 70
                 Height = 14
                 Top = 3
@@ -316,24 +331,47 @@ object frmMain: TfrmMain
                 LabelSpacing = 10
                 ReadOnly = True
                 TabOrder = 0
-                Text = 'INIT VOICE'
                 TextHint = 'Slot empty'
                 OnDblClick = edSlotDblClick
                 OnDragDrop = edSlotDragDrop
                 OnDragOver = edSlotDragOver
               end
+              object alDXII_01: TAdvLed
+                Tag = 1
+                AnchorSideTop.Control = edSlot01
+                AnchorSideTop.Side = asrCenter
+                Left = 166
+                Height = 24
+                Top = -2
+                Width = 24
+                Kind = lkGreenLight
+                OnClick = alDXIIClick
+              end
+              object alTX7_01: TAdvLed
+                Tag = 1
+                AnchorSideTop.Control = alDXII_01
+                AnchorSideTop.Side = asrCenter
+                Left = 196
+                Height = 24
+                Top = -2
+                Width = 24
+                Kind = lkGreenLight
+                OnClick = alTX7Click
+              end
             end
             object pnSlot02: TPanel
+              Tag = 2
               Left = 16
               Height = 20
               Top = 86
-              Width = 160
+              Width = 220
               BevelColor = clBlack
               ClientHeight = 20
-              ClientWidth = 160
+              ClientWidth = 220
               TabOrder = 1
+              OnClick = pnSlotClick
               object edSlot02: TLabeledEdit
-                Tag = 1
+                Tag = 2
                 Left = 70
                 Height = 14
                 Top = 3
@@ -352,18 +390,42 @@ object frmMain: TfrmMain
                 OnDragDrop = edSlotDragDrop
                 OnDragOver = edSlotDragOver
               end
+              object alDXII_02: TAdvLed
+                Tag = 2
+                AnchorSideTop.Control = edSlot02
+                AnchorSideTop.Side = asrCenter
+                Left = 166
+                Height = 24
+                Top = -2
+                Width = 24
+                Kind = lkGreenLight
+                OnClick = alDXIIClick
+              end
+              object alTX7_02: TAdvLed
+                Tag = 2
+                AnchorSideTop.Control = alDXII_02
+                AnchorSideTop.Side = asrCenter
+                Left = 196
+                Height = 24
+                Top = -2
+                Width = 24
+                Kind = lkGreenLight
+                OnClick = alTX7Click
+              end
             end
             object pnSlot03: TPanel
+              Tag = 3
               Left = 16
               Height = 20
               Top = 116
-              Width = 160
+              Width = 220
               BevelColor = clBlack
               ClientHeight = 20
-              ClientWidth = 160
+              ClientWidth = 220
               TabOrder = 2
+              OnClick = pnSlotClick
               object edSlot03: TLabeledEdit
-                Tag = 2
+                Tag = 3
                 Left = 70
                 Height = 14
                 Top = 3
@@ -383,18 +445,42 @@ object frmMain: TfrmMain
                 OnDragDrop = edSlotDragDrop
                 OnDragOver = edSlotDragOver
               end
+              object alDXII_03: TAdvLed
+                Tag = 3
+                AnchorSideTop.Control = edSlot03
+                AnchorSideTop.Side = asrCenter
+                Left = 166
+                Height = 24
+                Top = -2
+                Width = 24
+                Kind = lkGreenLight
+                OnClick = alDXIIClick
+              end
+              object alTX7_03: TAdvLed
+                Tag = 3
+                AnchorSideTop.Control = alDXII_03
+                AnchorSideTop.Side = asrCenter
+                Left = 196
+                Height = 24
+                Top = -2
+                Width = 24
+                Kind = lkGreenLight
+                OnClick = alTX7Click
+              end
             end
             object pnSlot04: TPanel
+              Tag = 4
               Left = 16
               Height = 20
               Top = 146
-              Width = 160
+              Width = 220
               BevelColor = clBlack
               ClientHeight = 20
-              ClientWidth = 160
+              ClientWidth = 220
               TabOrder = 3
+              OnClick = pnSlotClick
               object edSlot04: TLabeledEdit
-                Tag = 3
+                Tag = 4
                 Left = 70
                 Height = 14
                 Top = 3
@@ -414,18 +500,42 @@ object frmMain: TfrmMain
                 OnDragDrop = edSlotDragDrop
                 OnDragOver = edSlotDragOver
               end
+              object alDXII_04: TAdvLed
+                Tag = 4
+                AnchorSideTop.Control = edSlot04
+                AnchorSideTop.Side = asrCenter
+                Left = 166
+                Height = 24
+                Top = -2
+                Width = 24
+                Kind = lkGreenLight
+                OnClick = alDXIIClick
+              end
+              object alTX7_04: TAdvLed
+                Tag = 4
+                AnchorSideTop.Control = alDXII_04
+                AnchorSideTop.Side = asrCenter
+                Left = 196
+                Height = 24
+                Top = -2
+                Width = 24
+                Kind = lkGreenLight
+                OnClick = alTX7Click
+              end
             end
             object pnSlot05: TPanel
+              Tag = 5
               Left = 16
               Height = 20
               Top = 176
-              Width = 160
+              Width = 220
               BevelColor = clBlack
               ClientHeight = 20
-              ClientWidth = 160
+              ClientWidth = 220
               TabOrder = 4
+              OnClick = pnSlotClick
               object edSlot05: TLabeledEdit
-                Tag = 4
+                Tag = 5
                 Left = 70
                 Height = 14
                 Top = 3
@@ -445,18 +555,42 @@ object frmMain: TfrmMain
                 OnDragDrop = edSlotDragDrop
                 OnDragOver = edSlotDragOver
               end
+              object alDXII_05: TAdvLed
+                Tag = 5
+                AnchorSideTop.Control = edSlot05
+                AnchorSideTop.Side = asrCenter
+                Left = 166
+                Height = 24
+                Top = -2
+                Width = 24
+                Kind = lkGreenLight
+                OnClick = alDXIIClick
+              end
+              object alTX7_05: TAdvLed
+                Tag = 5
+                AnchorSideTop.Control = alDXII_05
+                AnchorSideTop.Side = asrCenter
+                Left = 196
+                Height = 24
+                Top = -2
+                Width = 24
+                Kind = lkGreenLight
+                OnClick = alTX7Click
+              end
             end
             object pnSlot06: TPanel
+              Tag = 6
               Left = 16
               Height = 20
               Top = 206
-              Width = 160
+              Width = 220
               BevelColor = clBlack
               ClientHeight = 20
-              ClientWidth = 160
+              ClientWidth = 220
               TabOrder = 5
+              OnClick = pnSlotClick
               object edSlot06: TLabeledEdit
-                Tag = 5
+                Tag = 6
                 Left = 70
                 Height = 14
                 Top = 3
@@ -476,18 +610,42 @@ object frmMain: TfrmMain
                 OnDragDrop = edSlotDragDrop
                 OnDragOver = edSlotDragOver
               end
+              object alDXII_06: TAdvLed
+                Tag = 6
+                AnchorSideTop.Control = edSlot06
+                AnchorSideTop.Side = asrCenter
+                Left = 166
+                Height = 24
+                Top = -2
+                Width = 24
+                Kind = lkGreenLight
+                OnClick = alDXIIClick
+              end
+              object alTX7_06: TAdvLed
+                Tag = 6
+                AnchorSideTop.Control = alDXII_06
+                AnchorSideTop.Side = asrCenter
+                Left = 196
+                Height = 24
+                Top = -2
+                Width = 24
+                Kind = lkGreenLight
+                OnClick = alTX7Click
+              end
             end
             object pnSlot07: TPanel
+              Tag = 7
               Left = 16
               Height = 20
               Top = 236
-              Width = 160
+              Width = 220
               BevelColor = clBlack
               ClientHeight = 20
-              ClientWidth = 160
+              ClientWidth = 220
               TabOrder = 6
+              OnClick = pnSlotClick
               object edSlot07: TLabeledEdit
-                Tag = 6
+                Tag = 7
                 Left = 70
                 Height = 14
                 Top = 3
@@ -507,18 +665,42 @@ object frmMain: TfrmMain
                 OnDragDrop = edSlotDragDrop
                 OnDragOver = edSlotDragOver
               end
+              object alDXII_07: TAdvLed
+                Tag = 7
+                AnchorSideTop.Control = edSlot07
+                AnchorSideTop.Side = asrCenter
+                Left = 166
+                Height = 24
+                Top = -2
+                Width = 24
+                Kind = lkGreenLight
+                OnClick = alDXIIClick
+              end
+              object alTX7_07: TAdvLed
+                Tag = 7
+                AnchorSideTop.Control = alDXII_07
+                AnchorSideTop.Side = asrCenter
+                Left = 196
+                Height = 24
+                Top = -2
+                Width = 24
+                Kind = lkGreenLight
+                OnClick = alTX7Click
+              end
             end
             object pnSlot08: TPanel
+              Tag = 8
               Left = 16
               Height = 20
               Top = 266
-              Width = 160
+              Width = 220
               BevelColor = clBlack
               ClientHeight = 20
-              ClientWidth = 160
+              ClientWidth = 220
               TabOrder = 7
+              OnClick = pnSlotClick
               object edSlot08: TLabeledEdit
-                Tag = 7
+                Tag = 8
                 Left = 70
                 Height = 14
                 Top = 3
@@ -538,18 +720,42 @@ object frmMain: TfrmMain
                 OnDragDrop = edSlotDragDrop
                 OnDragOver = edSlotDragOver
               end
+              object alTX7_08: TAdvLed
+                Tag = 8
+                AnchorSideTop.Control = alDXII_08
+                AnchorSideTop.Side = asrCenter
+                Left = 196
+                Height = 24
+                Top = -2
+                Width = 24
+                Kind = lkGreenLight
+                OnClick = alTX7Click
+              end
+              object alDXII_08: TAdvLed
+                Tag = 8
+                AnchorSideTop.Control = edSlot08
+                AnchorSideTop.Side = asrCenter
+                Left = 166
+                Height = 24
+                Top = -2
+                Width = 24
+                Kind = lkGreenLight
+                OnClick = alDXIIClick
+              end
             end
             object pnSlot09: TPanel
+              Tag = 9
               Left = 16
               Height = 20
               Top = 296
-              Width = 160
+              Width = 220
               BevelColor = clBlack
               ClientHeight = 20
-              ClientWidth = 160
+              ClientWidth = 220
               TabOrder = 8
+              OnClick = pnSlotClick
               object edSlot09: TLabeledEdit
-                Tag = 8
+                Tag = 9
                 Left = 70
                 Height = 14
                 Top = 3
@@ -569,18 +775,42 @@ object frmMain: TfrmMain
                 OnDragDrop = edSlotDragDrop
                 OnDragOver = edSlotDragOver
               end
+              object alTX7_09: TAdvLed
+                Tag = 9
+                AnchorSideTop.Control = alDXII_09
+                AnchorSideTop.Side = asrCenter
+                Left = 196
+                Height = 24
+                Top = -2
+                Width = 24
+                Kind = lkGreenLight
+                OnClick = alTX7Click
+              end
+              object alDXII_09: TAdvLed
+                Tag = 9
+                AnchorSideTop.Control = edSlot09
+                AnchorSideTop.Side = asrCenter
+                Left = 166
+                Height = 24
+                Top = -2
+                Width = 24
+                Kind = lkGreenLight
+                OnClick = alDXIIClick
+              end
             end
             object pnSlot10: TPanel
+              Tag = 10
               Left = 16
               Height = 20
               Top = 326
-              Width = 160
+              Width = 220
               BevelColor = clBlack
               ClientHeight = 20
-              ClientWidth = 160
+              ClientWidth = 220
               TabOrder = 9
+              OnClick = pnSlotClick
               object edSlot10: TLabeledEdit
-                Tag = 9
+                Tag = 10
                 Left = 70
                 Height = 14
                 Top = 3
@@ -600,18 +830,42 @@ object frmMain: TfrmMain
                 OnDragDrop = edSlotDragDrop
                 OnDragOver = edSlotDragOver
               end
+              object alTX7_10: TAdvLed
+                Tag = 10
+                AnchorSideTop.Control = alDXII_10
+                AnchorSideTop.Side = asrCenter
+                Left = 196
+                Height = 24
+                Top = -2
+                Width = 24
+                Kind = lkGreenLight
+                OnClick = alTX7Click
+              end
+              object alDXII_10: TAdvLed
+                Tag = 10
+                AnchorSideTop.Control = edSlot10
+                AnchorSideTop.Side = asrCenter
+                Left = 166
+                Height = 24
+                Top = -2
+                Width = 24
+                Kind = lkGreenLight
+                OnClick = alDXIIClick
+              end
             end
             object pnSlot11: TPanel
+              Tag = 11
               Left = 16
               Height = 20
               Top = 356
-              Width = 160
+              Width = 220
               BevelColor = clBlack
               ClientHeight = 20
-              ClientWidth = 160
+              ClientWidth = 220
               TabOrder = 10
+              OnClick = pnSlotClick
               object edSlot11: TLabeledEdit
-                Tag = 10
+                Tag = 11
                 Left = 70
                 Height = 14
                 Top = 3
@@ -631,18 +885,42 @@ object frmMain: TfrmMain
                 OnDragDrop = edSlotDragDrop
                 OnDragOver = edSlotDragOver
               end
+              object alTX7_11: TAdvLed
+                Tag = 11
+                AnchorSideTop.Control = alDXII_11
+                AnchorSideTop.Side = asrCenter
+                Left = 196
+                Height = 24
+                Top = -2
+                Width = 24
+                Kind = lkGreenLight
+                OnClick = alTX7Click
+              end
+              object alDXII_11: TAdvLed
+                Tag = 11
+                AnchorSideTop.Control = edSlot11
+                AnchorSideTop.Side = asrCenter
+                Left = 166
+                Height = 24
+                Top = -2
+                Width = 24
+                Kind = lkGreenLight
+                OnClick = alDXIIClick
+              end
             end
             object pnSlot12: TPanel
+              Tag = 12
               Left = 16
               Height = 20
               Top = 386
-              Width = 160
+              Width = 220
               BevelColor = clBlack
               ClientHeight = 20
-              ClientWidth = 160
+              ClientWidth = 220
               TabOrder = 11
+              OnClick = pnSlotClick
               object edSlot12: TLabeledEdit
-                Tag = 11
+                Tag = 12
                 Left = 70
                 Height = 14
                 Top = 3
@@ -662,18 +940,42 @@ object frmMain: TfrmMain
                 OnDragDrop = edSlotDragDrop
                 OnDragOver = edSlotDragOver
               end
+              object alTX7_12: TAdvLed
+                Tag = 12
+                AnchorSideTop.Control = alDXII_12
+                AnchorSideTop.Side = asrCenter
+                Left = 196
+                Height = 24
+                Top = -2
+                Width = 24
+                Kind = lkGreenLight
+                OnClick = alTX7Click
+              end
+              object alDXII_12: TAdvLed
+                Tag = 12
+                AnchorSideTop.Control = edSlot12
+                AnchorSideTop.Side = asrCenter
+                Left = 166
+                Height = 24
+                Top = -2
+                Width = 24
+                Kind = lkGreenLight
+                OnClick = alDXIIClick
+              end
             end
             object pnSlot13: TPanel
+              Tag = 13
               Left = 16
               Height = 20
               Top = 416
-              Width = 160
+              Width = 220
               BevelColor = clBlack
               ClientHeight = 20
-              ClientWidth = 160
+              ClientWidth = 220
               TabOrder = 12
+              OnClick = pnSlotClick
               object edSlot13: TLabeledEdit
-                Tag = 12
+                Tag = 13
                 Left = 70
                 Height = 14
                 Top = 3
@@ -693,18 +995,42 @@ object frmMain: TfrmMain
                 OnDragDrop = edSlotDragDrop
                 OnDragOver = edSlotDragOver
               end
+              object alTX7_13: TAdvLed
+                Tag = 13
+                AnchorSideTop.Control = alDXII_13
+                AnchorSideTop.Side = asrCenter
+                Left = 196
+                Height = 24
+                Top = -2
+                Width = 24
+                Kind = lkGreenLight
+                OnClick = alTX7Click
+              end
+              object alDXII_13: TAdvLed
+                Tag = 13
+                AnchorSideTop.Control = edSlot13
+                AnchorSideTop.Side = asrCenter
+                Left = 166
+                Height = 24
+                Top = -2
+                Width = 24
+                Kind = lkGreenLight
+                OnClick = alDXIIClick
+              end
             end
             object pnSlot14: TPanel
+              Tag = 14
               Left = 16
               Height = 20
               Top = 446
-              Width = 160
+              Width = 220
               BevelColor = clBlack
               ClientHeight = 20
-              ClientWidth = 160
+              ClientWidth = 220
               TabOrder = 13
+              OnClick = pnSlotClick
               object edSlot14: TLabeledEdit
-                Tag = 13
+                Tag = 14
                 Left = 70
                 Height = 14
                 Top = 3
@@ -724,18 +1050,42 @@ object frmMain: TfrmMain
                 OnDragDrop = edSlotDragDrop
                 OnDragOver = edSlotDragOver
               end
+              object alTX7_14: TAdvLed
+                Tag = 14
+                AnchorSideTop.Control = alDXII_14
+                AnchorSideTop.Side = asrCenter
+                Left = 196
+                Height = 24
+                Top = -2
+                Width = 24
+                Kind = lkGreenLight
+                OnClick = alTX7Click
+              end
+              object alDXII_14: TAdvLed
+                Tag = 14
+                AnchorSideTop.Control = edSlot14
+                AnchorSideTop.Side = asrCenter
+                Left = 166
+                Height = 24
+                Top = -2
+                Width = 24
+                Kind = lkGreenLight
+                OnClick = alDXIIClick
+              end
             end
             object pnSlot15: TPanel
+              Tag = 15
               Left = 16
               Height = 20
               Top = 476
-              Width = 160
+              Width = 220
               BevelColor = clBlack
               ClientHeight = 20
-              ClientWidth = 160
+              ClientWidth = 220
               TabOrder = 14
+              OnClick = pnSlotClick
               object edSlot15: TLabeledEdit
-                Tag = 14
+                Tag = 15
                 Left = 70
                 Height = 14
                 Top = 3
@@ -755,18 +1105,41 @@ object frmMain: TfrmMain
                 OnDragDrop = edSlotDragDrop
                 OnDragOver = edSlotDragOver
               end
+              object alTX7_15: TAdvLed
+                Tag = 15
+                AnchorSideTop.Control = alDXII_15
+                AnchorSideTop.Side = asrCenter
+                Left = 196
+                Height = 24
+                Top = -2
+                Width = 24
+                Kind = lkGreenLight
+                OnClick = alTX7Click
+              end
+              object alDXII_15: TAdvLed
+                Tag = 15
+                AnchorSideTop.Control = edSlot15
+                AnchorSideTop.Side = asrCenter
+                Left = 166
+                Height = 24
+                Top = -2
+                Width = 24
+                Kind = lkGreenLight
+              end
             end
             object pnSlot16: TPanel
+              Tag = 16
               Left = 16
               Height = 20
               Top = 506
-              Width = 160
+              Width = 220
               BevelColor = clBlack
               ClientHeight = 20
-              ClientWidth = 160
+              ClientWidth = 220
               TabOrder = 15
+              OnClick = pnSlotClick
               object edSlot16: TLabeledEdit
-                Tag = 15
+                Tag = 16
                 Left = 70
                 Height = 14
                 Top = 3
@@ -786,18 +1159,42 @@ object frmMain: TfrmMain
                 OnDragDrop = edSlotDragDrop
                 OnDragOver = edSlotDragOver
               end
+              object alTX7_16: TAdvLed
+                Tag = 16
+                AnchorSideTop.Control = alDXII_16
+                AnchorSideTop.Side = asrCenter
+                Left = 196
+                Height = 24
+                Top = -2
+                Width = 24
+                Kind = lkGreenLight
+                OnClick = alTX7Click
+              end
+              object alDXII_16: TAdvLed
+                Tag = 16
+                AnchorSideTop.Control = edSlot16
+                AnchorSideTop.Side = asrCenter
+                Left = 166
+                Height = 24
+                Top = -2
+                Width = 24
+                Kind = lkGreenLight
+                OnClick = alDXIIClick
+              end
             end
             object pnSlot17: TPanel
-              Left = 216
+              Tag = 17
+              Left = 256
               Height = 20
               Top = 56
-              Width = 160
+              Width = 220
               BevelColor = clBlack
               ClientHeight = 20
-              ClientWidth = 160
+              ClientWidth = 220
               TabOrder = 16
+              OnClick = pnSlotClick
               object edSlot17: TLabeledEdit
-                Tag = 16
+                Tag = 17
                 Left = 70
                 Height = 14
                 Top = 3
@@ -817,18 +1214,42 @@ object frmMain: TfrmMain
                 OnDragDrop = edSlotDragDrop
                 OnDragOver = edSlotDragOver
               end
+              object alTX7_17: TAdvLed
+                Tag = 17
+                AnchorSideTop.Control = alDXII_17
+                AnchorSideTop.Side = asrCenter
+                Left = 196
+                Height = 24
+                Top = -2
+                Width = 24
+                Kind = lkGreenLight
+                OnClick = alTX7Click
+              end
+              object alDXII_17: TAdvLed
+                Tag = 17
+                AnchorSideTop.Control = edSlot17
+                AnchorSideTop.Side = asrCenter
+                Left = 166
+                Height = 24
+                Top = -2
+                Width = 24
+                Kind = lkGreenLight
+                OnClick = alDXIIClick
+              end
             end
             object pnSlot18: TPanel
-              Left = 216
+              Tag = 18
+              Left = 256
               Height = 20
               Top = 86
-              Width = 160
+              Width = 220
               BevelColor = clBlack
               ClientHeight = 20
-              ClientWidth = 160
+              ClientWidth = 220
               TabOrder = 17
+              OnClick = pnSlotClick
               object edSlot18: TLabeledEdit
-                Tag = 17
+                Tag = 18
                 Left = 70
                 Height = 14
                 Top = 3
@@ -848,18 +1269,42 @@ object frmMain: TfrmMain
                 OnDragDrop = edSlotDragDrop
                 OnDragOver = edSlotDragOver
               end
+              object alTX7_18: TAdvLed
+                Tag = 18
+                AnchorSideTop.Control = alDXII_18
+                AnchorSideTop.Side = asrCenter
+                Left = 196
+                Height = 24
+                Top = -2
+                Width = 24
+                Kind = lkGreenLight
+                OnClick = alTX7Click
+              end
+              object alDXII_18: TAdvLed
+                Tag = 18
+                AnchorSideTop.Control = edSlot18
+                AnchorSideTop.Side = asrCenter
+                Left = 166
+                Height = 24
+                Top = -2
+                Width = 24
+                Kind = lkGreenLight
+                OnClick = alDXIIClick
+              end
             end
             object pnSlot19: TPanel
-              Left = 216
+              Tag = 19
+              Left = 256
               Height = 20
               Top = 116
-              Width = 160
+              Width = 220
               BevelColor = clBlack
               ClientHeight = 20
-              ClientWidth = 160
+              ClientWidth = 220
               TabOrder = 18
+              OnClick = pnSlotClick
               object edSlot19: TLabeledEdit
-                Tag = 18
+                Tag = 19
                 Left = 70
                 Height = 14
                 Top = 3
@@ -879,18 +1324,42 @@ object frmMain: TfrmMain
                 OnDragDrop = edSlotDragDrop
                 OnDragOver = edSlotDragOver
               end
+              object alTX7_19: TAdvLed
+                Tag = 19
+                AnchorSideTop.Control = alDXII_19
+                AnchorSideTop.Side = asrCenter
+                Left = 196
+                Height = 24
+                Top = -2
+                Width = 24
+                Kind = lkGreenLight
+                OnClick = alTX7Click
+              end
+              object alDXII_19: TAdvLed
+                Tag = 19
+                AnchorSideTop.Control = edSlot19
+                AnchorSideTop.Side = asrCenter
+                Left = 166
+                Height = 24
+                Top = -2
+                Width = 24
+                Kind = lkGreenLight
+                OnClick = alDXIIClick
+              end
             end
             object pnSlot20: TPanel
-              Left = 216
+              Tag = 20
+              Left = 256
               Height = 20
               Top = 146
-              Width = 160
+              Width = 220
               BevelColor = clBlack
               ClientHeight = 20
-              ClientWidth = 160
+              ClientWidth = 220
               TabOrder = 19
+              OnClick = pnSlotClick
               object edSlot20: TLabeledEdit
-                Tag = 19
+                Tag = 20
                 Left = 70
                 Height = 14
                 Top = 3
@@ -910,18 +1379,42 @@ object frmMain: TfrmMain
                 OnDragDrop = edSlotDragDrop
                 OnDragOver = edSlotDragOver
               end
+              object alTX7_20: TAdvLed
+                Tag = 20
+                AnchorSideTop.Control = alDXII_20
+                AnchorSideTop.Side = asrCenter
+                Left = 196
+                Height = 24
+                Top = -2
+                Width = 24
+                Kind = lkGreenLight
+                OnClick = alTX7Click
+              end
+              object alDXII_20: TAdvLed
+                Tag = 20
+                AnchorSideTop.Control = edSlot20
+                AnchorSideTop.Side = asrCenter
+                Left = 166
+                Height = 24
+                Top = -2
+                Width = 24
+                Kind = lkGreenLight
+                OnClick = alDXIIClick
+              end
             end
             object pnSlot21: TPanel
-              Left = 216
+              Tag = 21
+              Left = 256
               Height = 20
               Top = 176
-              Width = 160
+              Width = 220
               BevelColor = clBlack
               ClientHeight = 20
-              ClientWidth = 160
+              ClientWidth = 220
               TabOrder = 20
+              OnClick = pnSlotClick
               object edSlot21: TLabeledEdit
-                Tag = 20
+                Tag = 21
                 Left = 70
                 Height = 14
                 Top = 3
@@ -941,18 +1434,42 @@ object frmMain: TfrmMain
                 OnDragDrop = edSlotDragDrop
                 OnDragOver = edSlotDragOver
               end
+              object alTX7_21: TAdvLed
+                Tag = 21
+                AnchorSideTop.Control = alDXII_21
+                AnchorSideTop.Side = asrCenter
+                Left = 196
+                Height = 24
+                Top = -2
+                Width = 24
+                Kind = lkGreenLight
+                OnClick = alTX7Click
+              end
+              object alDXII_21: TAdvLed
+                Tag = 21
+                AnchorSideTop.Control = edSlot21
+                AnchorSideTop.Side = asrCenter
+                Left = 166
+                Height = 24
+                Top = -2
+                Width = 24
+                Kind = lkGreenLight
+                OnClick = alDXIIClick
+              end
             end
             object pnSlot22: TPanel
-              Left = 216
+              Tag = 22
+              Left = 256
               Height = 20
               Top = 206
-              Width = 160
+              Width = 220
               BevelColor = clBlack
               ClientHeight = 20
-              ClientWidth = 160
+              ClientWidth = 220
               TabOrder = 21
+              OnClick = pnSlotClick
               object edSlot22: TLabeledEdit
-                Tag = 21
+                Tag = 22
                 Left = 70
                 Height = 14
                 Top = 3
@@ -972,18 +1489,42 @@ object frmMain: TfrmMain
                 OnDragDrop = edSlotDragDrop
                 OnDragOver = edSlotDragOver
               end
+              object alTX7_22: TAdvLed
+                Tag = 22
+                AnchorSideTop.Control = alDXII_22
+                AnchorSideTop.Side = asrCenter
+                Left = 196
+                Height = 24
+                Top = -2
+                Width = 24
+                Kind = lkGreenLight
+                OnClick = alTX7Click
+              end
+              object alDXII_22: TAdvLed
+                Tag = 22
+                AnchorSideTop.Control = edSlot22
+                AnchorSideTop.Side = asrCenter
+                Left = 166
+                Height = 24
+                Top = -2
+                Width = 24
+                Kind = lkGreenLight
+                OnClick = alDXIIClick
+              end
             end
             object pnSlot23: TPanel
-              Left = 216
+              Tag = 23
+              Left = 256
               Height = 20
               Top = 236
-              Width = 160
+              Width = 220
               BevelColor = clBlack
               ClientHeight = 20
-              ClientWidth = 160
+              ClientWidth = 220
               TabOrder = 22
+              OnClick = pnSlotClick
               object edSlot23: TLabeledEdit
-                Tag = 22
+                Tag = 23
                 Left = 70
                 Height = 14
                 Top = 3
@@ -1003,18 +1544,42 @@ object frmMain: TfrmMain
                 OnDragDrop = edSlotDragDrop
                 OnDragOver = edSlotDragOver
               end
+              object alTX7_23: TAdvLed
+                Tag = 23
+                AnchorSideTop.Control = alDXII_23
+                AnchorSideTop.Side = asrCenter
+                Left = 196
+                Height = 24
+                Top = -2
+                Width = 24
+                Kind = lkGreenLight
+                OnClick = alTX7Click
+              end
+              object alDXII_23: TAdvLed
+                Tag = 23
+                AnchorSideTop.Control = edSlot23
+                AnchorSideTop.Side = asrCenter
+                Left = 166
+                Height = 24
+                Top = -2
+                Width = 24
+                Kind = lkGreenLight
+                OnClick = alDXIIClick
+              end
             end
             object pnSlot24: TPanel
-              Left = 216
+              Tag = 24
+              Left = 256
               Height = 20
               Top = 266
-              Width = 160
+              Width = 220
               BevelColor = clBlack
               ClientHeight = 20
-              ClientWidth = 160
+              ClientWidth = 220
               TabOrder = 23
+              OnClick = pnSlotClick
               object edSlot24: TLabeledEdit
-                Tag = 23
+                Tag = 24
                 Left = 70
                 Height = 14
                 Top = 3
@@ -1034,18 +1599,42 @@ object frmMain: TfrmMain
                 OnDragDrop = edSlotDragDrop
                 OnDragOver = edSlotDragOver
               end
+              object alTX7_24: TAdvLed
+                Tag = 24
+                AnchorSideTop.Control = alDXII_24
+                AnchorSideTop.Side = asrCenter
+                Left = 196
+                Height = 24
+                Top = -2
+                Width = 24
+                Kind = lkGreenLight
+                OnClick = alTX7Click
+              end
+              object alDXII_24: TAdvLed
+                Tag = 24
+                AnchorSideTop.Control = edSlot24
+                AnchorSideTop.Side = asrCenter
+                Left = 166
+                Height = 24
+                Top = -2
+                Width = 24
+                Kind = lkGreenLight
+                OnClick = alDXIIClick
+              end
             end
             object pnSlot25: TPanel
-              Left = 216
+              Tag = 25
+              Left = 256
               Height = 20
               Top = 296
-              Width = 160
+              Width = 220
               BevelColor = clBlack
               ClientHeight = 20
-              ClientWidth = 160
+              ClientWidth = 220
               TabOrder = 24
+              OnClick = pnSlotClick
               object edSlot25: TLabeledEdit
-                Tag = 24
+                Tag = 25
                 Left = 70
                 Height = 14
                 Top = 3
@@ -1065,18 +1654,42 @@ object frmMain: TfrmMain
                 OnDragDrop = edSlotDragDrop
                 OnDragOver = edSlotDragOver
               end
+              object alTX7_25: TAdvLed
+                Tag = 25
+                AnchorSideTop.Control = alDXII_25
+                AnchorSideTop.Side = asrCenter
+                Left = 196
+                Height = 24
+                Top = -2
+                Width = 24
+                Kind = lkGreenLight
+                OnClick = alTX7Click
+              end
+              object alDXII_25: TAdvLed
+                Tag = 25
+                AnchorSideTop.Control = edSlot25
+                AnchorSideTop.Side = asrCenter
+                Left = 166
+                Height = 24
+                Top = -2
+                Width = 24
+                Kind = lkGreenLight
+                OnClick = alDXIIClick
+              end
             end
             object pnSlot26: TPanel
-              Left = 216
+              Tag = 26
+              Left = 256
               Height = 20
               Top = 326
-              Width = 160
+              Width = 220
               BevelColor = clBlack
               ClientHeight = 20
-              ClientWidth = 160
+              ClientWidth = 220
               TabOrder = 25
+              OnClick = pnSlotClick
               object edSlot26: TLabeledEdit
-                Tag = 25
+                Tag = 26
                 Left = 70
                 Height = 14
                 Top = 3
@@ -1096,18 +1709,42 @@ object frmMain: TfrmMain
                 OnDragDrop = edSlotDragDrop
                 OnDragOver = edSlotDragOver
               end
+              object alTX7_26: TAdvLed
+                Tag = 26
+                AnchorSideTop.Control = alDXII_26
+                AnchorSideTop.Side = asrCenter
+                Left = 196
+                Height = 24
+                Top = -2
+                Width = 24
+                Kind = lkGreenLight
+                OnClick = alTX7Click
+              end
+              object alDXII_26: TAdvLed
+                Tag = 26
+                AnchorSideTop.Control = edSlot26
+                AnchorSideTop.Side = asrCenter
+                Left = 166
+                Height = 24
+                Top = -2
+                Width = 24
+                Kind = lkGreenLight
+                OnClick = alDXIIClick
+              end
             end
             object pnSlot27: TPanel
-              Left = 216
+              Tag = 27
+              Left = 256
               Height = 20
               Top = 356
-              Width = 160
+              Width = 220
               BevelColor = clBlack
               ClientHeight = 20
-              ClientWidth = 160
+              ClientWidth = 220
               TabOrder = 26
+              OnClick = pnSlotClick
               object edSlot27: TLabeledEdit
-                Tag = 26
+                Tag = 27
                 Left = 70
                 Height = 14
                 Top = 3
@@ -1127,18 +1764,42 @@ object frmMain: TfrmMain
                 OnDragDrop = edSlotDragDrop
                 OnDragOver = edSlotDragOver
               end
+              object alTX7_27: TAdvLed
+                Tag = 27
+                AnchorSideTop.Control = alDXII_27
+                AnchorSideTop.Side = asrCenter
+                Left = 196
+                Height = 24
+                Top = -2
+                Width = 24
+                Kind = lkGreenLight
+                OnClick = alTX7Click
+              end
+              object alDXII_27: TAdvLed
+                Tag = 27
+                AnchorSideTop.Control = edSlot27
+                AnchorSideTop.Side = asrCenter
+                Left = 166
+                Height = 24
+                Top = -2
+                Width = 24
+                Kind = lkGreenLight
+                OnClick = alDXIIClick
+              end
             end
             object pnSlot28: TPanel
-              Left = 216
+              Tag = 28
+              Left = 256
               Height = 20
               Top = 386
-              Width = 160
+              Width = 220
               BevelColor = clBlack
               ClientHeight = 20
-              ClientWidth = 160
+              ClientWidth = 220
               TabOrder = 27
+              OnClick = pnSlotClick
               object edSlot28: TLabeledEdit
-                Tag = 27
+                Tag = 28
                 Left = 70
                 Height = 14
                 Top = 3
@@ -1158,18 +1819,42 @@ object frmMain: TfrmMain
                 OnDragDrop = edSlotDragDrop
                 OnDragOver = edSlotDragOver
               end
+              object alTX7_28: TAdvLed
+                Tag = 28
+                AnchorSideTop.Control = alDXII_28
+                AnchorSideTop.Side = asrCenter
+                Left = 196
+                Height = 24
+                Top = -2
+                Width = 24
+                Kind = lkGreenLight
+                OnClick = alTX7Click
+              end
+              object alDXII_28: TAdvLed
+                Tag = 28
+                AnchorSideTop.Control = edSlot28
+                AnchorSideTop.Side = asrCenter
+                Left = 166
+                Height = 24
+                Top = -2
+                Width = 24
+                Kind = lkGreenLight
+                OnClick = alDXIIClick
+              end
             end
             object pnSlot29: TPanel
-              Left = 216
+              Tag = 29
+              Left = 256
               Height = 20
               Top = 416
-              Width = 160
+              Width = 220
               BevelColor = clBlack
               ClientHeight = 20
-              ClientWidth = 160
+              ClientWidth = 220
               TabOrder = 28
+              OnClick = pnSlotClick
               object edSlot29: TLabeledEdit
-                Tag = 28
+                Tag = 29
                 Left = 70
                 Height = 14
                 Top = 3
@@ -1189,18 +1874,42 @@ object frmMain: TfrmMain
                 OnDragDrop = edSlotDragDrop
                 OnDragOver = edSlotDragOver
               end
+              object alTX7_29: TAdvLed
+                Tag = 29
+                AnchorSideTop.Control = alDXII_29
+                AnchorSideTop.Side = asrCenter
+                Left = 196
+                Height = 24
+                Top = -2
+                Width = 24
+                Kind = lkGreenLight
+                OnClick = alTX7Click
+              end
+              object alDXII_29: TAdvLed
+                Tag = 29
+                AnchorSideTop.Control = edSlot29
+                AnchorSideTop.Side = asrCenter
+                Left = 166
+                Height = 24
+                Top = -2
+                Width = 24
+                Kind = lkGreenLight
+                OnClick = alDXIIClick
+              end
             end
             object pnSlot30: TPanel
-              Left = 216
+              Tag = 30
+              Left = 256
               Height = 20
               Top = 446
-              Width = 160
+              Width = 220
               BevelColor = clBlack
               ClientHeight = 20
-              ClientWidth = 160
+              ClientWidth = 220
               TabOrder = 29
+              OnClick = pnSlotClick
               object edSlot30: TLabeledEdit
-                Tag = 29
+                Tag = 30
                 Left = 70
                 Height = 14
                 Top = 3
@@ -1220,18 +1929,42 @@ object frmMain: TfrmMain
                 OnDragDrop = edSlotDragDrop
                 OnDragOver = edSlotDragOver
               end
+              object alTX7_30: TAdvLed
+                Tag = 30
+                AnchorSideTop.Control = alDXII_30
+                AnchorSideTop.Side = asrCenter
+                Left = 196
+                Height = 24
+                Top = -2
+                Width = 24
+                Kind = lkGreenLight
+                OnClick = alTX7Click
+              end
+              object alDXII_30: TAdvLed
+                Tag = 30
+                AnchorSideTop.Control = edSlot30
+                AnchorSideTop.Side = asrCenter
+                Left = 166
+                Height = 24
+                Top = -2
+                Width = 24
+                Kind = lkGreenLight
+                OnClick = alDXIIClick
+              end
             end
             object pnSlot31: TPanel
-              Left = 216
+              Tag = 31
+              Left = 256
               Height = 20
               Top = 476
-              Width = 160
+              Width = 220
               BevelColor = clBlack
               ClientHeight = 20
-              ClientWidth = 160
+              ClientWidth = 220
               TabOrder = 30
+              OnClick = pnSlotClick
               object edSlot31: TLabeledEdit
-                Tag = 30
+                Tag = 31
                 Left = 70
                 Height = 14
                 Top = 3
@@ -1251,18 +1984,42 @@ object frmMain: TfrmMain
                 OnDragDrop = edSlotDragDrop
                 OnDragOver = edSlotDragOver
               end
+              object alTX7_31: TAdvLed
+                Tag = 31
+                AnchorSideTop.Control = alDXII_31
+                AnchorSideTop.Side = asrCenter
+                Left = 196
+                Height = 24
+                Top = -2
+                Width = 24
+                Kind = lkGreenLight
+                OnClick = alTX7Click
+              end
+              object alDXII_31: TAdvLed
+                Tag = 31
+                AnchorSideTop.Control = edSlot31
+                AnchorSideTop.Side = asrCenter
+                Left = 166
+                Height = 24
+                Top = -2
+                Width = 24
+                Kind = lkGreenLight
+                OnClick = alDXIIClick
+              end
             end
             object pnSlot32: TPanel
-              Left = 216
+              Tag = 32
+              Left = 256
               Height = 20
               Top = 506
-              Width = 160
+              Width = 220
               BevelColor = clBlack
               ClientHeight = 20
-              ClientWidth = 160
+              ClientWidth = 220
               TabOrder = 31
+              OnClick = pnSlotClick
               object edSlot32: TLabeledEdit
-                Tag = 31
+                Tag = 32
                 Left = 70
                 Height = 14
                 Top = 3
@@ -1281,6 +2038,28 @@ object frmMain: TfrmMain
                 OnDblClick = edSlotDblClick
                 OnDragDrop = edSlotDragDrop
                 OnDragOver = edSlotDragOver
+              end
+              object alTX7_32: TAdvLed
+                Tag = 32
+                AnchorSideTop.Control = alDXII_32
+                AnchorSideTop.Side = asrCenter
+                Left = 196
+                Height = 24
+                Top = -2
+                Width = 24
+                Kind = lkGreenLight
+                OnClick = alTX7Click
+              end
+              object alDXII_32: TAdvLed
+                Tag = 32
+                AnchorSideTop.Control = edSlot32
+                AnchorSideTop.Side = asrCenter
+                Left = 166
+                Height = 24
+                Top = -2
+                Width = 24
+                Kind = lkGreenLight
+                OnClick = alDXIIClick
               end
             end
             object tbBank: TToolBar
@@ -1306,10 +2085,13 @@ object frmMain: TfrmMain
               end
               object tbbtSendVoiceDump: TToolButton
                 Left = 52
+                Hint = 'Send Bank over MIDI'
                 Top = 0
                 Caption = 'Send'
                 ImageIndex = 2
                 OnClick = tbbtSendVoiceDumpClick
+                ParentShowHint = False
+                ShowHint = True
               end
               object tbSeparator1: TToolButton
                 Left = 47
@@ -1320,10 +2102,13 @@ object frmMain: TfrmMain
               end
               object tbStoreToDB: TToolButton
                 Left = 75
+                Hint = 'Add voices to Voice DB'
                 Top = 0
                 Caption = 'tbStoreToDB'
                 ImageIndex = 3
                 OnClick = tbStoreToDBClick
+                ParentShowHint = False
+                ShowHint = True
               end
             end
             object Label10: TLabel
@@ -1432,12 +2217,13 @@ object frmMain: TfrmMain
               Left = 16
               Height = 20
               Top = 56
-              Width = 160
+              Width = 220
               BevelColor = clBlack
               ClientHeight = 20
-              ClientWidth = 160
+              ClientWidth = 220
               TabOrder = 0
               object edPSlot01: TLabeledEdit
+                Tag = 1
                 Left = 70
                 Height = 14
                 Top = 3
@@ -1456,18 +2242,29 @@ object frmMain: TfrmMain
                 OnDragDrop = edPSlotDragDrop
                 OnDragOver = edPSlotDragOver
               end
+              object alMDX_01: TAdvLed
+                Tag = 1
+                AnchorSideTop.Control = edPSlot01
+                AnchorSideTop.Side = asrCenter
+                Left = 166
+                Height = 24
+                Top = -2
+                Width = 24
+                Kind = lkGreenLight
+                OnClick = alMDXClick
+              end
             end
             object pnPSlot02: TPanel
               Left = 16
               Height = 20
               Top = 86
-              Width = 160
+              Width = 220
               BevelColor = clBlack
               ClientHeight = 20
-              ClientWidth = 160
+              ClientWidth = 220
               TabOrder = 1
               object edPSlot02: TLabeledEdit
-                Tag = 1
+                Tag = 2
                 Left = 70
                 Height = 14
                 Top = 3
@@ -1485,18 +2282,29 @@ object frmMain: TfrmMain
                 OnDragDrop = edPSlotDragDrop
                 OnDragOver = edPSlotDragOver
               end
+              object alMDX_02: TAdvLed
+                Tag = 2
+                AnchorSideTop.Control = edPSlot01
+                AnchorSideTop.Side = asrCenter
+                Left = 166
+                Height = 24
+                Top = -2
+                Width = 24
+                Kind = lkGreenLight
+                OnClick = alMDXClick
+              end
             end
             object pnPSlot03: TPanel
               Left = 16
               Height = 20
               Top = 116
-              Width = 160
+              Width = 220
               BevelColor = clBlack
               ClientHeight = 20
-              ClientWidth = 160
+              ClientWidth = 220
               TabOrder = 2
               object edPSlot03: TLabeledEdit
-                Tag = 2
+                Tag = 3
                 Left = 70
                 Height = 14
                 Top = 3
@@ -1515,18 +2323,29 @@ object frmMain: TfrmMain
                 OnDragDrop = edPSlotDragDrop
                 OnDragOver = edPSlotDragOver
               end
+              object alMDX_03: TAdvLed
+                Tag = 3
+                AnchorSideTop.Control = edPSlot01
+                AnchorSideTop.Side = asrCenter
+                Left = 166
+                Height = 24
+                Top = -2
+                Width = 24
+                Kind = lkGreenLight
+                OnClick = alMDXClick
+              end
             end
             object pnPSlot04: TPanel
               Left = 16
               Height = 20
               Top = 146
-              Width = 160
+              Width = 220
               BevelColor = clBlack
               ClientHeight = 20
-              ClientWidth = 160
+              ClientWidth = 220
               TabOrder = 3
               object edPSlot04: TLabeledEdit
-                Tag = 3
+                Tag = 4
                 Left = 70
                 Height = 14
                 Top = 3
@@ -1545,18 +2364,29 @@ object frmMain: TfrmMain
                 OnDragDrop = edPSlotDragDrop
                 OnDragOver = edPSlotDragOver
               end
+              object alMDX_04: TAdvLed
+                Tag = 4
+                AnchorSideTop.Control = edPSlot01
+                AnchorSideTop.Side = asrCenter
+                Left = 166
+                Height = 24
+                Top = -2
+                Width = 24
+                Kind = lkGreenLight
+                OnClick = alMDXClick
+              end
             end
             object pnPSlot05: TPanel
               Left = 16
               Height = 20
               Top = 176
-              Width = 160
+              Width = 220
               BevelColor = clBlack
               ClientHeight = 20
-              ClientWidth = 160
+              ClientWidth = 220
               TabOrder = 4
               object edPSlot05: TLabeledEdit
-                Tag = 4
+                Tag = 5
                 Left = 70
                 Height = 14
                 Top = 3
@@ -1575,18 +2405,29 @@ object frmMain: TfrmMain
                 OnDragDrop = edPSlotDragDrop
                 OnDragOver = edPSlotDragOver
               end
+              object alMDX_05: TAdvLed
+                Tag = 5
+                AnchorSideTop.Control = edPSlot01
+                AnchorSideTop.Side = asrCenter
+                Left = 166
+                Height = 24
+                Top = -2
+                Width = 24
+                Kind = lkGreenLight
+                OnClick = alMDXClick
+              end
             end
             object pnPSlot06: TPanel
               Left = 16
               Height = 20
               Top = 206
-              Width = 160
+              Width = 220
               BevelColor = clBlack
               ClientHeight = 20
-              ClientWidth = 160
+              ClientWidth = 220
               TabOrder = 5
               object edPSlot06: TLabeledEdit
-                Tag = 5
+                Tag = 6
                 Left = 70
                 Height = 14
                 Top = 3
@@ -1605,18 +2446,29 @@ object frmMain: TfrmMain
                 OnDragDrop = edPSlotDragDrop
                 OnDragOver = edPSlotDragOver
               end
+              object alMDX_06: TAdvLed
+                Tag = 6
+                AnchorSideTop.Control = edPSlot01
+                AnchorSideTop.Side = asrCenter
+                Left = 166
+                Height = 24
+                Top = -2
+                Width = 24
+                Kind = lkGreenLight
+                OnClick = alMDXClick
+              end
             end
             object pnPSlot07: TPanel
               Left = 16
               Height = 20
               Top = 236
-              Width = 160
+              Width = 220
               BevelColor = clBlack
               ClientHeight = 20
-              ClientWidth = 160
+              ClientWidth = 220
               TabOrder = 6
               object edPSlot07: TLabeledEdit
-                Tag = 6
+                Tag = 7
                 Left = 70
                 Height = 14
                 Top = 3
@@ -1635,18 +2487,29 @@ object frmMain: TfrmMain
                 OnDragDrop = edPSlotDragDrop
                 OnDragOver = edPSlotDragOver
               end
+              object alMDX_07: TAdvLed
+                Tag = 7
+                AnchorSideTop.Control = edPSlot01
+                AnchorSideTop.Side = asrCenter
+                Left = 166
+                Height = 24
+                Top = -2
+                Width = 24
+                Kind = lkGreenLight
+                OnClick = alMDXClick
+              end
             end
             object pnPSlot08: TPanel
               Left = 16
               Height = 20
               Top = 266
-              Width = 160
+              Width = 220
               BevelColor = clBlack
               ClientHeight = 20
-              ClientWidth = 160
+              ClientWidth = 220
               TabOrder = 7
               object edPSlot08: TLabeledEdit
-                Tag = 7
+                Tag = 8
                 Left = 70
                 Height = 14
                 Top = 3
@@ -1665,6 +2528,32 @@ object frmMain: TfrmMain
                 OnDragDrop = edPSlotDragDrop
                 OnDragOver = edPSlotDragOver
               end
+              object alMDX_08: TAdvLed
+                Tag = 8
+                AnchorSideTop.Control = edPSlot01
+                AnchorSideTop.Side = asrCenter
+                Left = 166
+                Height = 24
+                Top = -2
+                Width = 24
+                Kind = lkGreenLight
+                OnClick = alMDXClick
+              end
+            end
+            object btLoadPerfToEditor: TButton
+              AnchorSideRight.Control = pnPSlot01
+              AnchorSideRight.Side = asrBottom
+              Left = 160
+              Height = 25
+              Hint = 'Load voices to '#13#10'Performance editor'
+              Top = 320
+              Width = 76
+              Anchors = [akTop, akLeft, akRight]
+              Caption = 'Load'
+              OnClick = btLoadPerfToEditorClick
+              ParentShowHint = False
+              ShowHint = True
+              TabOrder = 8
             end
           end
         end
@@ -1710,13 +2599,16 @@ object frmMain: TfrmMain
         end
         object tbExtractPerfVoicesToDB: TToolButton
           Left = 52
+          Hint = 'Add voices to the Voices DB'
           Top = 0
           Caption = 'tbExtractPerfVoicesToDB'
           ImageIndex = 3
           OnClick = tbExtractPerfVoicesToDBClick
+          ParentShowHint = False
+          ShowHint = True
         end
       end
-      object pnPEffects: TPanel
+      object pnPGeneral: TPanel
         Left = 0
         Height = 120
         Top = 24
@@ -1998,7 +2890,7 @@ object frmMain: TfrmMain
           Top = 16
           Width = 65
           Anchors = [akTop, akRight]
-          Caption = 'EFF'
+          Caption = 'GEN'
           Font.Height = -53
           Font.Name = 'Consolas'
           Font.Orientation = 900
@@ -2084,6 +2976,17 @@ object frmMain: TfrmMain
           BorderSpacing.Right = 10
           Caption = 'Origin'
           ParentColor = False
+        end
+        object btPerfUpdate: TButton
+          AnchorSideTop.Control = pnPGeneral
+          AnchorSideTop.Side = asrCenter
+          Left = 1139
+          Height = 25
+          Top = 48
+          Width = 75
+          Caption = 'Apply'
+          OnClick = btPerfUpdateClick
+          TabOrder = 11
         end
       end
       object pcTGs: TPageControl
@@ -13149,19 +14052,19 @@ object frmMain: TfrmMain
         Columns = <        
           item
             Title.Caption = 'Category'
-            Width = 334
+            Width = 325
           end        
           item
             Title.Caption = 'Comment'
-            Width = 334
+            Width = 326
           end>
         FixedCols = 0
         Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goRangeSelect, goColSizing, goEditing, goAutoAddRows, goThumbTracking, goSmoothScroll, goHeaderHotTracking]
         TabOrder = 4
         OnDrawCell = sgCategoriesDrawCell
         ColWidths = (
-          334
-          334
+          325
+          326
         )
       end
       object btCatLoad: TButton
@@ -13322,26 +14225,5 @@ object frmMain: TfrmMain
   object SelectSDCardDirectoryDialog1: TSelectDirectoryDialog
     Title = 'Select SD Card root directory'
     Left = 768
-  end
-  object SQLite3Con: TSQLite3Connection
-    Connected = False
-    LoginPrompt = False
-    KeepConnection = False
-    Transaction = SQLTrans
-    AlwaysUseBigint = False
-    Left = 877
-  end
-  object SQLTrans: TSQLTransaction
-    Active = False
-    Database = SQLite3Con
-    Left = 960
-  end
-  object SQLQuery: TSQLQuery
-    FieldDefs = <>
-    Database = SQLite3Con
-    Transaction = SQLTrans
-    Params = <>
-    Macros = <>
-    Left = 1040
   end
 end

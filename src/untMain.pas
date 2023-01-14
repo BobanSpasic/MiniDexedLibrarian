@@ -7,6 +7,15 @@
  Author: Boban Spasic
 
 }
+//ToDo - open for more
+//+save binary data to SQL
+//save performance to SQL
+//+suppl_ver
+//+whole performance to bin + version
+//DBGrid filter
+//TX802/816 class
+//FM Heaven import
+//FM7 import
 
 unit untMain;
 
@@ -19,24 +28,96 @@ uses
   {$IFDEF WINDOWS}
   Messages,
   {$ENDIF}
-  SysUtils, StrUtils, Forms, Controls, Graphics, Dialogs,
-  StdCtrls, ComCtrls, ExtCtrls, Grids, Spin, DBGrids, atshapeline,
-  ECSlider, ECSwitch, ECEditBtns, untUtils, untDX7Bank, untDX7Voice,
-  untDX7IISupplement, untDX7IISupplBank,
-  untDXUtils, untMiniINI, Types, SQLite3Conn, SQLDB, SQLite3DS, DB,
-  untPopUp, LCLIntf, LazFileUtils
+  SysUtils, StrUtils, Forms, Controls, Graphics, Dialogs, StdCtrls, ComCtrls,
+  ExtCtrls, Grids, Spin, atshapeline, ECSlider, ECSwitch, ECEditBtns,
+  Types, LCLIntf, AdvLed, LazFileUtils
   {$IFDEF WINDOWS}
   ,MIDI, untUnPortMIDI
   {$ENDIF}
-  {$IFDEF LINUX}
+  {$IFDEF UNIX}
   ,untLinuxMIDI, PortMidi
-  {$ENDIF}  ;
+  {$ENDIF}
+  , untSQLProxy, untUtils, untCCBank, untCCVoice, untDX7Voice,
+  untDX7IISupplement, untTX7Function, untDXUtils, untMiniINI, untPopUp,
+  untDX7View, untDX7IIView, untTX7View, untMDXView, untMDXSupplement, untMDXPerformance;
 
 type
 
   { TfrmMain }
 
   TfrmMain = class(TForm)
+    alMDX_01: TAdvLed;
+    alDXII_10: TAdvLed;
+    alDXII_11: TAdvLed;
+    alDXII_12: TAdvLed;
+    alDXII_13: TAdvLed;
+    alDXII_14: TAdvLed;
+    alDXII_15: TAdvLed;
+    alDXII_16: TAdvLed;
+    alDXII_17: TAdvLed;
+    alDXII_18: TAdvLed;
+    alDXII_19: TAdvLed;
+    alDXII_20: TAdvLed;
+    alDXII_21: TAdvLed;
+    alDXII_22: TAdvLed;
+    alDXII_23: TAdvLed;
+    alDXII_24: TAdvLed;
+    alDXII_25: TAdvLed;
+    alDXII_26: TAdvLed;
+    alDXII_27: TAdvLed;
+    alDXII_28: TAdvLed;
+    alDXII_29: TAdvLed;
+    alDXII_30: TAdvLed;
+    alDXII_31: TAdvLed;
+    alDXII_01: TAdvLed;
+    alDXII_02: TAdvLed;
+    alDXII_03: TAdvLed;
+    alDXII_04: TAdvLed;
+    alDXII_05: TAdvLed;
+    alDXII_06: TAdvLed;
+    alDXII_07: TAdvLed;
+    alDXII_08: TAdvLed;
+    alDXII_09: TAdvLed;
+    alMDX_02: TAdvLed;
+    alMDX_03: TAdvLed;
+    alMDX_04: TAdvLed;
+    alMDX_05: TAdvLed;
+    alMDX_06: TAdvLed;
+    alMDX_07: TAdvLed;
+    alMDX_08: TAdvLed;
+    alTX7_10: TAdvLed;
+    alTX7_11: TAdvLed;
+    alTX7_12: TAdvLed;
+    alTX7_13: TAdvLed;
+    alTX7_14: TAdvLed;
+    alTX7_15: TAdvLed;
+    alTX7_16: TAdvLed;
+    alTX7_17: TAdvLed;
+    alTX7_18: TAdvLed;
+    alTX7_19: TAdvLed;
+    alTX7_20: TAdvLed;
+    alTX7_21: TAdvLed;
+    alTX7_22: TAdvLed;
+    alTX7_23: TAdvLed;
+    alTX7_24: TAdvLed;
+    alTX7_25: TAdvLed;
+    alTX7_26: TAdvLed;
+    alTX7_27: TAdvLed;
+    alTX7_28: TAdvLed;
+    alTX7_29: TAdvLed;
+    alTX7_30: TAdvLed;
+    alTX7_31: TAdvLed;
+    alTX7_32: TAdvLed;
+    alDXII_32: TAdvLed;
+    alTX7_01: TAdvLed;
+    alTX7_02: TAdvLed;
+    alTX7_03: TAdvLed;
+    alTX7_04: TAdvLed;
+    alTX7_05: TAdvLed;
+    alTX7_06: TAdvLed;
+    alTX7_07: TAdvLed;
+    alTX7_08: TAdvLed;
+    alTX7_09: TAdvLed;
     btSelectDir: TECSpeedBtnPlus;
     btSelSDCard: TECSpeedBtnPlus;
     btCatLoad: TButton;
@@ -45,6 +126,8 @@ type
     btDeleteCategoryDB: TButton;
     btSDCardRenameVoices: TButton;
     btSDCardRenamePerformances: TButton;
+    btLoadPerfToEditor: TButton;
+    btPerfUpdate: TButton;
     cbBtnActionBack: TComboBox;
     cbBtnActionHome: TComboBox;
     cbBtnActionNext: TComboBox;
@@ -223,7 +306,7 @@ type
     pnHint: TPanel;
     pnMIDIDevice: TPanel;
     pnMiniDexedFiles: TPanel;
-    pnPEffects: TPanel;
+    pnPGeneral: TPanel;
     pnPerfOptions: TPanel;
     pnPSlot01: TPanel;
     pnPSlot02: TPanel;
@@ -451,9 +534,6 @@ type
     seFontSize: TSpinEdit;
     Splitter1: TSplitter;
     Splitter2: TSplitter;
-    SQLite3Con: TSQLite3Connection;
-    SQLQuery: TSQLQuery;
-    SQLTrans: TSQLTransaction;
     sgSDSysExFiles: TStringGrid;
     sgDB: TStringGrid;
     swAfterTouchA1: TECSwitch;
@@ -614,10 +694,15 @@ type
     tsSyxFiles: TTabSheet;
     tsTG1_4: TTabSheet;
     tsTG5_8: TTabSheet;
+    procedure alDXIIClick(Sender: TObject);
+    procedure alMDXClick(Sender: TObject);
+    procedure alTX7Click(Sender: TObject);
     procedure btCatLoadClick(Sender: TObject);
     procedure btCatSaveClick(Sender: TObject);
     procedure btDeleteCategoryDBClick(Sender: TObject);
     procedure btDeleteVoiceDBClick(Sender: TObject);
+    procedure btLoadPerfToEditorClick(Sender: TObject);
+    procedure btPerfUpdateClick(Sender: TObject);
     procedure btSDCardRenamePerformancesClick(Sender: TObject);
     procedure btSDCardRenameVoicesClick(Sender: TObject);
     procedure btSelectDirClick(Sender: TObject);
@@ -639,6 +724,7 @@ type
     procedure lbFilesClick(Sender: TObject);
     procedure lbFilesStartDrag(Sender: TObject; var DragObject: TDragObject);
     procedure lbVoicesStartDrag(Sender: TObject; var DragObject: TDragObject);
+    procedure pnSlotClick(Sender: TObject);
     procedure rbDisplayDiscreteChange(Sender: TObject);
     procedure rbDisplayi2cHD44780Change(Sender: TObject);
     procedure rbDisplayi2cSSD1306Change(Sender: TObject);
@@ -690,20 +776,12 @@ type
     procedure LoadLastStateBank;
     procedure FillFilesList(aFolder: string);
     procedure OpenSysEx(aName: string);
-    procedure OpenPerformance(aName: string);
-    procedure SQLCreateTables;
-    procedure SQLAddVoice(aID, aName, aCategory, aData, aSupplement, aOrigin: string);
-    procedure SQLGetVoice(aID: string; var sl: TMemoryStream);
-    procedure SQLLoadCategories;
-    procedure SQLSaveCategories;
+    procedure LoadPerformance(aName: string);
     procedure tbExtractPerfVoicesToDBClick(Sender: TObject);
     procedure tbStoreToDBClick(Sender: TObject);
     procedure LoadSDCard(dir: string);
-    procedure myDBGridRefresh;
-    procedure myDBGridCommit(aID, aName, aCategory, aOrigin: string);
-    procedure UpdateCategoryLists;
-    procedure SQLiteVacuum;
-    procedure SQLCleanTable(ATable: string);
+    procedure PerfToGUI;
+    procedure GUIToPerf;
 
   private
     {$IFDEF WINDOWS}
@@ -716,39 +794,40 @@ type
   end;
 
 var
-  dragItem:  integer;
+  dragItem:    integer;
   sgSyxDragItem: integer;
   sgPerfDragItem: integer;
-  FBankDX:   TDX7BankContainer;
-  FSupplBankDXII: TDX7IISupplBankContainer;
-  FSlotsDX:  TDX7BankContainer;
-  FSlotsSupplDX7II: TDX7IISupplBankContainer;
-  FPerfSlotsDX: array [1..8] of TDX7VoiceContainer;
-  FPerfSlotsSupplDX7II: array [1..8] of TDX7IISupplementContainer;
-  FMidiIn:   string;
-  FMidiInInt: integer;
-  FMidiOut:  string;
+  FTmpCCBank:  TCCBankContainer;
+  //FSupplBankDXII: TDX7IISupplBankContainer;
+  //FFunctBankTX7: TTX7FunctBankContainer;
+  FSlotsDX:    TCCBankContainer;
+  FPerfSlotsDX: array [1..8] of TCCVoiceContainer;
+  FPerformance: TMDXPerformanceContainer;
+  FMidiIn:     string;
+  FMidiInInt:  integer;
+  FMidiOut:    string;
   FMidiOutInt: integer;
   FMidiIsActive: boolean;
-  frmMain:   TfrmMain;
+  frmMain:     TfrmMain;
   LastSysExOpenDir: string;
   LastSysExSaveDir: string;
-  LastSysEx: string;
+  LastSysEx:   string;
   LastPerfOpenDir: string;
   LastPerfSaveDir: string;
-  LastPerf:  string;
+  LastPerf:    string;
   LastSDCardDir: string;
   FUpdatingForm: boolean;
   HD44780Addr: string;
   SSD1306Addr: string;
-  DBName:    string;
-  HomeDir:   string;
-  AppDir:    string;
+  DBName:      string;
+  HomeDir:     string;
+  //AppDir: string;
   SDCardSysExFiles: TStringList;
   SDCardPerfFiles: TStringList;
-  compArray: array [0..3] of string;
-  compList:  TStringList;
+  compArray:   array [0..3] of string;
+  compList:    TStringList;
   lastSelectedRow: integer;
+  SQLProxy:    TSQLProxy;
 
 implementation
 
@@ -760,187 +839,43 @@ implementation
 
 { TfrmMain }
 
-procedure TfrmMain.SQLCreateTables;
-begin
-  if SQLite3Con.Connected then
-  begin
-    SQLQuery.Close;
-    SQLQuery.SQL.Text :=
-      'CREATE TABLE IF NOT EXISTS CATEGORY (NAME VARCHAR(32) UNIQUE NOT NULL, COMMENT VARCHAR(256));';
-    SQLQuery.ExecSQL;
-    SQLTrans.Commit;
-    SQLQuery.Close;
-    SQLQuery.SQL.Text :=
-      'CREATE TABLE IF NOT EXISTS VOICES (ID VARCHAR(256) UNIQUE NOT NULL, NAME VARCHAR(32) NOT NULL, CATEGORY VARCHAR(32) NOT NULL, DATA VARCHAR(500) NOT NULL, SUPPLEMENT VARCHAR(500), ORIGIN VARCHAR(256));';
-    SQLQuery.ExecSQL;
-    SQLTrans.Commit;
-  end
-  else
-    ShowMessage('No database file assigned');
-end;
-
-procedure TfrmMain.SQLGetVoice(aID: string; var sl: TMemoryStream);
-var
-  Data: string;
-begin
-  Data := '';
-  if SQLite3Con.Connected then
-  begin
-    SQLQuery.Close;
-    SQLQuery.SQL.Text :=
-      'SELECT * FROM VOICES WHERE ID = :AID';
-    SQLQuery.Params.ParamByName('AID').AsString := aID;
-    SQLTrans.StartTransaction;
-    SQLQuery.Open;
-    while not SQLQuery.EOF do
-    begin
-      if SQLQuery.FieldCount > 0 then
-      begin
-        Data := SQLQuery.Fields[3].AsString;
-        Break;
-      end;
-      SQLQuery.Next;
-    end;
-    mmLog.Lines.Add(Data);
-    StrToSysExStream(Data, sl);
-    SQLQuery.Close;
-    SQLTrans.Commit;
-  end;
-end;
-
-procedure TfrmMain.UpdateCategoryLists;
-var
-  sl: TStringList;
-begin
-  if SQLite3Con.Connected then
-  begin
-    sl := TStringList.Create;
-    SQLQuery.Close;
-    SQLQuery.SQL.Text := 'SELECT * FROM CATEGORY';
-    SQLTrans.StartTransaction;
-    SQLQuery.Open;
-    while not SQLQuery.EOF do
-    begin
-      sl.Add(SQLQuery.Fields[0].AsString);
-      SQLQuery.Next;
-    end;
-    SQLQuery.Close;
-    SQLTrans.Commit;
-    sgDB.Columns[1].PickList := sl;
-    cbPerfCategory.Items := sl;
-    if cbPerfCategory.Items.Count > 0 then cbPerfCategory.ItemIndex := 0;
-    cbVoicesCategory.Items := sl;
-    if cbVoicesCategory.Items.Count > 0 then cbVoicesCategory.ItemIndex := 0;
-    sl.Free;
-  end;
-end;
-
 procedure TfrmMain.tbExtractPerfVoicesToDBClick(Sender: TObject);
 var
   voiceStream: TMemoryStream;
+  extraStream: TMemoryStream;
   i: integer;
+  version: integer;
+  FName, FCat, FOrigin, FHash: string;
 begin
   for i := 1 to 8 do
   begin
     try
       voiceStream := TMemoryStream.Create;
-      FPerfSlotsDX[i].Save_VCED_ToStream(voiceStream);
-      SQLAddVoice(FPerfSlotsDX[i].CalculateHash, FPerfSlotsDX[i].GetVoiceName,
-        cbPerfCategory.Text, SysExStreamToStr(voiceStream), '', edPerfOrigin.Text);
+      extraStream := TMemoryStream.Create;
+      version := 3; //PCEDx
+      voiceStream.WriteBuffer(FPerformance.FMDX_Params.TG[i].VoiceData, SizeOf(FPerformance.FMDX_Params.TG[i].VoiceData));
+      extraStream.WriteBuffer(FPerformance.FMDX_Params.TG[i].SupplData, SizeOf(FPerformance.FMDX_Params.TG[i].SupplData));
+      FName:=FPerformance.GetTGVoiceName(i);
+      FCat:=FPerformance.FMDX_Params.General.Category;
+      FOrigin:=FPerformance.FMDX_Params.General.Origin;
+      FHash := FPerformance.CalculateTGHash(i);
+      SQLProxy.AddBinVoice(FHash, FName, FCat, FOrigin, version, voiceStream, extraStream);
+
     finally
       voiceStream.Free;
+      extraStream.Free;
     end;
   end;
-end;
-
-procedure TfrmMain.SQLiteVacuum;
-var
-  tmpDataset: TSqlite3Dataset;
-  wasConnected: boolean;
-begin
-  wasConnected := SQLite3Con.Connected;
-
-  SQLite3Con.Close;
-  repeat
-  until not SQLite3Con.Connected;
-
-  tmpDataset := TSqlite3Dataset.Create(nil);
-  tmpDataset.FileName := SQLite3Con.DatabaseName;
-  tmpDataset.ExecSQL('VACUUM;');
-  tmpDataset.Free;
-
-  SQLite3Con.Connected := wasConnected;
-end;
-
-procedure TfrmMain.SQLCleanTable(ATable: string);
-begin
-  if SQLite3Con.Connected then
-  begin
-    SQLQuery.Close;
-    SQLQuery.SQL.Text := 'DELETE FROM ' + ATable;
-    SQLQuery.ExecSQL;
-    SQLTrans.Commit;
-  end
-  else
-    ShowMessage('No database file assigned');
-end;
-
-procedure TfrmMain.SQLAddVoice(aID, aName, aCategory, aData, aSupplement,
-  aOrigin: string);
-var
-  aExists: boolean;
-  aExName: string;
-begin
-  aExists := False;
-  if SQLite3Con.Connected then
-  begin
-    SQLQuery.Close;
-    aExName := '';
-    SQLQuery.SQL.Text :=
-      'SELECT * FROM VOICES WHERE ID = :AID';
-    SQLQuery.Params.ParamByName('AID').AsString := aID;
-    SQLTrans.StartTransaction;
-    SQLQuery.Open;
-    while not SQLQuery.EOF do
-    begin
-      if SQLQuery.FieldCount > 0 then
-      begin
-        aExName := SQLQuery.Fields[1].AsString;
-        aExists := True;
-        Break;
-      end;
-      SQLQuery.Next;
-    end;
-    SQLQuery.Close;
-    SQLTrans.Commit;
-
-    if aExists and (MessageDlg('Duplicate', aName + ' is a duplicate of ' +
-      aExName + #13#10 + 'Overwrite?', mtConfirmation, mbYesNo, 0) = mrNo) then
-      Exit
-    else
-    begin
-      SQLQuery.SQL.Text :=
-        'INSERT OR REPLACE INTO VOICES (ID, NAME, CATEGORY, DATA, SUPPLEMENT, ORIGIN) VALUES (:AID, :AName, :ACategory, :AData, :ASupplement, :AOrigin);';
-      SQLQuery.Params.ParamByName('AID').AsString := aID;
-      SQLQuery.Params.ParamByName('AName').AsString := aName;
-      SQLQuery.Params.ParamByName('ACategory').AsString := aCategory;
-      SQLQuery.Params.ParamByName('AData').AsString := aData;
-      SQLQuery.Params.ParamByName('ASupplement').AsString := aSupplement;
-      SQLQuery.Params.ParamByName('AOrigin').AsString := aOrigin;
-      SQLQuery.ExecSQL;
-      SQLTrans.Commit;
-    end;
-  end
-  else
-    ShowMessage('No database file assigned');
 end;
 
 procedure TfrmMain.tbStoreToDBClick(Sender: TObject);
 var
   voiceStream: TMemoryStream;
   tmpVoice: TDX7VoiceContainer;
-  supplStream: TMemoryStream;
+  extraStream: TMemoryStream;
   tmpSuppl: TDX7IISupplementContainer;
+  tmpFunct: TTX7FunctionContainer;
+  version: integer; // 0 - no_extras, 1 - ACED, 2 - PCED
   i: integer;
 begin
   for i := 1 to 32 do
@@ -948,112 +883,42 @@ begin
     try
       voiceStream := TMemoryStream.Create;
       tmpVoice := TDX7VoiceContainer.Create;
-      supplStream := TMemoryStream.Create;
+      extraStream := TMemoryStream.Create;
       tmpSuppl := TDX7IISupplementContainer.Create;
+      tmpFunct := TTX7FunctionContainer.Create;
 
-      FSlotsDX.GetVoice(i, tmpVoice);
+      FSlotsDX.CGetVoice(i, tmpVoice);
       tmpVoice.Save_VCED_ToStream(voiceStream);
-      FSlotsSupplDX7II.GetSupplement(i, tmpSuppl);
-      tmpSuppl.Save_ACED_ToStream(supplStream);
+      version := 0;
+      if FSlotsDX.HasSuppl(i) then
+      begin
+        FSlotsDX.CGetSupplement(i, tmpSuppl);
+        tmpSuppl.Save_ACED_ToStream(extraStream);
+        version := 1;
+      end;
+      if FSlotsDX.HasFunct(i) then
+      begin
+        FSlotsDX.CGetFunction(i, tmpFunct);
+        tmpFunct.Save_PCED_ToStream(extraStream);
+        version := 2;
+      end;
 
-      SQLAddVoice(tmpVoice.CalculateHash, tmpVoice.GetVoiceName,
+      SQLProxy.AddBinVoice(tmpVoice.CalculateHash, tmpVoice.GetVoiceName,
+        cbVoicesCategory.TextHint, edVoicesOrigin.Text, version,
+        voiceStream, extraStream);
+
+      {SQLProxy.AddVoice(tmpVoice.CalculateHash, tmpVoice.GetVoiceName,
         cbVoicesCategory.Text, SysExStreamToStr(voiceStream),
-        SysExStreamToStr(supplStream), edVoicesOrigin.Text);
+        SysExStreamToStr(supplStream), edVoicesOrigin.Text);  }
 
     finally
       voiceStream.Free;
       tmpVoice.Free;
-      supplStream.Free;
+      extraStream.Free;
       tmpSuppl.Free;
+      tmpFunct.Free;
     end;
   end;
-end;
-
-procedure TfrmMain.myDBGridRefresh;
-var
-  sl: TStringList;
-  i: integer;
-begin
-  sgDB.RowCount := 1;
-  if SQLite3Con.Connected then
-  begin
-    sgDB.BeginUpdate;
-    sl := TStringList.Create;
-    sl.Delimiter := ';';
-    SQLQuery.SQL.Text := 'SELECT * FROM voices';
-    SQLTrans.StartTransaction;
-    SQLQuery.Open;
-    while not SQLQuery.EOF do
-    begin
-      sl.Add('"' + SQLQuery.Fields[1].AsString + '";"' +
-        SQLQuery.Fields[2].AsString + '";"' + SQLQuery.Fields[5].AsString +
-        '";"' + SQLQuery.Fields[0].AsString + '"');
-      SQLQuery.Next;
-    end;
-    SQLQuery.Close;
-    SQLTrans.Commit;
-    sgDB.RowCount := sl.Count + 1;
-    for i := 0 to sl.Count - 1 do
-    begin
-      sgDB.Rows[i + 1].Delimiter := ';';
-      sgDB.Rows[i + 1].QuoteChar := '"';
-      sgDB.Rows[i + 1].StrictDelimiter := True;
-      sgDB.Rows[i + 1].DelimitedText := sl[i];
-    end;
-    sl.Free;
-    sgDB.EndUpdate(True);
-    UpdateCategoryLists;
-  end
-  else
-    ShowMessage('No database file assigned');
-end;
-
-procedure TfrmMain.myDBGridCommit(aID, aName, aCategory, aOrigin: string);
-var
-  aSupplement: string;
-  aData: string;
-  aExists: boolean;
-begin
-  aData := '';
-  aSupplement := '';
-  if SQLite3Con.Connected then
-  begin
-    aExists := False;
-    SQLQuery.Close;
-    SQLQuery.SQL.Text :=
-      'SELECT * FROM VOICES WHERE ID = :AID';
-    SQLQuery.Params.ParamByName('AID').AsString := aID;
-    SQLTrans.StartTransaction;
-    SQLQuery.Open;
-    while not SQLQuery.EOF do
-    begin
-      if SQLQuery.FieldCount > 0 then
-      begin
-        aData := SQLQuery.Fields[3].AsString;
-        aSupplement := SQLQuery.Fields[4].AsString;
-        aExists := True;
-        Break;
-      end;
-      SQLQuery.Next;
-    end;
-    SQLQuery.Close;
-    SQLTrans.Commit;
-    if aExists then
-    begin
-      SQLQuery.SQL.Text :=
-        'INSERT OR REPLACE INTO VOICES (ID, NAME, CATEGORY, DATA, SUPPLEMENT, ORIGIN) VALUES (:AID, :AName, :ACategory, :AData, :ASupplement, :AOrigin);';
-      SQLQuery.Params.ParamByName('AID').AsString := aID;
-      SQLQuery.Params.ParamByName('AName').AsString := aName;
-      SQLQuery.Params.ParamByName('ACategory').AsString := aCategory;
-      SQLQuery.Params.ParamByName('AData').AsString := aData;
-      SQLQuery.Params.ParamByName('ASupplement').AsString := aSupplement;
-      SQLQuery.Params.ParamByName('AOrigin').AsString := aOrigin;
-      SQLQuery.ExecSQL;
-      SQLTrans.Commit;
-    end;
-  end
-  else
-    ShowMessage('No database file assigned');
 end;
 
 procedure TfrmMain.OnMidiInData(const aDeviceIndex: integer;
@@ -1102,7 +967,7 @@ procedure TfrmMain.OnSysExData(const aDeviceIndex: integer;
   const aStream: TMemoryStream);
 begin
   //do something with data
-
+  Unused(aDeviceIndex, aStream);
   //memLog.Lines.BeginUpdate;
   try
     // print the message log
@@ -1127,78 +992,56 @@ begin
   end;
 end;
 
-procedure TfrmMain.SQLLoadCategories;
+procedure TfrmMain.alDXIIClick(Sender: TObject);
 var
-  sl: TStringList;
-  i: integer;
+  ms: TMemoryStream;
+  tmpSuppl: TDX7IISupplementContainer;
 begin
-  sgDB.RowCount := 1;
-  if SQLite3Con.Connected then
-  begin
-    sgCategories.BeginUpdate;
-    sl := TStringList.Create;
-    sl.Delimiter := ';';
-    SQLQuery.SQL.Text := 'SELECT * FROM category';
-    SQLTrans.StartTransaction;
-    SQLQuery.Open;
-    while not SQLQuery.EOF do
-    begin
-      sl.Add('"' + SQLQuery.Fields[0].AsString + '";"' +
-        SQLQuery.Fields[1].AsString + '"');
-      SQLQuery.Next;
-    end;
-    SQLQuery.Close;
-    SQLTrans.Commit;
-    sgCategories.RowCount := sl.Count + 1;
-    for i := 0 to sl.Count - 1 do
-    begin
-      sgCategories.Rows[i + 1].Delimiter := ';';
-      sgCategories.Rows[i + 1].QuoteChar := '"';
-      sgCategories.Rows[i + 1].StrictDelimiter := True;
-      sgCategories.Rows[i + 1].DelimitedText := sl[i];
-    end;
-    sl.Free;
-    sgCategories.EndUpdate(True);
-    if sgCategories.RowCount = 1 then sgCategories.RowCount := 2;
-  end
-  else
-    ShowMessage('No database file assigned');
+  frmDX7IIView.Show;
+  ms := TMemoryStream.Create;
+  tmpSuppl := TDX7IISupplementContainer.Create;
+  FSlotsDX.CGetSupplement((Sender as TAdvLed).Tag, tmpSuppl);
+  tmpSuppl.Save_ACED_ToStream(ms);
+  frmDX7IIView.ViewDX7II(ms);
+  ms.Free;
+  tmpSuppl.Free;
 end;
 
-procedure TfrmMain.SQLSaveCategories;
+procedure TfrmMain.alMDXClick(Sender: TObject);
 var
-  i: integer;
+  ms: TMemoryStream;
 begin
-  if SQLite3Con.Connected then
-  begin
-    SQLQuery.Close;
-    SQLQuery.SQL.Text := 'DELETE FROM CATEGORY WHERE (NAME = '''');';
-    SQLQuery.ExecSQL;
-    SQLTrans.Commit;
-    for i := 1 to sgCategories.RowCount - 1 do
-    begin
-      if trim(sgCategories.Cells[0, i]) <> '' then
-      begin
-        SQLQuery.SQL.Text :=
-          'INSERT OR REPLACE INTO CATEGORY (NAME, COMMENT) VALUES (:AName, :AComment);';
-        SQLQuery.Params.ParamByName('AName').AsString := sgCategories.Cells[0, i];
-        SQLQuery.Params.ParamByName('AComment').AsString := sgCategories.Cells[1, i];
-        SQLQuery.ExecSQL;
-      end;
-    end;
-    SQLTrans.Commit;
-  end;
+  frmMDXView.Show;
+  ms := TMemoryStream.Create;
+  FPerfSlotsDX[(Sender as TAdvLed).Tag].Save_PCEDx_ToStream(ms);
+  frmMDXView.ViewMDX(ms);
+  ms.Free;
+end;
+
+procedure TfrmMain.alTX7Click(Sender: TObject);
+var
+  ms: TMemoryStream;
+  tmpFunct: TTX7FunctionContainer;
+begin
+  frmTX7View.Show;
+  ms := TMemoryStream.Create;
+  tmpFunct := TTX7FunctionContainer.Create;
+  FSlotsDX.CGetFunction((Sender as TAdvLed).Tag, tmpFunct);
+  tmpFunct.Save_PCED_ToStream(ms);
+  frmTX7View.ViewTX7(ms);
+  ms.Free;
+  tmpFunct.Free;
 end;
 
 procedure TfrmMain.btCatLoadClick(Sender: TObject);
 begin
-  SQLLoadCategories;
+  SQLProxy.LoadCategories(sgCategories);
 end;
 
 procedure TfrmMain.btCatSaveClick(Sender: TObject);
 begin
-  SQLSaveCategories;
-  UpdateCategoryLists;
+  SQLProxy.SaveCategories(sgCategories);
+  SQLProxy.GUIUpdateCategoryLists(sgDB, cbPerfCategory, cbVoicesCategory);
 end;
 
 procedure TfrmMain.btDeleteCategoryDBClick(Sender: TObject);
@@ -1207,8 +1050,8 @@ begin
     'This operation is not reversible.' + #13#10 + 'Are you sure?',
     mtWarning, mbYesNo, 0) = mrYes then
   begin
-    SQLCleanTable('CATEGORY');
-    SQLiteVacuum;
+    SQLProxy.CleanTable('CATEGORY');
+    SQLProxy.Vacuum;
   end;
 end;
 
@@ -1218,9 +1061,41 @@ begin
     'This operation is not reversible.' + #13#10 + 'Are you sure?',
     mtWarning, mbYesNo, 0) = mrYes then
   begin
-    SQLCleanTable('VOICES');
-    SQLiteVacuum;
+    SQLProxy.CleanTable('VOICES');
+    SQLProxy.Vacuum;
   end;
+end;
+
+procedure TfrmMain.btLoadPerfToEditorClick(Sender: TObject);
+var
+  i: integer;
+begin
+  pnHint.Visible := False;
+  for i := 1 to 8 do
+  begin
+    FPerformance.LoadVoiceToTG(i, FPerfSlotsDX[i].Get_VCED_Params.params);
+    FPerformance.LoadPCEDxToTG(i, FPerfSlotsDX[i].Get_PCEDx_Params);
+  end;
+  PerfToGUI;
+end;
+
+procedure TfrmMain.btPerfUpdateClick(Sender: TObject);
+var
+  cat: string;
+begin
+  cat := cbPerfCategory.Text;
+  if cbPerfCategory.Items.IndexOf(cat) = -1 then
+  begin
+    SQLProxy.LoadCategories(sgCategories);
+    sgCategories.RowCount := sgCategories.RowCount + 1;
+    sgCategories.Cells[0, sgCategories.RowCount - 1] := cat;
+    sgCategories.Cells[1, sgCategories.RowCount - 1] :=
+      'Added from ' + FPerformance.FMDX_Params.General.Name;
+    SQLProxy.SaveCategories(sgCategories);
+    SQLProxy.GUIUpdateCategoryLists(sgDB, cbPerfCategory, cbVoicesCategory);
+  end;
+  cbPerfCategory.ItemIndex := cbPerfCategory.Items.IndexOf(cat);
+  GUIToPerf;
 end;
 
 procedure TfrmMain.btSDCardRenamePerformancesClick(Sender: TObject);
@@ -1422,7 +1297,7 @@ begin
   {$IFDEF WINDOWS}
     SelectSDCardDirectoryDialog1.InitialDir:='::{20D04FE0-3AEA-1069-A2D8-08002B30309D}';
   {$ENDIF}
-  {$IFDEF LINUX}
+  {$IFDEF UNIX}
     SelectSDCardDirectoryDialog1.InitialDir:='/mnt/';
   {$ENDIF}
   if SelectSDCardDirectoryDialog1.Execute then
@@ -1438,43 +1313,121 @@ end;
 procedure TfrmMain.edPSlotDragDrop(Sender, Source: TObject; X, Y: integer);
 var
   dmp: TMemoryStream;
-  f: string;
-  itm: string;
-  i, j: integer;
+  spl: TMemoryStream;
   tmpVoice: TDX7VoiceContainer;
+  tmpSuppl: TDX7IISupplementContainer;
+  tmpFunct: TTX7FunctionContainer;
+  tmpMDX: TMDXSupplementContainer;
+  version: integer;
 begin
   Unused(X, Y);
   if Source = lbVoices then
   begin
     if (lbVoices.ItemIndex = -1) or (lbFiles.ItemIndex = -1) then Exit;
-    itm := lbFiles.Items[lbFiles.ItemIndex];
-    f := IncludeTrailingPathDelimiter(edbtSelSysExDir.Text) + itm;
-    if FileExists(f) then
+
+    tmpVoice := TDX7VoiceContainer.Create;
+    FTmpCCBank.CGetVoice(lbVoices.ItemIndex + 1, tmpVoice);
+    FPerfSlotsDX[(Sender as TLabeledEdit).Tag].Set_VMEM_Params(
+      tmpVoice.Get_VMEM_Params);
+    tmpVoice.Free;
+
+    TAdvLed(FindComponent(Format('alMDX_%.2d',
+      [(Sender as TLabeledEdit).Tag]))).State := lsOff;
+    TAdvLed(FindComponent(Format('alMDX_%.2d',
+      [(Sender as TLabeledEdit).Tag]))).State := lsDisabled;
+
+    FPerfSlotsDX[(Sender as TLabeledEdit).Tag].InitSuppl;
+    FPerfSlotsDX[(Sender as TLabeledEdit).Tag].InitFunct;
+    FPerfSlotsDX[(Sender as TLabeledEdit).Tag].InitPCEDx;
+
+    if FTmpCCBank.HasSuppl(lbVoices.ItemIndex + 1) then
     begin
-      dmp := TMemoryStream.Create;
-      dmp.LoadFromFile(f);
-      i := 0;
-      j := 0;
-      if ContainsDX7BankDump(dmp, i, j) then  //voice is a part of a bank
-      begin
-        tmpVoice := TDX7VoiceContainer.Create;
-        FBankDX.GetVoice(lbVoices.ItemIndex + 1, tmpVoice);
-        FPerfSlotsDX[(Sender as TLabeledEdit).Tag + 1].SetVoiceParams(
-          tmpVoice.GetVoiceParams);
-        tmpVoice.Free;
-      end;
-      i := 0;
-      if ContainsDX7VoiceDump(dmp, i, j) then  //single voice file
-      begin
-        tmpVoice := TDX7VoiceContainer.Create;
-        tmpVoice.Load_VCED_FromStream(dmp, j);
-        FPerfSlotsDX[(Sender as TLabeledEdit).Tag + 1].SetVoiceParams(
-          tmpVoice.GetVoiceParams);
-        tmpVoice.Free;
-      end;
-      RefreshSlots;
-      dmp.Free;
+      tmpSuppl := TDX7IISupplementContainer.Create;
+      FTmpCCBank.CGetSupplement(lbVoices.ItemIndex + 1, tmpSuppl);
+      FPerfSlotsDX[(Sender as TLabeledEdit).Tag].Set_AMEM_Params(
+        tmpSuppl.Get_AMEM_Params);
+      FPerfSlotsDX[(Sender as TLabeledEdit).Tag].LoadDX7IIACEDtoPCEDx(tmpSuppl);
+      TAdvLed(FindComponent(Format('alMDX_%.2d',
+        [(Sender as TLabeledEdit).Tag]))).State := lsOn;
+      tmpSuppl.Free;
     end;
+
+    if FTmpCCBank.HasFunct(lbVoices.ItemIndex + 1) then
+    begin
+      tmpFunct := TTX7FunctionContainer.Create;
+      FTmpCCBank.CGetFunction(lbVoices.ItemIndex + 1, tmpFunct);
+      FPerfSlotsDX[(Sender as TLabeledEdit).Tag].Set_PMEM_Params(
+        tmpFunct.Get_PMEM_Params);
+      FPerfSlotsDX[(Sender as TLabeledEdit).Tag].LoadTX7PCEDtoPCEDx(tmpFunct);
+      TAdvLed(FindComponent(Format('alMDX_%.2d',
+        [(Sender as TLabeledEdit).Tag]))).State := lsOn;
+      tmpFunct.Free;
+    end;
+
+    RefreshSlots;
+  end;
+  if Source = sgDB then
+  begin
+    dmp := TMemoryStream.Create;
+    spl := TMemoryStream.Create;
+    version := 0;
+    SQLProxy.GetBinVoice(sgDB.Cells[3, dragItem], version, dmp, spl);
+    tmpVoice := TDX7VoiceContainer.Create;
+    tmpVoice.Load_VCED_FromStream(dmp, 0);
+    if FPerfSlotsDX[(Sender as TLabeledEdit).Tag].Set_VMEM_Params(
+      tmpVoice.Get_VMEM_Params) then
+    begin
+      if version = 0 then
+      begin
+        TAdvLed(FindComponent(Format('alMDX_%.2d',
+          [(Sender as TLabeledEdit).Tag]))).State := lsOff;
+        TAdvLed(FindComponent(Format('alMDX_%.2d',
+          [(Sender as TLabeledEdit).Tag]))).State := lsDisabled;
+        FPerfSlotsDX[(Sender as TLabeledEdit).Tag].HasMDXSuppl := False;
+      end;
+
+      if version = 1 then
+      begin
+        tmpSuppl := TDX7IISupplementContainer.Create;
+        tmpSuppl.Load_ACED_FromStream(spl, 0);
+        FPerfSlotsDX[(Sender as TLabeledEdit).Tag].Set_AMEM_Params(
+          tmpSuppl.Get_AMEM_Params);
+        FPerfSlotsDX[(Sender as TLabeledEdit).Tag].LoadDX7IIACEDtoPCEDx(tmpSuppl);
+        TAdvLed(FindComponent(Format('alMDX_%.2d',
+          [(Sender as TLabeledEdit).Tag]))).State := lsOn;
+        tmpSuppl.Free;
+        FPerfSlotsDX[(Sender as TLabeledEdit).Tag].HasMDXSuppl := True;
+      end;
+
+      if version = 2 then
+      begin
+        tmpFunct := TTX7FunctionContainer.Create;
+        tmpFunct.Load_PCED_FromStream(spl, 0);
+        FPerfSlotsDX[(Sender as TLabeledEdit).Tag].Set_PMEM_Params(
+          tmpFunct.Get_PMEM_Params);
+        FPerfSlotsDX[(Sender as TLabeledEdit).Tag].LoadTX7PCEDtoPCEDx(tmpFunct);
+        TAdvLed(FindComponent(Format('alMDX_%.2d',
+          [(Sender as TLabeledEdit).Tag]))).State := lsOn;
+        tmpFunct.Free;
+        FPerfSlotsDX[(Sender as TLabeledEdit).Tag].HasMDXSuppl := True;
+      end;
+
+      if version = 3 then
+      begin
+        tmpMDX := TMDXSupplementContainer.Create;
+        tmpMDX.Load_PCEDx_FromStream(spl, 0);
+        FPerfSlotsDX[(Sender as TLabeledEdit).Tag].Set_PCEDx_Params(
+          tmpMDX.Get_PCEDx_Params);
+        TAdvLed(FindComponent(Format('alMDX_%.2d',
+          [(Sender as TLabeledEdit).Tag]))).State := lsOn;
+        tmpMDX.Free;
+        FPerfSlotsDX[(Sender as TLabeledEdit).Tag].HasMDXSuppl := True;
+      end;
+    end;
+    tmpVoice.Free;
+    dmp.Free;
+    spl.Free;
+    RefreshSlots;
   end;
 end;
 
@@ -1484,11 +1437,12 @@ begin
   Unused(Source, State);
   Unused(X, Y);
   if (Sender = lbVoices) and (dragItem <> -1) then Accept := True;
+  if (Sender = sgDB) and (dragItem <> -1) then Accept := True;
 end;
 
 procedure TfrmMain.edSlotDblClick(Sender: TObject);
 begin
-  SendSingleVoice(cbLibMIDIChannel.ItemIndex + 1, (Sender as TLabeledEdit).Tag + 1);
+  SendSingleVoice(cbLibMIDIChannel.ItemIndex + 1, (Sender as TLabeledEdit).Tag);
   (Sender as TLabeledEdit).SelLength := 0;
   Self.ActiveControl := nil;
 end;
@@ -1496,99 +1450,169 @@ end;
 procedure TfrmMain.edSlotDragDrop(Sender, Source: TObject; X, Y: integer);
 var
   dmp: TMemoryStream;
-  f: string;
-  itm: string;
-  i, j: integer;
+  spl: TMemoryStream;
+  i: integer;
   tmpVoice: TDX7VoiceContainer;
   tmpSuppl: TDX7IISupplementContainer;
+  tmpFunct: TTX7FunctionContainer;
+  version: integer;
 begin
   Unused(X, Y);
   if Source = lbFiles then
   begin
     if lbFiles.ItemIndex = -1 then exit;
-    itm := lbFiles.Items[dragItem];
-    f := IncludeTrailingPathDelimiter(edbtSelSysExDir.Text) + itm;
-    if FileExists(f) then
+    dmp := TMemoryStream.Create;
+    dmp.Clear;
+    FTmpCCBank.CSaveVoiceBankToStream(dmp);
+    FSlotsDX.CLoadVoiceBankFromStream(dmp, 0);
+    for i := 1 to 32 do
     begin
-      dmp := TMemoryStream.Create;
-      dmp.LoadFromFile(f);
-      i := 0;
-      j := 0;
-      if ContainsDX7BankDump(dmp, i, j) then
-      begin
-        FSlotsDX.LoadBankFromStream(dmp, j);
-        for i := 0 to 31 do
-        begin
-          TLabeledEdit(FindComponent(Format('edSlot%.2d', [i + 1]))).Text :=
-            FSlotsDX.GetVoiceName(i + 1);
-        end;
-        i := dmp.Position;
-        if ContainsDX7IISupplBankDump(dmp, i, j) then
-          FSlotsSupplDX7II.LoadSupplBankFromStream(dmp, j);
-      end;
-      dmp.Free;
+      TLabeledEdit(FindComponent(Format('edSlot%.2d', [i]))).Text :=
+        FSlotsDX.CGetVoiceName(i);
     end;
+
+    for i := 1 to 32 do
+    begin
+      TAdvLed(FindComponent(Format('alDXII_%.2d', [i]))).State := lsOff;
+      TAdvLed(FindComponent(Format('alTX7_%.2d', [i]))).State := lsOff;
+      TAdvLed(FindComponent(Format('alDXII_%.2d', [i]))).State := lsDisabled;
+      TAdvLed(FindComponent(Format('alTX7_%.2d', [i]))).State := lsDisabled;
+    end;
+
+    if FTmpCCBank.HasGlobalSuppl then
+    begin
+      dmp.Clear;
+      dmp.Size := 0;
+      FTmpCCBank.CSaveSupplBankToStream(dmp);
+      FSlotsDX.CLoadSupplBankFromStream(dmp, 0);
+      for i := 1 to 32 do
+      begin
+        if FSlotsDX.HasSuppl(i) then
+          TAdvLed(FindComponent(Format('alDXII_%.2d', [i]))).State := lsOn;
+      end;
+    end
+    else
+      FSlotsDX.CInitSuppl;
+
+    if FTmpCCBank.HasGlobalFunct then
+    begin
+      dmp.Clear;
+      dmp.Size := 0;
+      FTmpCCBank.CSaveFunctBankToStream(dmp);
+      FSlotsDX.CLoadFunctBankFromStream(dmp, 0);
+      for i := 1 to 32 do
+      begin
+        if FSlotsDX.HasFunct(i) then
+          TAdvLed(FindComponent(Format('alTX7_%.2d', [i]))).State := lsOn;
+      end;
+    end
+    else
+      FSlotsDX.CInitFunct;
+    dmp.Free;
   end;
   if Source = lbVoices then
   begin
     if (lbVoices.ItemIndex = -1) or (lbFiles.ItemIndex = -1) then Exit;
-    itm := lbFiles.Items[lbFiles.ItemIndex];
-    f := IncludeTrailingPathDelimiter(edbtSelSysExDir.Text) + itm;
-    if FileExists(f) then
+
+    tmpVoice := TDX7VoiceContainer.Create;
+    tmpVoice.InitVoice;
+    FTmpCCBank.CGetVoice(lbVoices.ItemIndex + 1, tmpVoice);
+    FSlotsDX.CSetVoice((Sender as TLabeledEdit).Tag, tmpVoice);
+    (Sender as TLabeledEdit).Text :=
+      FSlotsDX.CGetVoiceName((Sender as TLabeledEdit).Tag);
+    tmpVoice.Free;
+
+    TAdvLed(FindComponent(Format('alTX7_%.2d',
+      [(Sender as TLabeledEdit).Tag]))).State := lsOff;
+    TAdvLed(FindComponent(Format('alTX7_%.2d',
+      [(Sender as TLabeledEdit).Tag]))).State := lsDisabled;
+    TAdvLed(FindComponent(Format('alDXII_%.2d',
+      [(Sender as TLabeledEdit).Tag]))).State := lsOff;
+    TAdvLed(FindComponent(Format('alDXII_%.2d',
+      [(Sender as TLabeledEdit).Tag]))).State := lsDisabled;
+
+    FSlotsDX.SetHasSuppl((Sender as TLabeledEdit).Tag, False);
+    FSlotsDX.SetHasFunct((Sender as TLabeledEdit).Tag, False);
+    FSlotsDX.CInitFunct;
+    FSlotsDX.CInitSuppl;
+
+    if FTmpCCBank.HasSuppl(lbVoices.ItemIndex + 1) then
     begin
-      dmp := TMemoryStream.Create;
-      dmp.LoadFromFile(f);
-      i := 0;
-      j := 0;
-      if ContainsDX7BankDump(dmp, i, j) then  //voice is a part of a bank
-      begin
-        tmpVoice := TDX7VoiceContainer.Create;
-        FBankDX.GetVoice(lbVoices.ItemIndex + 1, tmpVoice);
-        FSlotsDX.SetVoice((Sender as TLabeledEdit).Tag + 1, tmpVoice);
-        (Sender as TLabeledEdit).Text :=
-          FSlotsDX.GetVoiceName((Sender as TLabeledEdit).Tag + 1);
-        tmpVoice.Free;
-        i := j;
-        if ContainsDX7IISupplBankDump(dmp, i, j) then
-        begin
-          tmpSuppl := TDX7IISupplementContainer.Create;
-          FSupplBankDXII.GetSupplement(lbVoices.ItemIndex + 1, tmpSuppl);
-          FSlotsSupplDX7II.SetSupplement((Sender as TLabeledEdit).Tag + 1, tmpSuppl);
-          tmpSuppl.Free;
-        end;
-      end;
-      i := 0;
-      if ContainsDX7VoiceDump(dmp, i, j) then  //single voice file
-      begin
-        tmpVoice := TDX7VoiceContainer.Create;
-        tmpVoice.Load_VCED_FromStream(dmp, j);
-        if FSlotsDX.SetVoice((Sender as TLabeledEdit).Tag + 1, tmpVoice) then
-          (Sender as TLabeledEdit).Text :=
-            FSlotsDX.GetVoiceName((Sender as TLabeledEdit).Tag + 1);
-        tmpVoice.Free;
-        i := j;
-        if ContainsDX7IISupplementDump(dmp, i, j) then
-        begin
-          tmpSuppl := TDX7IISupplementContainer.Create;
-          tmpSuppl.Load_ACED_FromStream(dmp, j);
-          FSlotsSupplDX7II.SetSupplement((Sender as TLabeledEdit).Tag + 1, tmpSuppl);
-          tmpSuppl.Free;
-        end;
-      end;
-      dmp.Free;
+      tmpSuppl := TDX7IISupplementContainer.Create;
+      FTmpCCBank.CGetSupplement(lbVoices.ItemIndex + 1, tmpSuppl);
+      FSlotsDX.CSetSupplement((Sender as TLabeledEdit).Tag, tmpSuppl);
+      FSlotsDX.SetHasSuppl((Sender as TLabeledEdit).Tag, True);
+      if FSlotsDX.HasSuppl((Sender as TLabeledEdit).Tag) then
+        TAdvLed(FindComponent(Format('alDXII_%.2d',
+          [(Sender as TLabeledEdit).Tag]))).State := lsOn;
+      tmpSuppl.Free;
+    end;
+
+    if FTmpCCBank.HasFunct(lbVoices.ItemIndex + 1) then
+    begin
+      tmpFunct := TTX7FunctionContainer.Create;
+      FTmpCCBank.CGetFunction(lbVoices.ItemIndex + 1, tmpFunct);
+      FSlotsDX.CSetFunction((Sender as TLabeledEdit).Tag, tmpFunct);
+      FSlotsDX.SetHasFunct((Sender as TLabeledEdit).Tag, True);
+      if FSlotsDX.HasFunct((Sender as TLabeledEdit).Tag) then
+        TAdvLed(FindComponent(Format('alTX7_%.2d',
+          [(Sender as TLabeledEdit).Tag]))).State := lsOn;
+      tmpFunct.Free;
     end;
   end;
   if Source = sgDB then
   begin
     dmp := TMemoryStream.Create;
-    SQLGetVoice(sgDB.Cells[3, dragItem], dmp);
+    spl := TMemoryStream.Create;
+    version := 0;
+    SQLProxy.GetBinVoice(sgDB.Cells[3, dragItem], version, dmp, spl);
+    //SQLProxy.GetVoice(sgDB.Cells[3, dragItem], dmp);
     tmpVoice := TDX7VoiceContainer.Create;
     tmpVoice.Load_VCED_FromStream(dmp, 0);
-    if FSlotsDX.SetVoice((Sender as TLabeledEdit).Tag + 1, tmpVoice) then
+    if FSlotsDX.CSetVoice((Sender as TLabeledEdit).Tag, tmpVoice) then
+    begin
       (Sender as TLabeledEdit).Text :=
-        FSlotsDX.GetVoiceName((Sender as TLabeledEdit).Tag + 1);
+        FSlotsDX.CGetVoiceName((Sender as TLabeledEdit).Tag);
+      TAdvLed(FindComponent(Format('alTX7_%.2d',
+        [(Sender as TLabeledEdit).Tag]))).State := lsOff;
+      TAdvLed(FindComponent(Format('alTX7_%.2d',
+        [(Sender as TLabeledEdit).Tag]))).State := lsDisabled;
+      TAdvLed(FindComponent(Format('alDXII_%.2d',
+        [(Sender as TLabeledEdit).Tag]))).State := lsOff;
+      TAdvLed(FindComponent(Format('alDXII_%.2d',
+        [(Sender as TLabeledEdit).Tag]))).State := lsDisabled;
+
+      if version = 0 then
+      begin
+        FSlotsDX.SetHasSuppl((Sender as TLabeledEdit).Tag, False);
+        FSlotsDX.SetHasFunct((Sender as TLabeledEdit).Tag, False);
+      end;
+
+      if version = 1 then
+      begin
+        tmpSuppl := TDX7IISupplementContainer.Create;
+        tmpSuppl.Load_ACED_FromStream(spl, 0);
+        FSlotsDX.CSetSupplement((Sender as TLabeledEdit).Tag, tmpSuppl);
+        TAdvLed(FindComponent(Format('alDXII_%.2d',
+          [(Sender as TLabeledEdit).Tag]))).State := lsOn;
+        tmpSuppl.Free;
+        FSlotsDX.SetHasSuppl((Sender as TLabeledEdit).Tag, True);
+      end;
+
+      if version = 2 then
+      begin
+        tmpFunct := TTX7FunctionContainer.Create;
+        tmpFunct.Load_PCED_FromStream(spl, 0);
+        FSlotsDX.CSetFunction((Sender as TLabeledEdit).Tag, tmpFunct);
+        TAdvLed(FindComponent(Format('alTX7_%.2d',
+          [(Sender as TLabeledEdit).Tag]))).State := lsOn;
+        tmpFunct.Free;
+        FSlotsDX.SetHasFunct((Sender as TLabeledEdit).Tag, True);
+      end;
+    end;
     tmpVoice.Free;
     dmp.Free;
+    spl.Free;
   end;
 end;
 
@@ -1618,16 +1642,21 @@ var
   i: integer;
 begin
   Unused(CloseAction);
-  FBankDX.Free;
+  FTmpCCBank.Free;
   FSlotsDX.Free;
-  FSupplBankDXII.Free;
-  FSlotsSupplDX7II.Free;
+  FPerformance.Free;
 
   for i := 1 to 8 do
   begin
     FPerfSlotsDX[i].Free;
-    FPerfSlotsSupplDX7II[i].Free;
   end;
+
+  SQLProxy.Free;
+
+  SDCardSysExFiles.Free;
+  SDCardPerfFiles.Free;
+
+  compList.Free;
 end;
 
 procedure TfrmMain.FormCloseQuery(Sender: TObject; var CanClose: boolean);
@@ -1651,15 +1680,10 @@ begin
     ini.WriteString('LastSDCardDir', LastSDCardDir);
     ini.WriteInteger('FontSize', frmMain.Font.Height);
     ini.SaveToFile(HomeDir + 'settings.ini');
-    FSlotsDX.SaveBankToSysExFile(HomeDir + 'lastState.syx');
+    FSlotsDX.CSaveBankToSysExFile(HomeDir + 'lastState.syx');
   finally
     ini.Free;
   end;
-
-  SDCardSysExFiles.Free;
-  SDCardPerfFiles.Free;
-
-  compList.Free;
 
   if FMidiIsActive then
   begin
@@ -1680,22 +1704,21 @@ begin
   HomeDir := IncludeTrailingPathDelimiter(IncludeTrailingPathDelimiter(GetUserDir) +
     'MiniDexedCC');
   if not DirectoryExists(HomeDir) then CreateDir(HomeDir);
-  AppDir := IncludeTrailingPathDelimiter(ExtractFileDir(Application.Params[0]));
-  FBankDX := TDX7BankContainer.Create;
-  FSlotsDX := TDX7BankContainer.Create;
-  FSupplBankDXII := TDX7IISupplBankContainer.Create;
-  FSlotsSupplDX7II := TDX7IISupplBankContainer.Create;
+  //AppDir := IncludeTrailingPathDelimiter(ExtractFileDir(Application.Params[0]));  //not working under *nix
+  FTmpCCBank := TCCBankContainer.Create;
+  FSlotsDX := TCCBankContainer.Create;
+  FPerformance := TMDXPerformanceContainer.Create;
+
+
   for i := 0 to 31 do
   begin
     TLabeledEdit(FindComponent(Format('edSlot%.2d', [i + 1]))).Text :=
-      FSlotsDX.GetVoiceName(i + 1);
+      FSlotsDX.CGetVoiceName(i + 1);
   end;
+
   for i := 1 to 8 do
   begin
-    FPerfSlotsDX[i] := TDX7VoiceContainer.Create;
-    FPerfSlotsDX[i].InitVoice;
-    FPerfSlotsSupplDX7II[i] := TDX7IISupplementContainer.Create;
-    FPerfSlotsSupplDX7II[i].InitSupplement;
+    FPerfSlotsDX[i] := TCCVoiceContainer.Create;
 
     TLabeledEdit(FindComponent(Format('edPSlot%.2d', [i]))).Text :=
       FPerfSlotsDX[i].GetVoiceName;
@@ -1730,19 +1753,17 @@ begin
 
   //DB Stuff
   DBName := HomeDir + 'SysExDB.sqlite';
-  SQLite3Con.Connected := False;
-  SQLite3Con.DatabaseName := DBName;
-  SQLite3Con.Connected := True;
-  SQLCreateTables;
-  //create default category
-  SQLQuery.Close;
-  SQLQuery.SQL.Text :=
-    'INSERT OR REPLACE INTO CATEGORY (NAME, COMMENT) VALUES (''Default'', ''Default category'');';
-  SQLQuery.ExecSQL;
-  SQLTrans.Commit;
+  SQLProxy := TSQLProxy.Create;
+  SQLProxy.DbFileName := DBName;
+  SQLProxy.Connect;
+
+  SQLProxy.CreateTables;
+  SQLProxy.CreateDefaultCategories;
+
   //Load the DB values into the GUI components
-  SQLLoadCategories;
-  UpdateCategoryLists;
+  sgDB.RowCount := 1;
+  SQLProxy.LoadCategories(sgCategories);
+  SQLProxy.GUIUpdateCategoryLists(sgDB, cbPerfCategory, cbVoicesCategory);
 
   //SDCard lists
   SDCardSysExFiles := TStringList.Create;
@@ -1813,7 +1834,7 @@ begin
       SavePerformanceDialog1.InitialDir := LastPerfSaveDir;
     if FileExists(LastPerf) then
     begin
-      OpenPerformance(LastPerf);
+      LoadPerformance(LastPerf);
     end;
     if DirectoryExists(LastSDCardDir) then
     begin
@@ -1842,7 +1863,7 @@ var
   dmp: TMemoryStream;
   i, j: integer;
   Itm: string;
-  nr: integer;
+  dmpPos: int64;
 begin
   Itm := HomeDir + 'lastState.syx';
   if FileExists(itm) then
@@ -1853,11 +1874,42 @@ begin
     j := 0;
     if ContainsDX7BankDump(dmp, i, j) then
     begin
-      FSlotsDX.LoadBankFromStream(dmp, j);
-      for nr := 0 to 31 do
+      FSlotsDX.CLoadVoiceBankFromStream(dmp, j);
+      for i := 0 to 31 do
       begin
-        TLabeledEdit(FindComponent(Format('edSlot%.2d', [nr + 1]))).Text :=
-          FSlotsDX.GetVoiceName(nr + 1);
+        TLabeledEdit(FindComponent(Format('edSlot%.2d', [i + 1]))).Text :=
+          FSlotsDX.CGetVoiceName(i + 1);
+      end;
+
+      for i := 0 to 31 do
+      begin
+        TAdvLed(FindComponent(Format('alDXII_%.2d', [i + 1]))).State := lsOff;
+        TAdvLed(FindComponent(Format('alTX7_%.2d', [i + 1]))).State := lsOff;
+        TAdvLed(FindComponent(Format('alDXII_%.2d', [i + 1]))).State := lsDisabled;
+        TAdvLed(FindComponent(Format('alTX7_%.2d', [i + 1]))).State := lsDisabled;
+      end;
+
+      dmpPos := dmp.Position;
+      i := dmpPos;
+      if ContainsDX7IISupplBankDump(dmp, i, j) then
+      begin
+        FSlotsDX.CLoadSupplBankFromStream(dmp, j);
+        for i := 1 to 32 do
+        begin
+          if FSlotsDX.HasSuppl(i) then
+            TAdvLed(FindComponent(Format('alDXII_%.2d', [i]))).State := lsOn;
+        end;
+      end;
+
+      i := dmpPos;
+      if ContainsTX7FunctBankDump(dmp, i, j) then
+      begin
+        FSlotsDX.CLoadFunctBankFromStream(dmp, j);
+        for i := 1 to 32 do
+        begin
+          if FSlotsDX.HasFunct(i) then
+            TAdvLed(FindComponent(Format('alTX7_%.2d', [i]))).State := lsOn;
+        end;
       end;
     end;
     dmp.Free;
@@ -1891,423 +1943,40 @@ begin
     dragItem := lbVoices.ItemIndex;
 end;
 
-procedure TfrmMain.OpenPerformance(aName: string);
+procedure TfrmMain.pnSlotClick(Sender: TObject);
 var
-  ini: TMiniINIFile;
-  hexstream: TMemoryStream;
-  hexstring: string;
-  chkStr: string;
-  sName: string;
-  sCategory: string;
-  sOrigin: string;
+  ms: TMemoryStream;
+  tmpVoice: TDX7VoiceContainer;
 begin
-  ini := TMiniINIFile.Create;
-  ini.LoadFromFile(aName);
-  sName := ExtractFileNameWithoutExt(ExtractFileName(aName));
-  chkStr := copy(sName, 0, 6);
-  if StrToInt64Def(chkStr, -1) <> -1 then
-    edPerfName.Text := copy(sName, 8, Length(sName) - 7)
-  else
-    edPerfName.Text := sName;
-  //MiniDexedCC-specific
-  //overwrite the name if contained in INI
-  sName := ini.ReadString('Name', '');
-  if sName <> '' then edPerfName.Text := sName;
-  sCategory := ini.ReadString('Category', '');
-  if sCategory <> '' then
+  frmDX7View.Show;
+  ms := TMemoryStream.Create;
+  tmpVoice := TDX7VoiceContainer.Create;
+  FSlotsDX.CGetVoice((Sender as TPanel).Tag, tmpVoice);
+  tmpVoice.Save_VCED_ToStream(ms);
+  frmDX7View.ViewDX7(ms);
+  ms.Free;
+  tmpVoice.Free;
+end;
+
+procedure TfrmMain.LoadPerformance(aName: string);
+var
+  i: integer;
+begin
+  FPerformance.LoadPerformanceFromFile(aName);
+  PerfToGUI;
+  for i := 1 to 8 do
   begin
-    if cbPerfCategory.Items.IndexOf(sCategory) <> -1 then
-      cbPerfCategory.ItemIndex := cbPerfCategory.Items.IndexOf(sCategory)
-    else
-    begin
-      //add new category
-      SQLLoadCategories;
-      sgCategories.RowCount := sgCategories.RowCount + 1;
-      sgCategories.Cells[0, sgCategories.RowCount - 1] := sCategory;
-      sgCategories.Cells[1, sgCategories.RowCount - 1] := 'Added from ' + sName;
-      SQLSaveCategories;
-      UpdateCategoryLists;
-      cbPerfCategory.ItemIndex := cbPerfCategory.Items.IndexOf(sCategory);
-    end;
+    FPerfSlotsDX[i].Set_VCED_Params(FPerformance.GetTGVoiceData(i));
+    FPerfSlotsDX[i].Set_PCEDx_Params(FPerformance.GetTGPCEDxData(i));
+    TAdvLed(FindComponent(Format('alMDX_%.2d', [i]))).State := lsOn;
   end;
-  sOrigin := ini.ReadString('Origin', '');
-  if sOrigin <> '' then edPerfOrigin.Text := sOrigin
-  else
-    edPerfOrigin.Text := 'Unknown';
-
-  hexstream := TMemoryStream.Create;
-  if ini.ReadInteger('MIDIChannel1', 1) > 16 then cbMidiCh1.ItemIndex := 17
-  else
-    cbMidiCh1.ItemIndex := ini.ReadInteger('MIDIChannel1', 1);
-  slVolume1.Position := ini.ReadInteger('Volume1', 100);
-  slPan1.Position := ini.ReadInteger('Pan1', 0);
-  slDetune1.Position := ini.ReadInteger('Detune1', 0);
-  slCutoff1.Position := ini.ReadInteger('Cutoff1', 99);
-  slResonance1.Position := ini.ReadInteger('Resonance1', 0);
-  slLoNote1.Position := ini.ReadInteger('NoteLimitLow1', 0);
-  slHiNote1.Position := ini.ReadInteger('NoteLimitHigh1', 127);
-  slTranspose1.Position := ini.ReadInteger('NoteShift1', 0);
-  slReverbSend1.Position := ini.ReadInteger('ReverbSend1', 0);
-  slPitchBendRange1.Position := ini.ReadInteger('PitchBendRange1', 2);
-  slPitchBendStep1.Position := ini.ReadInteger('PitchBendStep1', 0);
-  swPortaMode1.Checked := ini.ReadInteger('PortamentoMode1', 0) = 1;
-  swPortaGlissando1.Checked := ini.ReadInteger('PortamentoGlissando1', 0) = 1;
-  slPortaTime1.Position := ini.ReadInteger('PortamentoTime1', 0);
-  hexstring := ini.ReadString('VoiceData1', '');
-  if hexstring <> '' then
-  begin
-    hexstream.Position := 0;
-    VCEDHexToStream(hexstring, hexstream);
-    FPerfSlotsDX[1].Load_VCED_FromStream(hexstream, 0);
-  end
-  else
-    FPerfSlotsDX[1].InitVoice;
-  swMonoMode1.Checked := ini.ReadInteger('MonoMode1', 0) = 1;
-  slModWhRange1.Position := ini.ReadInteger('ModulationWheelRange1', 99);
-  swModP1.Checked := ini.ReadInteger('ModulationWheelTarget1', 1) and 1 = 1;
-  swModA1.Checked := ini.ReadInteger('ModulationWheelTarget1', 1) and 2 = 2;
-  swModEG1.Checked := ini.ReadInteger('ModulationWheelTarget1', 1) and 4 = 4;
-  slFootCtrlRange1.Position := ini.ReadInteger('FootControlRange1', 99);
-  swFootP1.Checked := ini.ReadInteger('FootControlTarget1', 0) and 1 = 1;
-  swFootA1.Checked := ini.ReadInteger('FootControlTarget1', 0) and 2 = 2;
-  swFootEG1.Checked := ini.ReadInteger('FootControlTarget1', 0) and 4 = 4;
-  slBreathCtrlRange1.Position := ini.ReadInteger('BreathControlRange1', 99);
-  swBreathP1.Checked := ini.ReadInteger('BreathControlTarget1', 0) and 1 = 1;
-  swBreathA1.Checked := ini.ReadInteger('BreathControlTarget1', 0) and 2 = 2;
-  swBreathEG1.Checked := ini.ReadInteger('BreathControlTarget1', 0) and 4 = 4;
-  slAfterTouchRange1.Position := ini.ReadInteger('AfterTouchRange1', 99);
-  swAfterTouchP1.Checked := ini.ReadInteger('AfterTouchTarget1', 0) and 1 = 1;
-  swAfterTouchA1.Checked := ini.ReadInteger('AfterTouchTarget1', 0) and 2 = 2;
-  swAfterTouchEG1.Checked := ini.ReadInteger('AfterTouchTarget1', 0) and 4 = 4;
-
-  if ini.ReadInteger('MIDIChannel2', 1) > 16 then cbMidiCh2.ItemIndex := 17
-  else
-    cbMidiCh2.ItemIndex := ini.ReadInteger('MIDIChannel2', 1);
-  slVolume2.Position := ini.ReadInteger('Volume2', 100);
-  slPan2.Position := ini.ReadInteger('Pan2', 0);
-  slDetune2.Position := ini.ReadInteger('Detune2', 0);
-  slCutoff2.Position := ini.ReadInteger('Cutoff2', 99);
-  slResonance2.Position := ini.ReadInteger('Resonance2', 0);
-  slLoNote2.Position := ini.ReadInteger('NoteLimitLow2', 0);
-  slHiNote2.Position := ini.ReadInteger('NoteLimitHigh2', 127);
-  slTranspose2.Position := ini.ReadInteger('NoteShift2', 0);
-  slReverbSend2.Position := ini.ReadInteger('ReverbSend2', 0);
-  slPitchBendRange2.Position := ini.ReadInteger('PitchBendRange2', 2);
-  slPitchBendStep2.Position := ini.ReadInteger('PitchBendStep2', 0);
-  swPortaMode2.Checked := ini.ReadInteger('PortamentoMode2', 0) = 1;
-  swPortaGlissando2.Checked := ini.ReadInteger('PortamentoGlissando2', 0) = 1;
-  slPortaTime2.Position := ini.ReadInteger('PortamentoTime2', 0);
-  hexstring := ini.ReadString('VoiceData2', '');
-  if hexstring <> '' then
-  begin
-    hexstream.Position := 0;
-    VCEDHexToStream(hexstring, hexstream);
-    FPerfSlotsDX[2].Load_VCED_FromStream(hexstream, 0);
-  end
-  else
-    FPerfSlotsDX[2].InitVoice;
-  swMonoMode2.Checked := ini.ReadInteger('MonoMode2', 0) = 1;
-  slModWhRange2.Position := ini.ReadInteger('ModulationWheelRange2', 99);
-  swModP2.Checked := ini.ReadInteger('ModulationWheelTarget2', 1) and 1 = 1;
-  swModA2.Checked := ini.ReadInteger('ModulationWheelTarget2', 1) and 2 = 2;
-  swModEG2.Checked := ini.ReadInteger('ModulationWheelTarget2', 1) and 4 = 4;
-  slFootCtrlRange2.Position := ini.ReadInteger('FootControlRange2', 99);
-  swFootP2.Checked := ini.ReadInteger('FootControlTarget2', 0) and 1 = 1;
-  swFootA2.Checked := ini.ReadInteger('FootControlTarget2', 0) and 2 = 2;
-  swFootEG2.Checked := ini.ReadInteger('FootControlTarget2', 0) and 4 = 4;
-  slBreathCtrlRange2.Position := ini.ReadInteger('BreathControlRange2', 99);
-  swBreathP2.Checked := ini.ReadInteger('BreathControlTarget2', 0) and 1 = 1;
-  swBreathA2.Checked := ini.ReadInteger('BreathControlTarget2', 0) and 2 = 2;
-  swBreathEG2.Checked := ini.ReadInteger('BreathControlTarget2', 0) and 4 = 4;
-  slAfterTouchRange2.Position := ini.ReadInteger('AfterTouchRange2', 99);
-  swAfterTouchP2.Checked := ini.ReadInteger('AfterTouchTarget2', 0) and 1 = 1;
-  swAfterTouchA2.Checked := ini.ReadInteger('AfterTouchTarget2', 0) and 2 = 2;
-  swAfterTouchEG2.Checked := ini.ReadInteger('AfterTouchTarget2', 0) and 4 = 4;
-
-  if ini.ReadInteger('MIDIChannel3', 1) > 16 then cbMidiCh3.ItemIndex := 17
-  else
-    cbMidiCh3.ItemIndex := ini.ReadInteger('MIDIChannel3', 1);
-  slVolume3.Position := ini.ReadInteger('Volume3', 100);
-  slPan3.Position := ini.ReadInteger('Pan3', 0);
-  slDetune3.Position := ini.ReadInteger('Detune3', 0);
-  slCutoff3.Position := ini.ReadInteger('Cutoff3', 99);
-  slResonance3.Position := ini.ReadInteger('Resonance3', 0);
-  slLoNote3.Position := ini.ReadInteger('NoteLimitLow3', 0);
-  slHiNote3.Position := ini.ReadInteger('NoteLimitHigh3', 127);
-  slTranspose3.Position := ini.ReadInteger('NoteShift3', 0);
-  slReverbSend3.Position := ini.ReadInteger('ReverbSend3', 0);
-  slPitchBendRange3.Position := ini.ReadInteger('PitchBendRange3', 2);
-  slPitchBendStep3.Position := ini.ReadInteger('PitchBendStep3', 0);
-  swPortaMode3.Checked := ini.ReadInteger('PortamentoMode3', 0) = 1;
-  swPortaGlissando3.Checked := ini.ReadInteger('PortamentoGlissando3', 0) = 1;
-  slPortaTime3.Position := ini.ReadInteger('PortamentoTime3', 0);
-  hexstring := ini.ReadString('VoiceData3', '');
-  if hexstring <> '' then
-  begin
-    hexstream.Position := 0;
-    VCEDHexToStream(hexstring, hexstream);
-    FPerfSlotsDX[3].Load_VCED_FromStream(hexstream, 0);
-  end
-  else
-    FPerfSlotsDX[3].InitVoice;
-  swMonoMode3.Checked := ini.ReadInteger('MonoMode3', 0) = 1;
-  slModWhRange3.Position := ini.ReadInteger('ModulationWheelRange3', 99);
-  swModP3.Checked := ini.ReadInteger('ModulationWheelTarget3', 1) and 1 = 1;
-  swModA3.Checked := ini.ReadInteger('ModulationWheelTarget3', 1) and 2 = 2;
-  swModEG3.Checked := ini.ReadInteger('ModulationWheelTarget3', 1) and 4 = 4;
-  slFootCtrlRange3.Position := ini.ReadInteger('FootControlRange3', 99);
-  swFootP3.Checked := ini.ReadInteger('FootControlTarget3', 0) and 1 = 1;
-  swFootA3.Checked := ini.ReadInteger('FootControlTarget3', 0) and 2 = 2;
-  swFootEG3.Checked := ini.ReadInteger('FootControlTarget3', 0) and 4 = 4;
-  slBreathCtrlRange3.Position := ini.ReadInteger('BreathControlRange3', 99);
-  swBreathP3.Checked := ini.ReadInteger('BreathControlTarget3', 0) and 1 = 1;
-  swBreathA3.Checked := ini.ReadInteger('BreathControlTarget3', 0) and 2 = 2;
-  swBreathEG3.Checked := ini.ReadInteger('BreathControlTarget3', 0) and 4 = 4;
-  slAfterTouchRange3.Position := ini.ReadInteger('AfterTouchRange3', 99);
-  swAfterTouchP3.Checked := ini.ReadInteger('AfterTouchTarget3', 0) and 1 = 1;
-  swAfterTouchA3.Checked := ini.ReadInteger('AfterTouchTarget3', 0) and 2 = 2;
-  swAfterTouchEG3.Checked := ini.ReadInteger('AfterTouchTarget3', 0) and 4 = 4;
-
-  if ini.ReadInteger('MIDIChannel4', 1) > 16 then cbMidiCh4.ItemIndex := 17
-  else
-    cbMidiCh4.ItemIndex := ini.ReadInteger('MIDIChannel4', 1);
-  slVolume4.Position := ini.ReadInteger('Volume4', 100);
-  slPan4.Position := ini.ReadInteger('Pan4', 0);
-  slDetune4.Position := ini.ReadInteger('Detune4', 0);
-  slCutoff4.Position := ini.ReadInteger('Cutoff4', 99);
-  slResonance4.Position := ini.ReadInteger('Resonance4', 0);
-  slLoNote4.Position := ini.ReadInteger('NoteLimitLow4', 0);
-  slHiNote4.Position := ini.ReadInteger('NoteLimitHigh4', 127);
-  slTranspose4.Position := ini.ReadInteger('NoteShift4', 0);
-  slReverbSend4.Position := ini.ReadInteger('ReverbSend4', 0);
-  slPitchBendRange4.Position := ini.ReadInteger('PitchBendRange4', 2);
-  slPitchBendStep4.Position := ini.ReadInteger('PitchBendStep4', 0);
-  swPortaMode4.Checked := ini.ReadInteger('PortamentoMode4', 0) = 1;
-  swPortaGlissando4.Checked := ini.ReadInteger('PortamentoGlissando4', 0) = 1;
-  slPortaTime4.Position := ini.ReadInteger('PortamentoTime4', 0);
-  hexstring := ini.ReadString('VoiceData4', '');
-  if hexstring <> '' then
-  begin
-    hexstream.Position := 0;
-    VCEDHexToStream(hexstring, hexstream);
-    FPerfSlotsDX[4].Load_VCED_FromStream(hexstream, 0);
-  end
-  else
-    FPerfSlotsDX[4].InitVoice;
-  swMonoMode4.Checked := ini.ReadInteger('MonoMode4', 0) = 1;
-  slModWhRange4.Position := ini.ReadInteger('ModulationWheelRange4', 99);
-  swModP4.Checked := ini.ReadInteger('ModulationWheelTarget4', 1) and 1 = 1;
-  swModA4.Checked := ini.ReadInteger('ModulationWheelTarget4', 1) and 2 = 2;
-  swModEG4.Checked := ini.ReadInteger('ModulationWheelTarget4', 1) and 4 = 4;
-  slFootCtrlRange4.Position := ini.ReadInteger('FootControlRange4', 99);
-  swFootP4.Checked := ini.ReadInteger('FootControlTarget4', 0) and 1 = 1;
-  swFootA4.Checked := ini.ReadInteger('FootControlTarget4', 0) and 2 = 2;
-  swFootEG4.Checked := ini.ReadInteger('FootControlTarget4', 0) and 4 = 4;
-  slBreathCtrlRange4.Position := ini.ReadInteger('BreathControlRange4', 99);
-  swBreathP4.Checked := ini.ReadInteger('BreathControlTarget4', 0) and 1 = 1;
-  swBreathA4.Checked := ini.ReadInteger('BreathControlTarget4', 0) and 2 = 2;
-  swBreathEG4.Checked := ini.ReadInteger('BreathControlTarget4', 0) and 4 = 4;
-  slAfterTouchRange4.Position := ini.ReadInteger('AfterTouchRange4', 99);
-  swAfterTouchP4.Checked := ini.ReadInteger('AfterTouchTarget4', 0) and 1 = 1;
-  swAfterTouchA4.Checked := ini.ReadInteger('AfterTouchTarget4', 0) and 2 = 2;
-  swAfterTouchEG4.Checked := ini.ReadInteger('AfterTouchTarget4', 0) and 4 = 4;
-
-  if ini.ReadInteger('MIDIChannel5', 1) > 16 then cbMidiCh5.ItemIndex := 17
-  else
-    cbMidiCh5.ItemIndex := ini.ReadInteger('MIDIChannel5', 1);
-  slVolume5.Position := ini.ReadInteger('Volume5', 100);
-  slPan5.Position := ini.ReadInteger('Pan5', 0);
-  slDetune5.Position := ini.ReadInteger('Detune5', 0);
-  slCutoff5.Position := ini.ReadInteger('Cutoff5', 99);
-  slResonance5.Position := ini.ReadInteger('Resonance5', 0);
-  slLoNote5.Position := ini.ReadInteger('NoteLimitLow5', 0);
-  slHiNote5.Position := ini.ReadInteger('NoteLimitHigh5', 127);
-  slTranspose5.Position := ini.ReadInteger('NoteShift5', 0);
-  slReverbSend5.Position := ini.ReadInteger('ReverbSend5', 0);
-  slPitchBendRange5.Position := ini.ReadInteger('PitchBendRange5', 2);
-  slPitchBendStep5.Position := ini.ReadInteger('PitchBendStep5', 0);
-  swPortaMode5.Checked := ini.ReadInteger('PortamentoMode5', 0) = 1;
-  swPortaGlissando5.Checked := ini.ReadInteger('PortamentoGlissando5', 0) = 1;
-  slPortaTime5.Position := ini.ReadInteger('PortamentoTime5', 0);
-  hexstring := ini.ReadString('VoiceData5', '');
-  if hexstring <> '' then
-  begin
-    hexstream.Position := 0;
-    VCEDHexToStream(hexstring, hexstream);
-    FPerfSlotsDX[5].Load_VCED_FromStream(hexstream, 0);
-  end
-  else
-    FPerfSlotsDX[5].InitVoice;
-  swMonoMode5.Checked := ini.ReadInteger('MonoMode5', 0) = 1;
-  slModWhRange5.Position := ini.ReadInteger('ModulationWheelRange5', 99);
-  swModP5.Checked := ini.ReadInteger('ModulationWheelTarget5', 1) and 1 = 1;
-  swModA5.Checked := ini.ReadInteger('ModulationWheelTarget5', 1) and 2 = 2;
-  swModEG5.Checked := ini.ReadInteger('ModulationWheelTarget5', 1) and 4 = 4;
-  slFootCtrlRange5.Position := ini.ReadInteger('FootControlRange5', 99);
-  swFootP5.Checked := ini.ReadInteger('FootControlTarget5', 0) and 1 = 1;
-  swFootA5.Checked := ini.ReadInteger('FootControlTarget5', 0) and 2 = 2;
-  swFootEG5.Checked := ini.ReadInteger('FootControlTarget5', 0) and 4 = 4;
-  slBreathCtrlRange5.Position := ini.ReadInteger('BreathControlRange5', 99);
-  swBreathP5.Checked := ini.ReadInteger('BreathControlTarget5', 0) and 1 = 1;
-  swBreathA5.Checked := ini.ReadInteger('BreathControlTarget5', 0) and 2 = 2;
-  swBreathEG5.Checked := ini.ReadInteger('BreathControlTarget5', 0) and 4 = 4;
-  slAfterTouchRange5.Position := ini.ReadInteger('AfterTouchRange5', 99);
-  swAfterTouchP5.Checked := ini.ReadInteger('AfterTouchTarget5', 0) and 1 = 1;
-  swAfterTouchA5.Checked := ini.ReadInteger('AfterTouchTarget5', 0) and 2 = 2;
-  swAfterTouchEG5.Checked := ini.ReadInteger('AfterTouchTarget5', 0) and 4 = 4;
-
-  if ini.ReadInteger('MIDIChannel6', 1) > 16 then cbMidiCh6.ItemIndex := 17
-  else
-    cbMidiCh6.ItemIndex := ini.ReadInteger('MIDIChannel6', 1);
-  slVolume6.Position := ini.ReadInteger('Volume6', 100);
-  slPan6.Position := ini.ReadInteger('Pan6', 0);
-  slDetune6.Position := ini.ReadInteger('Detune6', 0);
-  slCutoff6.Position := ini.ReadInteger('Cutoff6', 99);
-  slResonance6.Position := ini.ReadInteger('Resonance6', 0);
-  slLoNote6.Position := ini.ReadInteger('NoteLimitLow6', 0);
-  slHiNote6.Position := ini.ReadInteger('NoteLimitHigh6', 127);
-  slTranspose6.Position := ini.ReadInteger('NoteShift6', 0);
-  slReverbSend6.Position := ini.ReadInteger('ReverbSend6', 0);
-  slPitchBendRange6.Position := ini.ReadInteger('PitchBendRange6', 2);
-  slPitchBendStep6.Position := ini.ReadInteger('PitchBendStep6', 0);
-  swPortaMode6.Checked := ini.ReadInteger('PortamentoMode6', 0) = 1;
-  swPortaGlissando6.Checked := ini.ReadInteger('PortamentoGlissando6', 0) = 1;
-  slPortaTime6.Position := ini.ReadInteger('PortamentoTime6', 0);
-  hexstring := ini.ReadString('VoiceData6', '');
-  if hexstring <> '' then
-  begin
-    hexstream.Position := 0;
-    VCEDHexToStream(hexstring, hexstream);
-    FPerfSlotsDX[6].Load_VCED_FromStream(hexstream, 0);
-  end
-  else
-    FPerfSlotsDX[6].InitVoice;
-  swMonoMode6.Checked := ini.ReadInteger('MonoMode6', 0) = 1;
-  slModWhRange6.Position := ini.ReadInteger('ModulationWheelRange6', 99);
-  swModP6.Checked := ini.ReadInteger('ModulationWheelTarget6', 1) and 1 = 1;
-  swModA6.Checked := ini.ReadInteger('ModulationWheelTarget6', 1) and 2 = 2;
-  swModEG6.Checked := ini.ReadInteger('ModulationWheelTarget6', 1) and 4 = 4;
-  slFootCtrlRange6.Position := ini.ReadInteger('FootControlRange6', 99);
-  swFootP6.Checked := ini.ReadInteger('FootControlTarget6', 0) and 1 = 1;
-  swFootA6.Checked := ini.ReadInteger('FootControlTarget6', 0) and 2 = 2;
-  swFootEG6.Checked := ini.ReadInteger('FootControlTarget6', 0) and 4 = 4;
-  slBreathCtrlRange6.Position := ini.ReadInteger('BreathControlRange6', 99);
-  swBreathP6.Checked := ini.ReadInteger('BreathControlTarget6', 0) and 1 = 1;
-  swBreathA6.Checked := ini.ReadInteger('BreathControlTarget6', 0) and 2 = 2;
-  swBreathEG6.Checked := ini.ReadInteger('BreathControlTarget6', 0) and 4 = 4;
-  slAfterTouchRange6.Position := ini.ReadInteger('AfterTouchRange6', 99);
-  swAfterTouchP6.Checked := ini.ReadInteger('AfterTouchTarget6', 0) and 1 = 1;
-  swAfterTouchA6.Checked := ini.ReadInteger('AfterTouchTarget6', 0) and 2 = 2;
-  swAfterTouchEG6.Checked := ini.ReadInteger('AfterTouchTarget6', 0) and 4 = 4;
-
-  if ini.ReadInteger('MIDIChannel7', 1) > 16 then cbMidiCh7.ItemIndex := 17
-  else
-    cbMidiCh7.ItemIndex := ini.ReadInteger('MIDIChannel7', 1);
-  slVolume7.Position := ini.ReadInteger('Volume7', 100);
-  slPan7.Position := ini.ReadInteger('Pan7', 0);
-  slDetune7.Position := ini.ReadInteger('Detune7', 0);
-  slCutoff7.Position := ini.ReadInteger('Cutoff7', 99);
-  slResonance7.Position := ini.ReadInteger('Resonance7', 0);
-  slLoNote7.Position := ini.ReadInteger('NoteLimitLow7', 0);
-  slHiNote7.Position := ini.ReadInteger('NoteLimitHigh7', 127);
-  slTranspose7.Position := ini.ReadInteger('NoteShift7', 0);
-  slReverbSend7.Position := ini.ReadInteger('ReverbSend7', 0);
-  slPitchBendRange7.Position := ini.ReadInteger('PitchBendRange7', 2);
-  slPitchBendStep7.Position := ini.ReadInteger('PitchBendStep7', 0);
-  swPortaMode7.Checked := ini.ReadInteger('PortamentoMode7', 0) = 1;
-  swPortaGlissando7.Checked := ini.ReadInteger('PortamentoGlissando7', 0) = 1;
-  slPortaTime7.Position := ini.ReadInteger('PortamentoTime7', 0);
-  hexstring := ini.ReadString('VoiceData7', '');
-  if hexstring <> '' then
-  begin
-    hexstream.Position := 0;
-    VCEDHexToStream(hexstring, hexstream);
-    FPerfSlotsDX[7].Load_VCED_FromStream(hexstream, 0);
-  end
-  else
-    FPerfSlotsDX[7].InitVoice;
-  swMonoMode7.Checked := ini.ReadInteger('MonoMode7', 0) = 1;
-  slModWhRange7.Position := ini.ReadInteger('ModulationWheelRange7', 99);
-  swModP7.Checked := ini.ReadInteger('ModulationWheelTarget7', 1) and 1 = 1;
-  swModA7.Checked := ini.ReadInteger('ModulationWheelTarget7', 1) and 2 = 2;
-  swModEG7.Checked := ini.ReadInteger('ModulationWheelTarget7', 1) and 4 = 4;
-  slFootCtrlRange7.Position := ini.ReadInteger('FootControlRange7', 99);
-  swFootP7.Checked := ini.ReadInteger('FootControlTarget7', 0) and 1 = 1;
-  swFootA7.Checked := ini.ReadInteger('FootControlTarget7', 0) and 2 = 2;
-  swFootEG7.Checked := ini.ReadInteger('FootControlTarget7', 0) and 4 = 4;
-  slBreathCtrlRange7.Position := ini.ReadInteger('BreathControlRange7', 99);
-  swBreathP7.Checked := ini.ReadInteger('BreathControlTarget7', 0) and 1 = 1;
-  swBreathA7.Checked := ini.ReadInteger('BreathControlTarget7', 0) and 2 = 2;
-  swBreathEG7.Checked := ini.ReadInteger('BreathControlTarget7', 0) and 4 = 4;
-  slAfterTouchRange7.Position := ini.ReadInteger('AfterTouchRange7', 99);
-  swAfterTouchP7.Checked := ini.ReadInteger('AfterTouchTarget7', 0) and 1 = 1;
-  swAfterTouchA7.Checked := ini.ReadInteger('AfterTouchTarget7', 0) and 2 = 2;
-  swAfterTouchEG7.Checked := ini.ReadInteger('AfterTouchTarget7', 0) and 4 = 4;
-
-  if ini.ReadInteger('MIDIChannel8', 1) > 16 then cbMidiCh8.ItemIndex := 17
-  else
-    cbMidiCh8.ItemIndex := ini.ReadInteger('MIDIChannel8', 1);
-  slVolume8.Position := ini.ReadInteger('Volume8', 100);
-  slPan8.Position := ini.ReadInteger('Pan8', 0);
-  slDetune8.Position := ini.ReadInteger('Detune8', 0);
-  slCutoff8.Position := ini.ReadInteger('Cutoff8', 99);
-  slResonance8.Position := ini.ReadInteger('Resonance8', 0);
-  slLoNote8.Position := ini.ReadInteger('NoteLimitLow8', 0);
-  slHiNote8.Position := ini.ReadInteger('NoteLimitHigh8', 127);
-  slTranspose8.Position := ini.ReadInteger('NoteShift8', 0);
-  slReverbSend8.Position := ini.ReadInteger('ReverbSend8', 0);
-  slPitchBendRange8.Position := ini.ReadInteger('PitchBendRange8', 2);
-  slPitchBendStep8.Position := ini.ReadInteger('PitchBendStep8', 0);
-  swPortaMode8.Checked := ini.ReadInteger('PortamentoMode8', 0) = 1;
-  swPortaGlissando8.Checked := ini.ReadInteger('PortamentoGlissando8', 0) = 1;
-  slPortaTime8.Position := ini.ReadInteger('PortamentoTime8', 0);
-  hexstring := ini.ReadString('VoiceData8', '');
-  if hexstring <> '' then
-  begin
-    VCEDHexToStream(hexstring, hexstream);
-    FPerfSlotsDX[8].Load_VCED_FromStream(hexstream, 0);
-  end
-  else
-    FPerfSlotsDX[8].InitVoice;
-  swMonoMode8.Checked := ini.ReadInteger('MonoMode8', 0) = 1;
-  slModWhRange8.Position := ini.ReadInteger('ModulationWheelRange8', 99);
-  swModP8.Checked := ini.ReadInteger('ModulationWheelTarget8', 1) and 1 = 1;
-  swModA8.Checked := ini.ReadInteger('ModulationWheelTarget8', 1) and 2 = 2;
-  swModEG8.Checked := ini.ReadInteger('ModulationWheelTarget8', 1) and 4 = 4;
-  slFootCtrlRange8.Position := ini.ReadInteger('FootControlRange8', 99);
-  swFootP8.Checked := ini.ReadInteger('FootControlTarget8', 0) and 1 = 1;
-  swFootA8.Checked := ini.ReadInteger('FootControlTarget8', 0) and 2 = 2;
-  swFootEG8.Checked := ini.ReadInteger('FootControlTarget8', 0) and 4 = 4;
-  slBreathCtrlRange8.Position := ini.ReadInteger('BreathControlRange8', 99);
-  swBreathP8.Checked := ini.ReadInteger('BreathControlTarget8', 0) and 1 = 1;
-  swBreathA8.Checked := ini.ReadInteger('BreathControlTarget8', 0) and 2 = 2;
-  swBreathEG8.Checked := ini.ReadInteger('BreathControlTarget8', 0) and 4 = 4;
-  slAfterTouchRange8.Position := ini.ReadInteger('AfterTouchRange8', 99);
-  swAfterTouchP8.Checked := ini.ReadInteger('AfterTouchTarget8', 0) and 1 = 1;
-  swAfterTouchA8.Checked := ini.ReadInteger('AfterTouchTarget8', 0) and 2 = 2;
-  swAfterTouchEG8.Checked := ini.ReadInteger('AfterTouchTarget8', 0) and 4 = 4;
-
-  swCompressorEnable.Checked := ini.ReadInteger('CompressorEnable', 1) = 1;
-  swReverbEnable.Checked := ini.ReadInteger('ReverbEnable', 1) = 1;
-  slReverbSize.Position := ini.ReadInteger('ReverbSize', 70);
-  slReverbHighDamp.Position := ini.ReadInteger('ReverbHighDamp', 50);
-  slReverbLowDamp.Position := ini.ReadInteger('ReverbLowDamp', 50);
-  slReverbLowPass.Position := ini.ReadInteger('ReverbLowPass', 30);
-  slReverbDiffusion.Position := ini.ReadInteger('ReverbDiffusion', 65);
-  slReverbLevel.Position := ini.ReadInteger('ReverbLevel', 80);
-
-  hexstream.Free;
-  ini.Free;
   RefreshSlots;
 end;
 
 procedure TfrmMain.OpenSysEx(aName: string);
 var
   dmp: TMemoryStream;
-  i, j: integer;
-  bVCED, bVMEM: boolean;
-  bACED, bAMEM: boolean;
-  dxsupp: TDX7IISupplementContainer;
+  i, j, k: integer;
   dxv: TDX7VoiceContainer;
   nr: integer;
 begin
@@ -2319,73 +1988,41 @@ begin
     mmLog.Lines.Clear;
     i := 0;
     j := 0;
-    bVCED := False;
-    bVMEM := False;
-    bACED := True;
-    bAMEM := True;
+
     ContainsDXData(dmp, i, mmLog.Lines);
+
     if ContainsDX7VoiceDump(dmp, i, j) then
     begin
       lbVoices.Items.Clear;
-      {$IFDEF ExtraInfo}
-      mmLog.Lines.Add('File ' + ExtractFileName(aName) +
-        ' contains DX7 single voice header at position ' + IntToStr(i));
-      {$ENDIF}
       dxv := TDX7VoiceContainer.Create;
       dxv.Load_VCED_FromStream(dmp, j);
-      if dxv.GetVoiceName <> '' then lbVoices.Items.Add(dxv.GetVoiceName);
+      FTmpCCBank.CInitVoices;
+      FTmpCCBank.CSetVoice(1, dxv);
+      lbVoices.Items.Add(FTmpCCBank.CGetVoiceName(1));
       dxv.Free;
-      {$IFDEF ExtraInfo}
-      i := j;
-      if ContainsDX7IISupplBankDump(dmp, i, j) then
-      begin
-        dxsupp := TDX7IISupplementContainer.Create;
-        dxsupp.Load_ACED_FromStream(dmp, j);
-        mmLog.Lines.Add('and also contains DX7II supplement');
-        dxsupp.Free;
-      end
-      else
-        bACED := False;
-      {$ENDIF}
-    end
-    else
-      bVCED := True;
+    end;
+
     i := 0; //read from the begining of the stream again
     if ContainsDX7BankDump(dmp, i, j) then
     begin
       lbVoices.Items.Clear;
-      {$IFDEF ExtraInfo}
-      mmLog.Lines.Add('File ' + ExtractFileName(aName) +
-        ' contains DX7 voice bank header at position ' + IntToStr(i));
-      {$ENDIF}
-      FBankDX.LoadBankFromStream(dmp, j);
+      FTmpCCBank.CLoadVoiceBankFromStream(dmp, j);
       for nr := 1 to 32 do
       begin
-        lbVoices.Items.Add(FBankDX.GetVoiceName(nr));
+        lbVoices.Items.Add(FTmpCCBank.CGetVoiceName(nr));
       end;
-      i := dmp.Position;
+      k := dmp.Position;
+      i := k;
       if ContainsDX7IISupplBankDump(dmp, i, j) then
-      begin
-        FSupplBankDXII.LoadSupplBankFromStream(dmp, i);
-        {$IFDEF ExtraInfo}
-        mmLog.Lines.Add('and also contains DX7II supplement');
-        {$ENDIF}
-      end
+        FTmpCCBank.CLoadSupplBankFromStream(dmp, j)
       else
-      begin
-        FSupplBankDXII.InitBank;
-        bAMEM := False;
-      end;
-    end
-    else
-      bVMEM := True;
-    {$IFDEF ExtraInfo}
-    if bVMEM and bVCED then
-      mmLog.Lines.Add('File ' + ExtractFileName(aName) + ' contains no DX7 dumps');
-    if not (bAMEM and bACED) then
-      mmLog.Lines.Add('File ' + ExtractFileName(aName) +
-        ' contains no DX7II supplement dumps');
-    {$ENDIF}
+        FTmpCCBank.CInitSuppl;
+      i := k;
+      if ContainsTX7FunctBankDump(dmp, i, j) then
+        FTmpCCBank.CLoadFunctBankFromStream(dmp, j)
+      else
+        FTmpCCBank.CInitFunct;
+    end;
     dmp.Free;
   end;
 end;
@@ -2785,7 +2422,7 @@ begin
   begin
     try
       bankStream := TMemoryStream.Create;
-      FSlotsDX.SysExBankToStream(bankStream);
+      FSlotsDX.CSysExBankToStream(bankStream);
       err := MidiOutput.SendSysEx(FMidiOutInt, bankStream);
       if (err = 0)
         {$IFNDEF WINDOWS}
@@ -2820,7 +2457,7 @@ begin
     try
       voiceStream := TMemoryStream.Create;
       tmpVoice := TDX7VoiceContainer.Create;
-      FSlotsDX.GetVoice(aVoiceNr, tmpVoice);
+      FSlotsDX.CGetVoice(aVoiceNr, tmpVoice);
       tmpVoice.SysExVoiceToStream(aCh, voiceStream);
       err := MidiOutput.SendSysEx(FMidiOutInt, voiceStream);
       if (err = 0)
@@ -2921,7 +2558,8 @@ var
   PCol, PRow: longint;
 begin
   Unused(DragObject);
-  GetCursorPos(p);
+  P := Default(TPoint);
+  GetCursorPos(P);
   with sgDB do
   begin
     P := ScreenToClient(P);
@@ -2963,7 +2601,7 @@ begin
       begin
         LastPerfOpenDir := IncludeTrailingPathDelimiter(ExtractFileDir(path));
         LastPerf := path;
-        OpenPerformance(path);
+        LoadPerformance(path);
         pnHint.Visible := False;
         pcMain.ActivePage := tsPerformance;
         pcTGs.ActivePage := tsTG1_4;
@@ -3028,11 +2666,11 @@ begin
         j := 0;
         if ContainsDX7BankDump(dmp, i, j) then
         begin
-          FSlotsDX.LoadBankFromStream(dmp, j);
+          FSlotsDX.CLoadVoiceBankFromStream(dmp, j);
           for nr := 0 to 31 do
           begin
             TLabeledEdit(FindComponent(Format('edSlot%.2d', [nr + 1]))).Text :=
-              FSlotsDX.GetVoiceName(nr + 1);
+              FSlotsDX.CGetVoiceName(nr + 1);
           end;
         end;
         dmp.Free;
@@ -3154,7 +2792,7 @@ begin
     FCategory := sgDB.Cells[1, nr];
     FOrigin := sgDB.Cells[2, nr];
     FId := sgDB.Cells[3, nr];
-    myDBGridCommit(FId, FName, FCategory, FOrigin);
+    SQLProxy.Commit(FId, FName, FCategory, FOrigin);
   end;
   compList.Clear;
 end;
@@ -3166,7 +2804,7 @@ begin
     LastPerfOpenDir := IncludeTrailingPathDelimiter(
       ExtractFileDir(OpenPerformanceDialog1.FileName));
     LastPerf := OpenPerformanceDialog1.FileName;
-    OpenPerformance(OpenPerformanceDialog1.FileName);
+    LoadPerformance(OpenPerformanceDialog1.FileName);
     pnHint.Visible := False;
   end;
 end;
@@ -3366,14 +3004,15 @@ end;
 
 procedure TfrmMain.tbbtRefreshClick(Sender: TObject);
 begin
-  myDBGridRefresh;
+  SQLProxy.GUIGridRefresh(sgDB);
+  SQLProxy.GUIUpdateCategoryLists(sgDB, cbPerfCategory, cbVoicesCategory);
 end;
 
 procedure TfrmMain.tbbtSaveBankClick(Sender: TObject);
 begin
   if SaveBankDialog1.Execute then
   begin
-    FSlotsDX.SaveBankToSysExFile(SaveBankDialog1.FileName);
+    FSlotsDX.CSaveBankToSysExFile(SaveBankDialog1.FileName);
     LastSysExSaveDir := IncludeTrailingPathDelimiter(
       ExtractFileDir(SaveBankDialog1.FileName));
   end;
@@ -3383,26 +3022,26 @@ procedure TfrmMain.RefreshSlots;
 var
   i: integer;
 begin
-  edpSlot1.Text := FPerfSlotsDX[1].GetVoiceName;
-  edpSlot2.Text := FPerfSlotsDX[2].GetVoiceName;
-  edpSlot3.Text := FPerfSlotsDX[3].GetVoiceName;
-  edpSlot4.Text := FPerfSlotsDX[4].GetVoiceName;
-  edpSlot5.Text := FPerfSlotsDX[5].GetVoiceName;
-  edpSlot6.Text := FPerfSlotsDX[6].GetVoiceName;
-  edpSlot7.Text := FPerfSlotsDX[7].GetVoiceName;
-  edpSlot8.Text := FPerfSlotsDX[8].GetVoiceName;
-  edpSlot01.Text := FPerfSlotsDX[1].GetVoiceName;
-  edpSlot02.Text := FPerfSlotsDX[2].GetVoiceName;
-  edpSlot03.Text := FPerfSlotsDX[3].GetVoiceName;
-  edpSlot04.Text := FPerfSlotsDX[4].GetVoiceName;
-  edpSlot05.Text := FPerfSlotsDX[5].GetVoiceName;
-  edpSlot06.Text := FPerfSlotsDX[6].GetVoiceName;
-  edpSlot07.Text := FPerfSlotsDX[7].GetVoiceName;
-  edpSlot08.Text := FPerfSlotsDX[8].GetVoiceName;
+  edPSlot1.Text := FPerformance.GetTGVoiceName(1);
+  edPSlot2.Text := FPerformance.GetTGVoiceName(2);
+  edPSlot3.Text := FPerformance.GetTGVoiceName(3);
+  edPSlot4.Text := FPerformance.GetTGVoiceName(4);
+  edPSlot5.Text := FPerformance.GetTGVoiceName(5);
+  edPSlot6.Text := FPerformance.GetTGVoiceName(6);
+  edPSlot7.Text := FPerformance.GetTGVoiceName(7);
+  edPSlot8.Text := FPerformance.GetTGVoiceName(8);
+  edPSlot01.Text := FPerfSlotsDX[1].GetVoiceName;
+  edPSlot02.Text := FPerfSlotsDX[2].GetVoiceName;
+  edPSlot03.Text := FPerfSlotsDX[3].GetVoiceName;
+  edPSlot04.Text := FPerfSlotsDX[4].GetVoiceName;
+  edPSlot05.Text := FPerfSlotsDX[5].GetVoiceName;
+  edPSlot06.Text := FPerfSlotsDX[6].GetVoiceName;
+  edPSlot07.Text := FPerfSlotsDX[7].GetVoiceName;
+  edPSlot08.Text := FPerfSlotsDX[8].GetVoiceName;
   for i := 1 to 32 do
   begin
     TLabeledEdit(FindComponent(Format('edSlot%.2d', [i]))).Text :=
-      FSlotsDX.GetVoiceName(i);
+      FSlotsDX.CGetVoiceName(i);
   end;
 end;
 
@@ -3526,11 +3165,96 @@ begin
   end;
 end;
 
-procedure TfrmMain.tbbtSavePerformanceClick(Sender: TObject);
+procedure TfrmMain.GUIToPerf;
 var
-  ini: TMiniINIFile;
-  hexstream: TMemoryStream;
-  hexstring: string;
+  i: integer;
+  a: string;
+begin
+  FPerformance.FMDX_Params.General.Name := edPerfName.Text;
+  FPerformance.FMDX_Params.General.Category := cbPerfCategory.Text;
+  FPerformance.FMDX_Params.General.Origin := edPerfOrigin.Text;
+  FPerformance.FMDX_Params.General.Version := 1;
+  FPerformance.FMDX_Params.Eff.CompressorEnable := byte(swCompressorEnable.Checked);
+  FPerformance.FMDX_Params.Eff.ReverbEnable := byte(swReverbEnable.Checked);
+  FPerformance.FMDX_Params.Eff.ReverbSize := Trunc(slReverbSize.Position);
+  FPerformance.FMDX_Params.Eff.ReverbHighDamp := Trunc(slReverbHighDamp.Position);
+  FPerformance.FMDX_Params.Eff.ReverbLowDamp := Trunc(slReverbLowDamp.Position);
+  FPerformance.FMDX_Params.Eff.ReverbLowPass := Trunc(slReverbLowPass.Position);
+  FPerformance.FMDX_Params.Eff.ReverbDiffusion := Trunc(slReverbDiffusion.Position);
+  FPerformance.FMDX_Params.Eff.ReverbLevel := Trunc(slReverbLevel.Position);
+
+  for i := 1 to 8 do
+  begin
+    a := IntToStr(i);
+    FPerformance.FMDX_Params.TG[i].MIDIChannel :=
+      TComboBox(FindComponent('cbMidiCh' + a)).ItemIndex;
+    FPerformance.FMDX_Params.TG[i].SupplData.Volume :=
+      trunc(TECSlider(FindComponent('slVolume' + a)).Position);
+    FPerformance.FMDX_Params.TG[i].SupplData.Pan :=
+      trunc(TECSlider(FindComponent('slPan' + a)).Position);
+    if TECSlider(FindComponent('slDetune' + a)).Position < 0 then
+      FPerformance.FMDX_Params.TG[i].SupplData.DetuneSGN := 1
+    else
+      FPerformance.FMDX_Params.TG[i].SupplData.DetuneSGN := 0;
+    FPerformance.FMDX_Params.TG[i].SupplData.DetuneVAL :=
+      abs(trunc(TECSlider(FindComponent('slDetune' + a)).Position));
+    FPerformance.FMDX_Params.TG[i].SupplData.Cutoff :=
+      trunc(TECSlider(FindComponent('slCutoff' + a)).Position);
+    FPerformance.FMDX_Params.TG[i].SupplData.Resonance :=
+      trunc(TECSlider(FindComponent('slResonance' + a)).Position);
+    FPerformance.FMDX_Params.TG[i].SupplData.NoteLimitLow :=
+      trunc(TECSlider(FindComponent('slLoNote' + a)).Position);
+    FPerformance.FMDX_Params.TG[i].SupplData.NoteLimitHigh :=
+      trunc(TECSlider(FindComponent('slHiNote' + a)).Position);
+    FPerformance.FMDX_Params.TG[i].SupplData.NoteShift :=
+      trunc(TECSlider(FindComponent('slTranspose' + a)).Position);
+    FPerformance.FMDX_Params.TG[i].SupplData.FX1Send :=
+      trunc(TECSlider(FindComponent('slReverbSend' + a)).Position);
+    FPerformance.FMDX_Params.TG[i].SupplData.PitchBendRange :=
+      trunc(TECSlider(FindComponent('slPitchBendRange' + a)).Position);
+    FPerformance.FMDX_Params.TG[i].SupplData.PitchBendStep :=
+      trunc(TECSlider(FindComponent('slPitchBendStep' + a)).Position);
+    FPerformance.FMDX_Params.TG[i].SupplData.PortamentoMode :=
+      byte(TECSwitch(FindComponent('swPortaMode' + a)).Checked);
+    FPerformance.FMDX_Params.TG[i].SupplData.PortamentoGlissando :=
+      byte(TECSwitch(FindComponent('swPortaGlissando' + a)).Checked);
+    FPerformance.FMDX_Params.TG[i].SupplData.PortamentoTime :=
+      trunc(TECSlider(FindComponent('slPortaTime' + a)).Position);
+
+    FPerformance.FMDX_Params.TG[i].SupplData.MonoMode :=
+      byte(TECSwitch(FindComponent('swMonoMode' + a)).Checked);
+
+    FPerformance.FMDX_Params.TG[i].SupplData.ModulationWheelRange :=
+      trunc(TECSlider(FindComponent('slModWhRange' + a)).Position);
+    FPerformance.FMDX_Params.TG[i].SupplData.ModulationWheelTarget :=
+      (byte(TECSwitch(FindComponent('swModEG' + a)).Checked) shl 2) +
+      (byte(TECSwitch(FindComponent('swModA' + a)).Checked) shl 1) +
+      byte(TECSwitch(FindComponent('swModP' + a)).Checked);
+
+    FPerformance.FMDX_Params.TG[i].SupplData.FootControlRange :=
+      trunc(TECSlider(FindComponent('slFootCtrlRange' + a)).Position);
+    FPerformance.FMDX_Params.TG[i].SupplData.FootControlTarget :=
+      (byte(TECSwitch(FindComponent('swFootEG' + a)).Checked) shl 2) +
+      (byte(TECSwitch(FindComponent('swFootA' + a)).Checked) shl 1) +
+      byte(TECSwitch(FindComponent('swFootP' + a)).Checked);
+
+    FPerformance.FMDX_Params.TG[i].SupplData.BreathControlRange :=
+      trunc(TECSlider(FindComponent('slBreathCtrlRange' + a)).Position);
+    FPerformance.FMDX_Params.TG[i].SupplData.BreathControlTarget :=
+      (byte(TECSwitch(FindComponent('swBreathEG' + a)).Checked) shl 2) +
+      (byte(TECSwitch(FindComponent('swBreathA' + a)).Checked) shl 1) +
+      byte(TECSwitch(FindComponent('swBreathP' + a)).Checked);
+
+    FPerformance.FMDX_Params.TG[i].SupplData.AftertouchRange :=
+      trunc(TECSlider(FindComponent('slAfterTouchRange' + a)).Position);
+    FPerformance.FMDX_Params.TG[i].SupplData.AftertouchTarget :=
+      (byte(TECSwitch(FindComponent('swAfterTouchEG' + a)).Checked) shl 2) +
+      (byte(TECSwitch(FindComponent('swAfterTouchA' + a)).Checked) shl 1) +
+      byte(TECSwitch(FindComponent('swAfterTouchP' + a)).Checked);
+  end;
+end;
+
+procedure TfrmMain.tbbtSavePerformanceClick(Sender: TObject);
 begin
   SavePerformanceDialog1.InitialDir := LastPerfSaveDir;
   SavePerformanceDialog1.FileName := edPerfName.Text + '.ini';
@@ -3539,323 +3263,116 @@ begin
     LastPerfSaveDir := IncludeTrailingPathDelimiter(
       ExtractFileDir(SavePerformanceDialog1.FileName));
     LastPerf := SavePerformanceDialog1.FileName;
-    ini := TMiniINIFile.Create;
-    ini.InitPerformance(False);
-    hexstream := TMemoryStream.Create;
+    GUIToPerf;
+    FPerformance.SavePerformanceToFile(SavePerformanceDialog1.FileName, False);
+  end;
+end;
 
-    //MiniDexedCC-specific
-    ini.WriteString('Name', edPerfName.Text);
-    ini.WriteString('Category', cbPerfCategory.Text);
-    ini.WriteString('Origin', edPerfOrigin.Text);
+procedure TfrmMain.PerfToGUI;
+var
+  i: integer;
+  dtn: integer;
+  a: string;
+  cat: string;
+begin
+  edPerfName.Text := FPerformance.FMDX_Params.General.Name;
+  edPerfOrigin.Text := FPerformance.FMDX_Params.General.Origin;
+  cat := FPerformance.FMDX_Params.General.Category;
+  if cbPerfCategory.Items.IndexOf(cat) = -1 then
+  begin
+    SQLProxy.LoadCategories(sgCategories);
+    sgCategories.RowCount := sgCategories.RowCount + 1;
+    sgCategories.Cells[0, sgCategories.RowCount - 1] := cat;
+    sgCategories.Cells[1, sgCategories.RowCount - 1] :=
+      'Added from ' + FPerformance.FMDX_Params.General.Name;
+    SQLProxy.SaveCategories(sgCategories);
+    SQLProxy.GUIUpdateCategoryLists(sgDB, cbPerfCategory, cbVoicesCategory);
+  end;
+  cbPerfCategory.ItemIndex := cbPerfCategory.Items.IndexOf(cat);
 
-    //Standard
-    ini.WriteInteger('MIDIChannel1', cbMidiCh1.ItemIndex);
-    ini.WriteInteger('Volume1', trunc(slVolume1.Position));
-    ini.WriteInteger('Pan1', trunc(slPan1.Position));
-    ini.WriteInteger('Detune1', trunc(slDetune1.Position));
-    ini.WriteInteger('Cutoff1', trunc(slCutoff1.Position));
-    ini.WriteInteger('Resonance1', trunc(slResonance1.Position));
-    ini.WriteInteger('NoteLimitLow1', trunc(slLoNote1.Position));
-    ini.WriteInteger('NoteLimitHigh1', trunc(slHiNote1.Position));
-    ini.WriteInteger('NoteShift1', trunc(slTranspose1.Position));
-    ini.WriteInteger('ReverbSend1', trunc(slReverbSend1.Position));
-    ini.WriteInteger('PitchBendRange1', trunc(slPitchBendRange1.Position));
-    ini.WriteInteger('PitchBendStep1', trunc(slPitchBendStep1.Position));
-    ini.WriteInteger('PortamentoMode1', byte(swPortaMode1.Checked));
-    ini.WriteInteger('PortamentoGlissando1', byte(swPortaGlissando1.Checked));
-    ini.WriteInteger('PortamentoTime1', trunc(slPortaTime1.Position));
-    FPerfSlotsDX[1].Save_VCED_ToStream(hexstream);
-    hexstring := StreamToVCEDHex(hexstream);
-    ini.WriteString('VoiceData1', hexstring);
-    ini.WriteInteger('MonoMode1', byte(swMonoMode1.Checked));
-    ini.WriteInteger('ModulationWheelRange1', trunc(slModWhRange1.Position));
-    ini.WriteInteger('ModulationWheelTarget1',
-      (byte(swModEG1.Checked) shl 2) + (byte(swModA1.Checked) shl 1) +
-      byte(swModP1.Checked));
-    ini.WriteInteger('FootControlRange1', trunc(slFootCtrlRange1.Position));
-    ini.WriteInteger('FootControlTarget1',
-      (byte(swFootEG1.Checked) shl 2) + (byte(swFootA1.Checked) shl 1) +
-      byte(swFootP1.Checked));
-    ini.WriteInteger('BreathControlRange1', trunc(slBreathCtrlRange1.Position));
-    ini.WriteInteger('BreathControlTarget1',
-      (byte(swBreathEG1.Checked) shl 2) + (byte(swBreathA1.Checked) shl 1) +
-      byte(swBreathP1.Checked));
-    ini.WriteInteger('AfterTouchRange1', trunc(slAfterTouchRange1.Position));
-    ini.WriteInteger('AfterTouchTarget1',
-      (byte(swAfterTouchEG1.Checked) shl 2) + (byte(swAfterTouchA1.Checked) shl 1) +
-      byte(swAfterTouchP1.Checked));
+  slReverbSize.Position := FPerformance.FMDX_Params.Eff.ReverbSize;
+  slReverbHighDamp.Position := FPerformance.FMDX_Params.Eff.ReverbHighDamp;
+  slReverbLowDamp.Position := FPerformance.FMDX_Params.Eff.ReverbLowDamp;
+  swReverbEnable.Checked := FPerformance.FMDX_Params.Eff.ReverbEnable = 1;
+  slReverbLowPass.Position := FPerformance.FMDX_Params.Eff.ReverbLowPass;
+  slReverbDiffusion.Position := FPerformance.FMDX_Params.Eff.ReverbDiffusion;
+  slReverbLevel.Position := FPerformance.FMDX_Params.Eff.ReverbLevel;
+  swCompressorEnable.Checked := FPerformance.FMDX_Params.Eff.CompressorEnable = 1;
 
-    ini.WriteInteger('MIDIChannel2', cbMidiCh2.ItemIndex);
-    ini.WriteInteger('Volume2', trunc(slVolume2.Position));
-    ini.WriteInteger('Pan2', trunc(slPan2.Position));
-    ini.WriteInteger('Detune2', trunc(slDetune2.Position));
-    ini.WriteInteger('Cutoff2', trunc(slCutoff2.Position));
-    ini.WriteInteger('Resonance2', trunc(slResonance2.Position));
-    ini.WriteInteger('NoteLimitLow2', trunc(slLoNote2.Position));
-    ini.WriteInteger('NoteLimitHigh2', trunc(slHiNote2.Position));
-    ini.WriteInteger('NoteShift2', trunc(slTranspose2.Position));
-    ini.WriteInteger('ReverbSend2', trunc(slReverbSend2.Position));
-    ini.WriteInteger('PitchBendRange2', trunc(slPitchBendRange2.Position));
-    ini.WriteInteger('PitchBendStep2', trunc(slPitchBendStep2.Position));
-    ini.WriteInteger('PortamentoMode2', byte(swPortaMode2.Checked));
-    ini.WriteInteger('PortamentoGlissando2', byte(swPortaGlissando2.Checked));
-    ini.WriteInteger('PortamentoTime2', trunc(slPortaTime2.Position));
-    FPerfSlotsDX[2].Save_VCED_ToStream(hexstream);
-    hexstring := StreamToVCEDHex(hexstream);
-    ini.WriteString('VoiceData2', hexstring);
-    ini.WriteInteger('MonoMode2', byte(swMonoMode2.Checked));
-    ini.WriteInteger('ModulationWheelRange2', trunc(slModWhRange2.Position));
-    ini.WriteInteger('ModulationWheelTarget2',
-      (byte(swModEG2.Checked) shl 2) + (byte(swModA2.Checked) shl 1) +
-      byte(swModP2.Checked));
-    ini.WriteInteger('FootControlRange2', trunc(slFootCtrlRange2.Position));
-    ini.WriteInteger('FootControlTarget2',
-      (byte(swFootEG2.Checked) shl 2) + (byte(swFootA2.Checked) shl 1) +
-      byte(swFootP2.Checked));
-    ini.WriteInteger('BreathControlRange2', trunc(slBreathCtrlRange2.Position));
-    ini.WriteInteger('BreathControlTarget2',
-      (byte(swBreathEG2.Checked) shl 2) + (byte(swBreathA2.Checked) shl 1) +
-      byte(swBreathP2.Checked));
-    ini.WriteInteger('AfterTouchRange2', trunc(slAfterTouchRange2.Position));
-    ini.WriteInteger('AfterTouchTarget2',
-      (byte(swAfterTouchEG2.Checked) shl 2) + (byte(swAfterTouchA2.Checked) shl 1) +
-      byte(swAfterTouchP2.Checked));
+  for i := 1 to 8 do
+  begin
+    a := IntToStr(i);
+    if FPerformance.FMDX_Params.TG[i].MIDIChannel > 16 then
+      TComboBox(FindComponent('cbMidiCh' + a)).ItemIndex := 17
+    else
+      TComboBox(FindComponent('cbMidiCh' + a)).ItemIndex :=
+        FPerformance.FMDX_Params.TG[i].MIDIChannel;
+    TECSlider(FindComponent('slVolume' + a)).Position :=
+      FPerformance.FMDX_Params.TG[i].SupplData.Volume;
+    TECSlider(FindComponent('slPan' + a)).Position :=
+      FPerformance.FMDX_Params.TG[i].SupplData.Pan;
+    dtn := FPerformance.FMDX_Params.TG[i].SupplData.DetuneVAL;
+    if FPerformance.FMDX_Params.TG[i].SupplData.DetuneSGN = 1 then dtn := -dtn;
+    TECSlider(FindComponent('slDetune' + a)).Position := dtn;
+    TECSlider(FindComponent('slCutoff' + a)).Position :=
+      FPerformance.FMDX_Params.TG[i].SupplData.Cutoff;
+    TECSlider(FindComponent('slResonance' + a)).Position :=
+      FPerformance.FMDX_Params.TG[i].SupplData.Resonance;
+    TECSlider(FindComponent('slLoNote' + a)).Position :=
+      FPerformance.FMDX_Params.TG[i].SupplData.NoteLimitLow;
+    TECSlider(FindComponent('slHiNote' + a)).Position :=
+      FPerformance.FMDX_Params.TG[i].SupplData.NoteLimitHigh;
+    TECSlider(FindComponent('slTranspose' + a)).Position :=
+      FPerformance.FMDX_Params.TG[i].SupplData.NoteShift - 24;
+    TECSlider(FindComponent('slReverbSend' + a)).Position :=
+      FPerformance.FMDX_Params.TG[i].SupplData.FX1Send;
+    TECSlider(FindComponent('slPitchBendRange' + a)).Position :=
+      FPerformance.FMDX_Params.TG[i].SupplData.PitchBendRange;
+    TECSlider(FindComponent('slPitchBendStep' + a)).Position :=
+      FPerformance.FMDX_Params.TG[i].SupplData.PitchBendStep;
+    TECSwitch(FindComponent('swPortaMode' + a)).Checked :=
+      FPerformance.FMDX_Params.TG[i].SupplData.PortamentoMode = 1;
+    TECSwitch(FindComponent('swPortaGlissando' + a)).Checked :=
+      FPerformance.FMDX_Params.TG[i].SupplData.PortamentoGlissando = 1;
+    TECSlider(FindComponent('slPortaTime' + a)).Position :=
+      FPerformance.FMDX_Params.TG[i].SupplData.PortamentoTime;
 
-    ini.WriteInteger('MIDIChannel3', cbMidiCh3.ItemIndex);
-    ini.WriteInteger('Volume3', trunc(slVolume3.Position));
-    ini.WriteInteger('Pan3', trunc(slPan3.Position));
-    ini.WriteInteger('Detune3', trunc(slDetune3.Position));
-    ini.WriteInteger('Cutoff3', trunc(slCutoff3.Position));
-    ini.WriteInteger('Resonance3', trunc(slResonance3.Position));
-    ini.WriteInteger('NoteLimitLow3', trunc(slLoNote3.Position));
-    ini.WriteInteger('NoteLimitHigh3', trunc(slHiNote3.Position));
-    ini.WriteInteger('NoteShift3', trunc(slTranspose3.Position));
-    ini.WriteInteger('ReverbSend3', trunc(slReverbSend3.Position));
-    ini.WriteInteger('PitchBendRange3', trunc(slPitchBendRange3.Position));
-    ini.WriteInteger('PitchBendStep3', trunc(slPitchBendStep3.Position));
-    ini.WriteInteger('PortamentoMode3', byte(swPortaMode3.Checked));
-    ini.WriteInteger('PortamentoGlissando3', byte(swPortaGlissando3.Checked));
-    ini.WriteInteger('PortamentoTime3', trunc(slPortaTime3.Position));
-    FPerfSlotsDX[3].Save_VCED_ToStream(hexstream);
-    hexstring := StreamToVCEDHex(hexstream);
-    ini.WriteString('VoiceData3', hexstring);
-    ini.WriteInteger('MonoMode3', byte(swMonoMode3.Checked));
-    ini.WriteInteger('ModulationWheelRange3', trunc(slModWhRange3.Position));
-    ini.WriteInteger('ModulationWheelTarget3',
-      (byte(swModEG3.Checked) shl 2) + (byte(swModA3.Checked) shl 1) +
-      byte(swModP3.Checked));
-    ini.WriteInteger('FootControlRange3', trunc(slFootCtrlRange3.Position));
-    ini.WriteInteger('FootControlTarget3',
-      (byte(swFootEG3.Checked) shl 2) + (byte(swFootA3.Checked) shl 1) +
-      byte(swFootP3.Checked));
-    ini.WriteInteger('BreathControlRange3', trunc(slBreathCtrlRange3.Position));
-    ini.WriteInteger('BreathControlTarget3',
-      (byte(swBreathEG3.Checked) shl 2) + (byte(swBreathA3.Checked) shl 1) +
-      byte(swBreathP3.Checked));
-    ini.WriteInteger('AfterTouchRange3', trunc(slAfterTouchRange3.Position));
-    ini.WriteInteger('AfterTouchTarget3',
-      (byte(swAfterTouchEG3.Checked) shl 2) + (byte(swAfterTouchA3.Checked) shl 1) +
-      byte(swAfterTouchP3.Checked));
+    TECSwitch(FindComponent('swMonoMode' + a)).Checked :=
+      FPerformance.FMDX_Params.TG[i].SupplData.MonoMode = 1;
+    TECSlider(FindComponent('slModWhRange' + a)).Position :=
+      FPerformance.FMDX_Params.TG[i].SupplData.ModulationWheelRange;
+    TECSwitch(FindComponent('swModP' + a)).Checked :=
+      FPerformance.FMDX_Params.TG[i].SupplData.ModulationWheelTarget and 1 = 1;
+    TECSwitch(FindComponent('swModA' + a)).Checked :=
+      FPerformance.FMDX_Params.TG[i].SupplData.ModulationWheelTarget and 2 = 2;
+    TECSwitch(FindComponent('swModEG' + a)).Checked :=
+      FPerformance.FMDX_Params.TG[i].SupplData.ModulationWheelTarget and 4 = 4;
+    TECSlider(FindComponent('slFootCtrlRange' + a)).Position :=
+      FPerformance.FMDX_Params.TG[i].SupplData.FootControlRange;
+    TECSwitch(FindComponent('swFootP' + a)).Checked :=
+      FPerformance.FMDX_Params.TG[i].SupplData.FootControlTarget and 1 = 1;
+    TECSwitch(FindComponent('swFootA' + a)).Checked :=
+      FPerformance.FMDX_Params.TG[i].SupplData.FootControlTarget and 2 = 2;
+    TECSwitch(FindComponent('swFootEG' + a)).Checked :=
+      FPerformance.FMDX_Params.TG[i].SupplData.FootControlTarget and 4 = 4;
+    TECSlider(FindComponent('slBreathCtrlRange' + a)).Position :=
+      FPerformance.FMDX_Params.TG[i].SupplData.BreathControlRange;
+    TECSwitch(FindComponent('swBreathP' + a)).Checked :=
+      FPerformance.FMDX_Params.TG[i].SupplData.BreathControlTarget and 1 = 1;
+    TECSwitch(FindComponent('swBreathA' + a)).Checked :=
+      FPerformance.FMDX_Params.TG[i].SupplData.BreathControlTarget and 2 = 2;
+    TECSwitch(FindComponent('swBreathEG' + a)).Checked :=
+      FPerformance.FMDX_Params.TG[i].SupplData.BreathControlTarget and 4 = 4;
+    TECSlider(FindComponent('slAfterTouchRange' + a)).Position :=
+      FPerformance.FMDX_Params.TG[i].SupplData.AftertouchRange;
+    TECSwitch(FindComponent('swAfterTouchP' + a)).Checked :=
+      FPerformance.FMDX_Params.TG[i].SupplData.AftertouchTarget and 1 = 1;
+    TECSwitch(FindComponent('swAfterTouchA' + a)).Checked :=
+      FPerformance.FMDX_Params.TG[i].SupplData.AftertouchTarget and 2 = 2;
+    TECSwitch(FindComponent('swAfterTouchEG' + a)).Checked :=
+      FPerformance.FMDX_Params.TG[i].SupplData.AftertouchTarget and 4 = 4;
 
-    ini.WriteInteger('MIDIChannel4', cbMidiCh4.ItemIndex);
-    ini.WriteInteger('Volume4', trunc(slVolume4.Position));
-    ini.WriteInteger('Pan4', trunc(slPan4.Position));
-    ini.WriteInteger('Detune4', trunc(slDetune4.Position));
-    ini.WriteInteger('Cutoff4', trunc(slCutoff4.Position));
-    ini.WriteInteger('Resonance4', trunc(slResonance4.Position));
-    ini.WriteInteger('NoteLimitLow4', trunc(slLoNote4.Position));
-    ini.WriteInteger('NoteLimitHigh4', trunc(slHiNote4.Position));
-    ini.WriteInteger('NoteShift4', trunc(slTranspose4.Position));
-    ini.WriteInteger('ReverbSend4', trunc(slReverbSend4.Position));
-    ini.WriteInteger('PitchBendRange4', trunc(slPitchBendRange4.Position));
-    ini.WriteInteger('PitchBendStep4', trunc(slPitchBendStep4.Position));
-    ini.WriteInteger('PortamentoMode4', byte(swPortaMode4.Checked));
-    ini.WriteInteger('PortamentoGlissando4',
-      byte(swPortaGlissando4.Checked));
-    ini.WriteInteger('PortamentoTime4', trunc(slPortaTime4.Position));
-    FPerfSlotsDX[4].Save_VCED_ToStream(hexstream);
-    hexstring := StreamToVCEDHex(hexstream);
-    ini.WriteString('VoiceData4', hexstring);
-    ini.WriteInteger('MonoMode4', byte(swMonoMode4.Checked));
-    ini.WriteInteger('ModulationWheelRange4', trunc(slModWhRange4.Position));
-    ini.WriteInteger('ModulationWheelTarget4',
-      (byte(swModEG4.Checked) shl 2) + (byte(swModA4.Checked) shl 1) +
-      byte(swModP4.Checked));
-    ini.WriteInteger('FootControlRange4', trunc(slFootCtrlRange4.Position));
-    ini.WriteInteger('FootControlTarget4',
-      (byte(swFootEG4.Checked) shl 2) + (byte(swFootA4.Checked) shl 1) +
-      byte(swFootP4.Checked));
-    ini.WriteInteger('BreathControlRange4', trunc(slBreathCtrlRange4.Position));
-    ini.WriteInteger('BreathControlTarget4',
-      (byte(swBreathEG4.Checked) shl 2) + (byte(swBreathA4.Checked) shl 1) +
-      byte(swBreathP4.Checked));
-    ini.WriteInteger('AfterTouchRange4', trunc(slAfterTouchRange4.Position));
-    ini.WriteInteger('AfterTouchTarget4',
-      (byte(swAfterTouchEG4.Checked) shl 2) + (byte(swAfterTouchA4.Checked) shl 1) +
-      byte(swAfterTouchP4.Checked));
-
-    ini.WriteInteger('MIDIChannel5', cbMidiCh5.ItemIndex);
-    ini.WriteInteger('Volume5', trunc(slVolume5.Position));
-    ini.WriteInteger('Pan5', trunc(slPan5.Position));
-    ini.WriteInteger('Detune5', trunc(slDetune5.Position));
-    ini.WriteInteger('Cutoff5', trunc(slCutoff5.Position));
-    ini.WriteInteger('Resonance5', trunc(slResonance5.Position));
-    ini.WriteInteger('NoteLimitLow5', trunc(slLoNote5.Position));
-    ini.WriteInteger('NoteLimitHigh5', trunc(slHiNote5.Position));
-    ini.WriteInteger('NoteShift5', trunc(slTranspose5.Position));
-    ini.WriteInteger('ReverbSend5', trunc(slReverbSend5.Position));
-    ini.WriteInteger('PitchBendRange5',
-      trunc(slPitchBendRange5.Position));
-    ini.WriteInteger('PitchBendStep5', trunc(slPitchBendStep5.Position));
-    ini.WriteInteger('PortamentoMode5', byte(swPortaMode5.Checked));
-    ini.WriteInteger('PortamentoGlissando5',
-      byte(swPortaGlissando5.Checked));
-    ini.WriteInteger('PortamentoTime5', trunc(slPortaTime5.Position));
-    FPerfSlotsDX[5].Save_VCED_ToStream(hexstream);
-    hexstring := StreamToVCEDHex(hexstream);
-    ini.WriteString('VoiceData5', hexstring);
-    ini.WriteInteger('MonoMode5', byte(swMonoMode5.Checked));
-    ini.WriteInteger('ModulationWheelRange5', trunc(slModWhRange5.Position));
-    ini.WriteInteger('ModulationWheelTarget5',
-      (byte(swModEG5.Checked) shl 2) + (byte(swModA5.Checked) shl 1) +
-      byte(swModP5.Checked));
-    ini.WriteInteger('FootControlRange5', trunc(slFootCtrlRange5.Position));
-    ini.WriteInteger('FootControlTarget5',
-      (byte(swFootEG5.Checked) shl 2) + (byte(swFootA5.Checked) shl 1) +
-      byte(swFootP5.Checked));
-    ini.WriteInteger('BreathControlRange5', trunc(slBreathCtrlRange5.Position));
-    ini.WriteInteger('BreathControlTarget5',
-      (byte(swBreathEG5.Checked) shl 2) + (byte(swBreathA5.Checked) shl 1) +
-      byte(swBreathP5.Checked));
-    ini.WriteInteger('AfterTouchRange5', trunc(slAfterTouchRange5.Position));
-    ini.WriteInteger('AfterTouchTarget5',
-      (byte(swAfterTouchEG5.Checked) shl 2) + (byte(swAfterTouchA5.Checked) shl 1) +
-      byte(swAfterTouchP5.Checked));
-
-    ini.WriteInteger('MIDIChannel6', cbMidiCh6.ItemIndex);
-    ini.WriteInteger('Volume6', trunc(slVolume6.Position));
-    ini.WriteInteger('Pan6', trunc(slPan6.Position));
-    ini.WriteInteger('Detune6', trunc(slDetune6.Position));
-    ini.WriteInteger('Cutoff6', trunc(slCutoff6.Position));
-    ini.WriteInteger('Resonance6', trunc(slResonance6.Position));
-    ini.WriteInteger('NoteLimitLow6', trunc(slLoNote6.Position));
-    ini.WriteInteger('NoteLimitHigh6', trunc(slHiNote6.Position));
-    ini.WriteInteger('NoteShift6', trunc(slTranspose6.Position));
-    ini.WriteInteger('ReverbSend6', trunc(slReverbSend6.Position));
-    ini.WriteInteger('PitchBendRange6',
-      trunc(slPitchBendRange6.Position));
-    ini.WriteInteger('PitchBendStep6',
-      trunc(slPitchBendStep6.Position));
-    ini.WriteInteger('PortamentoMode6', byte(swPortaMode6.Checked));
-    ini.WriteInteger('PortamentoGlissando6',
-      byte(swPortaGlissando6.Checked));
-    ini.WriteInteger('PortamentoTime6',
-      trunc(slPortaTime6.Position));
-    FPerfSlotsDX[6].Save_VCED_ToStream(hexstream);
-    hexstring := StreamToVCEDHex(hexstream);
-    ini.WriteString('VoiceData6', hexstring);
-    ini.WriteInteger('MonoMode6', byte(swMonoMode6.Checked));
-    ini.WriteInteger('ModulationWheelRange6', trunc(slModWhRange6.Position));
-    ini.WriteInteger('ModulationWheelTarget6',
-      (byte(swModEG6.Checked) shl 2) + (byte(swModA6.Checked) shl 1) +
-      byte(swModP6.Checked));
-    ini.WriteInteger('FootControlRange6', trunc(slFootCtrlRange6.Position));
-    ini.WriteInteger('FootControlTarget6',
-      (byte(swFootEG6.Checked) shl 2) + (byte(swFootA6.Checked) shl 1) +
-      byte(swFootP6.Checked));
-    ini.WriteInteger('BreathControlRange6', trunc(slBreathCtrlRange6.Position));
-    ini.WriteInteger('BreathControlTarget6',
-      (byte(swBreathEG6.Checked) shl 2) + (byte(swBreathA6.Checked) shl 1) +
-      byte(swBreathP6.Checked));
-    ini.WriteInteger('AfterTouchRange6', trunc(slAfterTouchRange6.Position));
-    ini.WriteInteger('AfterTouchTarget6',
-      (byte(swAfterTouchEG6.Checked) shl 2) + (byte(swAfterTouchA6.Checked) shl 1) +
-      byte(swAfterTouchP6.Checked));
-
-    ini.WriteInteger('MIDIChannel7', cbMidiCh7.ItemIndex);
-    ini.WriteInteger('Volume7', trunc(slVolume7.Position));
-    ini.WriteInteger('Pan7', trunc(slPan7.Position));
-    ini.WriteInteger('Detune7', trunc(slDetune7.Position));
-    ini.WriteInteger('Cutoff7', trunc(slCutoff7.Position));
-    ini.WriteInteger('Resonance7', trunc(slResonance7.Position));
-    ini.WriteInteger('NoteLimitLow7', trunc(slLoNote7.Position));
-    ini.WriteInteger('NoteLimitHigh7', trunc(slHiNote7.Position));
-    ini.WriteInteger('NoteShift7', trunc(slTranspose7.Position));
-    ini.WriteInteger('ReverbSend7', trunc(slReverbSend7.Position));
-    ini.WriteInteger('PitchBendRange7', trunc(slPitchBendRange7.Position));
-    ini.WriteInteger('PitchBendStep7', trunc(slPitchBendStep7.Position));
-    ini.WriteInteger('PortamentoMode7', byte(swPortaMode7.Checked));
-    ini.WriteInteger('PortamentoGlissando7', byte(swPortaGlissando7.Checked));
-    ini.WriteInteger('PortamentoTime7', trunc(slPortaTime7.Position));
-    FPerfSlotsDX[7].Save_VCED_ToStream(hexstream);
-    hexstring := StreamToVCEDHex(hexstream);
-    ini.WriteString('VoiceData7', hexstring);
-    ini.WriteInteger('MonoMode7', byte(swMonoMode7.Checked));
-    ini.WriteInteger('ModulationWheelRange7', trunc(slModWhRange7.Position));
-    ini.WriteInteger('ModulationWheelTarget7',
-      (byte(swModEG7.Checked) shl 2) + (byte(swModA7.Checked) shl 1) +
-      byte(swModP7.Checked));
-    ini.WriteInteger('FootControlRange7', trunc(slFootCtrlRange7.Position));
-    ini.WriteInteger('FootControlTarget7',
-      (byte(swFootEG7.Checked) shl 2) + (byte(swFootA7.Checked) shl 1) +
-      byte(swFootP7.Checked));
-    ini.WriteInteger('BreathControlRange7', trunc(slBreathCtrlRange7.Position));
-    ini.WriteInteger('BreathControlTarget7',
-      (byte(swBreathEG7.Checked) shl 2) + (byte(swBreathA7.Checked) shl 1) +
-      byte(swBreathP7.Checked));
-    ini.WriteInteger('AfterTouchRange7', trunc(slAfterTouchRange7.Position));
-    ini.WriteInteger('AfterTouchTarget7',
-      (byte(swAfterTouchEG7.Checked) shl 2) + (byte(swAfterTouchA7.Checked) shl 1) +
-      byte(swAfterTouchP7.Checked));
-
-    ini.WriteInteger('MIDIChannel8', cbMidiCh8.ItemIndex);
-    ini.WriteInteger('Volume8', trunc(slVolume8.Position));
-    ini.WriteInteger('Pan8', trunc(slPan8.Position));
-    ini.WriteInteger('Detune8', trunc(slDetune8.Position));
-    ini.WriteInteger('Cutoff8', trunc(slCutoff8.Position));
-    ini.WriteInteger('Resonance8', trunc(slResonance8.Position));
-    ini.WriteInteger('NoteLimitLow8', trunc(slLoNote8.Position));
-    ini.WriteInteger('NoteLimitHigh8', trunc(slHiNote8.Position));
-    ini.WriteInteger('NoteShift8', trunc(slTranspose8.Position));
-    ini.WriteInteger('ReverbSend8', trunc(slReverbSend8.Position));
-    ini.WriteInteger('PitchBendRange8', trunc(slPitchBendRange8.Position));
-    ini.WriteInteger('PitchBendStep8', trunc(slPitchBendStep8.Position));
-    ini.WriteInteger('PortamentoMode8', byte(swPortaMode8.Checked));
-    ini.WriteInteger('PortamentoGlissando8', byte(swPortaGlissando8.Checked));
-    ini.WriteInteger('PortamentoTime8', trunc(slPortaTime8.Position));
-    FPerfSlotsDX[8].Save_VCED_ToStream(hexstream);
-    hexstring := StreamToVCEDHex(hexstream);
-    ini.WriteString('VoiceData8', hexstring);
-    ini.WriteInteger('MonoMode8', byte(swMonoMode8.Checked));
-    ini.WriteInteger('ModulationWheelRange8', trunc(slModWhRange8.Position));
-    ini.WriteInteger('ModulationWheelTarget8',
-      (byte(swModEG8.Checked) shl 2) + (byte(swModA8.Checked) shl 1) +
-      byte(swModP8.Checked));
-    ini.WriteInteger('FootControlRange8', trunc(slFootCtrlRange8.Position));
-    ini.WriteInteger('FootControlTarget8',
-      (byte(swFootEG8.Checked) shl 2) + (byte(swFootA8.Checked) shl 1) +
-      byte(swFootP8.Checked));
-    ini.WriteInteger('BreathControlRange8', trunc(slBreathCtrlRange8.Position));
-    ini.WriteInteger('BreathControlTarget8',
-      (byte(swBreathEG8.Checked) shl 2) + (byte(swBreathA8.Checked) shl 1) +
-      byte(swBreathP8.Checked));
-    ini.WriteInteger('AfterTouchRange8', trunc(slAfterTouchRange8.Position));
-    ini.WriteInteger('AfterTouchTarget8',
-      (byte(swAfterTouchEG8.Checked) shl 2) + (byte(swAfterTouchA8.Checked) shl 1) +
-      byte(swAfterTouchP8.Checked));
-
-    ini.WriteInteger('CompressorEnable', byte(swCompressorEnable.Checked));
-    ini.WriteInteger('ReverbEnable', byte(swReverbEnable.Checked));
-    ini.WriteInteger('ReverbSize', Trunc(slReverbSize.Position));
-    ini.WriteInteger('ReverbHighDamp', Trunc(slReverbHighDamp.Position));
-    ini.WriteInteger('ReverbLowDamp', Trunc(slReverbLowDamp.Position));
-    ini.WriteInteger('ReverbLowPass', Trunc(slReverbLowPass.Position));
-    ini.WriteInteger('ReverbDiffusion', Trunc(slReverbDiffusion.Position));
-    ini.WriteInteger('ReverbLevel', Trunc(slReverbLevel.Position));
-
-    ini.SaveToFile(SavePerformanceDialog1.FileName);
-    ini.Free;
-    hexstream.Free;
+    TLabeledEdit(FindComponent('edPSlot' + a)).Text := FPerformance.GetTGVoiceName(i);
   end;
 end;
 

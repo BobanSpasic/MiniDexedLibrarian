@@ -2,13 +2,13 @@
 <CONFIG>
   <ProjectSession>
     <Version Value="12"/>
-    <BuildModes Active="Release">
-      <Item Name="Release">
+    <BuildModes Active="Release Darwin">
+      <Item Name="Release Win64">
         <CompilerOptions>
           <Version Value="11"/>
           <PathDelim Value="\"/>
           <Target>
-            <Filename Value="..\bin\MiniDexedCC"/>
+            <Filename Value="..\bin\LWindows\MiniDexedCC.exe"/>
           </Target>
           <SearchPaths>
             <IncludeFiles Value="$(ProjOutDir)"/>
@@ -78,7 +78,71 @@
           <Version Value="11"/>
           <PathDelim Value="\"/>
           <Target>
-            <Filename Value="..\bin\MiniDexedCC_Qt5"/>
+            <Filename Value="..\bin\LinuxQt5\MiniDexedCC"/>
+          </Target>
+          <SearchPaths>
+            <IncludeFiles Value="$(ProjOutDir)"/>
+            <OtherUnitFiles Value="..\units;..\ext_units"/>
+            <UnitOutputDirectory Value="..\lib\$(TargetCPU)-$(TargetOS)"/>
+          </SearchPaths>
+          <CodeGeneration>
+            <SmartLinkUnit Value="True"/>
+            <Optimizations>
+              <OptimizationLevel Value="3"/>
+            </Optimizations>
+          </CodeGeneration>
+          <Linking>
+            <Debugging>
+              <GenerateDebugInfo Value="False"/>
+              <DebugInfoType Value="dsDwarf2Set"/>
+            </Debugging>
+            <LinkSmart Value="True"/>
+            <Options>
+              <Win32>
+                <GraphicApplication Value="True"/>
+              </Win32>
+            </Options>
+          </Linking>
+        </CompilerOptions>
+      </Item>
+      <Item Name="Release GTK">
+        <CompilerOptions>
+          <Version Value="11"/>
+          <PathDelim Value="\"/>
+          <Target>
+            <Filename Value="..\bin\LinuxGTK\MiniDexedCC"/>
+          </Target>
+          <SearchPaths>
+            <IncludeFiles Value="$(ProjOutDir)"/>
+            <OtherUnitFiles Value="..\units;..\ext_units"/>
+            <UnitOutputDirectory Value="..\lib\$(TargetCPU)-$(TargetOS)"/>
+          </SearchPaths>
+          <CodeGeneration>
+            <SmartLinkUnit Value="True"/>
+            <Optimizations>
+              <OptimizationLevel Value="3"/>
+            </Optimizations>
+          </CodeGeneration>
+          <Linking>
+            <Debugging>
+              <GenerateDebugInfo Value="False"/>
+              <DebugInfoType Value="dsDwarf2Set"/>
+            </Debugging>
+            <LinkSmart Value="True"/>
+            <Options>
+              <Win32>
+                <GraphicApplication Value="True"/>
+              </Win32>
+            </Options>
+          </Linking>
+        </CompilerOptions>
+      </Item>
+      <Item Name="Release Darwin">
+        <CompilerOptions>
+          <Version Value="11"/>
+          <PathDelim Value="\"/>
+          <Target>
+            <Filename Value="..\bin\Darwin\MiniDexedCC"/>
           </Target>
           <SearchPaths>
             <IncludeFiles Value="$(ProjOutDir)"/>
@@ -114,53 +178,49 @@
       <Unit>
         <Filename Value="prMiniDexedCC.lpr"/>
         <IsPartOfProject Value="True"/>
-        <EditorIndex Value="5"/>
-        <CursorPos X="3" Y="24"/>
-        <UsageCount Value="139"/>
-        <Loaded Value="True"/>
+        <EditorIndex Value="-1"/>
+        <CursorPos X="3" Y="37"/>
+        <UsageCount Value="200"/>
       </Unit>
       <Unit>
         <Filename Value="../units/untUtils.pas"/>
         <IsPartOfProject Value="True"/>
-        <EditorIndex Value="3"/>
-        <TopLine Value="38"/>
-        <CursorPos Y="61"/>
-        <UsageCount Value="110"/>
-        <Loaded Value="True"/>
+        <EditorIndex Value="-1"/>
+        <CursorPos Y="73"/>
+        <UsageCount Value="200"/>
       </Unit>
       <Unit>
         <Filename Value="../units/untMiniINI.pas"/>
         <IsPartOfProject Value="True"/>
-        <EditorIndex Value="1"/>
-        <TopLine Value="12"/>
-        <CursorPos X="49" Y="36"/>
-        <UsageCount Value="110"/>
-        <Loaded Value="True"/>
+        <EditorIndex Value="-1"/>
+        <CursorPos X="15" Y="14"/>
+        <UsageCount Value="200"/>
       </Unit>
       <Unit>
         <Filename Value="../units/untDX7Voice.pas"/>
         <IsPartOfProject Value="True"/>
-        <EditorIndex Value="9"/>
-        <TopLine Value="1190"/>
-        <CursorPos X="33" Y="1222"/>
-        <UsageCount Value="110"/>
+        <EditorIndex Value="13"/>
+        <TopLine Value="669"/>
+        <CursorPos X="17" Y="703"/>
+        <UsageCount Value="200"/>
         <Loaded Value="True"/>
       </Unit>
       <Unit>
         <Filename Value="../units/untDX7Bank.pas"/>
         <IsPartOfProject Value="True"/>
-        <EditorIndex Value="8"/>
-        <CursorPos X="2" Y="95"/>
-        <UsageCount Value="110"/>
+        <EditorIndex Value="1"/>
+        <CursorPos X="87"/>
+        <UsageCount Value="200"/>
         <Loaded Value="True"/>
       </Unit>
       <Unit>
         <Filename Value="untPopUp.pas"/>
         <IsPartOfProject Value="True"/>
-        <EditorIndex Value="-1"/>
-        <TopLine Value="19"/>
-        <CursorPos X="63" Y="39"/>
-        <UsageCount Value="110"/>
+        <EditorIndex Value="12"/>
+        <TopLine Value="30"/>
+        <CursorPos X="31" Y="49"/>
+        <UsageCount Value="200"/>
+        <Loaded Value="True"/>
       </Unit>
       <Unit>
         <Filename Value="untMain.pas"/>
@@ -168,10 +228,9 @@
         <ComponentName Value="frmMain"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
-        <IsVisibleTab Value="True"/>
-        <TopLine Value="1714"/>
-        <CursorPos X="33" Y="1743"/>
-        <UsageCount Value="110"/>
+        <TopLine Value="778"/>
+        <CursorPos X="21" Y="791"/>
+        <UsageCount Value="200"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
       </Unit>
@@ -182,88 +241,216 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="81"/>
         <CursorPos Y="98"/>
-        <UsageCount Value="135"/>
+        <UsageCount Value="200"/>
       </Unit>
       <Unit>
         <Filename Value="../units/untDX7SysExDefs.pas"/>
         <IsPartOfProject Value="True"/>
-        <EditorIndex Value="12"/>
-        <UsageCount Value="96"/>
-        <Loaded Value="True"/>
+        <EditorIndex Value="-1"/>
+        <CursorPos X="45" Y="13"/>
+        <UsageCount Value="202"/>
       </Unit>
       <Unit>
         <Filename Value="../units/untDXUtils.pas"/>
         <IsPartOfProject Value="True"/>
-        <EditorIndex Value="7"/>
-        <TopLine Value="304"/>
-        <CursorPos X="102" Y="313"/>
-        <UsageCount Value="96"/>
+        <IsVisibleTab Value="True"/>
+        <EditorIndex Value="3"/>
+        <TopLine Value="400"/>
+        <CursorPos X="60" Y="414"/>
+        <UsageCount Value="202"/>
         <Loaded Value="True"/>
       </Unit>
       <Unit>
         <Filename Value="../units/untUnPortMIDI.pas"/>
         <IsPartOfProject Value="True"/>
-        <EditorIndex Value="6"/>
-        <UsageCount Value="96"/>
-        <Loaded Value="True"/>
+        <EditorIndex Value="-1"/>
+        <CursorPos X="25" Y="11"/>
+        <UsageCount Value="202"/>
       </Unit>
       <Unit>
         <Filename Value="../units/untDX7IISupplement.pas"/>
         <IsPartOfProject Value="True"/>
-        <EditorIndex Value="10"/>
-        <CursorPos X="29" Y="463"/>
-        <UsageCount Value="38"/>
+        <EditorIndex Value="2"/>
+        <TopLine Value="364"/>
+        <CursorPos X="38" Y="385"/>
+        <UsageCount Value="200"/>
         <Loaded Value="True"/>
       </Unit>
       <Unit>
         <Filename Value="../units/untDX7IISupplBank.pas"/>
         <IsPartOfProject Value="True"/>
-        <EditorIndex Value="11"/>
-        <TopLine Value="152"/>
-        <CursorPos X="45" Y="187"/>
-        <UsageCount Value="33"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="13"/>
+        <CursorPos Y="183"/>
+        <UsageCount Value="200"/>
+      </Unit>
+      <Unit>
+        <Filename Value="../units/untMDXPerformance.pas"/>
+        <IsPartOfProject Value="True"/>
+        <EditorIndex Value="7"/>
+        <CursorPos X="50" Y="321"/>
+        <UsageCount Value="200"/>
         <Loaded Value="True"/>
       </Unit>
       <Unit>
-        <Filename Value="../units/untLinuxMIDI.pas"/>
-        <EditorIndex Value="4"/>
-        <TopLine Value="190"/>
-        <UsageCount Value="63"/>
+        <Filename Value="../units/untTX7Function.pas"/>
+        <IsPartOfProject Value="True"/>
+        <EditorIndex Value="-1"/>
+        <CursorPos X="7" Y="226"/>
+        <UsageCount Value="193"/>
+      </Unit>
+      <Unit>
+        <Filename Value="../units/untTX7FunctBank.pas"/>
+        <IsPartOfProject Value="True"/>
+        <EditorIndex Value="-1"/>
+        <CursorPos Y="192"/>
+        <UsageCount Value="186"/>
+      </Unit>
+      <Unit>
+        <Filename Value="../units/untSysExUtils.pas"/>
+        <IsPartOfProject Value="True"/>
+        <EditorIndex Value="15"/>
+        <TopLine Value="38"/>
+        <CursorPos X="3" Y="91"/>
+        <UsageCount Value="182"/>
         <Loaded Value="True"/>
+      </Unit>
+      <Unit>
+        <Filename Value="../units/untSQLProxy.pas"/>
+        <IsPartOfProject Value="True"/>
+        <EditorIndex Value="4"/>
+        <TopLine Value="289"/>
+        <CursorPos X="64" Y="287"/>
+        <UsageCount Value="182"/>
+        <Loaded Value="True"/>
+      </Unit>
+      <Unit>
+        <Filename Value="../units/untCCVoice.pas"/>
+        <IsPartOfProject Value="True"/>
+        <EditorIndex Value="8"/>
+        <CursorPos X="91" Y="11"/>
+        <UsageCount Value="158"/>
+        <Loaded Value="True"/>
+      </Unit>
+      <Unit>
+        <Filename Value="../units/untCCBank.pas"/>
+        <IsPartOfProject Value="True"/>
+        <EditorIndex Value="14"/>
+        <TopLine Value="276"/>
+        <CursorPos X="3" Y="280"/>
+        <UsageCount Value="149"/>
+        <Loaded Value="True"/>
+      </Unit>
+      <Unit>
+        <Filename Value="../units/untMDXSupplement.pas"/>
+        <IsPartOfProject Value="True"/>
+        <EditorIndex Value="6"/>
+        <TopLine Value="105"/>
+        <CursorPos X="28" Y="122"/>
+        <UsageCount Value="138"/>
+        <Loaded Value="True"/>
+      </Unit>
+      <Unit>
+        <Filename Value="untDX7IIView.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="frmDX7IIView"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <EditorIndex Value="10"/>
+        <TopLine Value="11"/>
+        <CursorPos X="7" Y="32"/>
+        <UsageCount Value="112"/>
+        <Loaded Value="True"/>
+      </Unit>
+      <Unit>
+        <Filename Value="untTX7View.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="frmTX7View"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <EditorIndex Value="11"/>
+        <TopLine Value="89"/>
+        <CursorPos X="18" Y="116"/>
+        <UsageCount Value="109"/>
+        <Loaded Value="True"/>
+      </Unit>
+      <Unit>
+        <Filename Value="../units/untParConst.pas"/>
+        <IsPartOfProject Value="True"/>
+        <EditorIndex Value="5"/>
+        <CursorPos X="38" Y="13"/>
+        <UsageCount Value="99"/>
+        <Loaded Value="True"/>
+      </Unit>
+      <Unit>
+        <Filename Value="untDX7View.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="frmDX7View"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <EditorIndex Value="9"/>
+        <TopLine Value="180"/>
+        <CursorPos X="27" Y="136"/>
+        <UsageCount Value="86"/>
+        <Loaded Value="True"/>
+      </Unit>
+      <Unit>
+        <Filename Value="untMDXView.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="frmMDXView"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UsageCount Value="22"/>
+      </Unit>
+      <Unit>
+        <Filename Value="untmdxview.pas"/>
+        <ComponentName Value="frmMDXView"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="untMDXView"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="5"/>
+        <CursorPos X="18" Y="103"/>
+        <UsageCount Value="69"/>
+      </Unit>
+      <Unit>
+        <Filename Value="../units/untLinuxMIDI.pas"/>
+        <EditorIndex Value="-1"/>
+        <CursorPos X="95" Y="10"/>
+        <UsageCount Value="82"/>
       </Unit>
       <Unit>
         <Filename Value="untlinuxmidi.pas"/>
         <UnitName Value="untLinuxMidi"/>
         <EditorIndex Value="-1"/>
-        <UsageCount Value="52"/>
+        <UsageCount Value="34"/>
       </Unit>
       <Unit>
         <Filename Value="untunportmidi.pas"/>
         <UnitName Value="untUnPortMIDI"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="49" Y="45"/>
-        <UsageCount Value="27"/>
+        <UsageCount Value="9"/>
       </Unit>
       <Unit>
         <Filename Value="../ext_units/midi.pas"/>
         <UnitName Value="MIDI"/>
-        <EditorIndex Value="2"/>
-        <TopLine Value="616"/>
-        <CursorPos Y="646"/>
-        <UsageCount Value="59"/>
-        <Loaded Value="True"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="251"/>
+        <CursorPos X="6" Y="264"/>
+        <UsageCount Value="78"/>
       </Unit>
       <Unit>
         <Filename Value="../ext_units/MIDI_Core.pas"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="27" Y="17"/>
-        <UsageCount Value="10"/>
+        <UsageCount Value="2"/>
       </Unit>
       <Unit>
         <Filename Value="../../Ay/Ay_Emul29b26.src/Midi.pas"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="821"/>
-        <UsageCount Value="8"/>
+        <UsageCount Value="10"/>
       </Unit>
       <Unit>
         <Filename Value="/usr/share/lazarus/2.2.4/components/lazutils/laztracer.pas"/>
@@ -271,28 +458,28 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="32"/>
         <CursorPos Y="50"/>
-        <UsageCount Value="1"/>
+        <UsageCount Value="3"/>
       </Unit>
       <Unit>
         <Filename Value="/usr/share/lazarus/2.2.4/lcl/include/control.inc"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="1691"/>
         <CursorPos Y="1705"/>
-        <UsageCount Value="10"/>
+        <UsageCount Value="2"/>
       </Unit>
       <Unit>
         <Filename Value="/usr/share/lazarus/2.2.4/lcl/interfaces/gtk2/gtk2proc.inc"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="4540"/>
         <CursorPos X="25" Y="4553"/>
-        <UsageCount Value="1"/>
+        <UsageCount Value="3"/>
       </Unit>
       <Unit>
         <Filename Value="/usr/share/lazarus/2.2.4/lcl/interfaces/gtk2/gtk2winapi.inc"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="6266"/>
         <CursorPos Y="6275"/>
-        <UsageCount Value="1"/>
+        <UsageCount Value="3"/>
       </Unit>
       <Unit>
         <Filename Value="/usr/share/lazarus/2.2.4/lcl/interfaces/gtk2/gtk2int.pas"/>
@@ -300,7 +487,7 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="388"/>
         <CursorPos Y="415"/>
-        <UsageCount Value="1"/>
+        <UsageCount Value="3"/>
       </Unit>
       <Unit>
         <Filename Value="/usr/share/lazarus/2.2.4/lcl/interfaces/gtk2/gtk2proc.pp"/>
@@ -308,21 +495,21 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="452"/>
         <CursorPos X="19" Y="465"/>
-        <UsageCount Value="1"/>
+        <UsageCount Value="3"/>
       </Unit>
       <Unit>
         <Filename Value="/usr/share/fpcsrc/3.2.2/packages/gtk2/src/gtk+/gdk/gdkwindow.inc"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="388"/>
         <CursorPos X="10" Y="402"/>
-        <UsageCount Value="1"/>
+        <UsageCount Value="3"/>
       </Unit>
       <Unit>
         <Filename Value="/usr/share/lazarus/2.2.4/lcl/include/customform.inc"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="2299"/>
         <CursorPos Y="2313"/>
-        <UsageCount Value="1"/>
+        <UsageCount Value="3"/>
       </Unit>
       <Unit>
         <Filename Value="/lazarus/fpc/3.2.2/source/packages/winunits-base/src/mmsystem.pp"/>
@@ -330,224 +517,242 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="2583"/>
         <CursorPos X="70" Y="2615"/>
-        <UsageCount Value="2"/>
-      </Unit>
-      <Unit>
-        <Filename Value="../../../.lazarus/onlinepackagemanager/packages/EC_Controls/EC_Controls/ectypes.pas"/>
-        <UnitName Value="ECTypes"/>
-        <EditorIndex Value="-1"/>
-        <TopLine Value="439"/>
-        <CursorPos X="10" Y="453"/>
         <UsageCount Value="4"/>
       </Unit>
       <Unit>
-        <Filename Value="../../../../../../lazarus/lcl/controls.pp"/>
-        <UnitName Value="Controls"/>
-        <EditorIndex Value="-1"/>
-        <TopLine Value="1414"/>
-        <CursorPos X="15" Y="1432"/>
-        <UsageCount Value="7"/>
-      </Unit>
-      <Unit>
-        <Filename Value="../../../../../../lazarus/lcl/grids.pas"/>
+        <Filename Value="/lazarus/lcl/grids.pas"/>
         <UnitName Value="Grids"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="15"/>
         <CursorPos Y="48"/>
+        <UsageCount Value="10"/>
+      </Unit>
+      <Unit>
+        <Filename Value="/lazarus/lcl/include/control.inc"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="1784"/>
+        <CursorPos Y="1802"/>
         <UsageCount Value="8"/>
       </Unit>
       <Unit>
-        <Filename Value="../../../../../../lazarus/lcl/include/control.inc"/>
-        <EditorIndex Value="-1"/>
-        <TopLine Value="4541"/>
-        <CursorPos Y="4561"/>
-        <UsageCount Value="11"/>
-      </Unit>
-      <Unit>
-        <Filename Value="../../../../../../lazarus/lcl/include/dragmanager.inc"/>
+        <Filename Value="/lazarus/lcl/include/dragmanager.inc"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="844"/>
         <CursorPos Y="865"/>
-        <UsageCount Value="11"/>
+        <UsageCount Value="3"/>
       </Unit>
       <Unit>
-        <Filename Value="../../../../../../lazarus/lcl/include/dragobject.inc"/>
+        <Filename Value="/lazarus/lcl/include/dragobject.inc"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="38"/>
         <CursorPos Y="59"/>
-        <UsageCount Value="6"/>
+        <UsageCount Value="8"/>
       </Unit>
       <Unit>
-        <Filename Value="../../../../../../lazarus/lcl/include/wincontrol.inc"/>
+        <Filename Value="/lazarus/lcl/include/wincontrol.inc"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="3893"/>
         <CursorPos Y="3913"/>
-        <UsageCount Value="11"/>
+        <UsageCount Value="4"/>
       </Unit>
       <Unit>
-        <Filename Value="../../../../../../lazarus/lcl/lclmessageglue.pas"/>
+        <Filename Value="/lazarus/lcl/lclmessageglue.pas"/>
         <UnitName Value="LCLMessageGlue"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="110"/>
         <CursorPos Y="128"/>
-        <UsageCount Value="6"/>
+        <UsageCount Value="8"/>
       </Unit>
       <Unit>
-        <Filename Value="../../../../../../lazarus/lcl/interfaces/win32/win32callback.inc"/>
+        <Filename Value="/lazarus/lcl/interfaces/win32/win32callback.inc"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="2752"/>
         <CursorPos Y="2772"/>
-        <UsageCount Value="6"/>
+        <UsageCount Value="8"/>
       </Unit>
       <Unit>
-        <Filename Value="../../../../../../lazarus/lcl/interfaces/win32/win32object.inc"/>
+        <Filename Value="/lazarus/lcl/interfaces/win32/win32object.inc"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="354"/>
         <CursorPos Y="386"/>
-        <UsageCount Value="6"/>
+        <UsageCount Value="8"/>
       </Unit>
       <Unit>
-        <Filename Value="../../../../../../lazarus/lcl/interfaces/win32/win32winapi.inc"/>
+        <Filename Value="/lazarus/lcl/interfaces/win32/win32winapi.inc"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="2758"/>
         <CursorPos Y="2779"/>
-        <UsageCount Value="6"/>
+        <UsageCount Value="8"/>
       </Unit>
       <Unit>
-        <Filename Value="../../../../../../lazarus/lcl/include/application.inc"/>
+        <Filename Value="/lazarus/lcl/include/application.inc"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="1363"/>
         <CursorPos Y="1382"/>
-        <UsageCount Value="6"/>
+        <UsageCount Value="8"/>
       </Unit>
       <Unit>
-        <Filename Value="../../../../../../lazarus/lcl/include/interfacebase.inc"/>
+        <Filename Value="/lazarus/lcl/include/interfacebase.inc"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="36"/>
         <CursorPos Y="55"/>
-        <UsageCount Value="6"/>
+        <UsageCount Value="8"/>
+      </Unit>
+      <Unit>
+        <Filename Value="/lazarus/fpc/3.2.2/source/rtl/objpas/sysutils/sysstrh.inc"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="103"/>
+        <CursorPos X="13" Y="121"/>
+        <UsageCount Value="4"/>
+      </Unit>
+      <Unit>
+        <Filename Value="/lazarus/fpc/3.2.2/source/rtl/objpas/sysutils/sysstr.inc"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="900"/>
+        <CursorPos X="2" Y="903"/>
+        <UsageCount Value="4"/>
+      </Unit>
+      <Unit>
+        <Filename Value="/lazarus/lcl/include/customform.inc"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="3206"/>
+        <CursorPos Y="3225"/>
+        <UsageCount Value="2"/>
+      </Unit>
+      <Unit>
+        <Filename Value="/lazarus/lcl/include/customlistbox.inc"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="612"/>
+        <CursorPos Y="631"/>
+        <UsageCount Value="8"/>
+      </Unit>
+      <Unit>
+        <Filename Value="/lazarus/fpc/3.2.2/source/rtl/inc/objpash.inc"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="185"/>
+        <CursorPos X="23" Y="206"/>
+        <UsageCount Value="7"/>
+      </Unit>
+      <Unit>
+        <Filename Value="/lazarus/fpc/3.2.2/source/rtl/inc/mathh.inc"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="96"/>
+        <CursorPos X="19" Y="117"/>
+        <UsageCount Value="10"/>
       </Unit>
     </Units>
-    <JumpHistory HistoryIndex="29">
+    <JumpHistory HistoryIndex="27">
       <Position>
         <Filename Value="untMain.pas"/>
-        <Caret Line="2084" Column="20" TopLine="2065"/>
-      </Position>
-      <Position>
-        <Filename Value="untMain.pas"/>
-        <Caret Line="2128" Column="20" TopLine="2109"/>
+        <Caret Line="1415" TopLine="1385"/>
       </Position>
       <Position>
         <Filename Value="untMain.pas"/>
-        <Caret Line="2172" Column="20" TopLine="2153"/>
+        <Caret Line="1417" TopLine="1387"/>
       </Position>
       <Position>
         <Filename Value="untMain.pas"/>
-        <Caret Line="2216" Column="20" TopLine="2197"/>
+        <Caret Line="1417" TopLine="1390"/>
       </Position>
       <Position>
         <Filename Value="untMain.pas"/>
-        <Caret Line="2259" Column="20" TopLine="2240"/>
+        <Caret Line="1418" TopLine="1390"/>
       </Position>
       <Position>
         <Filename Value="untMain.pas"/>
-        <Caret Line="3549" Column="33" TopLine="3530"/>
+        <Caret Line="1419" TopLine="1390"/>
       </Position>
       <Position>
-        <Filename Value="untMain.pas"/>
-        <Caret Line="3585" Column="33" TopLine="3566"/>
+        <Filename Value="../units/untMDXSupplement.pas"/>
+        <Caret Line="97" Column="14" TopLine="76"/>
       </Position>
       <Position>
-        <Filename Value="untMain.pas"/>
-        <Caret Line="3621" Column="33" TopLine="3602"/>
+        <Filename Value="../units/untMDXSupplement.pas"/>
+        <Caret Line="122" Column="28" TopLine="105"/>
       </Position>
       <Position>
-        <Filename Value="untMain.pas"/>
-        <Caret Line="3658" Column="33" TopLine="3639"/>
-      </Position>
-      <Position>
-        <Filename Value="untMain.pas"/>
-        <Caret Line="3696" Column="33" TopLine="3677"/>
-      </Position>
-      <Position>
-        <Filename Value="untMain.pas"/>
-        <Caret Line="3736" Column="33" TopLine="3717"/>
-      </Position>
-      <Position>
-        <Filename Value="untMain.pas"/>
-        <Caret Line="3772" Column="33" TopLine="3753"/>
-      </Position>
-      <Position>
-        <Filename Value="../units/untDX7Voice.pas"/>
-        <Caret Line="335" Column="86" TopLine="323"/>
-      </Position>
-      <Position>
-        <Filename Value="../units/untDX7Voice.pas"/>
-        <Caret Line="330" Column="87" TopLine="314"/>
-      </Position>
-      <Position>
-        <Filename Value="untMain.pas"/>
-        <Caret Line="3808" Column="33" TopLine="3789"/>
-      </Position>
-      <Position>
-        <Filename Value="untMain.pas"/>
-        <Caret Line="1870" Column="7" TopLine="1859"/>
-      </Position>
-      <Position>
-        <Filename Value="untMain.pas"/>
-        <Caret Line="692" Column="20" TopLine="674"/>
+        <Filename Value="../units/untMDXPerformance.pas"/>
+        <Caret Line="478" Column="31" TopLine="273"/>
       </Position>
       <Position>
         <Filename Value="../units/untDXUtils.pas"/>
-        <Caret Line="313" Column="102" TopLine="304"/>
+        <Caret Line="125" Column="4" TopLine="104"/>
+      </Position>
+      <Position>
+        <Filename Value="../units/untCCVoice.pas"/>
+        <Caret Line="355" Column="32" TopLine="334"/>
+      </Position>
+      <Position>
+        <Filename Value="untDX7View.pas"/>
+        <Caret Line="136" Column="27" TopLine="125"/>
+      </Position>
+      <Position>
+        <Filename Value="untDX7IIView.pas"/>
+        <Caret Line="30" Column="69" TopLine="9"/>
+      </Position>
+      <Position>
+        <Filename Value="untDX7IIView.pas"/>
+        <Caret Line="32" Column="7" TopLine="11"/>
+      </Position>
+      <Position>
+        <Filename Value="untTX7View.pas"/>
+        <Caret Line="116" Column="18" TopLine="89"/>
+      </Position>
+      <Position>
+        <Filename Value="untPopUp.pas"/>
+        <Caret Line="51" Column="63" TopLine="30"/>
       </Position>
       <Position>
         <Filename Value="untMain.pas"/>
-        <Caret Line="2386" Column="7" TopLine="2353"/>
+        <Caret Line="2561" Column="24" TopLine="2542"/>
+      </Position>
+      <Position>
+        <Filename Value="../units/untDX7IISupplement.pas"/>
+        <Caret Line="385" Column="38" TopLine="364"/>
+      </Position>
+      <Position>
+        <Filename Value="../units/untCCVoice.pas"/>
+        <Caret Line="355" Column="32" TopLine="334"/>
+      </Position>
+      <Position>
+        <Filename Value="untPopUp.pas"/>
+        <Caret Line="49" Column="31" TopLine="30"/>
+      </Position>
+      <Position>
+        <Filename Value="../units/untDX7Voice.pas"/>
+        <Caret Line="703" Column="59" TopLine="680"/>
+      </Position>
+      <Position>
+        <Filename Value="../units/untDX7Voice.pas"/>
+        <Caret Line="186" Column="21" TopLine="165"/>
+      </Position>
+      <Position>
+        <Filename Value="../units/untDX7Voice.pas"/>
+        <Caret Line="519" Column="23" TopLine="485"/>
       </Position>
       <Position>
         <Filename Value="untMain.pas"/>
-        <Caret Line="2384" Column="5" TopLine="2354"/>
+        <Caret Line="2561" Column="24" TopLine="2542"/>
       </Position>
       <Position>
         <Filename Value="untMain.pas"/>
-        <Caret Line="1736" Column="19" TopLine="1707"/>
+        <Caret Line="1349" TopLine="1319"/>
+      </Position>
+      <Position>
+        <Filename Value="../units/untCCVoice.pas"/>
+        <Caret Line="94" Column="21" TopLine="75"/>
+      </Position>
+      <Position>
+        <Filename Value="../units/untCCBank.pas"/>
+        <Caret Line="56" Column="19" TopLine="35"/>
+      </Position>
+      <Position>
+        <Filename Value="../units/untCCVoice.pas"/>
+        <Caret Line="11" Column="91"/>
       </Position>
       <Position>
         <Filename Value="untMain.pas"/>
-        <Caret Line="1200" Column="3" TopLine="1197"/>
-      </Position>
-      <Position>
-        <Filename Value="untMain.pas"/>
-        <Caret Line="618" Column="20" TopLine="600"/>
-      </Position>
-      <Position>
-        <Filename Value="untMain.pas"/>
-        <Caret Line="1200" Column="3" TopLine="1197"/>
-      </Position>
-      <Position>
-        <Filename Value="untMain.pas"/>
-        <Caret Line="698" Column="15" TopLine="680"/>
-      </Position>
-      <Position>
-        <Filename Value="untMain.pas"/>
-        <Caret Line="1174" Column="5" TopLine="1167"/>
-      </Position>
-      <Position>
-        <Filename Value="untMain.pas"/>
-        <Caret Line="1739" Column="48" TopLine="1717"/>
-      </Position>
-      <Position>
-        <Filename Value="untMain.pas"/>
-        <Caret Line="1200" Column="12" TopLine="1197"/>
-      </Position>
-      <Position>
-        <Filename Value="untMain.pas"/>
-        <Caret Line="698" Column="15" TopLine="680"/>
-      </Position>
-      <Position>
-        <Filename Value="untMain.pas"/>
-        <Caret Line="1183" Column="11" TopLine="1167"/>
+        <Caret Line="791" Column="21" TopLine="778"/>
       </Position>
     </JumpHistory>
     <RunParams>
@@ -555,4 +760,11 @@
       <Modes ActiveMode=""/>
     </RunParams>
   </ProjectSession>
+  <Debugging>
+    <Watches>
+      <Item>
+        <Expression Value="FTmpCCBank"/>
+      </Item>
+    </Watches>
+  </Debugging>
 </CONFIG>

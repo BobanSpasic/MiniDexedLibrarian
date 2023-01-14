@@ -6,6 +6,13 @@
 
  Author: Boban Spasic
 
+ Unit description:
+ The idea is to have the definitions of MIDI-CC parameters in this file.
+ It makes sense if MiniDexed implements MIDI-CC messages for Performances.
+ In that case, editing Performances could be made "Live" by hearing the results
+ as we edit the parameters in ControlCenter.
+ Not finished.
+ Not used.
 }
 
 unit untDX7SysExDefs;

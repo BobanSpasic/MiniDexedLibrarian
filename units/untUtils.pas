@@ -6,6 +6,8 @@
 
  Author: Boban Spasic
 
+ Unit description:
+ A couple of functions and procedures for general use in other units
 }
 
 unit untUtils;
@@ -19,10 +21,10 @@ uses
 
 procedure FindSYX(Directory: string; var sl: TStringList);
 procedure FindPERF(Directory: string; var sl: TStringList);
-function SysExStreamToStr(const aStream: TMemoryStream): ansistring;
 procedure Unused(const A1);
 procedure Unused(const A1, A2);
 procedure Unused(const A1, A2, A3);
+function SameArrays(var a1, a2: array of byte): boolean;
 
 implementation
 
@@ -48,16 +50,6 @@ begin
   FindClose(sr);
 end;
 
-function SysExStreamToStr(const aStream: TMemoryStream): ansistring;
-var
-  i: integer;
-begin
-  Result := '';
-  aStream.Position := 0;
-  for i := 0 to aStream.Size - 1 do
-    Result := Result + Format('%.2x ', [byte(pansichar(aStream.Memory)[i])]);
-end;
-
 {$PUSH}{$HINTS OFF}
 procedure Unused(const A1);
 begin
@@ -72,5 +64,15 @@ begin
 end;
 
 {$POP}
+
+function SameArrays(var a1, a2: array of byte): boolean;
+var
+  i: integer;
+begin
+  i := Low(a1);
+  while (i <= High(a1)) and (a1[i] = a2[i]) do
+    Inc(i);
+  Result := i >= High(a1);
+end;
 
 end.

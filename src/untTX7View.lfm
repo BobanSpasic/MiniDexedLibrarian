@@ -1,0 +1,47 @@
+object frmTX7View: TfrmTX7View
+  Left = 596
+  Height = 800
+  Top = 55
+  Width = 650
+  Caption = 'TX7View'
+  ClientHeight = 800
+  ClientWidth = 650
+  OnCreate = FormCreate
+  Position = poMainFormCenter
+  LCLVersion = '2.2.4.0'
+  object sgView: TStringGrid
+    Left = 0
+    Height = 800
+    Top = 0
+    Width = 650
+    Align = alClient
+    AutoFillColumns = True
+    ColCount = 4
+    Columns = <    
+      item
+        SizePriority = 0
+        Title.Caption = 'Parameter'
+        Width = 200
+      end    
+      item
+        ReadOnly = True
+        Title.Caption = 'TX7 Funct.'
+        Width = 190
+      end    
+      item
+        Title.Caption = 'INIT Values'
+        Width = 191
+      end>
+    Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goRangeSelect, goThumbTracking, goSmoothScroll]
+    RowCount = 95
+    TabOrder = 0
+    OnHeaderClick = sgViewHeaderClick
+    OnPrepareCanvas = sgViewPrepareCanvas
+    ColWidths = (
+      48
+      200
+      190
+      191
+    )
+  end
+end
