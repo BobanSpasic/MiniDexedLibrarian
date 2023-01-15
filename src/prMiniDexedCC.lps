@@ -8,7 +8,7 @@
           <Version Value="11"/>
           <PathDelim Value="\"/>
           <Target>
-            <Filename Value="..\bin\LWindows\MiniDexedCC.exe"/>
+            <Filename Value="..\bin\Windows\MiniDexedCC.exe"/>
           </Target>
           <SearchPaths>
             <IncludeFiles Value="$(ProjOutDir)"/>
@@ -228,8 +228,9 @@
         <ComponentName Value="frmMain"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
-        <TopLine Value="778"/>
-        <CursorPos X="21" Y="791"/>
+        <IsVisibleTab Value="True"/>
+        <TopLine Value="2811"/>
+        <CursorPos X="5" Y="2811"/>
         <UsageCount Value="200"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
@@ -253,7 +254,6 @@
       <Unit>
         <Filename Value="../units/untDXUtils.pas"/>
         <IsPartOfProject Value="True"/>
-        <IsVisibleTab Value="True"/>
         <EditorIndex Value="3"/>
         <TopLine Value="400"/>
         <CursorPos X="60" Y="414"/>
@@ -633,7 +633,7 @@
         <UsageCount Value="10"/>
       </Unit>
     </Units>
-    <JumpHistory HistoryIndex="27">
+    <JumpHistory HistoryIndex="28">
       <Position>
         <Filename Value="untMain.pas"/>
         <Caret Line="1415" TopLine="1385"/>
@@ -745,6 +745,10 @@
       <Position>
         <Filename Value="untMain.pas"/>
         <Caret Line="791" Column="21" TopLine="778"/>
+      </Position>
+      <Position>
+        <Filename Value="untMain.pas"/>
+        <Caret Line="792" Column="21" TopLine="779"/>
       </Position>
     </JumpHistory>
     <RunParams>

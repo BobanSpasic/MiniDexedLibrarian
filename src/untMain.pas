@@ -764,6 +764,7 @@ type
     procedure swMIDIThruEnableChange(Sender: TObject);
     procedure tbbtCommitClick(Sender: TObject);
     procedure tbbtLoadPerformanceClick(Sender: TObject);
+    procedure tbbtOpenBankClick(Sender: TObject);
     procedure tbbtOpenINIFilesClick(Sender: TObject);
     procedure tbbtRefreshClick(Sender: TObject);
     procedure tbbtSaveBankClick(Sender: TObject);
