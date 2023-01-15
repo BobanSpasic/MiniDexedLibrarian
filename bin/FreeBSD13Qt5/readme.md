@@ -9,10 +9,8 @@ Optional: alsa_seq_server to access MIDI ports.
 
 
 Instructions from probonopd ( https://github.com/probonopd/MiniDexed/discussions/196#discussioncomment-4412689 ):
-
+```
 sudo pkg install qt5pas alsa-seq-server
-
 sudo service alsa_seq_server enable
-
 sudo service alsa_seq_server start
-
+```
