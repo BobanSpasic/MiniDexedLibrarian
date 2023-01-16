@@ -38,10 +38,12 @@ type
       aSuppVer: integer; var aData, aSuppData: TMemoryStream);
     procedure GetBinVoice(aID: string; var FVersion: integer;
       var msData, msSuppl: TMemoryStream);
-    procedure AddPerformance(aID, aName, aCategory, aOrigin: string;
-      var aData: TMemoryStream);
-    procedure GetPerformance(aID: string; var aName, aCategory, aOrigin: string;
-      var aData: TMemoryStream);
+    procedure DeleteVoice(aID: string);
+    procedure AddPerformance(aID: string; aVersion: integer;
+      aName, aCategory, aOrigin: string; var aData: TMemoryStream);
+    procedure GetPerformance(aID: string; var aVersion: integer;
+      var aName, aCategory, aOrigin: string; var aData: TMemoryStream);
+    procedure DeletePerformance(aID: string);
     procedure LoadCategories(sgCategories: TStringGrid);
     procedure SaveCategories(sgCategories: TStringGrid);
     procedure Vacuum;
@@ -50,6 +52,7 @@ type
     procedure GUIUpdateCategoryLists(sgDB: TStringGrid;
       cbPerfCategory, cbVoicesCategory: TComboBox);
     procedure GUIGridRefresh(sgDB: TStringGrid);
+    procedure GUIPerfSelGridRefresh(sgDB: TStringGrid);
     function GetDbFileName: string;
     procedure SetDbFileName(DbFileName: string);
     property DbFileName: string read GetDbFileName write SetDbFileName;
@@ -113,9 +116,22 @@ begin
     SQLTrans.Commit;
 
     SQLQuery.SQL.Text :=
-      'CREATE TABLE IF NOT EXISTS PERFORMANCES (ID VARCHAR(64) UNIQUE NOT NULL, NAME VARCHAR(32) NOT NULL, CATEGORY VARCHAR(32) NOT NULL, DATA BLOB, ORIGIN VARCHAR(128));';
+      'CREATE TABLE IF NOT EXISTS PERFORMANCES (ID VARCHAR(64) UNIQUE NOT NULL, VERSION INTEGER, NAME VARCHAR(32) NOT NULL, CATEGORY VARCHAR(32) NOT NULL, DATA BLOB, ORIGIN VARCHAR(128));';
     SQLQuery.ExecSQL;
     SQLTrans.Commit;
+
+    //Update older db files without VERSION column
+    SQLQuery.SQL.Text :=
+      'PRAGMA table_info (''PERFORMANCES'');';
+    SQLQuery.Open;
+    if not SQLQuery.Locate('NAME','VERSION', []) then
+    begin
+      SQLQuery.Close;
+      SQLQuery.SQL.Text :=
+        'ALTER TABLE PERFORMANCES ADD COLUMN VERSION INTEGER;';
+      SQLQuery.ExecSQL;
+      SQLTrans.Commit;
+    end;
   end
   else
     ShowMessage('No database file assigned');
@@ -204,10 +220,8 @@ begin
       begin
         FVersion := SQLQuery.FieldByName('SUPPL_VER').AsInteger;
         TBlobField(SQLQuery.FieldByName('DATA')).SaveToStream(msData);
-        //msData := SQLQuery.CreateBlobStream(SQLQuery.FieldByName('DATA'), bmRead);
         if FVersion > 0 then
           TBlobField(SQLQuery.FieldByName('SUPPL')).SaveToStream(msSuppl);
-        //msSuppl := SQLQuery.CreateBlobStream(SQLQuery.FieldByName('SUPPL'), bmRead);
         Break;
       end;
       SQLQuery.Next;
@@ -217,8 +231,21 @@ begin
   end;
 end;
 
-procedure TSQLProxy.AddPerformance(aID, aName, aCategory, aOrigin: string;
-  var aData: TMemoryStream);
+procedure TSQLProxy.DeleteVoice(aID: string);
+begin
+  if SQLite3Con.Connected then
+  begin
+    SQLQuery.Close;
+    SQLQuery.SQL.Text := 'DELETE FROM BIN_VOICES WHERE ID = ''' + aID + ''';';
+    SQLQuery.ExecSQL;
+    SQLTrans.Commit;
+  end
+  else
+    ShowMessage('No database file assigned');
+end;
+
+procedure TSQLProxy.AddPerformance(aID: string; aVersion: integer;
+  aName, aCategory, aOrigin: string; var aData: TMemoryStream);
 var
   aExists: boolean;
   aExName: string;
@@ -252,9 +279,10 @@ begin
     else
     begin
       SQLQuery.SQL.Text :=
-        'INSERT OR REPLACE INTO PERFORMANCES (ID, NAME, CATEGORY, DATA, ORIGIN) VALUES (:AID, :AName, :ACategory, :AData, :AOrigin);';
+        'INSERT OR REPLACE INTO PERFORMANCES (ID, VERSION, NAME, CATEGORY, DATA, ORIGIN) VALUES (:AID, :AVersion, :AName, :ACategory, :AData, :AOrigin);';
       SQLQuery.Params.ParamByName('AID').AsString := aID;
       SQLQuery.Params.ParamByName('AName').AsString := aName;
+      SQLQuery.Params.ParamByName('AVersion').AsInteger := aVersion;
       SQLQuery.Params.ParamByName('ACategory').AsString := aCategory;
       SQLQuery.Params.ParamByName('AData').LoadFromStream(aData, ftBlob);
       SQLQuery.Params.ParamByName('AOrigin').AsString := aOrigin;
@@ -266,8 +294,8 @@ begin
     ShowMessage('No database file assigned');
 end;
 
-procedure TSQLProxy.GetPerformance(aID: string; var aName, aCategory, aOrigin: string;
-      var aData: TMemoryStream);
+procedure TSQLProxy.GetPerformance(aID: string; var aVersion: integer;
+  var aName, aCategory, aOrigin: string; var aData: TMemoryStream);
 begin
   if SQLite3Con.Connected then
   begin
@@ -281,6 +309,7 @@ begin
     begin
       if SQLQuery.FieldCount > 0 then
       begin
+        aVersion := SQLQuery.FieldByName('VERSION').AsInteger;
         aName := SQLQuery.FieldByName('NAME').AsString;
         aCategory := SQLQuery.FieldByName('CATEGORY').AsString;
         aOrigin := SQLQuery.FieldByName('ORIGIN').AsString;
@@ -424,20 +453,61 @@ begin
     ShowMessage('No database file assigned');
 end;
 
-procedure TSQLProxy.Commit(aID, aName, aCategory, aOrigin: string);
+procedure TSQLProxy.GUIPerfSelGridRefresh(sgDB: TStringGrid);
 var
-  aSupplement: string;
-  aData: string;
-  aExists: boolean;
+  sl: TStringList;
+  i: integer;
 begin
-  aData := '';
-  aSupplement := '';
+  sgDB.RowCount := 1;
   if SQLite3Con.Connected then
   begin
+    sgDB.BeginUpdate;
+    sl := TStringList.Create;
+    sl.Delimiter := ';';
+    SQLQuery.SQL.Text := 'SELECT * FROM PERFORMANCES';
+    SQLTrans.StartTransaction;
+    SQLQuery.Open;
+    while not SQLQuery.EOF do
+    begin
+      //ID, VERSION, NAME, CATEGORY, DATA BLOB, ORIGIN
+      sl.Add('"' + SQLQuery.FieldByName('NAME').AsString + '";"' +
+        SQLQuery.FieldByName('CATEGORY').AsString + '";"' +
+        SQLQuery.FieldByName('ORIGIN').AsString + '";"' +
+        SQLQuery.FieldByName('ID').AsString + '"');
+      SQLQuery.Next;
+    end;
+    SQLQuery.Close;
+    SQLTrans.Commit;
+    sgDB.RowCount := sl.Count + 1;
+    for i := 0 to sl.Count - 1 do
+    begin
+      sgDB.Rows[i + 1].Delimiter := ';';
+      sgDB.Rows[i + 1].QuoteChar := '"';
+      sgDB.Rows[i + 1].StrictDelimiter := True;
+      sgDB.Rows[i + 1].DelimitedText := sl[i];
+    end;
+    sl.Free;
+    sgDB.EndUpdate(True);
+  end
+  else
+    ShowMessage('No database file assigned');
+end;
+
+procedure TSQLProxy.Commit(aID, aName, aCategory, aOrigin: string);
+var
+  aExists: boolean;
+  aVersion: integer;
+  msData, msSuppl: TMemoryStream;
+begin
+  if SQLite3Con.Connected then
+  begin
+    msData := TMemoryStream.Create;
+    msSuppl := TMemoryStream.Create;
     aExists := False;
+    aVersion := 0;
     SQLQuery.Close;
     SQLQuery.SQL.Text :=
-      'SELECT * FROM VOICES WHERE ID = :AID';
+      'SELECT * FROM BIN_VOICES WHERE ID = :AID';
     SQLQuery.Params.ParamByName('AID').AsString := aID;
     SQLTrans.StartTransaction;
     SQLQuery.Open;
@@ -445,8 +515,10 @@ begin
     begin
       if SQLQuery.FieldCount > 0 then
       begin
-        aData := SQLQuery.Fields[3].AsString;
-        aSupplement := SQLQuery.Fields[4].AsString;
+        aVersion := SQLQuery.FieldByName('SUPPL_VER').AsInteger;
+        TBlobField(SQLQuery.FieldByName('DATA')).SaveToStream(msData);
+        if aVersion > 0 then
+          TBlobField(SQLQuery.FieldByName('SUPPL')).SaveToStream(msSuppl);
         aExists := True;
         Break;
       end;
@@ -457,16 +529,19 @@ begin
     if aExists then
     begin
       SQLQuery.SQL.Text :=
-        'INSERT OR REPLACE INTO VOICES (ID, NAME, CATEGORY, DATA, SUPPLEMENT, ORIGIN) VALUES (:AID, :AName, :ACategory, :AData, :ASupplement, :AOrigin);';
+        'INSERT OR REPLACE INTO BIN_VOICES (ID, NAME, CATEGORY, DATA, SUPPL_VER, SUPPL, ORIGIN) VALUES (:AID, :AName, :ACategory, :AData, :ASuppl_ver, :ASuppl, :AOrigin);';
       SQLQuery.Params.ParamByName('AID').AsString := aID;
       SQLQuery.Params.ParamByName('AName').AsString := aName;
       SQLQuery.Params.ParamByName('ACategory').AsString := aCategory;
-      SQLQuery.Params.ParamByName('AData').AsString := aData;
-      SQLQuery.Params.ParamByName('ASupplement').AsString := aSupplement;
+      SQLQuery.Params.ParamByName('AData').LoadFromStream(msData, ftBlob);
+      SQLQuery.Params.ParamByName('ASuppl_ver').AsInteger := aVersion;
+      SQLQuery.Params.ParamByName('ASuppl').LoadFromStream(msSuppl, ftBlob);
       SQLQuery.Params.ParamByName('AOrigin').AsString := aOrigin;
       SQLQuery.ExecSQL;
       SQLTrans.Commit;
     end;
+    msData.Free;
+    msSuppl.Free;
   end
   else
     ShowMessage('No database file assigned');
@@ -497,6 +572,19 @@ begin
   begin
     SQLQuery.Close;
     SQLQuery.SQL.Text := 'DELETE FROM ' + ATable;
+    SQLQuery.ExecSQL;
+    SQLTrans.Commit;
+  end
+  else
+    ShowMessage('No database file assigned');
+end;
+
+procedure TSQLProxy.DeletePerformance(aID: string);
+begin
+  if SQLite3Con.Connected then
+  begin
+    SQLQuery.Close;
+    SQLQuery.SQL.Text := 'DELETE FROM PERFORMANCES WHERE ID = ''' + aID + ''';';
     SQLQuery.ExecSQL;
     SQLTrans.Commit;
   end

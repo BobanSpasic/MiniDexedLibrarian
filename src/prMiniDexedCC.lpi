@@ -19,10 +19,10 @@
       <UseVersionInfo Value="True"/>
       <AutoIncrementBuild Value="True"/>
       <MinorVersionNr Value="9"/>
-      <RevisionNr Value="2"/>
-      <BuildNr Value="27"/>
+      <RevisionNr Value="3"/>
+      <BuildNr Value="30"/>
       <Attributes pvaPreRelease="True"/>
-      <StringTable FileDescription="MiniDexed Control Center" LegalCopyright="Boban Spasic" OriginalFilename="MiniDexedCC"/>
+      <StringTable FileDescription="MiniDexed Control Center" LegalCopyright="Boban Spasic" OriginalFilename="MiniDexedCC.exe"/>
     </VersionInfo>
     <BuildModes>
       <Item Name="Debug" Default="True"/>
@@ -211,6 +211,13 @@
         <Filename Value="untMDXView.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="frmMDXView"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+      </Unit>
+      <Unit>
+        <Filename Value="untPerfSelDlg.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="frmPerfSelDlg"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
       </Unit>

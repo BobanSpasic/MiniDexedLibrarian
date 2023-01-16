@@ -114,6 +114,7 @@ type
     function GetTGVoiceData(aNr: integer): TDX7_VCED_Params;
     function GetTGPCEDxData(aNr: integer): TMDX_PCEDx_Params;
     function CalculateTGHash(aNr: integer): string;
+    function CalculateHash: string;
   end;
 
 implementation
@@ -523,7 +524,8 @@ begin
   FMDX_Params.TG[aNr].VoiceData := aVCED;
 end;
 
-procedure TMDXPerformanceContainer.LoadPCEDxToTG(aNr: integer; aPCEDx: TMDX_PCEDx_Params);
+procedure TMDXPerformanceContainer.LoadPCEDxToTG(aNr: integer;
+  aPCEDx: TMDX_PCEDx_Params);
 begin
   FMDX_Params.TG[aNr].SupplData := aPCEDx;
 end;
@@ -556,8 +558,29 @@ begin
   aStream := TMemoryStream.Create;
   for i := low(FMDX_Params.TG[aNr].VoiceData) to high(FMDX_Params.TG[aNr].VoiceData) do
     aStream.WriteByte(FMDX_Params.TG[aNr].VoiceData[i]);
-  for i := low(FMDX_Params.TG[aNr].SupplData.params) to high(FMDX_Params.TG[aNr].SupplData.params) do
+  for i := low(FMDX_Params.TG[aNr].SupplData.params)
+    to high(FMDX_Params.TG[aNr].SupplData.params) do
     aStream.WriteByte(FMDX_Params.TG[aNr].SupplData.params[i]);
+  aStream.Position := 0;
+  Result := THashFactory.TCrypto.CreateSHA2_256().ComputeStream(aStream).ToString();
+  aStream.Free;
+end;
+
+function TMDXPerformanceContainer.CalculateHash: string;
+var
+  aStream: TMemoryStream;
+  i: integer;
+  aNr: integer;
+begin
+  aStream := TMemoryStream.Create;
+  for aNr := 1 to 8 do
+  begin
+    for i := low(FMDX_Params.TG[aNr].VoiceData) to high(FMDX_Params.TG[aNr].VoiceData) do
+      aStream.WriteByte(FMDX_Params.TG[aNr].VoiceData[i]);
+    for i := low(FMDX_Params.TG[aNr].SupplData.params)
+      to high(FMDX_Params.TG[aNr].SupplData.params) do
+      aStream.WriteByte(FMDX_Params.TG[aNr].SupplData.params[i]);
+  end;
   aStream.Position := 0;
   Result := THashFactory.TCrypto.CreateSHA2_256().ComputeStream(aStream).ToString();
   aStream.Free;

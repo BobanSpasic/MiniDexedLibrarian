@@ -34,7 +34,8 @@ uses
   untTX7View,
   untParConst,
   untDX7View,
-  untMDXView;
+  untMDXView,
+  untPerfSelDlg;
 
 {$R *.res}
 
@@ -48,5 +49,6 @@ begin
   Application.CreateForm(TfrmTX7View, frmTX7View);
   Application.CreateForm(TfrmDX7View, frmDX7View);
   Application.CreateForm(TfrmMDXView, frmMDXView);
+  Application.CreateForm(TfrmPerfSelDlg, frmPerfSelDlg);
   Application.Run;
 end.

@@ -29,7 +29,7 @@ uses
   Messages,
   {$ENDIF}
   SysUtils, StrUtils, Forms, Controls, Graphics, Dialogs, StdCtrls, ComCtrls,
-  ExtCtrls, Grids, Spin, atshapeline, ECSlider, ECSwitch, ECEditBtns,
+  ExtCtrls, Grids, Spin, atshapeline, ECSlider, ECSwitch, ECEditBtns, ECLink,
   Types, LCLIntf, AdvLed, LazFileUtils
   {$IFDEF WINDOWS}
   ,MIDI, untUnPortMIDI
@@ -39,7 +39,8 @@ uses
   {$ENDIF}
   , untSQLProxy, untUtils, untCCBank, untCCVoice, untDX7Voice,
   untDX7IISupplement, untTX7Function, untDXUtils, untMiniINI, untPopUp,
-  untDX7View, untDX7IIView, untTX7View, untMDXView, untMDXSupplement, untMDXPerformance;
+  untDX7View, untDX7IIView, untTX7View, untMDXView, untMDXSupplement,
+  untMDXPerformance, untPerfSelDlg;
 
 type
 
@@ -127,7 +128,6 @@ type
     btSDCardRenameVoices: TButton;
     btSDCardRenamePerformances: TButton;
     btLoadPerfToEditor: TButton;
-    btPerfUpdate: TButton;
     cbBtnActionBack: TComboBox;
     cbBtnActionHome: TComboBox;
     cbBtnActionNext: TComboBox;
@@ -229,6 +229,7 @@ type
     edSoundDevOther: TLabeledEdit;
     Label1: TLabel;
     Label10: TLabel;
+    lbCredits1: TLabel;
     lbVoicesDBOptions: TLabel;
     lbVoicesCategory: TLabel;
     lbPerfOrigin: TLabel;
@@ -284,12 +285,16 @@ type
     lbSoundDevChunkSize: TLabel;
     lbSoundDevSampleRate: TLabel;
     lbVoices: TListBox;
+    lnkCredits1: TECLink;
+    lnkCredits2: TECLink;
+    lnkCredits3: TECLink;
     mmINIComments: TMemo;
     mmLog: TMemo;
     mmLogSettings: TMemo;
     OpenMiniDexedINI: TOpenDialog;
     lbHint: TLabel;
     OpenPerformanceDialog1: TOpenDialog;
+    pnCredits: TPanel;
     pcFilesDatabase: TPageControl;
     pcBankPerformanceSlots: TPageControl;
     pcMain: TPageControl;
@@ -670,11 +675,16 @@ type
     tbSeparator2: TToolButton;
     tbSeparator3: TToolButton;
     tbExtractPerfVoicesToDB: TToolButton;
+    tbSeparator4: TToolButton;
+    tbbtSavePerfToDB: TToolButton;
+    tbbtLoadPerfFromDB: TToolButton;
+    tbbtDelPerfFromDB: TToolButton;
+    tbSeparator5: TToolButton;
+    tbbtDelVoice: TToolButton;
     tsFiles: TTabSheet;
     tsDatabase: TTabSheet;
     tbBank: TToolBar;
     tbbtLoadPerformance: TToolButton;
-    tbbtOpenBank: TToolButton;
     tbbtOpenINIFiles: TToolButton;
     tbbtSaveBank: TToolButton;
     tbbtSaveINIFiles: TToolButton;
@@ -702,7 +712,6 @@ type
     procedure btDeleteCategoryDBClick(Sender: TObject);
     procedure btDeleteVoiceDBClick(Sender: TObject);
     procedure btLoadPerfToEditorClick(Sender: TObject);
-    procedure btPerfUpdateClick(Sender: TObject);
     procedure btSDCardRenamePerformancesClick(Sender: TObject);
     procedure btSDCardRenameVoicesClick(Sender: TObject);
     procedure btSelectDirClick(Sender: TObject);
@@ -724,6 +733,7 @@ type
     procedure lbFilesClick(Sender: TObject);
     procedure lbFilesStartDrag(Sender: TObject; var DragObject: TDragObject);
     procedure lbVoicesStartDrag(Sender: TObject; var DragObject: TDragObject);
+    procedure lnkCredits1Click(Sender: TObject);
     procedure pnSlotClick(Sender: TObject);
     procedure rbDisplayDiscreteChange(Sender: TObject);
     procedure rbDisplayi2cHD44780Change(Sender: TObject);
@@ -763,8 +773,10 @@ type
       Shift: TShiftState; X, Y: integer);
     procedure swMIDIThruEnableChange(Sender: TObject);
     procedure tbbtCommitClick(Sender: TObject);
+    procedure tbbtDelPerfFromDBClick(Sender: TObject);
+    procedure tbbtDelVoiceClick(Sender: TObject);
+    procedure tbbtLoadPerfFromDBClick(Sender: TObject);
     procedure tbbtLoadPerformanceClick(Sender: TObject);
-    procedure tbbtOpenBankClick(Sender: TObject);
     procedure tbbtOpenINIFilesClick(Sender: TObject);
     procedure tbbtRefreshClick(Sender: TObject);
     procedure tbbtSaveBankClick(Sender: TObject);
@@ -772,6 +784,7 @@ type
     procedure tbbtSaveINIFilesClick(Sender: TObject);
     procedure tbbtSavePerformanceClick(Sender: TObject);
     procedure CalculateGPIO;
+    procedure tbbtSavePerfToDBClick(Sender: TObject);
     procedure tbbtSendVoiceDumpClick(Sender: TObject);
     procedure SendSingleVoice(aCh, aVoiceNr: integer);
     procedure LoadLastStateBank;
@@ -848,25 +861,30 @@ var
   version: integer;
   FName, FCat, FOrigin, FHash: string;
 begin
+  GUIToPerf;
   for i := 1 to 8 do
   begin
     try
       voiceStream := TMemoryStream.Create;
       extraStream := TMemoryStream.Create;
       version := 3; //PCEDx
-      voiceStream.WriteBuffer(FPerformance.FMDX_Params.TG[i].VoiceData, SizeOf(FPerformance.FMDX_Params.TG[i].VoiceData));
-      extraStream.WriteBuffer(FPerformance.FMDX_Params.TG[i].SupplData, SizeOf(FPerformance.FMDX_Params.TG[i].SupplData));
-      FName:=FPerformance.GetTGVoiceName(i);
-      FCat:=FPerformance.FMDX_Params.General.Category;
-      FOrigin:=FPerformance.FMDX_Params.General.Origin;
+      voiceStream.WriteBuffer(FPerformance.FMDX_Params.TG[i].VoiceData,
+        SizeOf(FPerformance.FMDX_Params.TG[i].VoiceData));
+      extraStream.WriteBuffer(FPerformance.FMDX_Params.TG[i].SupplData,
+        SizeOf(FPerformance.FMDX_Params.TG[i].SupplData));
+      FName := FPerformance.GetTGVoiceName(i);
+      FCat := FPerformance.FMDX_Params.General.Category;
+      FOrigin := FPerformance.FMDX_Params.General.Origin;
       FHash := FPerformance.CalculateTGHash(i);
-      SQLProxy.AddBinVoice(FHash, FName, FCat, FOrigin, version, voiceStream, extraStream);
+      SQLProxy.AddBinVoice(FHash, FName, FCat, FOrigin, version,
+        voiceStream, extraStream);
 
     finally
       voiceStream.Free;
       extraStream.Free;
     end;
   end;
+  PopUp('Done!', 2);
 end;
 
 procedure TfrmMain.tbStoreToDBClick(Sender: TObject);
@@ -1080,25 +1098,6 @@ begin
   PerfToGUI;
 end;
 
-procedure TfrmMain.btPerfUpdateClick(Sender: TObject);
-var
-  cat: string;
-begin
-  cat := cbPerfCategory.Text;
-  if cbPerfCategory.Items.IndexOf(cat) = -1 then
-  begin
-    SQLProxy.LoadCategories(sgCategories);
-    sgCategories.RowCount := sgCategories.RowCount + 1;
-    sgCategories.Cells[0, sgCategories.RowCount - 1] := cat;
-    sgCategories.Cells[1, sgCategories.RowCount - 1] :=
-      'Added from ' + FPerformance.FMDX_Params.General.Name;
-    SQLProxy.SaveCategories(sgCategories);
-    SQLProxy.GUIUpdateCategoryLists(sgDB, cbPerfCategory, cbVoicesCategory);
-  end;
-  cbPerfCategory.ItemIndex := cbPerfCategory.Items.IndexOf(cat);
-  GUIToPerf;
-end;
-
 procedure TfrmMain.btSDCardRenamePerformancesClick(Sender: TObject);
 var
   folder: string;
@@ -1122,7 +1121,7 @@ begin
         ShowMessage('Error: File ' + ExtractFileName(newName) + ' already exists');
   end;
   LoadSDCard(IncludeTrailingPathDelimiter(edbtSelSDCard.Text));
-  PopUp('Done!', 3);
+  PopUp('Done!', 2);
 end;
 
 procedure TfrmMain.btSDCardRenameVoicesClick(Sender: TObject);
@@ -1149,7 +1148,7 @@ begin
         ShowMessage('Error: File ' + ExtractFileName(newName) + ' already exists');
   end;
   LoadSDCard(IncludeTrailingPathDelimiter(edbtSelSDCard.Text));
-  PopUp('Done!', 3);
+  PopUp('Done!', 2);
 end;
 
 procedure TfrmMain.cbDisplayEncoderChange(Sender: TObject);
@@ -1307,7 +1306,7 @@ begin
       'minidexed.ini') then
       LoadSDCard(SelectSDCardDirectoryDialog1.FileName)
     else
-      PopUp('Not a MiniDexed SDCard', 3);
+      PopUp('Not a MiniDexed SDCard', 2);
   end;
 end;
 
@@ -1944,6 +1943,11 @@ begin
     dragItem := lbVoices.ItemIndex;
 end;
 
+procedure TfrmMain.lnkCredits1Click(Sender: TObject);
+begin
+  OpenURL('https://icons8.com/');
+end;
+
 procedure TfrmMain.pnSlotClick(Sender: TObject);
 var
   ms: TMemoryStream;
@@ -2414,6 +2418,26 @@ begin
   slButtons.Free;
 end;
 
+procedure TfrmMain.tbbtSavePerfToDBClick(Sender: TObject);
+var
+  tmpStream: TMemoryStream;
+  FName, FCategory, FOrigin: string;
+  FVersion: integer;
+  FHash: string;
+begin
+  GUIToPerf;
+  tmpStream := TMemoryStream.Create;
+  FHash := FPerformance.CalculateHash;
+  FVersion := FPerformance.FMDX_Params.General.Version;
+  FName := FPerformance.FMDX_Params.General.Name;
+  FCategory := FPerformance.FMDX_Params.General.Category;
+  FOrigin := FPerformance.FMDX_Params.General.Origin;
+  FPerformance.SavePerformanceToStream(tmpStream);
+  SQLProxy.AddPerformance(FHash, FVersion, FName, FCategory, FOrigin, tmpStream);
+  tmpStream.Free;
+  PopUp('Done!', 2);
+end;
+
 procedure TfrmMain.tbbtSendVoiceDumpClick(Sender: TObject);
 var
   bankStream: TMemoryStream;
@@ -2431,11 +2455,11 @@ begin
         {$ENDIF}
       then
       begin
-        PopUp('Bank sent', 3);
+        PopUp('Bank sent', 2);
       end
       else
         PopUp('Bank sending failed!' + #13 + 'Error message:' +
-          #13 + Pm_GetErrorText(err), 3);
+          #13 + Pm_GetErrorText(err), 2);
     finally
       bankStream.Free;
     end;
@@ -2467,11 +2491,11 @@ begin
         {$ENDIF}
       then
       begin
-        PopUp('Voice' + #13 + 'sent', 3);
+        PopUp('Voice' + #13 + 'sent', 2);
       end
       else
         PopUp('Voice sending failed!' + #13 + 'Error message:' +
-          #13 + Pm_GetErrorText(err), 3);
+          #13 + Pm_GetErrorText(err), 2);
     finally
       voiceStream.Free;
       tmpVoice.Free;
@@ -2796,6 +2820,63 @@ begin
     SQLProxy.Commit(FId, FName, FCategory, FOrigin);
   end;
   compList.Clear;
+end;
+
+procedure TfrmMain.tbbtDelPerfFromDBClick(Sender: TObject);
+var
+  FID: string;
+  FName: string;
+begin
+  SQLProxy.GUIPerfSelGridRefresh(frmPerfSelDlg.sgPerfSel);
+  frmPerfSelDlg.Caption := 'Delete performance from database';
+  if frmPerfSelDlg.ShowModal = mrOk then
+  begin
+    FID := untPerfSelDlg.ID;
+    FName := untPerfSelDlg.PerfName;
+    if MessageDlg('Delete confirmation', 'Are you sure you want to delete' +
+      #13#10 + FName + ' from database?', mtConfirmation, mbYesNo, 0) = mrYes then
+      SQLProxy.DeletePerformance(FID);
+  end;
+end;
+
+procedure TfrmMain.tbbtDelVoiceClick(Sender: TObject);
+var
+  FID, FName: string;
+begin
+  if sgDB.Row > 0 then
+  begin
+    FID := sgDB.Cells[3, sgDB.Row];
+    FName := sgDB.Cells[0, sgDB.Row];
+    if MessageDlg('Delete confirmation', 'Are you sure you want to delete' +
+      #13#10 + FName + ' from database?', mtConfirmation, mbYesNo, 0) = mrYes then
+    begin
+      SQLProxy.DeleteVoice(FID);
+      SQLProxy.GUIGridRefresh(sgDB);
+    end;
+  end;
+end;
+
+procedure TfrmMain.tbbtLoadPerfFromDBClick(Sender: TObject);
+var
+  FName, FCategory, FOrigin, FID: string;
+  FVersion: integer;
+  FStream: TMemoryStream;
+begin
+  SQLProxy.GUIPerfSelGridRefresh(frmPerfSelDlg.sgPerfSel);
+  frmPerfSelDlg.Caption := 'Load performance from database';
+  if frmPerfSelDlg.ShowModal = mrOk then
+  begin
+    FID := untPerfSelDlg.ID;
+    FVersion := 0;
+    FName := '';
+    FCategory := '';
+    FOrigin := '';
+    FStream := TMemoryStream.Create;
+    SQLProxy.GetPerformance(FID, FVersion, FName, FCategory, FOrigin, FStream);
+    FPerformance.LoadPerformanceFromStream(FStream);
+    PerfToGUI;
+    FStream.Free;
+  end;
 end;
 
 procedure TfrmMain.tbbtLoadPerformanceClick(Sender: TObject);
@@ -3170,7 +3251,22 @@ procedure TfrmMain.GUIToPerf;
 var
   i: integer;
   a: string;
+  cat: string;
 begin
+
+  cat := cbPerfCategory.Text;
+  if cbPerfCategory.Items.IndexOf(cat) = -1 then
+  begin
+    SQLProxy.LoadCategories(sgCategories);
+    sgCategories.RowCount := sgCategories.RowCount + 1;
+    sgCategories.Cells[0, sgCategories.RowCount - 1] := cat;
+    sgCategories.Cells[1, sgCategories.RowCount - 1] :=
+      'Added from ' + FPerformance.FMDX_Params.General.Name;
+    SQLProxy.SaveCategories(sgCategories);
+    SQLProxy.GUIUpdateCategoryLists(sgDB, cbPerfCategory, cbVoicesCategory);
+  end;
+  cbPerfCategory.ItemIndex := cbPerfCategory.Items.IndexOf(cat);
+
   FPerformance.FMDX_Params.General.Name := edPerfName.Text;
   FPerformance.FMDX_Params.General.Category := cbPerfCategory.Text;
   FPerformance.FMDX_Params.General.Origin := edPerfOrigin.Text;
