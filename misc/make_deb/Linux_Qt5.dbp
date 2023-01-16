@@ -15,7 +15,7 @@ Description: MiniDexed Control Center
 <<FILES>>
 1
 /home/linuxmint/Documents/MiniDexedCC/bin/LinuxQt5/MiniDexedCC* -> MiniDexedCC -> /usr/bin
-/home/linuxmint/Documents/MiniDexedCC_div/MiniDexedCC.png* -> MiniDexedCC.png -> /usr/share/pixmaps
+/home/linuxmint/Documents/MiniDexedCC/misc/make_deb/MiniDexedCC.png* -> MiniDexedCC.png -> /usr/share/pixmaps
 <</FILES>>
 <<SCRIPTS>>
 <<PREINST>>

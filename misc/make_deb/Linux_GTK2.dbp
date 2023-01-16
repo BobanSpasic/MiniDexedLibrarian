@@ -14,7 +14,7 @@ Description: MiniDexed Control Center
 <</CTRL>>
 <<FILES>>
 1
-/home/linuxmint/Documents/MiniDexedCC_div/MiniDexedCC.png* -> MiniDexedCC.png -> /usr/share/pixmaps
+/home/linuxmint/Documents/MiniDexedCC/misc/make_deb/MiniDexedCC.png* -> MiniDexedCC.png -> /usr/share/pixmaps
 /home/linuxmint/Documents/MiniDexedCC/bin/LinuxGTK/MiniDexedCC* -> MiniDexedCC -> /usr/bin
 <</FILES>>
 <<SCRIPTS>>

@@ -733,7 +733,7 @@ type
     procedure lbFilesClick(Sender: TObject);
     procedure lbFilesStartDrag(Sender: TObject; var DragObject: TDragObject);
     procedure lbVoicesStartDrag(Sender: TObject; var DragObject: TDragObject);
-    procedure lnkCredits1Click(Sender: TObject);
+    procedure lnkCreditsClick(Sender: TObject);
     procedure pnSlotClick(Sender: TObject);
     procedure rbDisplayDiscreteChange(Sender: TObject);
     procedure rbDisplayi2cHD44780Change(Sender: TObject);
@@ -1943,9 +1943,9 @@ begin
     dragItem := lbVoices.ItemIndex;
 end;
 
-procedure TfrmMain.lnkCredits1Click(Sender: TObject);
+procedure TfrmMain.lnkCreditsClick(Sender: TObject);
 begin
-  OpenURL('https://icons8.com/');
+  OpenURL((Sender as TECLink).Hint);
 end;
 
 procedure TfrmMain.pnSlotClick(Sender: TObject);

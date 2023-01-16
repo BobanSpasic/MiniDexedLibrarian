@@ -230,8 +230,8 @@
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
         <IsVisibleTab Value="True"/>
-        <TopLine Value="856"/>
-        <CursorPos X="3" Y="864"/>
+        <TopLine Value="1946"/>
+        <CursorPos X="6" Y="1947"/>
         <UsageCount Value="200"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
@@ -646,11 +646,7 @@
         <UsageCount Value="8"/>
       </Unit>
     </Units>
-    <JumpHistory HistoryIndex="29">
-      <Position>
-        <Filename Value="../units/untSQLProxy.pas"/>
-        <Caret Line="459" Column="64" TopLine="436"/>
-      </Position>
+    <JumpHistory HistoryIndex="28">
       <Position>
         <Filename Value="untMain.pas"/>
         <Caret Line="1938" Column="32" TopLine="1936"/>
@@ -658,14 +654,6 @@
       <Position>
         <Filename Value="untMain.pas"/>
         <Caret Line="43" Column="35"/>
-      </Position>
-      <Position>
-        <Filename Value="untperfseldlg.pas"/>
-        <Caret Line="26" Column="26"/>
-      </Position>
-      <Position>
-        <Filename Value="untperfseldlg.pas"/>
-        <Caret Line="35" Column="18"/>
       </Position>
       <Position>
         <Filename Value="untMain.pas"/>
@@ -766,6 +754,14 @@
       <Position>
         <Filename Value="untMain.pas"/>
         <Caret Line="2854" Column="42" TopLine="2842"/>
+      </Position>
+      <Position>
+        <Filename Value="untMain.pas"/>
+        <Caret Line="864" Column="3" TopLine="856"/>
+      </Position>
+      <Position>
+        <Filename Value="untMain.pas"/>
+        <Caret Line="1948" Column="31" TopLine="1946"/>
       </Position>
     </JumpHistory>
     <RunParams>
