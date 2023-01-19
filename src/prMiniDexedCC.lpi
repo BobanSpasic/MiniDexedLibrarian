@@ -20,7 +20,7 @@
       <AutoIncrementBuild Value="True"/>
       <MinorVersionNr Value="9"/>
       <RevisionNr Value="3"/>
-      <BuildNr Value="30"/>
+      <BuildNr Value="31"/>
       <Attributes pvaPreRelease="True"/>
       <StringTable FileDescription="MiniDexed Control Center" LegalCopyright="Boban Spasic" OriginalFilename="MiniDexedCC.exe"/>
     </VersionInfo>

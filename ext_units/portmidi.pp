@@ -1,20 +1,11 @@
-unit PortMidi;
-
-//{$mode objfpc}{$H+}
-{$MODE FPC}
-{$CALLING CDECL}
-{$MACRO ON}
-
 {
   PortMidi bindings for FreePascal
   Latest version available at: http://sourceforge.net/apps/trac/humus/
   
   Copyright (c) 2010 HuMuS Project
   Maintained by Roland Schaefer
-
   PortMidi Portable Real-Time MIDI Library
   Latest version available at: http://sourceforge.net/apps/trac/humus/
-
   Permission is hereby granted, free of charge, to any person obtaining
   a copy of this software and associated documentation files
   (the "Software"), to deal in the Software without restriction,
@@ -22,10 +13,8 @@ unit PortMidi;
   publish, distribute, sublicense, and/or sell copies of the Software,
   and to permit persons to whom the Software is furnished to do so,
   subject to the following conditions:
-
   The above copyright notice and this permission notice shall be
   included in all copies or substantial portions of the Software.
-
   THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
   EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
   MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
@@ -33,10 +22,8 @@ unit PortMidi;
   ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF
   CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
   WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
   The text above constitutes the entire PortMidi license; however, 
   the PortMusic community also makes the following non-binding requests:
-
   Any person wishing to distribute modifications to the Software is
   requested to send the modifications to the original developer so that
   they can be incorporated into the canonical version. It is also
@@ -45,8 +32,14 @@ unit PortMidi;
 }
 
 
+unit PortMidi;
+
 
 interface
+
+{$MODE FPC}
+{$CALLING CDECL}
+{$MACRO ON}
 
 
 uses
@@ -57,9 +50,17 @@ uses
 
 {$IFDEF LINKOBJECT}
   {$LINKLIB portmidi.o}
+{$ELSE}
+  {$IFDEF Darwin}
+    {$LINKLIB libportmidi}
+  {$ENDIF}
 {$ENDIF}
 
 
+
+type
+  CInt32 = CInt;
+  CUInt32 = CUInt;
 
 const
   PM_DEFAULT_SYSEX_BUFFER_SIZE : CInt = CInt(1024);
@@ -83,24 +84,24 @@ const
 
 
 function Pm_Initialize : PmError;
-  external 'portmidi' name 'Pm_Initialize';
+  EXTERNALSPEC 'Pm_Initialize';
 
 function Pm_Terminate : PmError;
-  external 'portmidi' name 'Pm_Terminate';
+  EXTERNALSPEC 'Pm_Terminate';
 
 type
   PortMidiStream = Pointer;
   PPortMidiStream = ^PortMidiStream;
 
 function Pm_HasHostError(stream : PortMidiStream) : CInt;
-  external 'portmidi' name 'Pm_HasHostError';
+  EXTERNALSPEC 'Pm_HasHostError';
 
 function Pm_GetErrorText(errnum : PmError) : PChar;
-  external 'portmidi' name 'Pm_GetErrorText';
+  EXTERNALSPEC 'Pm_GetErrorText';
 
 
 procedure Pm_GetHostErrorText(msg : PChar; Len : CUInt);
-  external 'portmidi' name 'Pm_GetHostErrorText';
+  EXTERNALSPEC 'Pm_GetHostErrorText';
 
 const
   HDRLENGTH             = 50;
@@ -124,13 +125,13 @@ type
   PPMDeviceInfo = ^PMDeviceInfo;
 
 function Pm_CountDevices : CInt;
-  external 'portmidi' name 'Pm_CountDevices';
+  EXTERNALSPEC 'Pm_CountDevices';
 
 function Pm_GetDefaultInputDeviceID : PmDeviceID;
-  external 'portmidi' name 'Pm_GetDefaultInputDeviceID';
+  EXTERNALSPEC 'Pm_GetDefaultInputDeviceID';
 
 function Pm_GetDefaultOutputDeviceID : PmDeviceID;
-  external 'portmidi' name 'Pm_GetDefaultOutputDeviceID';
+  EXTERNALSPEC 'Pm_GetDefaultOutputDeviceID';
 
 type
   PmTimestamp = CInt32;
@@ -141,7 +142,7 @@ type
 function PmBefore(t1, t2 : PmTimestamp) : Boolean; inline;
 
 function Pm_GetDeviceInfo(id : PmDeviceID) : PPmDeviceInfo;
-  external 'portmidi' name 'Pm_GetDeviceInfo';
+  EXTERNALSPEC 'Pm_GetDeviceInfo';
 
 function Pm_OpenInput(stream : PPortMidiStream;
   inputDevice : PmDeviceID;
@@ -149,7 +150,7 @@ function Pm_OpenInput(stream : PPortMidiStream;
   bufferSize : CInt32;
   time_proc : PmTimeProcPtr;
   time_info : Pointer ) : PmError;
-  external 'portmidi' name 'Pm_OpenInput';
+  EXTERNALSPEC 'Pm_OpenInput';
 
 function Pm_OpenOutput(stream : PPortMidiStream;
   outputDevice : PmDeviceID;
@@ -158,7 +159,7 @@ function Pm_OpenOutput(stream : PPortMidiStream;
   time_proc : PmTimeProcPtr;
   time_info : Pointer;
   latency : CInt32 ) : PmError;
-  external 'portmidi' name 'Pm_OpenOutput';
+  EXTERNALSPEC 'Pm_OpenOutput';
 
 const
   PM_FILT_ACTIVE             = (1 shl $0E);
@@ -192,21 +193,21 @@ const
                                 or (1 shl $03) or (1 shl $06));
 
 function Pm_SetFilter(stream : PortMidiStream; filters : CInt32 ) : PmError;
-  external 'portmidi' name 'Pm_SetFilte';
+  EXTERNALSPEC 'Pm_SetFilte';
 
 function Pm_Channel(channel : CInt) : CInt; inline;
 
 function Pm_SetChannelMask(stream : PortMidiStream; mask : CInt) : PmError;
-  external 'portmidi' name 'Pm_SetChannelMask';
+  EXTERNALSPEC 'Pm_SetChannelMask';
 
 function Pm_Abort(stream : PortMidiStream) : PmError;
-  external 'portmidi' name 'Pm_Abort';
+  EXTERNALSPEC 'Pm_Abort';
 
 function Pm_Close(stream : PortMidiStream) : PmError;
-  external 'portmidi' name 'Pm_Close';
+  EXTERNALSPEC 'Pm_Close';
 
 function Pm_Synchronize(stream : PortMidiStream) : PmError;
-  external 'portmidi' name 'Pm_Synchronize';
+  EXTERNALSPEC 'Pm_Synchronize';
 
 function Pm_Message(status, data1, data2 : CInt) : CInt; inline;
 
@@ -227,22 +228,22 @@ type
   PPmEvent = ^PmEvent;
 
 function Pm_Read(stream : PortMidiStream; buffer : PPmEvent; length : CInt32 ) : CInt;
-  external 'portmidi' name 'Pm_Read';
+  EXTERNALSPEC 'Pm_Read';
 
 function Pm_Poll(stream : PortMidiStream) : PmError;
-  external 'portmidi' name 'Pm_Poll';
+  EXTERNALSPEC 'Pm_Poll';
 
 function Pm_Write(stream : PortMidiStream; buffer : PPmEvent;
   length : CInt32 ) : PmError;
-  external 'portmidi' name 'Pm_Write';
+  EXTERNALSPEC 'Pm_Write';
 
 function Pm_WriteShort(stream : PortMidiStream; when : PmTimestamp;
   msg : CInt32) : PmError;
-  external 'portmidi' name 'Pm_WriteShort';
+  EXTERNALSPEC 'Pm_WriteShort';
 
 function Pm_WriteSysEx(stream : PortMidiStream; when : PmTimestamp;
   msg : PChar) : PmError;
-  external 'portmidi' name 'Pm_WriteSysEx';
+  EXTERNALSPEC 'Pm_WriteSysEx';
 
 
 implementation

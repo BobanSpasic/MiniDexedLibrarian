@@ -178,7 +178,7 @@
       <Unit>
         <Filename Value="prMiniDexedCC.lpr"/>
         <IsPartOfProject Value="True"/>
-        <EditorIndex Value="1"/>
+        <EditorIndex Value="2"/>
         <CursorPos X="3" Y="38"/>
         <UsageCount Value="200"/>
         <Loaded Value="True"/>
@@ -200,7 +200,7 @@
       <Unit>
         <Filename Value="../units/untDX7Voice.pas"/>
         <IsPartOfProject Value="True"/>
-        <EditorIndex Value="15"/>
+        <EditorIndex Value="16"/>
         <TopLine Value="669"/>
         <CursorPos X="17" Y="703"/>
         <UsageCount Value="200"/>
@@ -209,7 +209,7 @@
       <Unit>
         <Filename Value="../units/untDX7Bank.pas"/>
         <IsPartOfProject Value="True"/>
-        <EditorIndex Value="2"/>
+        <EditorIndex Value="3"/>
         <CursorPos X="87"/>
         <UsageCount Value="200"/>
         <Loaded Value="True"/>
@@ -217,7 +217,7 @@
       <Unit>
         <Filename Value="untPopUp.pas"/>
         <IsPartOfProject Value="True"/>
-        <EditorIndex Value="14"/>
+        <EditorIndex Value="15"/>
         <TopLine Value="30"/>
         <CursorPos X="31" Y="49"/>
         <UsageCount Value="200"/>
@@ -229,7 +229,6 @@
         <ComponentName Value="frmMain"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
-        <IsVisibleTab Value="True"/>
         <TopLine Value="1946"/>
         <CursorPos X="6" Y="1947"/>
         <UsageCount Value="200"/>
@@ -240,10 +239,12 @@
         <Filename Value="../ext_units/portmidi.pp"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="PortMidi"/>
-        <EditorIndex Value="-1"/>
-        <TopLine Value="81"/>
+        <IsVisibleTab Value="True"/>
+        <EditorIndex Value="1"/>
+        <TopLine Value="37"/>
         <CursorPos Y="98"/>
         <UsageCount Value="200"/>
+        <Loaded Value="True"/>
       </Unit>
       <Unit>
         <Filename Value="../units/untDX7SysExDefs.pas"/>
@@ -255,7 +256,7 @@
       <Unit>
         <Filename Value="../units/untDXUtils.pas"/>
         <IsPartOfProject Value="True"/>
-        <EditorIndex Value="5"/>
+        <EditorIndex Value="6"/>
         <TopLine Value="400"/>
         <CursorPos X="60" Y="414"/>
         <UsageCount Value="202"/>
@@ -271,7 +272,7 @@
       <Unit>
         <Filename Value="../units/untDX7IISupplement.pas"/>
         <IsPartOfProject Value="True"/>
-        <EditorIndex Value="4"/>
+        <EditorIndex Value="5"/>
         <TopLine Value="364"/>
         <CursorPos X="38" Y="385"/>
         <UsageCount Value="200"/>
@@ -288,7 +289,7 @@
       <Unit>
         <Filename Value="../units/untMDXPerformance.pas"/>
         <IsPartOfProject Value="True"/>
-        <EditorIndex Value="9"/>
+        <EditorIndex Value="10"/>
         <TopLine Value="221"/>
         <CursorPos X="3" Y="221"/>
         <UsageCount Value="200"/>
@@ -311,7 +312,7 @@
       <Unit>
         <Filename Value="../units/untSysExUtils.pas"/>
         <IsPartOfProject Value="True"/>
-        <EditorIndex Value="17"/>
+        <EditorIndex Value="18"/>
         <TopLine Value="38"/>
         <CursorPos X="3" Y="91"/>
         <UsageCount Value="201"/>
@@ -320,7 +321,7 @@
       <Unit>
         <Filename Value="../units/untSQLProxy.pas"/>
         <IsPartOfProject Value="True"/>
-        <EditorIndex Value="6"/>
+        <EditorIndex Value="7"/>
         <TopLine Value="213"/>
         <CursorPos X="32" Y="234"/>
         <UsageCount Value="201"/>
@@ -329,7 +330,7 @@
       <Unit>
         <Filename Value="../units/untCCVoice.pas"/>
         <IsPartOfProject Value="True"/>
-        <EditorIndex Value="10"/>
+        <EditorIndex Value="11"/>
         <CursorPos X="91" Y="11"/>
         <UsageCount Value="179"/>
         <Loaded Value="True"/>
@@ -337,7 +338,7 @@
       <Unit>
         <Filename Value="../units/untCCBank.pas"/>
         <IsPartOfProject Value="True"/>
-        <EditorIndex Value="16"/>
+        <EditorIndex Value="17"/>
         <TopLine Value="354"/>
         <CursorPos X="3" Y="360"/>
         <UsageCount Value="170"/>
@@ -346,7 +347,7 @@
       <Unit>
         <Filename Value="../units/untMDXSupplement.pas"/>
         <IsPartOfProject Value="True"/>
-        <EditorIndex Value="8"/>
+        <EditorIndex Value="9"/>
         <TopLine Value="11"/>
         <CursorPos X="28" Y="122"/>
         <UsageCount Value="159"/>
@@ -358,7 +359,7 @@
         <ComponentName Value="frmDX7IIView"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
-        <EditorIndex Value="12"/>
+        <EditorIndex Value="13"/>
         <TopLine Value="11"/>
         <CursorPos X="7" Y="32"/>
         <UsageCount Value="133"/>
@@ -370,7 +371,7 @@
         <ComponentName Value="frmTX7View"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
-        <EditorIndex Value="13"/>
+        <EditorIndex Value="14"/>
         <TopLine Value="89"/>
         <CursorPos X="18" Y="116"/>
         <UsageCount Value="130"/>
@@ -379,7 +380,7 @@
       <Unit>
         <Filename Value="../units/untParConst.pas"/>
         <IsPartOfProject Value="True"/>
-        <EditorIndex Value="7"/>
+        <EditorIndex Value="8"/>
         <CursorPos X="38" Y="13"/>
         <UsageCount Value="120"/>
         <Loaded Value="True"/>
@@ -390,7 +391,7 @@
         <ComponentName Value="frmDX7View"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
-        <EditorIndex Value="11"/>
+        <EditorIndex Value="12"/>
         <TopLine Value="180"/>
         <CursorPos X="27" Y="136"/>
         <UsageCount Value="107"/>
@@ -413,7 +414,7 @@
         <ComponentName Value="frmPerfSelDlg"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
-        <EditorIndex Value="3"/>
+        <EditorIndex Value="4"/>
         <CursorPos X="34" Y="49"/>
         <UsageCount Value="27"/>
         <Loaded Value="True"/>
