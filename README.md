@@ -23,7 +23,6 @@ ToDo:
 - conversion of various 4OP voice files to DX7 format (Low priority. Alternative: DXconvert from http://dxconvert.martintarenskeen.nl/ )
 
 
-The current state of the development can be tested on Windows 10, Linux (I use Linux Mint) and FreeBSD 13. The compiled files are in the BIN directory.
 
 Linux Qt5:
 ![MDCC_Lin_Qt5](https://user-images.githubusercontent.com/68187526/206912419-a7c5030b-384e-4a50-96f4-b10689b12255.png)
