@@ -52,12 +52,15 @@ type
   TMidiOutput = class(TMidiDevices)
   private
     FOutDevice: array of integer;
+    stream: PortMidiStream;
   public
     function Open(const aDeviceIndex: integer): PmError; override;
     procedure Close(const aDeviceIndex: integer); override;
     constructor Create; override;
     function SendSysEx(const aDeviceIndex: integer;
       const aStream: TMemoryStream): PmError;
+    procedure PutShort(MidiMessage: byte; Data1: byte; Data2: byte);
+    procedure Send(aDeviceIndex: integer; MidiMessage: byte; Data1: byte; Data2: byte);
   end;
 
 function MidiInput: TMidiInput;
@@ -166,11 +169,10 @@ begin
         FOutDevice[length(FOutDevice) - 1] := i;
       end;
   end;
+  stream := nil;
 end;
 
 function TMidiOutput.Open(const aDeviceIndex: integer): PmError;
-var
-  stream: PortMidiStream;
 begin
   Result := Pm_OpenOutput(@stream, FOutDevice[aDeviceIndex], nil, 16, nil, nil, 0);
   if (Result = 0) or (Result = 1) then
@@ -179,6 +181,11 @@ end;
 
 procedure TMidiOutput.Close(const aDeviceIndex: integer);
 begin
+  if stream <> nil then
+  begin
+    Pm_Close(stream);
+    stream := nil;
+  end;
   if FDevices.Objects[aDeviceIndex] <> nil then
   begin
     Pm_Close(FDevices.Objects[aDeviceIndex]);
@@ -198,6 +205,18 @@ begin
     aStream.Read(buffer[0], aStream.Size);
     Result := Pm_WriteSysEx(FDevices.Objects[aDeviceIndex], 0, PChar(buffer));
   end;
+end;
+
+procedure TMidiOutput.PutShort(MidiMessage: byte; Data1: byte; Data2: byte);
+begin
+  if stream <> nil then
+    Pm_WriteShort(stream, 0, Pm_Message(MidiMessage, Data1, Data2));
+end;
+
+//Windows MMSYSTEM-API compatibility layer
+procedure TMidiOutput.Send(aDeviceIndex: integer; MidiMessage: byte; Data1: byte; Data2: byte);
+begin
+  PutShort(MidiMessage, Data1, Data2);
 end;
 
 initialization
