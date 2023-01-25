@@ -46,8 +46,8 @@ type
       var FTX7Function: TTX7FunctionContainer): boolean;
     function GetChecksum: integer;
     function SaveFunctBankToSysExFile(aFile: string): boolean;
-    procedure SysExFunctBankToStream(var aStream: TMemoryStream);
-    procedure AppendSysExFunctBankToStream(var aStream: TMemoryStream);
+    procedure SysExFunctBankToStream(aCh: integer; var aStream: TMemoryStream);
+    procedure AppendSysExFunctBankToStream(aCh: integer; var aStream: TMemoryStream);
     function CalculateHash(aFunctionNr: integer): string;
     procedure InitFunctBank;
     function FunctIsInit(nr: integer): boolean;
@@ -172,15 +172,17 @@ begin
   end;
 end;
 
-procedure TTX7FunctBankContainer.SysExFunctBankToStream(var aStream: TMemoryStream);
+procedure TTX7FunctBankContainer.SysExFunctBankToStream(aCh: integer; var aStream: TMemoryStream);
 var
   i: integer;
+  FCh: byte;
 begin
+  FCh := aCh - 1;
   aStream.Clear;
   aStream.Position := 0;
   aStream.WriteByte($F0);
   aStream.WriteByte($43);
-  aStream.WriteByte($00);
+  aStream.WriteByte($00 + FCh);
   aStream.WriteByte($02);
   aStream.WriteByte($20);
   aStream.WriteByte($00);
@@ -190,14 +192,15 @@ begin
   aStream.WriteByte($F7);
 end;
 
-procedure TTX7FunctBankContainer.AppendSysExFunctBankToStream(
-  var aStream: TMemoryStream);
+procedure TTX7FunctBankContainer.AppendSysExFunctBankToStream(aCh: integer; var aStream: TMemoryStream);
 var
   i: integer;
+  FCh: byte;
 begin
+  FCh := aCh - 1;
   aStream.WriteByte($F0);
   aStream.WriteByte($43);
-  aStream.WriteByte($00);
+  aStream.WriteByte($00 + FCh);
   aStream.WriteByte($02);
   aStream.WriteByte($20);
   aStream.WriteByte($00);

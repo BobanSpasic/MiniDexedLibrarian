@@ -142,10 +142,11 @@ type
     function Set_AMEM_Params(aParams: TDX7II_AMEM_Params): boolean;
     function Save_AMEM_ToStream(var aStream: TMemoryStream): boolean;
     function Save_ACED_ToStream(var aStream: TMemoryStream): boolean;
+    function Add_ACED_ToStream(var aStream: TMemoryStream): boolean;
     function GetChecksumPart: integer;
     function GetChecksum: integer;
     function SupplIsInit: boolean;
-    procedure SysExSupplementToStream(ch: integer; var aStream: TMemoryStream);
+    procedure SysExSupplementToStream(aCh: integer; var aStream: TMemoryStream);
     function CalculateHash: string;
   end;
 
@@ -365,6 +366,21 @@ begin
     Result := False;
 end;
 
+function TDX7IISupplementContainer.Add_ACED_ToStream(
+  var aStream: TMemoryStream): boolean;
+var
+  i: integer;
+begin
+  if Assigned(aStream) then
+  begin
+    for i := 0 to 73 do
+      aStream.WriteByte(FDX7II_ACED_Params.params[i]);
+    Result := True;
+  end
+  else
+    Result := False;
+end;
+
 function TDX7IISupplementContainer.CalculateHash: string;
 var
   aStream: TMemoryStream;
@@ -415,18 +431,21 @@ begin
   end;
 end;
 
-procedure TDX7IISupplementContainer.SysExSupplementToStream(ch: integer;
+procedure TDX7IISupplementContainer.SysExSupplementToStream(aCh: integer;
   var aStream: TMemoryStream);
+var
+  FCh: byte;
 begin
+  FCh := aCh - 1;
   aStream.Clear;
   aStream.Position := 0;
   aStream.WriteByte($F0);
   aStream.WriteByte($43);
-  aStream.WriteByte($00 + ch); //MIDI channel
+  aStream.WriteByte($00 + FCh); //MIDI channel
   aStream.WriteByte($06);      //supplement
   aStream.WriteByte($08);
   aStream.WriteByte($60);
-  Save_ACED_ToStream(aStream);
+  Add_ACED_ToStream(aStream);
   aStream.WriteByte(GetChecksum);
   aStream.WriteByte($F7);
 end;

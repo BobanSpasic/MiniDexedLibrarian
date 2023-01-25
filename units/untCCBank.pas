@@ -61,7 +61,7 @@ type
     procedure AppendSysExFunctBankToStream(var aStream: TMemoryStream);
 
     function CSaveBankToSysExFile(aFile: string): boolean;
-    procedure CSysExBankToStream(var aStream: TMemoryStream);
+    procedure CSysExBankToStream(aCh: integer; var aStream: TMemoryStream);
     procedure CInitVoices;
     procedure CInitSuppl;
     procedure CInitFunct;
@@ -353,15 +353,17 @@ begin
   end;
 end;
 
-procedure TCCBankContainer.CSysExBankToStream(var aStream: TMemoryStream);
+procedure TCCBankContainer.CSysExBankToStream(aCh: integer; var aStream: TMemoryStream);
 var
   i: integer;
+  FCh: byte;
 begin
+  FCh := aCH - 1;
   aStream.Clear;
   aStream.Position := 0;
   aStream.WriteByte($F0);
   aStream.WriteByte($43);
-  aStream.WriteByte($00);
+  aStream.WriteByte($00 + FCh);
   aStream.WriteByte($09);
   aStream.WriteByte($20);
   aStream.WriteByte($00);

@@ -38,8 +38,8 @@ type
     function GetVoiceName(aVoiceNr: integer): string;
     function GetChecksum: integer;
     function SaveBankToSysExFile(aFile: string): boolean;
-    procedure SysExBankToStream(var aStream: TMemoryStream);
-    procedure AppendSysExBankToStream(var aStream: TMemoryStream);
+    procedure SysExBankToStream(aCh: integer; var aStream: TMemoryStream);
+    procedure AppendSysExBankToStream(aCh: Integer; var aStream: TMemoryStream);
     function CalculateHash(aVoiceNr: integer): string;
   end;
 
@@ -165,15 +165,17 @@ begin
   end;
 end;
 
-procedure TDX7BankContainer.SysExBankToStream(var aStream: TMemoryStream);
+procedure TDX7BankContainer.SysExBankToStream(aCh: integer; var aStream: TMemoryStream);
 var
   i: integer;
+  FCh: byte;
 begin
+  FCh := aCh - 1;
   aStream.Clear;
   aStream.Position := 0;
   aStream.WriteByte($F0);
   aStream.WriteByte($43);
-  aStream.WriteByte($00);
+  aStream.WriteByte($00 + FCh);
   aStream.WriteByte($09);
   aStream.WriteByte($20);
   aStream.WriteByte($00);
@@ -183,13 +185,15 @@ begin
   aStream.WriteByte($F7);
 end;
 
-procedure TDX7BankContainer.AppendSysExBankToStream(var aStream: TMemoryStream);
+procedure TDX7BankContainer.AppendSysExBankToStream(aCh: Integer; var aStream: TMemoryStream);
 var
   i: integer;
+  FCh: byte;
 begin
+  FCh := aCh - 1;
   aStream.WriteByte($F0);
   aStream.WriteByte($43);
-  aStream.WriteByte($00);
+  aStream.WriteByte($00 + FCh);
   aStream.WriteByte($09);
   aStream.WriteByte($20);
   aStream.WriteByte($00);

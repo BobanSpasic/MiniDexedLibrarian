@@ -8,14 +8,10 @@
 
 }
 //ToDo - open for more
-//+save binary data to SQL
-//save performance to SQL
-//+suppl_ver
-//+whole performance to bin + version
-//DBGrid filter
-//TX802/816 class
-//FM Heaven import
-//FM7 import
+//implement new minidexed.ini loading and saving
+// TX802/816 class
+// FM Heaven import
+// FM7 import
 
 unit untMain;
 
@@ -30,7 +26,7 @@ uses
   {$ENDIF}
   SysUtils, StrUtils, Forms, Controls, Graphics, Dialogs, StdCtrls, ComCtrls,
   ExtCtrls, Grids, Spin, atshapeline, ECSlider, ECSwitch, ECEditBtns, ECLink,
-  Types, LCLIntf, AdvLed, LazFileUtils
+  Types, LCLIntf, AdvLed, LazFileUtils, LCLType, LazUTF8
   {$IFDEF WINDOWS}
   ,MIDI, untUnPortMIDI
   {$ENDIF}
@@ -128,6 +124,7 @@ type
     btSDCardRenameVoices: TButton;
     btSDCardRenamePerformances: TButton;
     btLoadPerfToEditor: TButton;
+    cbAutoPreview: TCheckBox;
     cbBtnActionBack: TComboBox;
     cbBtnActionHome: TComboBox;
     cbBtnActionNext: TComboBox;
@@ -150,6 +147,7 @@ type
     cbEncoderClockPin: TComboBox;
     cbEncoderDataPin: TComboBox;
     cbLibMIDIChannel: TComboBox;
+    cbMIDIBtnChannel: TComboBox;
     cbMidiCh1: TComboBox;
     cbMidiCh2: TComboBox;
     cbMidiCh3: TComboBox;
@@ -166,13 +164,44 @@ type
     cbSoundDevChunkSize: TComboBox;
     cbSoundDevSampleRate: TComboBox;
     cbPerfCategory: TComboBox;
+    cgSanitize: TCheckGroup;
     edBtnDblClickTOut: TLabeledEdit;
     edBtnLngPressTOut: TLabeledEdit;
     edbtSelSDCard: TECEditBtn;
     edbtSelSysExDir: TECEditBtn;
     edDisplayi2sAddr: TLabeledEdit;
     edDisplayi2sCols: TLabeledEdit;
+    edMIDIButBack: TLabeledEdit;
+    edMIDIButHome: TLabeledEdit;
+    edMIDIButSel: TLabeledEdit;
+    edMIDIButPrev: TLabeledEdit;
     edDisplayi2sRows: TLabeledEdit;
+    edMIDIButNext: TLabeledEdit;
+    lbMIDIBtnChannel: TLabel;
+    lbMIDIIgnAllNotesOff: TLabel;
+    lbMIDIButtons: TLabel;
+    lbLCDMirror: TLabel;
+    lbLCD: TLabel;
+    lbLCDRotate: TLabel;
+    lbMIDIAutoDump: TLabel;
+    lbTestbed: TLabel;
+    lbPopUpDur: TLabel;
+    mmResultSamples: TMemo;
+    mmTestSamples: TMemo;
+    pnMIDIButtons: TPanel;
+    pnTestbed: TPanel;
+    rbMIDIButOff: TRadioButton;
+    rbMIDIButOn: TRadioButton;
+    ShapeLine10: TShapeLine;
+    swLCDMirror: TECSwitch;
+    swLCDRotate: TECSwitch;
+    swMIDIIgnAllNotesOff: TECSwitch;
+    swMIDIAutoDump: TECSwitch;
+    tbpnPreview: TPanel;
+    sePopUpDur: TSpinEdit;
+    tbrbSearchName: TRadioButton;
+    tbrbSearchOrigin: TRadioButton;
+    tbSearch: TEdit;
     edPerfOrigin: TEdit;
     edPerfName: TEdit;
     edMIDIBaudRate: TLabeledEdit;
@@ -294,6 +323,7 @@ type
     OpenMiniDexedINI: TOpenDialog;
     lbHint: TLabel;
     OpenPerformanceDialog1: TOpenDialog;
+    tbpnSearch: TPanel;
     pnCredits: TPanel;
     pcFilesDatabase: TPageControl;
     pcBankPerformanceSlots: TPageControl;
@@ -681,6 +711,8 @@ type
     tbbtDelPerfFromDB: TToolButton;
     tbSeparator5: TToolButton;
     tbbtDelVoice: TToolButton;
+    tbSeparator6: TToolButton;
+    tbbtSanitize: TToolButton;
     tsFiles: TTabSheet;
     tsDatabase: TTabSheet;
     tbBank: TToolBar;
@@ -720,6 +752,7 @@ type
     procedure cbMidiInChange(Sender: TObject);
     procedure cbMidiOutChange(Sender: TObject);
     procedure btSelSDCardClick(Sender: TObject);
+    procedure cgSanitizeItemClick(Sender: TObject; Index: integer);
     procedure edPSlotDragDrop(Sender, Source: TObject; X, Y: integer);
     procedure edPSlotDragOver(Sender, Source: TObject; X, Y: integer;
       State: TDragState; var Accept: boolean);
@@ -731,6 +764,7 @@ type
     procedure FormCloseQuery(Sender: TObject; var CanClose: boolean);
     procedure FormCreate(Sender: TObject);
     procedure lbFilesClick(Sender: TObject);
+    procedure lbFilesDblClick(Sender: TObject);
     procedure lbFilesStartDrag(Sender: TObject; var DragObject: TDragObject);
     procedure lbVoicesStartDrag(Sender: TObject; var DragObject: TDragObject);
     procedure lnkCreditsClick(Sender: TObject);
@@ -739,15 +773,18 @@ type
     procedure rbDisplayi2cHD44780Change(Sender: TObject);
     procedure rbDisplayi2cSSD1306Change(Sender: TObject);
     procedure rbEncoderDiscreteChange(Sender: TObject);
+    procedure rbMIDIButOnChange(Sender: TObject);
     procedure rbSoundDevHDMIChange(Sender: TObject);
     procedure rbSoundDevi2sChange(Sender: TObject);
     procedure rbSoundDevOtherChange(Sender: TObject);
     procedure rbSoundDevPWMChange(Sender: TObject);
     procedure seFontSizeChange(Sender: TObject);
+    procedure sePopUpDurChange(Sender: TObject);
     procedure sgCategoriesDrawCell(Sender: TObject; aCol, aRow: integer;
       aRect: TRect; aState: TGridDrawState);
     procedure sgDBAfterSelection(Sender: TObject; aCol, aRow: integer);
     procedure sgDBBeforeSelection(Sender: TObject; aCol, aRow: integer);
+    procedure sgDBClick(Sender: TObject);
     procedure sgDBDragOver(Sender, Source: TObject; X, Y: integer;
       State: TDragState; var Accept: boolean);
     procedure sgDBEditingDone(Sender: TObject);
@@ -779,6 +816,7 @@ type
     procedure tbbtLoadPerformanceClick(Sender: TObject);
     procedure tbbtOpenINIFilesClick(Sender: TObject);
     procedure tbbtRefreshClick(Sender: TObject);
+    procedure tbbtSanitizeClick(Sender: TObject);
     procedure tbbtSaveBankClick(Sender: TObject);
     procedure RefreshSlots;
     procedure tbbtSaveINIFilesClick(Sender: TObject);
@@ -792,10 +830,13 @@ type
     procedure OpenSysEx(aName: string);
     procedure LoadPerformance(aName: string);
     procedure tbExtractPerfVoicesToDBClick(Sender: TObject);
+    procedure tbSearchKeyUp(Sender: TObject; var Key: word; Shift: TShiftState);
     procedure tbStoreToDBClick(Sender: TObject);
     procedure LoadSDCard(dir: string);
     procedure PerfToGUI;
     procedure GUIToPerf;
+    procedure SendSimpleMelody(aCh: integer);
+    function SanitizeNames(tmp: string): string;
 
   private
     {$IFDEF WINDOWS}
@@ -840,8 +881,10 @@ var
   SDCardPerfFiles: TStringList;
   compArray:   array [0..3] of string;
   compList:    TStringList;
-  lastSelectedRow: integer;
+  LastSelectedRow: integer;
   SQLProxy:    TSQLProxy;
+  LastClickedFile: integer;
+  PopUpDuration: integer;
 
 implementation
 
@@ -884,7 +927,13 @@ begin
       extraStream.Free;
     end;
   end;
-  PopUp('Done!', 2);
+  PopUp('Done!', PopUpDuration);
+end;
+
+procedure TfrmMain.tbSearchKeyUp(Sender: TObject; var Key: word; Shift: TShiftState);
+begin
+  Unused(Shift);
+  if Key = VK_RETURN then tbbtRefresh.Click;
 end;
 
 procedure TfrmMain.tbStoreToDBClick(Sender: TObject);
@@ -923,7 +972,7 @@ begin
       end;
 
       SQLProxy.AddBinVoice(tmpVoice.CalculateHash, tmpVoice.GetVoiceName,
-        cbVoicesCategory.TextHint, edVoicesOrigin.Text, version,
+        cbVoicesCategory.Text, edVoicesOrigin.Text, version,
         voiceStream, extraStream);
 
       {SQLProxy.AddVoice(tmpVoice.CalculateHash, tmpVoice.GetVoiceName,
@@ -938,6 +987,7 @@ begin
       tmpFunct.Free;
     end;
   end;
+  PopUp('Done!', PopUpDuration);
 end;
 
 procedure TfrmMain.OnMidiInData(const aDeviceIndex: integer;
@@ -965,7 +1015,7 @@ begin
   then
   begin
       {
-      Memo1.Append( IntToStr( Msg.wParamhi) +' '
+      mmTestSamples.Append( IntToStr( Msg.wParamhi) +' '
                        +IntToStr( Msg.wParamlo) +'  '
                        // MIDI Note on / off
                        +IntToHex( Msg.lParamlo and $FF, 2) +' '
@@ -1004,6 +1054,8 @@ procedure TfrmMain.btSelectDirClick(Sender: TObject);
 begin
   if SelectSysExDirectoryDialog1.Execute then
   begin
+    lbVoices.Clear;
+    mmLog.Lines.Clear;
     edbtSelSysExDir.Text := SelectSysExDirectoryDialog1.FileName;
     LastSysExOpenDir := IncludeTrailingPathDelimiter(
       SelectSysExDirectoryDialog1.FileName);
@@ -1080,7 +1132,7 @@ begin
     'This operation is not reversible.' + #13#10 + 'Are you sure?',
     mtWarning, mbYesNo, 0) = mrYes then
   begin
-    SQLProxy.CleanTable('VOICES');
+    SQLProxy.CleanTable('BIN_VOICES');
     SQLProxy.Vacuum;
   end;
 end;
@@ -1121,7 +1173,7 @@ begin
         ShowMessage('Error: File ' + ExtractFileName(newName) + ' already exists');
   end;
   LoadSDCard(IncludeTrailingPathDelimiter(edbtSelSDCard.Text));
-  PopUp('Done!', 2);
+  PopUp('Done!', PopUpDuration);
 end;
 
 procedure TfrmMain.btSDCardRenameVoicesClick(Sender: TObject);
@@ -1148,7 +1200,7 @@ begin
         ShowMessage('Error: File ' + ExtractFileName(newName) + ' already exists');
   end;
   LoadSDCard(IncludeTrailingPathDelimiter(edbtSelSDCard.Text));
-  PopUp('Done!', 2);
+  PopUp('Done!', PopUpDuration);
 end;
 
 procedure TfrmMain.cbDisplayEncoderChange(Sender: TObject);
@@ -1306,7 +1358,58 @@ begin
       'minidexed.ini') then
       LoadSDCard(SelectSDCardDirectoryDialog1.FileName)
     else
-      PopUp('Not a MiniDexed SDCard', 2);
+      PopUp('Not a MiniDexed SDCard', PopUpDuration);
+  end;
+end;
+
+function TfrmMain.SanitizeNames(tmp: string): string;
+var
+  i: integer;
+begin
+  for i := 1 to 10 do
+  begin
+    if cgSanitize.Checked[1] then
+      if UTF8pos(UTF8copy(tmp, 1, 1), ('*°/\<>^?~#+-!$%&()[]`.,')) > 0 then
+        tmp := UTF8copy(tmp, 2, UTF8Length(tmp) - 1);
+    if cgSanitize.Checked[2] then
+      if UTF8pos(UTF8copy(tmp, UTF8Length(tmp), 1), ('*°/\<>^?~#+-!$%&()[]`.,')) > 0 then
+        tmp := UTF8copy(tmp, 1, UTF8Length(tmp) - 1);
+    if cgSanitize.Checked[3] then
+    begin
+      tmp := ReplaceStr(tmp, '{', '');
+      tmp := ReplaceStr(tmp, '}', '');
+    end;
+    if cgSanitize.Checked[4] then
+    begin
+      tmp := ReplaceStr(tmp, '''', ' ');
+    end;
+    if cgSanitize.Checked[5] then
+    begin
+      tmp := ReplaceStr(tmp, '"', ' ');
+    end;
+    if cgSanitize.Checked[6] then
+    begin
+      while pos('  ', tmp) > 0 do
+        tmp := ReplaceStr(tmp, '  ', ' ');
+    end;
+    if cgSanitize.Checked[0] then tmp := Trim(tmp);
+  end;
+  tmp := AddCharR(' ', tmp, 10);
+  Result := tmp;
+end;
+
+procedure TfrmMain.cgSanitizeItemClick(Sender: TObject; Index: integer);
+var
+  i: integer;
+  tmp: string;
+begin
+  Unused(Index);
+  mmResultSamples.Lines.Clear;
+
+  for i := 0 to mmTestSamples.Lines.Count - 1 do
+  begin
+    tmp := SanitizeNames(mmTestSamples.Lines[i]);
+    mmResultSamples.Lines.Add(tmp);
   end;
 end;
 
@@ -1566,7 +1669,6 @@ begin
     spl := TMemoryStream.Create;
     version := 0;
     SQLProxy.GetBinVoice(sgDB.Cells[3, dragItem], version, dmp, spl);
-    //SQLProxy.GetVoice(sgDB.Cells[3, dragItem], dmp);
     tmpVoice := TDX7VoiceContainer.Create;
     tmpVoice.Load_VCED_FromStream(dmp, 0);
     if FSlotsDX.CSetVoice((Sender as TLabeledEdit).Tag, tmpVoice) then
@@ -1671,6 +1773,9 @@ begin
       ini.WriteString('MIDIInput', cbMidiIn.Text);
     if cbMidiOut.ItemIndex <> -1 then
       ini.WriteString('MIDIOutput', cbMidiOut.Text);
+    if cbVoicesCategory.ItemIndex <> -1 then
+      ini.WriteString('VoiceCategory', cbVoicesCategory.Text);
+    ini.WriteString('VoiceOrigin', edVoicesOrigin.Text);
     ini.WriteString('LastSysExOpenDir', LastSysExOpenDir);
     ini.WriteString('LastSysExSaveDir', LastSysExSaveDir);
     ini.WriteString('LastSysEx', LastSysEx);
@@ -1679,6 +1784,7 @@ begin
     ini.WriteString('LastPerf', LastPerf);
     ini.WriteString('LastSDCardDir', LastSDCardDir);
     ini.WriteInteger('FontSize', frmMain.Font.Height);
+    ini.WriteInteger('PopUpDuration', PopUpDuration);
     ini.SaveToFile(HomeDir + 'settings.ini');
     FSlotsDX.CSaveBankToSysExFile(HomeDir + 'lastState.syx');
   finally
@@ -1701,6 +1807,8 @@ var
   i: integer;
   ini: TMiniINIFile;
 begin
+  frmMain.FormStyle := fsNormal;
+  //something in Lazarus changes the lfm file and puts fsStayOnTop
   HomeDir := IncludeTrailingPathDelimiter(IncludeTrailingPathDelimiter(GetUserDir) +
     'MiniDexedCC');
   if not DirectoryExists(HomeDir) then CreateDir(HomeDir);
@@ -1785,6 +1893,7 @@ begin
   LastPerfSaveDir := '';
   LastPerf := '';
   LastSDCardDir := '';
+  lastClickedFile := -1;
 
   try
     ini := TMiniINIFile.Create;
@@ -1813,7 +1922,12 @@ begin
     LastPerf := ini.ReadString('LastPerf', '');
     LastSDCardDir := ini.ReadString('LastSDCardDir', '');
     frmMain.Font.Height := ini.ReadInteger('FontSize', 11);
+    PopUpDuration := ini.ReadInteger('PopUpDuration', 2);
+    sePopUpDur.Value := PopUpDuration;
     seFontSize.Value := frmMain.Font.Height;
+    cbVoicesCategory.ItemIndex :=
+      cbVoicesCategory.Items.IndexOf(ini.ReadString('VoiceCategory', 'Default'));
+    edVoicesOrigin.Text := ini.ReadString('VoiceOrigin', 'Unknown');
     if DirectoryExists(LastSysExOpenDir) then
     begin
       SelectSysExDirectoryDialog1.InitialDir := LastSysExOpenDir;
@@ -1856,6 +1970,7 @@ begin
   swMIDIThruEnableChange(Self);
   rbEncoderDiscreteChange(Self);
   rbSoundDevOtherChange(Self);
+  rbMIDIButOnChange(Self);
 end;
 
 procedure TfrmMain.LoadLastStateBank;
@@ -1921,12 +2036,88 @@ var
   dbg: string;
   Itm: string;
 begin
-  if lbFiles.ItemIndex = -1 then exit;
-  Itm := lbFiles.Items[lbFiles.ItemIndex];
-  LastSysEx := itm;
-  dbg := IncludeTrailingPathDelimiter(edbtSelSysExDir.Text) + Itm;
-  lbVoices.Clear;
-  OpenSysEx(dbg);
+  if lbFiles.ItemIndex <> -1 then
+  begin
+    lastClickedFile := lbFiles.ItemIndex;
+    Itm := lbFiles.Items[lbFiles.ItemIndex];
+    LastSysEx := itm;
+    dbg := IncludeTrailingPathDelimiter(edbtSelSysExDir.Text) + Itm;
+    lbVoices.Clear;
+    mmLog.Lines.Clear;
+    OpenSysEx(dbg);
+    if (lastClickedFile <> -1) and ((lastClickedFile) < lbFiles.Items.Count) then
+      lbFiles.ItemIndex := lastClickedFile;
+  end;
+end;
+
+procedure TfrmMain.lbFilesDblClick(Sender: TObject);
+var
+  dbg: string;
+  Itm: string;
+  dmp: TMemoryStream;
+  i: integer;
+begin
+  if lbFiles.ItemIndex <> -1 then
+  begin
+    lastClickedFile := lbFiles.ItemIndex;
+    Itm := lbFiles.Items[lbFiles.ItemIndex];
+    LastSysEx := itm;
+    dbg := IncludeTrailingPathDelimiter(edbtSelSysExDir.Text) + Itm;
+    lbVoices.Clear;
+    mmLog.Lines.Clear;
+    OpenSysEx(dbg);
+    if (lastClickedFile <> -1) and ((lastClickedFile) < lbFiles.Items.Count) then
+      lbFiles.ItemIndex := lastClickedFile;
+
+    dmp := TMemoryStream.Create;
+    dmp.Clear;
+    FTmpCCBank.CSaveVoiceBankToStream(dmp);
+    FSlotsDX.CLoadVoiceBankFromStream(dmp, 0);
+    for i := 1 to 32 do
+    begin
+      TLabeledEdit(FindComponent(Format('edSlot%.2d', [i]))).Text :=
+        FSlotsDX.CGetVoiceName(i);
+    end;
+
+    for i := 1 to 32 do
+    begin
+      TAdvLed(FindComponent(Format('alDXII_%.2d', [i]))).State := lsOff;
+      TAdvLed(FindComponent(Format('alTX7_%.2d', [i]))).State := lsOff;
+      TAdvLed(FindComponent(Format('alDXII_%.2d', [i]))).State := lsDisabled;
+      TAdvLed(FindComponent(Format('alTX7_%.2d', [i]))).State := lsDisabled;
+    end;
+
+    if FTmpCCBank.HasGlobalSuppl then
+    begin
+      dmp.Clear;
+      dmp.Size := 0;
+      FTmpCCBank.CSaveSupplBankToStream(dmp);
+      FSlotsDX.CLoadSupplBankFromStream(dmp, 0);
+      for i := 1 to 32 do
+      begin
+        if FSlotsDX.HasSuppl(i) then
+          TAdvLed(FindComponent(Format('alDXII_%.2d', [i]))).State := lsOn;
+      end;
+    end
+    else
+      FSlotsDX.CInitSuppl;
+
+    if FTmpCCBank.HasGlobalFunct then
+    begin
+      dmp.Clear;
+      dmp.Size := 0;
+      FTmpCCBank.CSaveFunctBankToStream(dmp);
+      FSlotsDX.CLoadFunctBankFromStream(dmp, 0);
+      for i := 1 to 32 do
+      begin
+        if FSlotsDX.HasFunct(i) then
+          TAdvLed(FindComponent(Format('alTX7_%.2d', [i]))).State := lsOn;
+      end;
+    end
+    else
+      FSlotsDX.CInitFunct;
+    dmp.Free;
+  end;
 end;
 
 procedure TfrmMain.lbFilesStartDrag(Sender: TObject; var DragObject: TDragObject);
@@ -1984,6 +2175,7 @@ var
   i, j, k: integer;
   dxv: TDX7VoiceContainer;
   nr: integer;
+  feedback: string;
 begin
   if aName = '' then exit;
   if FileExists(aName) then
@@ -1994,39 +2186,77 @@ begin
     i := 0;
     j := 0;
 
-    ContainsDXData(dmp, i, mmLog.Lines);
-
-    if ContainsDX7VoiceDump(dmp, i, j) then
+    if ContainsDXData(dmp, i, mmLog.Lines) then
     begin
-      lbVoices.Items.Clear;
-      dxv := TDX7VoiceContainer.Create;
-      dxv.Load_VCED_FromStream(dmp, j);
-      FTmpCCBank.CInitVoices;
-      FTmpCCBank.CSetVoice(1, dxv);
-      lbVoices.Items.Add(FTmpCCBank.CGetVoiceName(1));
-      dxv.Free;
-    end;
-
-    i := 0; //read from the begining of the stream again
-    if ContainsDX7BankDump(dmp, i, j) then
-    begin
-      lbVoices.Items.Clear;
-      FTmpCCBank.CLoadVoiceBankFromStream(dmp, j);
-      for nr := 1 to 32 do
+      if ContainsDX7VoiceDump(dmp, i, j) then
       begin
-        lbVoices.Items.Add(FTmpCCBank.CGetVoiceName(nr));
+        lbVoices.Items.Clear;
+        dxv := TDX7VoiceContainer.Create;
+        dxv.Load_VCED_FromStream(dmp, j);
+        FTmpCCBank.CInitVoices;
+        FTmpCCBank.CSetVoice(1, dxv);
+        lbVoices.Items.Add(FTmpCCBank.CGetVoiceName(1));
+        dxv.Free;
       end;
-      k := dmp.Position;
-      i := k;
-      if ContainsDX7IISupplBankDump(dmp, i, j) then
-        FTmpCCBank.CLoadSupplBankFromStream(dmp, j)
+
+      i := 0; //read from the begining of the stream again
+      if ContainsDX7BankDump(dmp, i, j) then
+      begin
+        lbVoices.Items.Clear;
+        FTmpCCBank.CLoadVoiceBankFromStream(dmp, j);
+        for nr := 1 to 32 do
+        begin
+          lbVoices.Items.Add(FTmpCCBank.CGetVoiceName(nr));
+        end;
+        //k := dmp.Position;
+        k := 0; // got files where AMEM comes before VMEM
+        i := k;
+        if ContainsDX7IISupplBankDump(dmp, i, j) then
+          FTmpCCBank.CLoadSupplBankFromStream(dmp, j)
+        else
+          FTmpCCBank.CInitSuppl;
+        //i := k;
+        i := 0; // if PMEM is before VMEM in file
+        if ContainsTX7FunctBankDump(dmp, i, j) then
+          FTmpCCBank.CLoadFunctBankFromStream(dmp, j)
+        else
+          FTmpCCBank.CInitFunct;
+      end
       else
-        FTmpCCBank.CInitSuppl;
-      i := k;
-      if ContainsTX7FunctBankDump(dmp, i, j) then
-        FTmpCCBank.CLoadFunctBankFromStream(dmp, j)
+      begin
+        mmLog.Lines.Add('Not a valid DX SysEx');
+        feedback := '';
+        if RepairDX7SysEx(aName, feedback) then
+        begin
+          FillFilesList(edbtSelSysExDir.Text);
+          mmLog.Lines.Add(feedback);
+          mmLog.Lines.Add('Reparation: It is maybe a DX7 VMEM file');
+          Inc(lastClickedFile);
+        end
+        else
+        begin
+          mmLog.Lines.Add(feedback);
+          mmLog.Lines.Add('Could not repair');
+        end;
+      end;
+    end
+    else
+    begin
+      //mmLog.Lines.Clear;
+      mmLog.Lines.Add('Not a valid DX SysEx');
+      feedback := '';
+      if RepairDX7SysEx(aName, feedback) then
+      begin
+        FillFilesList(edbtSelSysExDir.Text);
+        mmLog.Lines.Add(feedback);
+        mmLog.Lines.Add('Reparation: It is maybe a DX7 VMEM file');
+        Inc(lastClickedFile);
+      end
       else
-        FTmpCCBank.CInitFunct;
+      begin
+        mmLog.Lines.Add(feedback);
+        mmLog.Lines.Add('Could not repair');
+      end;
     end;
     dmp.Free;
   end;
@@ -2125,6 +2355,26 @@ begin
     cbEncoderDataPin.Enabled := False;
   end;
   CalculateGPIO;
+end;
+
+procedure TfrmMain.rbMIDIButOnChange(Sender: TObject);
+begin
+  if rbMIDIButOn.Checked then
+  begin
+    edMIDIButPrev.Enabled := True;
+    edMIDIButNext.Enabled := True;
+    edMIDIButBack.Enabled := True;
+    edMIDIButSel.Enabled := True;
+    edMIDIButHome.Enabled := True;
+  end
+  else
+  begin
+    edMIDIButPrev.Enabled := False;
+    edMIDIButNext.Enabled := False;
+    edMIDIButBack.Enabled := False;
+    edMIDIButSel.Enabled := False;
+    edMIDIButHome.Enabled := False;
+  end;
 end;
 
 procedure TfrmMain.rbSoundDevHDMIChange(Sender: TObject);
@@ -2435,7 +2685,7 @@ begin
   FPerformance.SavePerformanceToStream(tmpStream);
   SQLProxy.AddPerformance(FHash, FVersion, FName, FCategory, FOrigin, tmpStream);
   tmpStream.Free;
-  PopUp('Done!', 2);
+  PopUp('Done!', PopUpDuration);
 end;
 
 procedure TfrmMain.tbbtSendVoiceDumpClick(Sender: TObject);
@@ -2447,7 +2697,7 @@ begin
   begin
     try
       bankStream := TMemoryStream.Create;
-      FSlotsDX.CSysExBankToStream(bankStream);
+      FSlotsDX.CSysExBankToStream(cbLibMIDIChannel.ItemIndex + 1, bankStream);
       err := MidiOutput.SendSysEx(FMidiOutInt, bankStream);
       if (err = 0)
         {$IFNDEF WINDOWS}
@@ -2455,11 +2705,11 @@ begin
         {$ENDIF}
       then
       begin
-        PopUp('Bank sent', 2);
+        PopUp('Bank sent', PopUpDuration);
       end
       else
         PopUp('Bank sending failed!' + #13 + 'Error message:' +
-          #13 + Pm_GetErrorText(err), 2);
+          #13 + Pm_GetErrorText(err), PopUpDuration);
     finally
       bankStream.Free;
     end;
@@ -2491,14 +2741,40 @@ begin
         {$ENDIF}
       then
       begin
-        PopUp('Voice' + #13 + 'sent', 2);
+        PopUp('Voice' + #13 + 'sent', PopUpDuration);
       end
       else
         PopUp('Voice sending failed!' + #13 + 'Error message:' +
-          #13 + Pm_GetErrorText(err), 2);
+          #13 + Pm_GetErrorText(err), PopUpDuration);
     finally
       voiceStream.Free;
       tmpVoice.Free;
+    end;
+  end
+  else
+  begin
+    ShowMessage('Please set-up the MIDI Output first');
+    pcMain.ActivePage := tsSettings;
+  end;
+end;
+
+procedure TfrmMain.SendSimpleMelody(aCh: integer);
+const
+  notes: array [0..8] of integer = (24, 36, 48, 60, 72, 84, 96, 108, 120);
+var
+  i: integer;
+begin
+  if FMidiOutInt <> -1 then
+  begin
+    if aCh < 1 then aCh := 1;
+    if aCh > 16 then aCh := 16;
+    aCh := aCh - 1;
+    for i := 0 to 8 do
+    begin
+      MidiOutput.Send(FMidiOutInt, 144 + aCh, notes[i], 100);
+      sleep(200);
+      MidiOutput.Send(FMidiOutInt, 128 + aCh, notes[i], 0);
+      sleep(50);
     end;
   end
   else
@@ -2529,6 +2805,11 @@ begin
   frmMain.Invalidate;
 end;
 
+procedure TfrmMain.sePopUpDurChange(Sender: TObject);
+begin
+  PopUpDuration := sePopUpDur.Value;
+end;
+
 procedure TfrmMain.sgCategoriesDrawCell(Sender: TObject; aCol, aRow: integer;
   aRect: TRect; aState: TGridDrawState);
 begin
@@ -2541,8 +2822,8 @@ end;
 
 procedure TfrmMain.sgDBAfterSelection(Sender: TObject; aCol, aRow: integer);
 begin
-  Unused(aCol);
   lastSelectedRow := aRow;
+  Unused(aCol);
 end;
 
 procedure TfrmMain.sgDBBeforeSelection(Sender: TObject; aCol, aRow: integer);
@@ -2553,6 +2834,40 @@ begin
   for c := 0 to 3 do
   begin
     compArray[c] := sgDB.Cells[c, aRow];
+  end;
+end;
+
+procedure TfrmMain.sgDBClick(Sender: TObject);
+var
+  ID: string;
+  Row: integer;
+  dmp: TMemoryStream;
+  spl: TMemoryStream;
+  voiceStream: TMemoryStream;
+  tmpVoice: TDX7VoiceContainer;
+  version: integer;
+begin
+  Row := sgDB.Row;
+  if (cbAutoPreview.Checked) and (Row > 0) then
+  begin
+    try
+      ID := sgDB.Cells[3, Row];
+      dmp := TMemoryStream.Create;
+      spl := TMemoryStream.Create;
+      voiceStream := TMemoryStream.Create;
+      version := 0;
+      SQLProxy.GetBinVoice(ID, version, dmp, spl);
+      tmpVoice := TDX7VoiceContainer.Create;
+      tmpVoice.Load_VCED_FromStream(dmp, 0);
+      tmpVoice.SysExVoiceToStream(cbLibMIDIChannel.ItemIndex + 1, voiceStream);
+      MidiOutput.SendSysEx(FMidiOutInt, voiceStream);
+      SendSimpleMelody(cbLibMIDIChannel.ItemIndex + 1);
+    finally
+      tmpVoice.Free;
+      dmp.Free;
+      spl.Free;
+      voiceStream.Free;
+    end;
   end;
 end;
 
@@ -2751,7 +3066,7 @@ begin
     if (aCol = 1) and (aRow <> i) then
       if sgSDSysExFiles.Cells[1, i] = NewValue then
       begin
-        PopUp('Conflict', 2);
+        PopUp('Conflict', PopUpDuration);
         NewValue := OldValue;
       end;
   end;
@@ -2852,6 +3167,7 @@ begin
     begin
       SQLProxy.DeleteVoice(FID);
       SQLProxy.GUIGridRefresh(sgDB);
+      compList.Clear;
     end;
   end;
 end;
@@ -2960,6 +3276,10 @@ begin
       end;
       swMIDIProgChange.Checked :=
         boolean(ini.ReadInteger('MIDIRXProgramChange', 1) and 1);
+      swMIDIIgnAllNotesOff.Checked :=
+        boolean(ini.ReadInteger('IgnoreAllNotesOff', 1) and 1);
+      swMIDIAutoDump.Checked :=
+        boolean(ini.ReadInteger('MIDIAutoVoiceDumpOnPC', 1) and 1);
       rbDisplayNone.Checked := boolean(ini.ReadInteger('LCDEnabled', 0) and 0);
       tmpStr := ini.ReadString('LCDI2CAddress', '0');
       tmpInt := 0;
@@ -3028,6 +3348,8 @@ begin
         cbDisplayResolution.ItemIndex :=
           cbDisplayResolution.Items.IndexOf(resWidth + 'x' + resHeight);
         cbDisplayResolutionChange(Self);
+        swLCDMirror.Checked := boolean(ini.ReadInteger('SSD1306LCDMirror', 1) and 1);
+        swLCDRotate.Checked := boolean(ini.ReadInteger('SSD1306LCDRotate', 1) and 1);
       end;
       rbEncoderNone.Checked := boolean(ini.ReadInteger('EncoderEnabled', 1) and 0);
       rbEncoderDiscrete.Checked := boolean(ini.ReadInteger('EncoderEnabled', 1) and 1);
@@ -3077,6 +3399,16 @@ begin
       swDbgProfile.Checked := boolean(ini.ReadInteger('ProfileEnabled', 0) and 1);
       swPerfSelToLoad.Checked :=
         boolean(ini.ReadInteger('PerformanceSelectToLoad', 1) and 1);
+
+      rbMIDIButOn.Checked := boolean(ini.ReadInteger('MIDIButtonNotes', 1) and 1);
+      cbMIDIBtnChannel.ItemIndex := ini.ReadInteger('MIDIButtonCh', 0);
+      edMIDIButPrev.Text := ini.ReadString('MIDIButtonPrev', '0');
+      edMIDIButNext.Text := ini.ReadString('MIDIButtonNext', '0');
+      edMIDIButBack.Text := ini.ReadString('MIDIButtonBack', '0');
+      edMIDIButSel.Text := ini.ReadString('MIDIButtonSelect', '0');
+      edMIDIButHome.Text := ini.ReadString('MIDIButtonHome', '0');
+      rbMIDIButOnChange(self);
+
       CalculateGPIO;
     finally
       ini.Free;
@@ -3085,9 +3417,40 @@ begin
 end;
 
 procedure TfrmMain.tbbtRefreshClick(Sender: TObject);
+var
+  ft: integer;
+  vc: integer;
 begin
-  SQLProxy.GUIGridRefresh(sgDB);
+  if trim(tbSearch.Text) = '' then
+    SQLProxy.GUIGridRefresh(sgDB)
+  else
+  begin
+    ft := 0;
+    if tbrbSearchName.Checked then ft := 1;
+    if tbrbSearchOrigin.Checked then ft := 2;
+    SQLProxy.GUIGridRefreshFiltered(sgDB, tbSearch.Text, ft);
+  end;
   SQLProxy.GUIUpdateCategoryLists(sgDB, cbPerfCategory, cbVoicesCategory);
+  vc := SQLProxy.GetVoiceCount;
+  compList.Clear;
+  PopUp('Total voices:' + #13#10 + IntToStr(vc), PopUpDuration);
+end;
+
+procedure TfrmMain.tbbtSanitizeClick(Sender: TObject);
+var
+  i: integer;
+  c1, c2: string;
+begin
+  sgDB.BeginUpdate;
+  for i := 1 to sgDB.RowCount - 1 do
+  begin
+    c1 := sgDB.Cells[0, i];
+    c2 := SanitizeNames(c1);
+    sgDB.Cells[0, i] := c2;
+    if c1 <> c2 then compList.Add(IntToStr(i));
+  end;
+  sgDB.EndUpdate(True);
+  PopUp('Done!', PopUpDuration);
 end;
 
 procedure TfrmMain.tbbtSaveBankClick(Sender: TObject);
@@ -3166,6 +3529,8 @@ begin
       ini.WriteInteger('ChannelsSwapped', integer(swSoundDevSwapCh.Checked));
       ini.WriteString('MIDIBaudRate', edMIDIBaudRate.Text);
       ini.WriteInteger('MIDIRXProgramChange', integer(swMIDIProgChange.Checked));
+      ini.WriteInteger('IgnoreAllNotesOff', integer(swMIDIIgnAllNotesOff.Checked));
+      ini.WriteInteger('MIDIAutoVoiceDumpOnPC', integer(swMIDIAutoDump.Checked));
       if swMIDIThruEnable.Checked then
       begin
         if not ini.NameExists('MIDIThru') then
@@ -3196,6 +3561,8 @@ begin
         ini.WriteString('SSD1306LCDI2CAddress', StrToCHex(edDisplayi2sAddr.Text));
         ini.WriteString('SSD1306LCDWidth', resWidth);
         ini.WriteString('SSD1306LCDHeight', resHeight);
+        ini.WriteInteger('SSD1306LCDRotate', integer(swLCDRotate.Checked));
+        ini.WriteInteger('SSD1306LCDMirror', integer(swLCDMirror.Checked));
         ini.WriteString('LCDColumns', edDisplayi2sCols.Text);
         ini.WriteString('LCDRows', edDisplayi2sRows.Text);
       end;
@@ -3212,6 +3579,16 @@ begin
         ini.WriteString('LCDPinData7', cbDisplayPinD7.Text);
         ini.WriteString('LCDColumns', edDisplayi2sCols.Text);
         ini.WriteString('LCDRows', edDisplayi2sRows.Text);
+      end;
+      if rbMIDIButOn.Checked then
+      begin
+        ini.WriteInteger('MIDIButtonCh', cbMIDIBtnChannel.ItemIndex);
+        ini.WriteInteger('MIDIButtonNotes', 1);
+        ini.WriteString('MIDIButtonPrev', edMIDIButPrev.Text);
+        ini.WriteString('MIDIButtonNext', edMIDIButNext.Text);
+        ini.WriteString('MIDIButtonBack', edMIDIButBack.Text);
+        ini.WriteString('MIDIButtonSelect', edMIDIButSel.Text);
+        ini.WriteString('MIDIButtonHome', edMIDIButHome.Text);
       end;
       //encoder
       if rbEncoderNone.Checked then ini.WriteInteger('EncoderEnabled', 0);

@@ -20,7 +20,7 @@ interface
 
 uses
   Classes, SysUtils, SQLite3Conn, SQLDB, SQLite3DS, DB,
-  Dialogs, Controls, Grids, StdCtrls;
+  Dialogs, Controls, Grids, StdCtrls, StrUtils;
 
 type
   TSQLProxy = class(TPersistent)
@@ -52,10 +52,14 @@ type
     procedure GUIUpdateCategoryLists(sgDB: TStringGrid;
       cbPerfCategory, cbVoicesCategory: TComboBox);
     procedure GUIGridRefresh(sgDB: TStringGrid);
+    procedure GUIGridRefreshFiltered(sgDB: TStringGrid; Filter: string;
+      FilterType: integer);
     procedure GUIPerfSelGridRefresh(sgDB: TStringGrid);
     function GetDbFileName: string;
     procedure SetDbFileName(DbFileName: string);
     property DbFileName: string read GetDbFileName write SetDbFileName;
+    function GetVoiceCount: integer;
+    procedure GetVoiceList(var sl: TStringList);
   end;
 
 const
@@ -124,7 +128,7 @@ begin
     SQLQuery.SQL.Text :=
       'PRAGMA table_info (''PERFORMANCES'');';
     SQLQuery.Open;
-    if not SQLQuery.Locate('NAME','VERSION', []) then
+    if not SQLQuery.Locate('NAME', 'VERSION', []) then
     begin
       SQLQuery.Close;
       SQLQuery.SQL.Text :=
@@ -173,7 +177,10 @@ begin
       if SQLQuery.FieldCount > 0 then
       begin
         aExName := SQLQuery.Fields[1].AsString;
-        aExists := True;
+        //do not bother the user with confirmation dialog if the names are the same
+        //category and origin will be updated with the new ones
+        if trim(aName) <> trim(aExName) then
+          aExists := True;
         Break;
       end;
       SQLQuery.Next;
@@ -265,7 +272,10 @@ begin
       if SQLQuery.FieldCount > 0 then
       begin
         aExName := SQLQuery.Fields[1].AsString;
-        aExists := True;
+        //do not bother the user with confirmation dialog if the names are the same
+        //category and origin will be updated with the new ones
+        if aName <> aExName then
+          aExists := True;
         Break;
       end;
       SQLQuery.Next;
@@ -417,6 +427,7 @@ procedure TSQLProxy.GUIGridRefresh(sgDB: TStringGrid);
 var
   sl: TStringList;
   i: integer;
+  sName, sCategory, sOrigin, sID, sSupplVer: string;
 begin
   sgDB.RowCount := 1;
   if SQLite3Con.Connected then
@@ -430,10 +441,71 @@ begin
     while not SQLQuery.EOF do
     begin
       //(ID, NAME, CATEGORY, DATA, SUPPL_VER, SUPPL, ORIGIN)
-      sl.Add('"' + SQLQuery.Fields[1].AsString + '";"' +
-        SQLQuery.Fields[2].AsString + '";"' + SQLQuery.Fields[6].AsString +
-        '";"' + SQLQuery.Fields[0].AsString + '";"' +
-        transSupplVer[SQLQuery.Fields[4].AsInteger] + '"');
+      sName := SQLQuery.FieldByName('NAME').AsString;
+      sCategory := SQLQuery.FieldByName('CATEGORY').AsString;
+      sOrigin := SQLQuery.FieldByName('ORIGIN').AsString;
+      sID := SQLQuery.FieldByName('ID').AsString;
+      sSupplVer := transSupplVer[SQLQuery.FieldByName('SUPPL_VER').AsInteger];
+      sName := ReplaceStr(sName, '"', ' ');
+      sCategory := ReplaceStr(sCategory, '"', ' ');
+      sOrigin := ReplaceStr(sOrigin, '"', ' ');
+      sl.Add('"' + sName + '";"' + sCategory + '";"' + sOrigin +
+        '";"' + sID + '";"' + sSupplVer + '"');
+      SQLQuery.Next;
+    end;
+    SQLQuery.Close;
+    SQLTrans.Commit;
+    sgDB.RowCount := sl.Count + 1;
+    for i := 0 to sl.Count - 1 do
+    begin
+      sgDB.Rows[i + 1].Delimiter := ';';
+      sgDB.Rows[i + 1].QuoteChar := '"';
+      sgDB.Rows[i + 1].StrictDelimiter := True;
+      sgDB.Rows[i + 1].DelimitedText := sl[i];
+    end;
+    sl.Free;
+    sgDB.EndUpdate(True);
+  end
+  else
+    ShowMessage('No database file assigned');
+end;
+
+procedure TSQLProxy.GUIGridRefreshFiltered(sgDB: TStringGrid;
+  Filter: string; FilterType: integer);
+var
+  sl: TStringList;
+  i: integer;
+  sName, sCategory, sOrigin, sID, sSupplVer: string;
+begin
+  sgDB.RowCount := 1;
+  if SQLite3Con.Connected then
+  begin
+    sgDB.BeginUpdate;
+    sl := TStringList.Create;
+    sl.Delimiter := ';';
+    case FilterType of
+      1: SQLQuery.SQL.Text := 'SELECT * FROM BIN_VOICES WHERE NAME LIKE ''%' +
+          Filter + '%''';
+      2: SQLQuery.SQL.Text := 'SELECT * FROM BIN_VOICES WHERE ORIGIN LIKE ''%' +
+          Filter + '%''';
+      else
+        SQLQuery.SQL.Text := 'SELECT * FROM BIN_VOICES';
+    end;
+    SQLTrans.StartTransaction;
+    SQLQuery.Open;
+    while not SQLQuery.EOF do
+    begin
+      //(ID, NAME, CATEGORY, DATA, SUPPL_VER, SUPPL, ORIGIN)
+      sName := SQLQuery.FieldByName('NAME').AsString;
+      sCategory := SQLQuery.FieldByName('CATEGORY').AsString;
+      sOrigin := SQLQuery.FieldByName('ORIGIN').AsString;
+      sID := SQLQuery.FieldByName('ID').AsString;
+      sSupplVer := transSupplVer[SQLQuery.FieldByName('SUPPL_VER').AsInteger];
+      sName := ReplaceStr(sName, '"', ' ');
+      sCategory := ReplaceStr(sCategory, '"', ' ');
+      sOrigin := ReplaceStr(sOrigin, '"', ' ');
+      sl.Add('"' + sName + '";"' + sCategory + '";"' + sOrigin +
+        '";"' + sID + '";"' + sSupplVer + '"');
       SQLQuery.Next;
     end;
     SQLQuery.Close;
@@ -586,6 +658,44 @@ begin
     SQLQuery.Close;
     SQLQuery.SQL.Text := 'DELETE FROM PERFORMANCES WHERE ID = ''' + aID + ''';';
     SQLQuery.ExecSQL;
+    SQLTrans.Commit;
+  end
+  else
+    ShowMessage('No database file assigned');
+end;
+
+function TSQLProxy.GetVoiceCount: integer;
+begin
+  Result := 0;
+  if SQLite3Con.Connected then
+  begin
+    SQLQuery.Close;
+    SQLQuery.SQL.Text := 'SELECT COUNT(*) AS cnt FROM BIN_VOICES;';
+    SQLTrans.StartTransaction;
+    SQLQuery.Open;
+    Result := SQLQuery.Fields[0].AsInteger;
+    SQLQuery.Close;
+    SQLTrans.Commit;
+  end;
+end;
+
+procedure TSQLProxy.GetVoiceList(var sl: TStringList);
+var
+  sName, sID: string;
+begin
+  if SQLite3Con.Connected then
+  begin
+    SQLQuery.SQL.Text := 'SELECT * FROM BIN_VOICES';
+    SQLTrans.StartTransaction;
+    SQLQuery.Open;
+    while not SQLQuery.EOF do
+    begin
+      sName := SQLQuery.FieldByName('NAME').AsString;
+      sID := SQLQuery.FieldByName('ID').AsString;
+      sl.AddPair(sID, sName);
+      SQLQuery.Next;
+    end;
+    SQLQuery.Close;
     SQLTrans.Commit;
   end
   else

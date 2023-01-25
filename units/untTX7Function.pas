@@ -218,10 +218,11 @@ type
     function Set_PMEM_Params(aParams: TTX7_PMEM_Params): boolean;
     function Save_PMEM_ToStream(var aStream: TMemoryStream): boolean;
     function Save_PCED_ToStream(var aStream: TMemoryStream): boolean;
+    function Add_PCED_ToStream(var aStream: TMemoryStream): boolean;
     function FunctIsInit: boolean;
     function GetChecksumPart: integer;
     function GetChecksum: integer;
-    procedure SysExFunctionToStream(ch: integer; var aStream: TMemoryStream);
+    procedure SysExFunctionToStream(aCh: integer; var aStream: TMemoryStream);
     function CalculateHash: string;
   end;
 
@@ -515,6 +516,20 @@ begin
     Result := False;
 end;
 
+function TTX7FunctionContainer.Add_PCED_ToStream(var aStream: TMemoryStream): boolean;
+var
+  i: integer;
+begin
+  if Assigned(aStream) then
+  begin
+    for i := 0 to 93 do
+      aStream.WriteByte(FTX7_PCED_Params.params[i]);
+    Result := True;
+  end
+  else
+    Result := False;
+end;
+
 function TTX7FunctionContainer.CalculateHash: string;
 var
   aStream: TMemoryStream;
@@ -565,18 +580,21 @@ begin
   end;
 end;
 
-procedure TTX7FunctionContainer.SysExFunctionToStream(ch: integer;
+procedure TTX7FunctionContainer.SysExFunctionToStream(aCh: integer;
   var aStream: TMemoryStream);
+var
+  FCh: byte;
 begin
+  FCh := aCh -1;
   aStream.Clear;
   aStream.Position := 0;
   aStream.WriteByte($F0);
   aStream.WriteByte($43);
-  aStream.WriteByte($00 + ch); //MIDI channel
+  aStream.WriteByte($00 + FCh); //MIDI channel
   aStream.WriteByte($01);       //Function
   aStream.WriteByte($00);
   aStream.WriteByte($5E);
-  Save_PCED_ToStream(aStream);
+  Add_PCED_ToStream(aStream);
   aStream.WriteByte(GetChecksum);
   aStream.WriteByte($F7);
 end;

@@ -20,7 +20,7 @@ unit untDXUtils;
 interface
 
 uses
-  Classes, StrUtils, SysUtils;
+  Classes, StrUtils, SysUtils, LazFileUtils;
 
 type
   TDXSysExHeader = record
@@ -69,7 +69,7 @@ type
     { underscores are spaces
     DX7II
     LM__8973PE    61 byte   DX7II Performance Edit Buffer                     1x
-    LM__9873PM  1642 byte   DX7II Packed 32 Performance                       1x
+    LM__8973PM  1642 byte   DX7II Packed 32 Performance                       1x
     LM__8973S_   112 byte   DX7II System Set-up                               1x
     LM__MCRYE_   266 byte   Micro Tuning Edit Buffer                          1x
     LM__MCRYMx   266 byte   Micro Tuning with Memory #x=(0,1)                 2x
@@ -110,6 +110,8 @@ function ContainsDXData(dmp: TMemoryStream; var StartPos: integer;
 function Printable(c: char): char;
 function VCEDHexToStream(aHex: string; var aStream: TMemoryStream): boolean;
 function StreamToVCEDHex(var aStream: TMemoryStream): string;
+
+function RepairDX7SysEx(aFileName: string; var aFeedback: string): boolean;
 
 implementation
 
@@ -259,21 +261,27 @@ begin
   begin
     dmp.Position := StartPos;
     StartPos := -1;
-    while (StartPos = -1) and (dmp.Position < dmp.Size) do
-      if dmp.ReadByte = $F0 then                  // $F0 - SysEx
-        StartPos := dmp.Position - 1;
-    if StartPos <> -1 then
+    while (StartPos = -1) and (dmp.Position < dmp.Size - 6) do
     begin
       dummy := dmp.ReadByte;
-      if not (dummy = $43) then StartPos := -1;     // $43 - Yamaha
-      dummy := dmp.ReadByte;                        // sub-status + channel number
-      dummy := dmp.ReadByte;
-      if not (dummy = $09) then StartPos := -1;     // $09 - 32 Voice dump
-      dummy := dmp.ReadByte;
-      if not (dummy = $20) then StartPos := -1;     // byte count MS
-      dummy := dmp.ReadByte;
-      if not (dummy = $00) then StartPos := -1;     // byte count LS
+      if dummy = $F0 then                           // $F0 - SysEx
+      begin
+        StartPos := dmp.Position - 1;
+        dummy := dmp.ReadByte;
+        if not (dummy = $43) then StartPos := -1;     // $43 - Yamaha
+        dummy := dmp.ReadByte;                        // sub-status + channel number
+        dummy := dmp.ReadByte;
+        if not (dummy = $09) then StartPos := -1;     // $09 - 32 Voice dump
+        dummy := dmp.ReadByte;
+        if not (dummy = $20) then StartPos := -1;     // byte count MS
+        dummy := dmp.ReadByte;
+        if not (dummy = $00) then StartPos := -1;     // byte count LS
+      end;
     end;
+    if StartPos <> -1 then
+      if (dmp.Size - StartPos) < 4104 then
+        StartPos := -1;  //file too short
+
     if StartPos <> -1 then
     begin
       Result := True;
@@ -301,21 +309,27 @@ begin
   begin
     dmp.Position := StartPos;
     StartPos := -1;
-    while (StartPos = -1) and (dmp.Position < dmp.Size) do
-      if dmp.ReadByte = $F0 then                  // $F0 - SysEx
-        StartPos := dmp.Position - 1;
-    if StartPos <> -1 then
+    while (StartPos = -1) and (dmp.Position < dmp.Size - 6) do
     begin
       dummy := dmp.ReadByte;
-      if not (dummy = $43) then StartPos := -1;     // $43 - Yamaha
-      dummy := dmp.ReadByte;                        // sub-status + channel number
-      dummy := dmp.ReadByte;
-      if not (dummy = $06) then StartPos := -1;     // $06 - 32 AMEM dump
-      dummy := dmp.ReadByte;
-      if not (dummy = $08) then StartPos := -1;     // byte count MS
-      dummy := dmp.ReadByte;
-      if not (dummy = $60) then StartPos := -1;     // byte count LS
+      if dummy = $F0 then                             // $F0 - SysEx
+      begin
+        StartPos := dmp.Position - 1;
+        dummy := dmp.ReadByte;
+        if not (dummy = $43) then StartPos := -1;     // $43 - Yamaha
+        dummy := dmp.ReadByte;                        // sub-status + channel number
+        dummy := dmp.ReadByte;
+        if not (dummy = $06) then StartPos := -1;     // $06 - 32 AMEM dump
+        dummy := dmp.ReadByte;
+        if not (dummy = $08) then StartPos := -1;     // byte count MS
+        dummy := dmp.ReadByte;
+        if not (dummy = $60) then StartPos := -1;     // byte count LS
+      end;
     end;
+    if StartPos <> -1 then
+      if (dmp.Size - StartPos) < 1120 then
+        StartPos := -1;  //file too short
+
     if StartPos <> -1 then
     begin
       Result := True;
@@ -343,21 +357,27 @@ begin
   begin
     dmp.Position := StartPos;
     StartPos := -1;
-    while (StartPos = -1) and (dmp.Position < dmp.Size) do
-      if dmp.ReadByte = $F0 then                  // $F0 - SysEx
-        StartPos := dmp.Position - 1;
-    if StartPos <> -1 then
+    while (StartPos = -1) and (dmp.Position < dmp.Size - 6) do
     begin
       dummy := dmp.ReadByte;
-      if not (dummy = $43) then StartPos := -1;     // $43 - Yamaha
-      dummy := dmp.ReadByte;                        // sub-status + channel number
-      dummy := dmp.ReadByte;
-      if not (dummy = $02) then StartPos := -1;     // $02 - 32 PMEM dump
-      dummy := dmp.ReadByte;
-      if not (dummy = $20) then StartPos := -1;     // byte count MS
-      dummy := dmp.ReadByte;
-      if not (dummy = $00) then StartPos := -1;     // byte count LS
+      if dummy = $F0 then                             // $F0 - SysEx
+      begin
+        StartPos := dmp.Position - 1;
+        dummy := dmp.ReadByte;
+        if not (dummy = $43) then StartPos := -1;     // $43 - Yamaha
+        dummy := dmp.ReadByte;                        // sub-status + channel number
+        dummy := dmp.ReadByte;
+        if not (dummy = $02) then StartPos := -1;     // $02 - 32 PMEM dump
+        dummy := dmp.ReadByte;
+        if not (dummy = $20) then StartPos := -1;     // byte count MS
+        dummy := dmp.ReadByte;
+        if not (dummy = $00) then StartPos := -1;     // byte count LS
+      end;
     end;
+    if StartPos <> -1 then
+      if (dmp.Size - StartPos) < 4104 then
+        StartPos := -1;  //file too short
+
     if StartPos <> -1 then
     begin
       Result := True;
@@ -407,8 +427,11 @@ begin
           rHeader.f0 := $F0;
           if rHeader.f0 = $F0 then
           begin
+            if dmp.Position = dmp.Size - 1 then break;
             rHeader.id := dmp.ReadByte;     // $43 - Yamaha
+            if dmp.Position = dmp.Size - 1 then break;
             rHeader.sc := dmp.ReadByte;     // sub-status + channel number
+            if dmp.Position = dmp.Size - 1 then break;
             rHeader.f := dmp.ReadByte;
           end;
           if (rHeader.f0 = $F0) and (rHeader.id = $43) and (rHeader.f in fValues) then
@@ -432,7 +455,7 @@ begin
 
               if PosEx('LM  8973PE', strStream.DataString, 1) > 0 then
                 tmpList.Add('DX7II Performance - PCED');
-              if PosEx('LM  9873PM', strStream.DataString, 1) > 0 then
+              if PosEx('LM  8973PM', strStream.DataString, 1) > 0 then
                 tmpList.Add('DX7II Performance Bank - PMEM');
               if PosEx('LM  8973S ', strStream.DataString, 1) > 0 then
                 tmpList.Add('DX7II System Set-up');
@@ -470,10 +493,27 @@ begin
                 tmpList.Add('DX11 System Set-up - SYS2');
               if PosEx('LM  8073S0', strStream.DataString, 1) > 0 then
                 tmpList.Add('V50 System Set-up - SYS3');
+              if PosEx('LM  8952PM', strStream.DataString, 1) > 0 then
+                tmpList.Add('TX802 Performances - PMEM');
               strStream.Free;
               dmp.Position := tmpPosition;
             end;
-            Result := True;
+            case rHeader.f of
+              $09: begin
+                if dmp.Size - StartPos < 4104 then
+                begin
+                  Result := False;
+                  tmpList.Add('Data size less than 4104 bytes');
+                end
+                else
+                  Result := True;
+              end;
+              $01: begin
+
+              end
+              else
+                Result := True;
+            end;
           end;
         end;
       end;
@@ -529,6 +569,146 @@ begin
   end;
   Result := ReplaceStr(Result, '$', '');
   Result := Trim(Result);
+end;
+
+function RepairDX7SysEx(aFileName: string; var aFeedback: string): boolean;
+var
+  msToRepair: TMemoryStream;
+  msRepaired: TMemoryStream;
+  sNameRepaired: string;
+  sNameRepaired2: string;
+  sDirRepaired: string;
+  checksum: integer;
+  bChk: byte;
+  i, j: integer;
+begin
+  Result := False;
+  msToRepair := TMemoryStream.Create;
+  msRepaired := TMemoryStream.Create;
+  msToRepair.LoadFromFile(aFileName);
+  sNameRepaired := ExtractFileName(aFileName);
+  sNameRepaired := ExtractFileNameWithoutExt(sNameRepaired);
+  sDirRepaired := IncludeTrailingPathDelimiter(ExtractFileDir(aFileName));
+  sNameRepaired2 := sDirRepaired + sNameRepaired;
+  sNameRepaired := sDirRepaired + sNameRepaired + '_DX7_repaired.syx';
+  aFeedback := 'File size = ' + IntToStr(msToRepair.Size);
+
+  //reparation
+  //header-less file
+  if msToRepair.Size = 4096 then
+  begin
+    try
+      //write DX7 VMEM header
+      msRepaired.WriteByte($F0);
+      msRepaired.WriteByte($43);
+      msRepaired.WriteByte($00);
+      msRepaired.WriteByte($09);
+      msRepaired.WriteByte($20);
+      msRepaired.WriteByte($00);
+
+      //copy data
+      msRepaired.CopyFrom(msToRepair, 4096);
+
+      //get checksum
+      checksum := 0;
+      i := 0;
+      msToRepair.Position := 0;
+      for i := 0 to msToRepair.Size - 1 do
+        checksum := checksum + msToRepair.ReadByte;
+      bChk := byte(((not (checksum and 255)) and 127) + 1);
+
+      msRepaired.WriteByte(bChk);
+      msRepaired.WriteByte($F7);
+      Result := True;
+    except
+      on E: Exception do Result := False;
+    end;
+    if Result then msRepaired.SaveToFile(sNameRepaired);
+  end;
+
+  //file with missing checksum byte
+  if msToRepair.Size = 4103 then
+  begin
+    try
+      //copy data
+      msRepaired.CopyFrom(msToRepair, 4102);
+
+      //get checksum
+      checksum := 0;
+      i := 0;
+      msToRepair.Position := 0;
+      for i := 0 to msToRepair.Size - 1 do
+        checksum := checksum + msToRepair.ReadByte;
+      bChk := byte(((not (checksum and 255)) and 127) + 1);
+
+      msRepaired.WriteByte(bChk);
+      msRepaired.WriteByte($F7);
+      Result := True;
+    except
+      on E: Exception do Result := False;
+    end;
+    if Result then msRepaired.SaveToFile(sNameRepaired);
+  end;
+
+  //32 VCEDs without header
+  if msToRepair.Size = 4960 then
+  begin
+    msToRepair.Position := 0;
+    for j := 1 to 32 do
+    begin
+      try
+        msRepaired.Clear;
+        msRepaired.Size := 0;
+        //write DX7 VCED header
+        msRepaired.WriteByte($F0);
+        msRepaired.WriteByte($43);
+        msRepaired.WriteByte($00);
+        msRepaired.WriteByte($00);
+        msRepaired.WriteByte($01);
+        msRepaired.WriteByte($1B);
+
+        //copy data
+        msRepaired.CopyFrom(msToRepair, 155);
+
+        //get checksum
+        checksum := 0;
+        msRepaired.Position := 6;
+        while msRepaired.Position < (msRepaired.Size) do
+          checksum := checksum + msRepaired.ReadByte;
+        bChk := byte(((not (checksum and 255)) and 127) + 1);
+
+        msRepaired.WriteByte(bChk);
+        msRepaired.WriteByte($F7);
+        Result := True;
+      except
+        on E: Exception do Result := False;
+      end;
+      if Result then msRepaired.SaveToFile(sNameRepaired2 + 'DX7_R' +
+        IntToHex(j, 2) + '.syx');
+
+    end;
+  end;
+
+  //Bad size MSB in header
+  if msToRepair.Size = 4104 then
+  begin
+    try
+      msToRepair.Position := 0;
+      msRepaired.Clear;
+      msRepaired.Size := 0;
+      msRepaired.CopyFrom(msToRepair, 4);
+      msRepaired.WriteByte($20);
+      msToRepair.Position:=5;
+      msRepaired.CopyFrom(msToRepair, 4099);
+      Result := True;
+    except
+      on E: Exception do Result := False;
+    end;
+    if Result then msRepaired.SaveToFile(sNameRepaired);
+  end;
+
+  msToRepair.Free;
+  msRepaired.Free;
 end;
 
 end.

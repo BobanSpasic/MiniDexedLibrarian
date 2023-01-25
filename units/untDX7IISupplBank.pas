@@ -40,8 +40,8 @@ type
       var FDX7IISupplement: TDX7IISupplementContainer): boolean;
     function GetChecksum: integer;
     function SaveSupplBankToSysExFile(aFile: string): boolean;
-    procedure SysExSupplBankToStream(var aStream: TMemoryStream);
-    procedure AppendSysExSupplBankToStream(var aStream: TMemoryStream);
+    procedure SysExSupplBankToStream(aCh: integer; var aStream: TMemoryStream);
+    procedure AppendSysExSupplBankToStream(aCh: integer; var aStream: TMemoryStream);
     function CalculateHash(aSupplementNr: integer): string;
     procedure InitSupplBank;
     function SupplIsInit(nr: integer): boolean;
@@ -163,15 +163,17 @@ begin
   end;
 end;
 
-procedure TDX7IISupplBankContainer.SysExSupplBankToStream(var aStream: TMemoryStream);
+procedure TDX7IISupplBankContainer.SysExSupplBankToStream(aCh: integer; var aStream: TMemoryStream);
 var
   i: integer;
+  FCh: byte;
 begin
+  FCh := aCh -1;
   aStream.Clear;
   aStream.Position := 0;
   aStream.WriteByte($F0);
   aStream.WriteByte($43);
-  aStream.WriteByte($00);
+  aStream.WriteByte($00 + FCh);
   aStream.WriteByte($06);
   aStream.WriteByte($08);
   aStream.WriteByte($60);
@@ -181,14 +183,15 @@ begin
   aStream.WriteByte($F7);
 end;
 
-procedure TDX7IISupplBankContainer.AppendSysExSupplBankToStream(
-  var aStream: TMemoryStream);
+procedure TDX7IISupplBankContainer.AppendSysExSupplBankToStream(aCh: integer; var aStream: TMemoryStream);
 var
   i: integer;
+  FCh: byte;
 begin
+  FCh := aCh -1;
   aStream.WriteByte($F0);
   aStream.WriteByte($43);
-  aStream.WriteByte($00);
+  aStream.WriteByte($00 + FCh);
   aStream.WriteByte($06);
   aStream.WriteByte($08);
   aStream.WriteByte($60);

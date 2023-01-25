@@ -18,10 +18,8 @@
     <VersionInfo>
       <UseVersionInfo Value="True"/>
       <AutoIncrementBuild Value="True"/>
-      <MinorVersionNr Value="9"/>
-      <RevisionNr Value="3"/>
-      <BuildNr Value="31"/>
-      <Attributes pvaPreRelease="True"/>
+      <MajorVersionNr Value="1"/>
+      <BuildNr Value="37"/>
       <StringTable FileDescription="MiniDexed Control Center" LegalCopyright="Boban Spasic" OriginalFilename="MiniDexedCC.exe"/>
     </VersionInfo>
     <BuildModes>
@@ -240,7 +238,6 @@
       </SyntaxOptions>
     </Parsing>
     <CodeGeneration>
-      <SmartLinkUnit Value="True"/>
       <Checks>
         <IOChecks Value="True"/>
         <RangeChecks Value="True"/>
@@ -249,17 +246,16 @@
       </Checks>
       <VerifyObjMethodCallValidity Value="True"/>
       <Optimizations>
-        <OptimizationLevel Value="3"/>
+        <OptimizationLevel Value="0"/>
       </Optimizations>
     </CodeGeneration>
     <Linking>
       <Debugging>
-        <DebugInfoType Value="dsDwarf2"/>
+        <DebugInfoType Value="dsDwarf2Set"/>
         <UseHeaptrc Value="True"/>
         <TrashVariables Value="True"/>
         <UseExternalDbgSyms Value="True"/>
       </Debugging>
-      <LinkSmart Value="True"/>
       <Options>
         <Win32>
           <GraphicApplication Value="True"/>

@@ -522,6 +522,8 @@ begin
   FMiniINI.Add('MIDIBaudRate=31250');
   FMiniINI.Add('#MIDIThru=umidi1,ttyS1');
   FMiniINI.Add('MIDIRXProgramChange=1');
+  FMiniINI.Add('IgnoreAllNotesOff=0');
+  FMiniINI.Add('MIDIAutoVoiceDumpOnPC=1');
   FMiniINI.Add('');
   FMiniINI.Add('# HD44780 LCD');
   FMiniINI.Add('LCDEnabled=1');
@@ -540,6 +542,8 @@ begin
   FMiniINI.Add('SSD1306LCDI2CAddress=0x0');
   FMiniINI.Add('SSD1306LCDWidth=128');
   FMiniINI.Add('SSD1306LCDHeight=32');
+  FMiniINI.Add('SSD1306LCDRotate=0');
+  FMiniINI.Add('SSD1306LCDMirror=0');
   FMiniINI.Add('');
   FMiniINI.Add('# Default is 16x2 display (e.g. HD44780)');
   FMiniINI.Add('LCDColumns=16');
@@ -563,6 +567,20 @@ begin
   FMiniINI.Add('# Timeouts in milliseconds for double click and long press');
   FMiniINI.Add('DoubleClickTimeout=400');
   FMiniINI.Add('LongPressTimeout=400');
+  FMiniINI.Add('');
+  FMiniINI.Add('# MIDI Button Navigation');
+  FMiniINI.Add('#  Specify MIDI CC to act as a button');
+  FMiniINI.Add('#  NB: Off < 64 < ON');
+  FMiniINI.Add('# CC channel: 0=OFF; 1-16 MIDI Ch; >16 Omni');
+  FMiniINI.Add('# If MIDIButtonNotes>0 then treat MIDIButton');
+  FMiniINI.Add('# numbers as MIDI Note numbers note CC numbers.');
+  FMiniINI.Add('MIDIButtonCh=0');
+  FMiniINI.Add('MIDIButtonNotes=0');
+  FMiniINI.Add('MIDIButtonPrev=0');
+  FMiniINI.Add('MIDIButtonNext=2');
+  FMiniINI.Add('MIDIButtonBack=3');
+  FMiniINI.Add('MIDIButtonSelect=4');
+  FMiniINI.Add('MIDIButtonHome=6');
   FMiniINI.Add('');
   FMiniINI.Add('# KY-040 Rotary Encoder');
   FMiniINI.Add('EncoderEnabled=1');

@@ -29,7 +29,7 @@ unit untDX7Voice;
 interface
 
 uses
-  Classes, HlpHashFactory, SysUtils, untDXUtils, untParConst;
+  Classes, HlpHashFactory, SysUtils, untDXUtils, untParConst, Dialogs;
 
 type
   TDX7_VMEM_Dump = array [0..127] of byte;
@@ -37,7 +37,7 @@ type
 
 type
   TDX7_VCED_Params = packed record
-    case asArray: boolean of
+    case boolean of
       True: (params: TDX7_VCED_Dump);
       False: (
         OP6_EG_rate_1: byte;              //       0-99
@@ -356,9 +356,10 @@ type
     function Set_VCED_Params(aParams: TDX7_VCED_Params): boolean;
     function Save_VMEM_ToStream(var aStream: TMemoryStream): boolean;
     function Save_VCED_ToStream(var aStream: TMemoryStream): boolean;
+    function Add_VCED_ToStream(var aStream: TMemoryStream): boolean;
     function GetChecksumPart: integer;
     function GetChecksum: integer;
-    procedure SysExVoiceToStream(ch: integer; var aStream: TMemoryStream);
+    procedure SysExVoiceToStream(aCh: integer; var aStream: TMemoryStream);
     function CalculateHash: string;
   end;
 
@@ -536,9 +537,6 @@ function VMEMtoVCED(aPar: TDX7_VMEM_Params): TDX7_VCED_Params;
 var
   t: TDX7_VCED_Params;
 begin
-  Result.asArray := False;
-  t.asArray := False;
-
   //first the parameters without conversion
   t.OP6_EG_rate_1 := aPar.OP6_EG_rate_1;
   t.OP6_EG_rate_2 := aPar.OP6_EG_rate_2;
@@ -750,7 +748,6 @@ begin
   else
     Exit;
   try
-    FDX7_VCED_Params.asArray := True;
     for i := 0 to 155 do
       FDX7_VCED_Params.params[i] := aStream.ReadByte;
 
@@ -763,7 +760,6 @@ end;
 
 procedure TDX7VoiceContainer.InitVoice;
 begin
-  FDX7_VCED_Params.asArray := True;
   GetDefinedValues(DX7, fInit, FDX7_VCED_Params.params);
   FDX7_VMEM_Params := VCEDtoVMEM(FDX7_VCED_Params);
 end;
@@ -833,8 +829,21 @@ begin
   if Assigned(aStream) then
   begin
     aStream.Clear;
-    FDX7_VCED_Params.asArray := True;
     for i := 0 to 155 do
+      aStream.WriteByte(FDX7_VCED_Params.params[i]);
+    Result := True;
+  end
+  else
+    Result := False;
+end;
+
+function TDX7VoiceContainer.Add_VCED_ToStream(var aStream: TMemoryStream): boolean;
+var
+  i: integer;
+begin
+  if Assigned(aStream) then
+  begin
+    for i := 0 to 154 do     // OP on/off is not a part of the VCED SysEx
       aStream.WriteByte(FDX7_VCED_Params.params[i]);
     Result := True;
   end
@@ -849,7 +858,6 @@ var
 begin
   //do not take Transpose and VoiceName into calculation
   aStream := TMemoryStream.Create;
-  FDX7_VCED_Params.asArray := True;
   for i := 0 to 143 do
     aStream.WriteByte(FDX7_VCED_Params.params[i]);
   aStream.WriteByte(FDX7_VCED_Params.params[155]);
@@ -887,17 +895,20 @@ begin
   end;
 end;
 
-procedure TDX7VoiceContainer.SysExVoiceToStream(ch: integer; var aStream: TMemoryStream);
+procedure TDX7VoiceContainer.SysExVoiceToStream(aCh: integer; var aStream: TMemoryStream);
+var
+  FCh: byte;
 begin
+  FCh := aCh - 1;
   aStream.Clear;
   aStream.Position := 0;
   aStream.WriteByte($F0);
   aStream.WriteByte($43);
-  aStream.WriteByte($00 + ch); //MIDI channel
+  aStream.WriteByte($00 + FCh); //MIDI channel
   aStream.WriteByte($00);
   aStream.WriteByte($01);
   aStream.WriteByte($1B);
-  Save_VCED_ToStream(aStream);
+  Add_VCED_ToStream(aStream);
   aStream.WriteByte(GetChecksum);
   aStream.WriteByte($F7);
 end;
