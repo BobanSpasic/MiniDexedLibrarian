@@ -33,6 +33,9 @@ Windows 10:
 FreeBSD 13:
 ![MDCC_FreeBSD](https://user-images.githubusercontent.com/2480569/207942721-f913b43e-6b71-422f-b776-1a625e0ff62b.png)
 
+OSX (Darwin):
+![MDCC_OSX](https://user-images.githubusercontent.com/68187526/215217790-3d76eb06-bdf6-40da-9755-fa9509ce0739.png)
+
 ## Dependencies
 Windows 64 - SQLite3 (dll included in download)
 
