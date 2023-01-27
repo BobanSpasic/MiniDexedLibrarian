@@ -46,9 +46,9 @@ object frmMain: TfrmMain
     Hint = 'Drag&Drop to re-arrange'#13#10'Double-click for sending to Librarian tab'
     Top = 0
     Width = 1510
-    ActivePage = tsSDCard
+    ActivePage = tsLibrarian
     Align = alClient
-    TabIndex = 2
+    TabIndex = 0
     TabOrder = 1
     object tsLibrarian: TTabSheet
       Caption = 'Librarian'
@@ -69,9 +69,9 @@ object frmMain: TfrmMain
           Height = 835
           Top = 0
           Width = 680
-          ActivePage = tsDatabase
+          ActivePage = tsFiles
           Align = alClient
-          TabIndex = 1
+          TabIndex = 0
           TabOrder = 0
           object tsFiles: TTabSheet
             Caption = 'Files'
@@ -205,16 +205,16 @@ object frmMain: TfrmMain
               Columns = <              
                 item
                   Title.Caption = 'Voice'
-                  Width = 200
+                  Width = 206
                 end              
                 item
                   ButtonStyle = cbsPickList
                   Title.Caption = 'Category'
-                  Width = 200
+                  Width = 206
                 end              
                 item
                   Title.Caption = 'Origin'
-                  Width = 200
+                  Width = 206
                 end              
                 item
                   ReadOnly = True
@@ -239,9 +239,9 @@ object frmMain: TfrmMain
               OnEditingDone = sgDBEditingDone
               OnStartDrag = sgDBStartDrag
               ColWidths = (
-                200
-                200
-                200
+                206
+                206
+                206
                 0
                 50
               )
@@ -13605,7 +13605,7 @@ object frmMain: TfrmMain
                 item
                   ReadOnly = True
                   Title.Caption = 'Title'
-                  Width = 100
+                  Width = 91
                 end              
                 item
                   Alignment = taRightJustify
@@ -13640,7 +13640,7 @@ object frmMain: TfrmMain
                   Alignment = taRightJustify
                   ReadOnly = True
                   Title.Caption = 'Title'
-                  Width = 100
+                  Width = 92
                 end>
               FixedCols = 0
               FixedRows = 0
@@ -13654,12 +13654,12 @@ object frmMain: TfrmMain
               TabOrder = 7
               OnDrawCell = sgGPIODrawCell
               ColWidths = (
-                100
+                91
                 54
                 20
                 20
                 54
-                100
+                92
               )
               Cells = (
                 40

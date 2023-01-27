@@ -19,7 +19,8 @@
       <UseVersionInfo Value="True"/>
       <AutoIncrementBuild Value="True"/>
       <MajorVersionNr Value="1"/>
-      <BuildNr Value="37"/>
+      <RevisionNr Value="1"/>
+      <BuildNr Value="41"/>
       <StringTable FileDescription="MiniDexed Control Center" LegalCopyright="Boban Spasic" OriginalFilename="MiniDexedCC.exe"/>
     </VersionInfo>
     <BuildModes>

@@ -359,6 +359,7 @@ type
     function Add_VCED_ToStream(var aStream: TMemoryStream): boolean;
     function GetChecksumPart: integer;
     function GetChecksum: integer;
+    function GetVCEDChecksum: byte;
     procedure SysExVoiceToStream(aCh: integer; var aStream: TMemoryStream);
     function CalculateHash: string;
   end;
@@ -895,6 +896,22 @@ begin
   end;
 end;
 
+function TDX7VoiceContainer.GetVCEDChecksum: byte;
+var
+  checksum: integer;
+  i: integer;
+  tmpStream: TMemoryStream;
+begin
+  checksum := 0;
+  tmpStream := TMemoryStream.Create;
+  Save_VCED_ToStream(tmpStream);
+  tmpStream.Position := 0;
+  for i := 0 to 154 do
+    checksum := checksum + tmpStream.ReadByte;
+  Result := ((not (checksum and 255)) and 127) + 1;
+  tmpStream.Free;
+end;
+
 procedure TDX7VoiceContainer.SysExVoiceToStream(aCh: integer; var aStream: TMemoryStream);
 var
   FCh: byte;
@@ -909,7 +926,7 @@ begin
   aStream.WriteByte($01);
   aStream.WriteByte($1B);
   Add_VCED_ToStream(aStream);
-  aStream.WriteByte(GetChecksum);
+  aStream.WriteByte(GetVCEDChecksum);
   aStream.WriteByte($F7);
 end;
 

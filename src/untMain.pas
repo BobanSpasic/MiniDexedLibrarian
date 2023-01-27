@@ -1372,7 +1372,8 @@ begin
       if UTF8pos(UTF8copy(tmp, 1, 1), ('*°/\<>^?~#+-!$%&()[]`.,')) > 0 then
         tmp := UTF8copy(tmp, 2, UTF8Length(tmp) - 1);
     if cgSanitize.Checked[2] then
-      if UTF8pos(UTF8copy(tmp, UTF8Length(tmp), 1), ('*°/\<>^?~#+-!$%&()[]`.,')) > 0 then
+      if UTF8pos(UTF8copy(tmp, UTF8Length(tmp), 1),
+        ('*°/\<>^?~#+-!$%&()[]`.,')) > 0 then
         tmp := UTF8copy(tmp, 1, UTF8Length(tmp) - 1);
     if cgSanitize.Checked[3] then
     begin
@@ -1903,7 +1904,11 @@ begin
     begin
       FMidiIn := cbMidiIn.Text;
       FMidiInInt := cbMidiIn.ItemIndex;
-      MidiInput.Open(FMidiInInt);
+      try
+        MidiInput.Open(FMidiInInt);
+      except
+        on e: Exception do PopUp('Could not open' + #13#10 + 'MIDI Input', 2);
+      end;
       FMidiIsActive := True;
     end;
     cbMidiOut.ItemIndex := cbMidiOut.Items.IndexOf(ini.ReadString('MIDIOutput', ''));
@@ -1911,7 +1916,11 @@ begin
     begin
       FMidiOut := cbMidiOut.Text;
       FMidiOutInt := cbMidiOut.ItemIndex;
-      MidiOutput.Open(FMidiOutInt);
+      try
+        MidiOutput.Open(FMidiOutInt);
+      except
+        on e: Exception do PopUp('Could not open' + #13#10 + 'MIDI Output', 2);
+      end;
       FMidiIsActive := True;
     end;
     LastSysExOpenDir := ini.ReadString('LastSysExOpenDir', '');
@@ -2197,53 +2206,56 @@ begin
         FTmpCCBank.CSetVoice(1, dxv);
         lbVoices.Items.Add(FTmpCCBank.CGetVoiceName(1));
         dxv.Free;
-      end;
-
-      i := 0; //read from the begining of the stream again
-      if ContainsDX7BankDump(dmp, i, j) then
-      begin
-        lbVoices.Items.Clear;
-        FTmpCCBank.CLoadVoiceBankFromStream(dmp, j);
-        for nr := 1 to 32 do
-        begin
-          lbVoices.Items.Add(FTmpCCBank.CGetVoiceName(nr));
-        end;
-        //k := dmp.Position;
-        k := 0; // got files where AMEM comes before VMEM
-        i := k;
-        if ContainsDX7IISupplBankDump(dmp, i, j) then
-          FTmpCCBank.CLoadSupplBankFromStream(dmp, j)
-        else
-          FTmpCCBank.CInitSuppl;
-        //i := k;
-        i := 0; // if PMEM is before VMEM in file
-        if ContainsTX7FunctBankDump(dmp, i, j) then
-          FTmpCCBank.CLoadFunctBankFromStream(dmp, j)
-        else
-          FTmpCCBank.CInitFunct;
       end
       else
       begin
-        mmLog.Lines.Add('Not a valid DX SysEx');
-        feedback := '';
-        if RepairDX7SysEx(aName, feedback) then
+
+        i := 0; //read from the begining of the stream again
+        if ContainsDX7BankDump(dmp, i, j) then
         begin
-          FillFilesList(edbtSelSysExDir.Text);
-          mmLog.Lines.Add(feedback);
-          mmLog.Lines.Add('Reparation: It is maybe a DX7 VMEM file');
-          Inc(lastClickedFile);
+          lbVoices.Items.Clear;
+          FTmpCCBank.CLoadVoiceBankFromStream(dmp, j);
+          for nr := 1 to 32 do
+          begin
+            lbVoices.Items.Add(FTmpCCBank.CGetVoiceName(nr));
+          end;
+          //k := dmp.Position;
+          k := 0; // got files where AMEM comes before VMEM
+          i := k;
+          if ContainsDX7IISupplBankDump(dmp, i, j) then
+            FTmpCCBank.CLoadSupplBankFromStream(dmp, j)
+          else
+            FTmpCCBank.CInitSuppl;
+          //i := k;
+          i := 0; // if PMEM is before VMEM in file
+          if ContainsTX7FunctBankDump(dmp, i, j) then
+            FTmpCCBank.CLoadFunctBankFromStream(dmp, j)
+          else
+            FTmpCCBank.CInitFunct;
         end
         else
         begin
-          mmLog.Lines.Add(feedback);
-          mmLog.Lines.Add('Could not repair');
+          mmLog.Lines.Add('Not a valid DX7 Bank SysEx');
+          feedback := '';
+          if RepairDX7SysEx(aName, feedback) then
+          begin
+            FillFilesList(edbtSelSysExDir.Text);
+            mmLog.Lines.Add(feedback);
+            mmLog.Lines.Add('Reparation: It is maybe a DX7 VMEM file');
+            Inc(lastClickedFile);
+          end
+          else
+          begin
+            mmLog.Lines.Add(feedback);
+            mmLog.Lines.Add('Could not repair');
+          end;
         end;
       end;
     end
     else
     begin
       //mmLog.Lines.Clear;
-      mmLog.Lines.Add('Not a valid DX SysEx');
+      mmLog.Lines.Add('Not a valid DX7 SysEx');
       feedback := '';
       if RepairDX7SysEx(aName, feedback) then
       begin
@@ -2833,7 +2845,9 @@ begin
   Unused(aCol);
   for c := 0 to 3 do
   begin
-    compArray[c] := sgDB.Cells[c, aRow];
+    if aRow < sgDB.RowCount then
+      //sometimes aRow is greater than the row count
+      compArray[c] := sgDB.Cells[c, aRow];
   end;
 end;
 
