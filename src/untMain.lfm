@@ -46,9 +46,9 @@ object frmMain: TfrmMain
     Hint = 'Drag&Drop to re-arrange'#13#10'Double-click for sending to Librarian tab'
     Top = 0
     Width = 1507
-    ActivePage = tsSDCard
+    ActivePage = tsSettings
     Align = alClient
-    TabIndex = 2
+    TabIndex = 3
     TabOrder = 1
     object tsLibrarian: TTabSheet
       Caption = 'Librarian'
@@ -205,16 +205,16 @@ object frmMain: TfrmMain
               Columns = <              
                 item
                   Title.Caption = 'Voice'
-                  Width = 206
+                  Width = 200
                 end              
                 item
                   ButtonStyle = cbsPickList
                   Title.Caption = 'Category'
-                  Width = 206
+                  Width = 200
                 end              
                 item
                   Title.Caption = 'Origin'
-                  Width = 206
+                  Width = 200
                 end              
                 item
                   ReadOnly = True
@@ -239,9 +239,9 @@ object frmMain: TfrmMain
               OnEditingDone = sgDBEditingDone
               OnStartDrag = sgDBStartDrag
               ColWidths = (
-                206
-                206
-                206
+                200
+                200
+                200
                 0
                 50
               )
