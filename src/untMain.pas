@@ -197,7 +197,6 @@ type
     swLCDRotate: TECSwitch;
     swMIDIIgnAllNotesOff: TECSwitch;
     swMIDIAutoDump: TECSwitch;
-    tbpnPreview: TPanel;
     sePopUpDur: TSpinEdit;
     tbrbSearchName: TRadioButton;
     tbrbSearchOrigin: TRadioButton;
@@ -713,6 +712,7 @@ type
     tbbtDelVoice: TToolButton;
     tbSeparator6: TToolButton;
     tbbtSanitize: TToolButton;
+    tbSeparator7: TToolButton;
     tsFiles: TTabSheet;
     tsDatabase: TTabSheet;
     tbBank: TToolBar;

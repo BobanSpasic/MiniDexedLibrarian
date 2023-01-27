@@ -1,7 +1,7 @@
 [DEBREATE-0.7.13]
 <<CTRL>>
 Package: minidexedcc
-Version: 0.9.2.27
+Version: 1.0.1.41
 Maintainer: Boban Spasic <spasic@gmail.com>
 Section: misc
 Homepage: https://github.com/BobanSpasic/MiniDexedLibrarian
@@ -14,8 +14,8 @@ Description: MiniDexed Control Center
 <</CTRL>>
 <<FILES>>
 1
-/home/linuxmint/Documents/MiniDexedCC/bin/LinuxQt5/MiniDexedCC* -> MiniDexedCC -> /usr/bin
 /home/linuxmint/Documents/MiniDexedCC/misc/make_deb/MiniDexedCC.png* -> MiniDexedCC.png -> /usr/share/pixmaps
+/home/linuxmint/Documents/MiniDexedCC/bin/LinuxQt5/MiniDexedCC* -> MiniDexedCC -> /usr/bin
 <</FILES>>
 <<SCRIPTS>>
 <<PREINST>>
