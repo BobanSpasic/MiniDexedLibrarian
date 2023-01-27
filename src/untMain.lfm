@@ -16,21 +16,21 @@ object frmMain: TfrmMain
   LCLVersion = '2.2.4.0'
   object pnHint: TPanel
     Left = 10
-    Height = 16
+    Height = 15
     Top = 46
-    Width = 65
+    Width = 49
     AutoSize = True
     BevelOuter = bvNone
     BorderStyle = bsSingle
-    ClientHeight = 14
-    ClientWidth = 63
+    ClientHeight = 11
+    ClientWidth = 45
     TabOrder = 0
     Visible = False
     object lbHint: TLabel
       Left = 0
-      Height = 14
+      Height = 11
       Top = 0
-      Width = 63
+      Width = 45
       Caption = 'HintLabel'
       Color = clDefault
       Font.Height = 11
@@ -46,27 +46,27 @@ object frmMain: TfrmMain
     Hint = 'Drag&Drop to re-arrange'#13#10'Double-click for sending to Librarian tab'
     Top = 0
     Width = 1507
-    ActivePage = tsSettings
+    ActivePage = tsSDCard
     Align = alClient
-    TabIndex = 3
+    TabIndex = 2
     TabOrder = 1
     object tsLibrarian: TTabSheet
       Caption = 'Librarian'
-      ClientHeight = 831
-      ClientWidth = 1497
+      ClientHeight = 835
+      ClientWidth = 1499
       object pnExplorer: TPanel
         Left = 0
-        Height = 831
+        Height = 835
         Top = 0
         Width = 680
         Align = alLeft
         BevelOuter = bvNone
-        ClientHeight = 831
+        ClientHeight = 835
         ClientWidth = 680
         TabOrder = 0
         object pcFilesDatabase: TPageControl
           Left = 0
-          Height = 831
+          Height = 835
           Top = 0
           Width = 680
           ActivePage = tsDatabase
@@ -75,23 +75,23 @@ object frmMain: TfrmMain
           TabOrder = 0
           object tsFiles: TTabSheet
             Caption = 'Files'
-            ClientHeight = 803
-            ClientWidth = 670
+            ClientHeight = 811
+            ClientWidth = 672
             object pnFileManager: TPanel
               Left = 0
-              Height = 803
+              Height = 811
               Top = 0
               Width = 280
               Align = alLeft
               BevelColor = clBlack
               ChildSizing.LeftRightSpacing = 10
               ChildSizing.TopBottomSpacing = 5
-              ClientHeight = 803
+              ClientHeight = 811
               ClientWidth = 280
               TabOrder = 0
               object lbFiles: TListBox
                 Left = 11
-                Height = 750
+                Height = 758
                 Top = 47
                 Width = 258
                 Align = alClient
@@ -105,7 +105,6 @@ object frmMain: TfrmMain
                 OnStartDrag = lbFilesStartDrag
                 Options = []
                 TabOrder = 0
-                TopIndex = -1
               end
               object sl3: TShapeLine
                 Left = 11
@@ -148,27 +147,27 @@ object frmMain: TfrmMain
             end
             object Splitter1: TSplitter
               Left = 280
-              Height = 803
+              Height = 811
               Top = 0
               Width = 8
             end
             object pnVoiceManager: TPanel
               Left = 288
-              Height = 803
+              Height = 811
               Top = 0
-              Width = 382
+              Width = 384
               Align = alClient
               BevelColor = clBlack
               ChildSizing.LeftRightSpacing = 10
               ChildSizing.TopBottomSpacing = 5
-              ClientHeight = 803
-              ClientWidth = 382
+              ClientHeight = 811
+              ClientWidth = 384
               TabOrder = 2
               object lbVoices: TListBox
                 Left = 11
-                Height = 701
+                Height = 709
                 Top = 6
-                Width = 360
+                Width = 362
                 Align = alClient
                 BorderStyle = bsNone
                 Color = clNone
@@ -178,13 +177,12 @@ object frmMain: TfrmMain
                 OnStartDrag = lbVoicesStartDrag
                 Options = []
                 TabOrder = 0
-                TopIndex = -1
               end
               object mmLog: TMemo
                 Left = 11
                 Height = 90
-                Top = 707
-                Width = 360
+                Top = 715
+                Width = 362
                 Align = alBottom
                 Color = clNone
                 ReadOnly = True
@@ -194,13 +192,13 @@ object frmMain: TfrmMain
           end
           object tsDatabase: TTabSheet
             Caption = 'Database'
-            ClientHeight = 803
-            ClientWidth = 670
+            ClientHeight = 811
+            ClientWidth = 672
             object sgDB: TStringGrid
               Left = 0
-              Height = 775
+              Height = 783
               Top = 28
-              Width = 670
+              Width = 672
               Align = alClient
               AutoFillColumns = True
               ColumnClickSorts = True
@@ -252,7 +250,7 @@ object frmMain: TfrmMain
               Left = 0
               Height = 28
               Top = 0
-              Width = 670
+              Width = 672
               ButtonHeight = 24
               ButtonWidth = 24
               Caption = 'Database'
@@ -304,19 +302,19 @@ object frmMain: TfrmMain
               end
               object tbpnSearch: TPanel
                 Left = 134
-                Height = 28
+                Height = 22
                 Top = 2
-                Width = 307
+                Width = 257
                 AutoSize = True
-                ClientHeight = 28
-                ClientWidth = 307
+                ClientHeight = 22
+                ClientWidth = 257
                 TabOrder = 0
                 object tbSearch: TEdit
                   AnchorSideLeft.Control = tbpnSearch
                   AnchorSideTop.Control = tbpnSearch
                   AnchorSideTop.Side = asrCenter
                   Left = 11
-                  Height = 25
+                  Height = 19
                   Top = 2
                   Width = 80
                   BorderSpacing.Left = 10
@@ -330,9 +328,9 @@ object frmMain: TfrmMain
                   AnchorSideTop.Control = tbpnSearch
                   AnchorSideTop.Side = asrCenter
                   Left = 101
-                  Height = 23
-                  Top = 3
-                  Width = 89
+                  Height = 19
+                  Top = 2
+                  Width = 65
                   BorderSpacing.Left = 10
                   Caption = 'in Voices'
                   Checked = True
@@ -344,10 +342,10 @@ object frmMain: TfrmMain
                   AnchorSideLeft.Side = asrBottom
                   AnchorSideTop.Control = tbpnSearch
                   AnchorSideTop.Side = asrCenter
-                  Left = 200
-                  Height = 23
-                  Top = 3
-                  Width = 96
+                  Left = 176
+                  Height = 19
+                  Top = 2
+                  Width = 70
                   BorderSpacing.Left = 10
                   BorderSpacing.Right = 10
                   Caption = 'in Origins'
@@ -374,10 +372,10 @@ object frmMain: TfrmMain
               object cbAutoPreview: TCheckBox
                 AnchorSideLeft.Side = asrBottom
                 AnchorSideTop.Side = asrCenter
-                Left = 449
-                Height = 23
+                Left = 399
+                Height = 19
                 Top = 2
-                Width = 110
+                Width = 80
                 BorderSpacing.Left = 10
                 BorderSpacing.Top = 4
                 BorderSpacing.Right = 10
@@ -385,7 +383,7 @@ object frmMain: TfrmMain
                 TabOrder = 1
               end
               object tbSeparator7: TToolButton
-                Left = 441
+                Left = 391
                 Height = 24
                 Top = 2
                 Caption = 'tbSeparator7'
@@ -397,27 +395,27 @@ object frmMain: TfrmMain
       end
       object pnBankPerformanceSlots: TPanel
         Left = 688
-        Height = 831
+        Height = 835
         Top = 0
-        Width = 809
+        Width = 811
         Align = alClient
         BevelColor = clBlack
-        ClientHeight = 831
-        ClientWidth = 809
+        ClientHeight = 835
+        ClientWidth = 811
         TabOrder = 1
         object pcBankPerformanceSlots: TPageControl
           Left = 1
-          Height = 829
+          Height = 833
           Top = 1
-          Width = 807
+          Width = 809
           ActivePage = tsBankSlots
           Align = alClient
           TabIndex = 0
           TabOrder = 0
           object tsBankSlots: TTabSheet
             Caption = 'Bank'
-            ClientHeight = 801
-            ClientWidth = 797
+            ClientHeight = 809
+            ClientWidth = 801
             object pnSlot01: TPanel
               Tag = 1
               Left = 16
@@ -437,8 +435,8 @@ object frmMain: TfrmMain
                 Width = 80
                 AutoSize = False
                 DragMode = dmAutomatic
-                EditLabel.Height = 14
-                EditLabel.Width = 49
+                EditLabel.Height = 11
+                EditLabel.Width = 35
                 EditLabel.Caption = 'Slot 01'
                 EditLabel.ParentColor = False
                 LabelPosition = lpLeft
@@ -491,8 +489,8 @@ object frmMain: TfrmMain
                 Top = 3
                 Width = 80
                 AutoSize = False
-                EditLabel.Height = 14
-                EditLabel.Width = 49
+                EditLabel.Height = 11
+                EditLabel.Width = 35
                 EditLabel.Caption = 'Slot 02'
                 EditLabel.ParentColor = False
                 LabelPosition = lpLeft
@@ -546,8 +544,8 @@ object frmMain: TfrmMain
                 Width = 80
                 AutoSize = False
                 DragMode = dmAutomatic
-                EditLabel.Height = 14
-                EditLabel.Width = 49
+                EditLabel.Height = 11
+                EditLabel.Width = 35
                 EditLabel.Caption = 'Slot 03'
                 EditLabel.ParentColor = False
                 LabelPosition = lpLeft
@@ -601,8 +599,8 @@ object frmMain: TfrmMain
                 Width = 80
                 AutoSize = False
                 DragMode = dmAutomatic
-                EditLabel.Height = 14
-                EditLabel.Width = 49
+                EditLabel.Height = 11
+                EditLabel.Width = 35
                 EditLabel.Caption = 'Slot 04'
                 EditLabel.ParentColor = False
                 LabelPosition = lpLeft
@@ -656,8 +654,8 @@ object frmMain: TfrmMain
                 Width = 80
                 AutoSize = False
                 DragMode = dmAutomatic
-                EditLabel.Height = 14
-                EditLabel.Width = 49
+                EditLabel.Height = 11
+                EditLabel.Width = 35
                 EditLabel.Caption = 'Slot 05'
                 EditLabel.ParentColor = False
                 LabelPosition = lpLeft
@@ -711,8 +709,8 @@ object frmMain: TfrmMain
                 Width = 80
                 AutoSize = False
                 DragMode = dmAutomatic
-                EditLabel.Height = 14
-                EditLabel.Width = 49
+                EditLabel.Height = 11
+                EditLabel.Width = 35
                 EditLabel.Caption = 'Slot 06'
                 EditLabel.ParentColor = False
                 LabelPosition = lpLeft
@@ -766,8 +764,8 @@ object frmMain: TfrmMain
                 Width = 80
                 AutoSize = False
                 DragMode = dmAutomatic
-                EditLabel.Height = 14
-                EditLabel.Width = 49
+                EditLabel.Height = 11
+                EditLabel.Width = 35
                 EditLabel.Caption = 'Slot 07'
                 EditLabel.ParentColor = False
                 LabelPosition = lpLeft
@@ -821,8 +819,8 @@ object frmMain: TfrmMain
                 Width = 80
                 AutoSize = False
                 DragMode = dmAutomatic
-                EditLabel.Height = 14
-                EditLabel.Width = 49
+                EditLabel.Height = 11
+                EditLabel.Width = 35
                 EditLabel.Caption = 'Slot 08'
                 EditLabel.ParentColor = False
                 LabelPosition = lpLeft
@@ -876,8 +874,8 @@ object frmMain: TfrmMain
                 Width = 80
                 AutoSize = False
                 DragMode = dmAutomatic
-                EditLabel.Height = 14
-                EditLabel.Width = 49
+                EditLabel.Height = 11
+                EditLabel.Width = 35
                 EditLabel.Caption = 'Slot 09'
                 EditLabel.ParentColor = False
                 LabelPosition = lpLeft
@@ -931,8 +929,8 @@ object frmMain: TfrmMain
                 Width = 80
                 AutoSize = False
                 DragMode = dmAutomatic
-                EditLabel.Height = 14
-                EditLabel.Width = 49
+                EditLabel.Height = 11
+                EditLabel.Width = 35
                 EditLabel.Caption = 'Slot 10'
                 EditLabel.ParentColor = False
                 LabelPosition = lpLeft
@@ -986,8 +984,8 @@ object frmMain: TfrmMain
                 Width = 80
                 AutoSize = False
                 DragMode = dmAutomatic
-                EditLabel.Height = 14
-                EditLabel.Width = 49
+                EditLabel.Height = 11
+                EditLabel.Width = 35
                 EditLabel.Caption = 'Slot 11'
                 EditLabel.ParentColor = False
                 LabelPosition = lpLeft
@@ -1041,8 +1039,8 @@ object frmMain: TfrmMain
                 Width = 80
                 AutoSize = False
                 DragMode = dmAutomatic
-                EditLabel.Height = 14
-                EditLabel.Width = 49
+                EditLabel.Height = 11
+                EditLabel.Width = 35
                 EditLabel.Caption = 'Slot 12'
                 EditLabel.ParentColor = False
                 LabelPosition = lpLeft
@@ -1096,8 +1094,8 @@ object frmMain: TfrmMain
                 Width = 80
                 AutoSize = False
                 DragMode = dmAutomatic
-                EditLabel.Height = 14
-                EditLabel.Width = 49
+                EditLabel.Height = 11
+                EditLabel.Width = 35
                 EditLabel.Caption = 'Slot 13'
                 EditLabel.ParentColor = False
                 LabelPosition = lpLeft
@@ -1151,8 +1149,8 @@ object frmMain: TfrmMain
                 Width = 80
                 AutoSize = False
                 DragMode = dmAutomatic
-                EditLabel.Height = 14
-                EditLabel.Width = 49
+                EditLabel.Height = 11
+                EditLabel.Width = 35
                 EditLabel.Caption = 'Slot 14'
                 EditLabel.ParentColor = False
                 LabelPosition = lpLeft
@@ -1206,8 +1204,8 @@ object frmMain: TfrmMain
                 Width = 80
                 AutoSize = False
                 DragMode = dmAutomatic
-                EditLabel.Height = 14
-                EditLabel.Width = 49
+                EditLabel.Height = 11
+                EditLabel.Width = 35
                 EditLabel.Caption = 'Slot 15'
                 EditLabel.ParentColor = False
                 LabelPosition = lpLeft
@@ -1260,8 +1258,8 @@ object frmMain: TfrmMain
                 Width = 80
                 AutoSize = False
                 DragMode = dmAutomatic
-                EditLabel.Height = 14
-                EditLabel.Width = 49
+                EditLabel.Height = 11
+                EditLabel.Width = 35
                 EditLabel.Caption = 'Slot 16'
                 EditLabel.ParentColor = False
                 LabelPosition = lpLeft
@@ -1315,8 +1313,8 @@ object frmMain: TfrmMain
                 Width = 80
                 AutoSize = False
                 DragMode = dmAutomatic
-                EditLabel.Height = 14
-                EditLabel.Width = 49
+                EditLabel.Height = 11
+                EditLabel.Width = 35
                 EditLabel.Caption = 'Slot 17'
                 EditLabel.ParentColor = False
                 LabelPosition = lpLeft
@@ -1370,8 +1368,8 @@ object frmMain: TfrmMain
                 Width = 80
                 AutoSize = False
                 DragMode = dmAutomatic
-                EditLabel.Height = 14
-                EditLabel.Width = 49
+                EditLabel.Height = 11
+                EditLabel.Width = 35
                 EditLabel.Caption = 'Slot 18'
                 EditLabel.ParentColor = False
                 LabelPosition = lpLeft
@@ -1425,8 +1423,8 @@ object frmMain: TfrmMain
                 Width = 80
                 AutoSize = False
                 DragMode = dmAutomatic
-                EditLabel.Height = 14
-                EditLabel.Width = 49
+                EditLabel.Height = 11
+                EditLabel.Width = 35
                 EditLabel.Caption = 'Slot 19'
                 EditLabel.ParentColor = False
                 LabelPosition = lpLeft
@@ -1480,8 +1478,8 @@ object frmMain: TfrmMain
                 Width = 80
                 AutoSize = False
                 DragMode = dmAutomatic
-                EditLabel.Height = 14
-                EditLabel.Width = 49
+                EditLabel.Height = 11
+                EditLabel.Width = 35
                 EditLabel.Caption = 'Slot 20'
                 EditLabel.ParentColor = False
                 LabelPosition = lpLeft
@@ -1535,8 +1533,8 @@ object frmMain: TfrmMain
                 Width = 80
                 AutoSize = False
                 DragMode = dmAutomatic
-                EditLabel.Height = 14
-                EditLabel.Width = 49
+                EditLabel.Height = 11
+                EditLabel.Width = 35
                 EditLabel.Caption = 'Slot 21'
                 EditLabel.ParentColor = False
                 LabelPosition = lpLeft
@@ -1590,8 +1588,8 @@ object frmMain: TfrmMain
                 Width = 80
                 AutoSize = False
                 DragMode = dmAutomatic
-                EditLabel.Height = 14
-                EditLabel.Width = 49
+                EditLabel.Height = 11
+                EditLabel.Width = 35
                 EditLabel.Caption = 'Slot 22'
                 EditLabel.ParentColor = False
                 LabelPosition = lpLeft
@@ -1645,8 +1643,8 @@ object frmMain: TfrmMain
                 Width = 80
                 AutoSize = False
                 DragMode = dmAutomatic
-                EditLabel.Height = 14
-                EditLabel.Width = 49
+                EditLabel.Height = 11
+                EditLabel.Width = 35
                 EditLabel.Caption = 'Slot 23'
                 EditLabel.ParentColor = False
                 LabelPosition = lpLeft
@@ -1700,8 +1698,8 @@ object frmMain: TfrmMain
                 Width = 80
                 AutoSize = False
                 DragMode = dmAutomatic
-                EditLabel.Height = 14
-                EditLabel.Width = 49
+                EditLabel.Height = 11
+                EditLabel.Width = 35
                 EditLabel.Caption = 'Slot 24'
                 EditLabel.ParentColor = False
                 LabelPosition = lpLeft
@@ -1755,8 +1753,8 @@ object frmMain: TfrmMain
                 Width = 80
                 AutoSize = False
                 DragMode = dmAutomatic
-                EditLabel.Height = 14
-                EditLabel.Width = 49
+                EditLabel.Height = 11
+                EditLabel.Width = 35
                 EditLabel.Caption = 'Slot 25'
                 EditLabel.ParentColor = False
                 LabelPosition = lpLeft
@@ -1810,8 +1808,8 @@ object frmMain: TfrmMain
                 Width = 80
                 AutoSize = False
                 DragMode = dmAutomatic
-                EditLabel.Height = 14
-                EditLabel.Width = 49
+                EditLabel.Height = 11
+                EditLabel.Width = 35
                 EditLabel.Caption = 'Slot 26'
                 EditLabel.ParentColor = False
                 LabelPosition = lpLeft
@@ -1865,8 +1863,8 @@ object frmMain: TfrmMain
                 Width = 80
                 AutoSize = False
                 DragMode = dmAutomatic
-                EditLabel.Height = 14
-                EditLabel.Width = 49
+                EditLabel.Height = 11
+                EditLabel.Width = 35
                 EditLabel.Caption = 'Slot 27'
                 EditLabel.ParentColor = False
                 LabelPosition = lpLeft
@@ -1920,8 +1918,8 @@ object frmMain: TfrmMain
                 Width = 80
                 AutoSize = False
                 DragMode = dmAutomatic
-                EditLabel.Height = 14
-                EditLabel.Width = 49
+                EditLabel.Height = 11
+                EditLabel.Width = 35
                 EditLabel.Caption = 'Slot 28'
                 EditLabel.ParentColor = False
                 LabelPosition = lpLeft
@@ -1975,8 +1973,8 @@ object frmMain: TfrmMain
                 Width = 80
                 AutoSize = False
                 DragMode = dmAutomatic
-                EditLabel.Height = 14
-                EditLabel.Width = 49
+                EditLabel.Height = 11
+                EditLabel.Width = 35
                 EditLabel.Caption = 'Slot 29'
                 EditLabel.ParentColor = False
                 LabelPosition = lpLeft
@@ -2030,8 +2028,8 @@ object frmMain: TfrmMain
                 Width = 80
                 AutoSize = False
                 DragMode = dmAutomatic
-                EditLabel.Height = 14
-                EditLabel.Width = 49
+                EditLabel.Height = 11
+                EditLabel.Width = 35
                 EditLabel.Caption = 'Slot 30'
                 EditLabel.ParentColor = False
                 LabelPosition = lpLeft
@@ -2085,8 +2083,8 @@ object frmMain: TfrmMain
                 Width = 80
                 AutoSize = False
                 DragMode = dmAutomatic
-                EditLabel.Height = 14
-                EditLabel.Width = 49
+                EditLabel.Height = 11
+                EditLabel.Width = 35
                 EditLabel.Caption = 'Slot 31'
                 EditLabel.ParentColor = False
                 LabelPosition = lpLeft
@@ -2140,8 +2138,8 @@ object frmMain: TfrmMain
                 Width = 80
                 AutoSize = False
                 DragMode = dmAutomatic
-                EditLabel.Height = 14
-                EditLabel.Width = 49
+                EditLabel.Height = 11
+                EditLabel.Width = 35
                 EditLabel.Caption = 'Slot 32'
                 EditLabel.ParentColor = False
                 LabelPosition = lpLeft
@@ -2180,7 +2178,7 @@ object frmMain: TfrmMain
               Left = 0
               Height = 28
               Top = 0
-              Width = 797
+              Width = 801
               ButtonHeight = 24
               ButtonWidth = 24
               Caption = 'tbBank'
@@ -2224,9 +2222,9 @@ object frmMain: TfrmMain
             object Label10: TLabel
               AnchorSideLeft.Control = pnSlot01
               Left = 16
-              Height = 14
+              Height = 11
               Top = 544
-              Width = 322
+              Width = 230
               Caption = 'Double-click to send voices over MIDI channel:'
               ParentColor = False
             end
@@ -2236,13 +2234,13 @@ object frmMain: TfrmMain
               AnchorSideTop.Control = Label10
               AnchorSideTop.Side = asrCenter
               Cursor = crHandPoint
-              Left = 353
-              Height = 27
-              Top = 538
+              Left = 261
+              Height = 19
+              Top = 540
               Width = 80
               BorderSpacing.Left = 15
               Color = clNone
-              ItemHeight = 0
+              ItemHeight = 11
               ItemIndex = 0
               Items.Strings = (
                 '1'
@@ -2269,10 +2267,10 @@ object frmMain: TfrmMain
               AnchorSideTop.Control = cbVoicesCategory
               AnchorSideTop.Side = asrCenter
               AnchorSideRight.Control = cbVoicesCategory
-              Left = 520
-              Height = 14
-              Top = 91
-              Width = 56
+              Left = 536
+              Height = 11
+              Top = 89
+              Width = 40
               Anchors = [akTop, akRight]
               BorderSpacing.Right = 10
               Caption = 'Category'
@@ -2280,17 +2278,17 @@ object frmMain: TfrmMain
             end
             object cbVoicesCategory: TComboBox
               Left = 586
-              Height = 27
+              Height = 19
               Top = 85
               Width = 100
-              ItemHeight = 0
+              ItemHeight = 11
               TabOrder = 34
               Text = 'cbVoicesCategory'
             end
             object edVoicesOrigin: TEdit
               AnchorSideLeft.Control = cbVoicesCategory
               Left = 586
-              Height = 25
+              Height = 19
               Top = 117
               Width = 100
               TabOrder = 35
@@ -2300,10 +2298,10 @@ object frmMain: TfrmMain
               AnchorSideTop.Control = edVoicesOrigin
               AnchorSideTop.Side = asrCenter
               AnchorSideRight.Control = edVoicesOrigin
-              Left = 534
-              Height = 14
-              Top = 122
-              Width = 42
+              Left = 546
+              Height = 11
+              Top = 121
+              Width = 30
               Anchors = [akTop, akRight]
               BorderSpacing.Right = 10
               Caption = 'Origin'
@@ -2311,18 +2309,18 @@ object frmMain: TfrmMain
             end
             object lbVoicesDBOptions: TLabel
               AnchorSideLeft.Control = lbVoicesCategory
-              Left = 520
-              Height = 14
+              Left = 536
+              Height = 11
               Top = 63
-              Width = 175
+              Width = 125
               Caption = 'Edit before adding to DB:'
               ParentColor = False
             end
           end
           object tsPerformanceSlots: TTabSheet
             Caption = 'Performance'
-            ClientHeight = 801
-            ClientWidth = 797
+            ClientHeight = 809
+            ClientWidth = 801
             object pnPSlot01: TPanel
               Left = 16
               Height = 20
@@ -2340,8 +2338,8 @@ object frmMain: TfrmMain
                 Width = 80
                 AutoSize = False
                 DragMode = dmAutomatic
-                EditLabel.Height = 14
-                EditLabel.Width = 49
+                EditLabel.Height = 11
+                EditLabel.Width = 35
                 EditLabel.Caption = 'Slot 01'
                 EditLabel.ParentColor = False
                 LabelPosition = lpLeft
@@ -2380,8 +2378,8 @@ object frmMain: TfrmMain
                 Top = 3
                 Width = 80
                 AutoSize = False
-                EditLabel.Height = 14
-                EditLabel.Width = 49
+                EditLabel.Height = 11
+                EditLabel.Width = 35
                 EditLabel.Caption = 'Slot 02'
                 EditLabel.ParentColor = False
                 LabelPosition = lpLeft
@@ -2421,8 +2419,8 @@ object frmMain: TfrmMain
                 Width = 80
                 AutoSize = False
                 DragMode = dmAutomatic
-                EditLabel.Height = 14
-                EditLabel.Width = 49
+                EditLabel.Height = 11
+                EditLabel.Width = 35
                 EditLabel.Caption = 'Slot 03'
                 EditLabel.ParentColor = False
                 LabelPosition = lpLeft
@@ -2462,8 +2460,8 @@ object frmMain: TfrmMain
                 Width = 80
                 AutoSize = False
                 DragMode = dmAutomatic
-                EditLabel.Height = 14
-                EditLabel.Width = 49
+                EditLabel.Height = 11
+                EditLabel.Width = 35
                 EditLabel.Caption = 'Slot 04'
                 EditLabel.ParentColor = False
                 LabelPosition = lpLeft
@@ -2503,8 +2501,8 @@ object frmMain: TfrmMain
                 Width = 80
                 AutoSize = False
                 DragMode = dmAutomatic
-                EditLabel.Height = 14
-                EditLabel.Width = 49
+                EditLabel.Height = 11
+                EditLabel.Width = 35
                 EditLabel.Caption = 'Slot 05'
                 EditLabel.ParentColor = False
                 LabelPosition = lpLeft
@@ -2544,8 +2542,8 @@ object frmMain: TfrmMain
                 Width = 80
                 AutoSize = False
                 DragMode = dmAutomatic
-                EditLabel.Height = 14
-                EditLabel.Width = 49
+                EditLabel.Height = 11
+                EditLabel.Width = 35
                 EditLabel.Caption = 'Slot 06'
                 EditLabel.ParentColor = False
                 LabelPosition = lpLeft
@@ -2585,8 +2583,8 @@ object frmMain: TfrmMain
                 Width = 80
                 AutoSize = False
                 DragMode = dmAutomatic
-                EditLabel.Height = 14
-                EditLabel.Width = 49
+                EditLabel.Height = 11
+                EditLabel.Width = 35
                 EditLabel.Caption = 'Slot 07'
                 EditLabel.ParentColor = False
                 LabelPosition = lpLeft
@@ -2626,8 +2624,8 @@ object frmMain: TfrmMain
                 Width = 80
                 AutoSize = False
                 DragMode = dmAutomatic
-                EditLabel.Height = 14
-                EditLabel.Width = 49
+                EditLabel.Height = 11
+                EditLabel.Width = 35
                 EditLabel.Caption = 'Slot 08'
                 EditLabel.ParentColor = False
                 LabelPosition = lpLeft
@@ -2670,20 +2668,20 @@ object frmMain: TfrmMain
       end
       object Splitter2: TSplitter
         Left = 680
-        Height = 831
+        Height = 835
         Top = 0
         Width = 8
       end
     end
     object tsPerformance: TTabSheet
       Caption = 'Performance'
-      ClientHeight = 831
-      ClientWidth = 1497
+      ClientHeight = 835
+      ClientWidth = 1499
       object tbPerfEdit: TToolBar
         Left = 0
         Height = 28
         Top = 0
-        Width = 1497
+        Width = 1499
         ButtonHeight = 24
         ButtonWidth = 24
         Caption = 'tbPerfEdit'
@@ -2753,11 +2751,11 @@ object frmMain: TfrmMain
         Left = 0
         Height = 120
         Top = 28
-        Width = 1497
+        Width = 1499
         Align = alTop
         BevelOuter = bvNone
         ClientHeight = 120
-        ClientWidth = 1497
+        ClientWidth = 1499
         TabOrder = 1
         object slReverbSize: TECSlider
           AnchorSideLeft.Control = swReverbEnable
@@ -3027,9 +3025,9 @@ object frmMain: TfrmMain
         end
         object Label9: TLabel
           Left = 1432
-          Height = 96
+          Height = 87
           Top = 16
-          Width = 63
+          Width = 65
           Anchors = [akTop, akRight]
           Caption = 'GEN'
           Font.Height = -53
@@ -3045,7 +3043,7 @@ object frmMain: TfrmMain
           Left = 0
           Height = 2
           Top = 0
-          Width = 1497
+          Width = 1499
           Align = alTop
           LineColor = clBlack
           ArrowColor = clBlack
@@ -3054,7 +3052,7 @@ object frmMain: TfrmMain
         object edPerfName: TEdit
           AnchorSideTop.Control = swReverbEnable
           Left = 856
-          Height = 25
+          Height = 19
           Top = 8
           Width = 100
           TabOrder = 8
@@ -3063,10 +3061,10 @@ object frmMain: TfrmMain
         object cbPerfCategory: TComboBox
           AnchorSideLeft.Control = edPerfName
           Left = 856
-          Height = 27
+          Height = 19
           Top = 40
           Width = 100
-          ItemHeight = 0
+          ItemHeight = 11
           TabOrder = 9
           Text = 'cbPerfCategory'
         end
@@ -3074,10 +3072,10 @@ object frmMain: TfrmMain
           AnchorSideTop.Control = edPerfName
           AnchorSideTop.Side = asrCenter
           AnchorSideRight.Control = edPerfName
-          Left = 818
-          Height = 14
-          Top = 13
-          Width = 28
+          Left = 826
+          Height = 11
+          Top = 12
+          Width = 20
           Anchors = [akTop, akRight]
           BorderSpacing.Right = 10
           Caption = 'Name'
@@ -3087,10 +3085,10 @@ object frmMain: TfrmMain
           AnchorSideTop.Control = cbPerfCategory
           AnchorSideTop.Side = asrCenter
           AnchorSideRight.Control = cbPerfCategory
-          Left = 790
-          Height = 14
-          Top = 46
-          Width = 56
+          Left = 806
+          Height = 11
+          Top = 44
+          Width = 40
           Anchors = [akTop, akRight]
           BorderSpacing.Right = 10
           Caption = 'Category'
@@ -3099,7 +3097,7 @@ object frmMain: TfrmMain
         object edPerfOrigin: TEdit
           AnchorSideLeft.Control = edPerfName
           Left = 856
-          Height = 25
+          Height = 19
           Top = 72
           Width = 100
           TabOrder = 10
@@ -3109,10 +3107,10 @@ object frmMain: TfrmMain
           AnchorSideTop.Control = edPerfOrigin
           AnchorSideTop.Side = asrCenter
           AnchorSideRight.Control = edPerfOrigin
-          Left = 804
-          Height = 14
-          Top = 77
-          Width = 42
+          Left = 816
+          Height = 11
+          Top = 76
+          Width = 30
           Anchors = [akTop, akRight]
           BorderSpacing.Right = 10
           Caption = 'Origin'
@@ -3121,26 +3119,26 @@ object frmMain: TfrmMain
       end
       object pcTGs: TPageControl
         Left = 0
-        Height = 683
+        Height = 687
         Top = 148
-        Width = 1497
+        Width = 1499
         ActivePage = tsTG1_4
         Align = alClient
         TabIndex = 0
         TabOrder = 2
         object tsTG1_4: TTabSheet
           Caption = 'TG 1 - 4'
-          ClientHeight = 679
-          ClientWidth = 1487
+          ClientHeight = 663
+          ClientWidth = 1491
           object pnPVoice1: TPanel
             Left = 0
             Height = 168
             Top = 0
-            Width = 1487
+            Width = 1491
             Align = alTop
             BevelOuter = bvNone
             ClientHeight = 168
-            ClientWidth = 1487
+            ClientWidth = 1491
             TabOrder = 0
             object slVolume1: TECSlider
               Cursor = crHandPoint
@@ -3658,10 +3656,10 @@ object frmMain: TfrmMain
               TabOrder = 13
             end
             object Label1: TLabel
-              Left = 1422
-              Height = 96
+              Left = 1424
+              Height = 87
               Top = 40
-              Width = 63
+              Width = 65
               Anchors = [akTop, akRight]
               Caption = 'TG1'
               Font.Height = -53
@@ -3677,7 +3675,7 @@ object frmMain: TfrmMain
               Left = 0
               Height = 2
               Top = 0
-              Width = 1487
+              Width = 1491
               Align = alTop
               LineColor = clBlack
               ArrowColor = clBlack
@@ -3689,7 +3687,7 @@ object frmMain: TfrmMain
               AnchorSideTop.Side = asrCenter
               Left = 118
               Height = 20
-              Top = 19
+              Top = 15
               Width = 160
               BorderSpacing.Left = 10
               BevelColor = clBlack
@@ -3703,8 +3701,8 @@ object frmMain: TfrmMain
                 Width = 80
                 AutoSize = False
                 DragMode = dmAutomatic
-                EditLabel.Height = 14
-                EditLabel.Width = 49
+                EditLabel.Height = 11
+                EditLabel.Width = 35
                 EditLabel.Caption = 'Slot 01'
                 EditLabel.ParentColor = False
                 LabelPosition = lpLeft
@@ -4234,12 +4232,12 @@ object frmMain: TfrmMain
               AnchorSideLeft.Side = asrBottom
               Cursor = crHandPoint
               Left = 8
-              Height = 27
+              Height = 19
               Top = 16
               Width = 100
               Anchors = [akTop]
               Color = clNone
-              ItemHeight = 0
+              ItemHeight = 11
               ItemIndex = 17
               Items.Strings = (
                 'OFF'
@@ -4269,11 +4267,11 @@ object frmMain: TfrmMain
             Left = 0
             Height = 168
             Top = 168
-            Width = 1487
+            Width = 1491
             Align = alTop
             BevelOuter = bvNone
             ClientHeight = 168
-            ClientWidth = 1487
+            ClientWidth = 1491
             TabOrder = 1
             object slVolume2: TECSlider
               Cursor = crHandPoint
@@ -4789,10 +4787,10 @@ object frmMain: TfrmMain
               TabOrder = 13
             end
             object Label2: TLabel
-              Left = 1422
-              Height = 96
+              Left = 1424
+              Height = 87
               Top = 40
-              Width = 63
+              Width = 65
               Anchors = [akTop, akRight]
               Caption = 'TG2'
               Font.Height = -53
@@ -4808,7 +4806,7 @@ object frmMain: TfrmMain
               Left = 0
               Height = 2
               Top = 0
-              Width = 1487
+              Width = 1491
               Align = alTop
               LineColor = clBlack
               ArrowColor = clBlack
@@ -4820,7 +4818,7 @@ object frmMain: TfrmMain
               AnchorSideTop.Side = asrCenter
               Left = 118
               Height = 20
-              Top = 19
+              Top = 15
               Width = 160
               BorderSpacing.Left = 10
               BevelColor = clBlack
@@ -4834,8 +4832,8 @@ object frmMain: TfrmMain
                 Top = 3
                 Width = 80
                 AutoSize = False
-                EditLabel.Height = 14
-                EditLabel.Width = 49
+                EditLabel.Height = 11
+                EditLabel.Width = 35
                 EditLabel.Caption = 'Slot 02'
                 EditLabel.ParentColor = False
                 LabelPosition = lpLeft
@@ -5364,11 +5362,11 @@ object frmMain: TfrmMain
               AnchorSideLeft.Control = slVolume2
               Cursor = crHandPoint
               Left = 8
-              Height = 27
+              Height = 19
               Top = 16
               Width = 100
               Color = clNone
-              ItemHeight = 0
+              ItemHeight = 11
               ItemIndex = 17
               Items.Strings = (
                 'OFF'
@@ -5398,11 +5396,11 @@ object frmMain: TfrmMain
             Left = 0
             Height = 168
             Top = 336
-            Width = 1487
+            Width = 1491
             Align = alTop
             BevelOuter = bvNone
             ClientHeight = 168
-            ClientWidth = 1487
+            ClientWidth = 1491
             TabOrder = 2
             object slVolume3: TECSlider
               Cursor = crHandPoint
@@ -5920,10 +5918,10 @@ object frmMain: TfrmMain
               TabOrder = 13
             end
             object Label3: TLabel
-              Left = 1422
-              Height = 96
+              Left = 1424
+              Height = 87
               Top = 40
-              Width = 63
+              Width = 65
               Anchors = [akTop, akRight]
               Caption = 'TG3'
               Font.Height = -53
@@ -5939,7 +5937,7 @@ object frmMain: TfrmMain
               Left = 0
               Height = 2
               Top = 0
-              Width = 1487
+              Width = 1491
               Align = alTop
               LineColor = clBlack
               ArrowColor = clBlack
@@ -5951,7 +5949,7 @@ object frmMain: TfrmMain
               AnchorSideTop.Side = asrCenter
               Left = 118
               Height = 20
-              Top = 19
+              Top = 15
               Width = 160
               BorderSpacing.Left = 10
               BevelColor = clBlack
@@ -5965,8 +5963,8 @@ object frmMain: TfrmMain
                 Top = 3
                 Width = 80
                 AutoSize = False
-                EditLabel.Height = 14
-                EditLabel.Width = 49
+                EditLabel.Height = 11
+                EditLabel.Width = 35
                 EditLabel.Caption = 'Slot 03'
                 EditLabel.ParentColor = False
                 LabelPosition = lpLeft
@@ -6495,11 +6493,11 @@ object frmMain: TfrmMain
               AnchorSideLeft.Control = slVolume3
               Cursor = crHandPoint
               Left = 8
-              Height = 27
+              Height = 19
               Top = 16
               Width = 100
               Color = clNone
-              ItemHeight = 0
+              ItemHeight = 11
               ItemIndex = 17
               Items.Strings = (
                 'OFF'
@@ -6529,11 +6527,11 @@ object frmMain: TfrmMain
             Left = 0
             Height = 168
             Top = 504
-            Width = 1487
+            Width = 1491
             Align = alTop
             BevelOuter = bvNone
             ClientHeight = 168
-            ClientWidth = 1487
+            ClientWidth = 1491
             TabOrder = 3
             object slVolume4: TECSlider
               Cursor = crHandPoint
@@ -7051,10 +7049,10 @@ object frmMain: TfrmMain
               TabOrder = 13
             end
             object Label4: TLabel
-              Left = 1422
-              Height = 96
+              Left = 1424
+              Height = 87
               Top = 40
-              Width = 63
+              Width = 65
               Anchors = [akTop, akRight]
               Caption = 'TG4'
               Font.Height = -53
@@ -7070,7 +7068,7 @@ object frmMain: TfrmMain
               Left = 0
               Height = 2
               Top = 0
-              Width = 1487
+              Width = 1491
               Align = alTop
               LineColor = clBlack
               ArrowColor = clBlack
@@ -7082,7 +7080,7 @@ object frmMain: TfrmMain
               AnchorSideTop.Side = asrCenter
               Left = 118
               Height = 20
-              Top = 19
+              Top = 15
               Width = 160
               BorderSpacing.Left = 10
               BevelColor = clBlack
@@ -7096,8 +7094,8 @@ object frmMain: TfrmMain
                 Top = 3
                 Width = 80
                 AutoSize = False
-                EditLabel.Height = 14
-                EditLabel.Width = 49
+                EditLabel.Height = 11
+                EditLabel.Width = 35
                 EditLabel.Caption = 'Slot 04'
                 EditLabel.ParentColor = False
                 LabelPosition = lpLeft
@@ -7626,11 +7624,11 @@ object frmMain: TfrmMain
               AnchorSideLeft.Control = slVolume4
               Cursor = crHandPoint
               Left = 8
-              Height = 27
+              Height = 19
               Top = 16
               Width = 100
               Color = clNone
-              ItemHeight = 0
+              ItemHeight = 11
               ItemIndex = 17
               Items.Strings = (
                 'OFF'
@@ -7659,17 +7657,17 @@ object frmMain: TfrmMain
         end
         object tsTG5_8: TTabSheet
           Caption = 'TG 5 - 8'
-          ClientHeight = 679
-          ClientWidth = 1487
+          ClientHeight = 663
+          ClientWidth = 1491
           object pnPVoice8: TPanel
             Left = 0
             Height = 168
             Top = 504
-            Width = 1487
+            Width = 1491
             Align = alTop
             BevelOuter = bvNone
             ClientHeight = 168
-            ClientWidth = 1487
+            ClientWidth = 1491
             TabOrder = 0
             object slVolume8: TECSlider
               Cursor = crHandPoint
@@ -8194,10 +8192,10 @@ object frmMain: TfrmMain
               TabOrder = 13
             end
             object Label8: TLabel
-              Left = 1422
-              Height = 96
+              Left = 1424
+              Height = 87
               Top = 40
-              Width = 63
+              Width = 65
               Anchors = [akTop, akRight]
               Caption = 'TG8'
               Font.Height = -53
@@ -8213,7 +8211,7 @@ object frmMain: TfrmMain
               Left = 0
               Height = 2
               Top = 0
-              Width = 1487
+              Width = 1491
               Align = alTop
               LineColor = clBlack
               ArrowColor = clBlack
@@ -8225,7 +8223,7 @@ object frmMain: TfrmMain
               AnchorSideTop.Side = asrCenter
               Left = 118
               Height = 20
-              Top = 19
+              Top = 15
               Width = 160
               BorderSpacing.Left = 10
               BevelColor = clBlack
@@ -8239,8 +8237,8 @@ object frmMain: TfrmMain
                 Top = 3
                 Width = 80
                 AutoSize = False
-                EditLabel.Height = 14
-                EditLabel.Width = 49
+                EditLabel.Height = 11
+                EditLabel.Width = 35
                 EditLabel.Caption = 'Slot 08'
                 EditLabel.ParentColor = False
                 LabelPosition = lpLeft
@@ -8769,11 +8767,11 @@ object frmMain: TfrmMain
               AnchorSideLeft.Control = slVolume8
               Cursor = crHandPoint
               Left = 8
-              Height = 27
+              Height = 19
               Top = 16
               Width = 100
               Color = clNone
-              ItemHeight = 0
+              ItemHeight = 11
               ItemIndex = 17
               Items.Strings = (
                 'OFF'
@@ -8803,11 +8801,11 @@ object frmMain: TfrmMain
             Left = 0
             Height = 168
             Top = 0
-            Width = 1487
+            Width = 1491
             Align = alTop
             BevelOuter = bvNone
             ClientHeight = 168
-            ClientWidth = 1487
+            ClientWidth = 1491
             TabOrder = 1
             object slVolume5: TECSlider
               Cursor = crHandPoint
@@ -9325,10 +9323,10 @@ object frmMain: TfrmMain
               TabOrder = 13
             end
             object Label5: TLabel
-              Left = 1422
-              Height = 96
+              Left = 1424
+              Height = 87
               Top = 40
-              Width = 63
+              Width = 65
               Anchors = [akTop, akRight]
               Caption = 'TG5'
               Font.Height = -53
@@ -9344,7 +9342,7 @@ object frmMain: TfrmMain
               Left = 0
               Height = 2
               Top = 0
-              Width = 1487
+              Width = 1491
               Align = alTop
               LineColor = clBlack
               ArrowColor = clBlack
@@ -9356,7 +9354,7 @@ object frmMain: TfrmMain
               AnchorSideTop.Side = asrCenter
               Left = 118
               Height = 20
-              Top = 19
+              Top = 15
               Width = 160
               BorderSpacing.Left = 10
               BevelColor = clBlack
@@ -9370,8 +9368,8 @@ object frmMain: TfrmMain
                 Top = 3
                 Width = 80
                 AutoSize = False
-                EditLabel.Height = 14
-                EditLabel.Width = 49
+                EditLabel.Height = 11
+                EditLabel.Width = 35
                 EditLabel.Caption = 'Slot 05'
                 EditLabel.ParentColor = False
                 LabelPosition = lpLeft
@@ -9900,11 +9898,11 @@ object frmMain: TfrmMain
               AnchorSideLeft.Control = slVolume5
               Cursor = crHandPoint
               Left = 8
-              Height = 27
+              Height = 19
               Top = 16
               Width = 100
               Color = clNone
-              ItemHeight = 0
+              ItemHeight = 11
               ItemIndex = 17
               Items.Strings = (
                 'OFF'
@@ -9934,11 +9932,11 @@ object frmMain: TfrmMain
             Left = 0
             Height = 168
             Top = 168
-            Width = 1487
+            Width = 1491
             Align = alTop
             BevelOuter = bvNone
             ClientHeight = 168
-            ClientWidth = 1487
+            ClientWidth = 1491
             TabOrder = 2
             object slVolume6: TECSlider
               Cursor = crHandPoint
@@ -10456,10 +10454,10 @@ object frmMain: TfrmMain
               TabOrder = 13
             end
             object Label6: TLabel
-              Left = 1422
-              Height = 96
+              Left = 1424
+              Height = 87
               Top = 40
-              Width = 63
+              Width = 65
               Anchors = [akTop, akRight]
               Caption = 'TG6'
               Font.Height = -53
@@ -10475,7 +10473,7 @@ object frmMain: TfrmMain
               Left = 0
               Height = 2
               Top = 0
-              Width = 1487
+              Width = 1491
               Align = alTop
               LineColor = clBlack
               ArrowColor = clBlack
@@ -10487,7 +10485,7 @@ object frmMain: TfrmMain
               AnchorSideTop.Side = asrCenter
               Left = 118
               Height = 20
-              Top = 19
+              Top = 15
               Width = 160
               BorderSpacing.Left = 10
               BevelColor = clBlack
@@ -10501,8 +10499,8 @@ object frmMain: TfrmMain
                 Top = 3
                 Width = 80
                 AutoSize = False
-                EditLabel.Height = 14
-                EditLabel.Width = 49
+                EditLabel.Height = 11
+                EditLabel.Width = 35
                 EditLabel.Caption = 'Slot 06'
                 EditLabel.ParentColor = False
                 LabelPosition = lpLeft
@@ -11031,11 +11029,11 @@ object frmMain: TfrmMain
               AnchorSideLeft.Control = slVolume6
               Cursor = crHandPoint
               Left = 8
-              Height = 27
+              Height = 19
               Top = 16
               Width = 100
               Color = clNone
-              ItemHeight = 0
+              ItemHeight = 11
               ItemIndex = 17
               Items.Strings = (
                 'OFF'
@@ -11065,11 +11063,11 @@ object frmMain: TfrmMain
             Left = 0
             Height = 168
             Top = 336
-            Width = 1487
+            Width = 1491
             Align = alTop
             BevelOuter = bvNone
             ClientHeight = 168
-            ClientWidth = 1487
+            ClientWidth = 1491
             TabOrder = 3
             object slVolume7: TECSlider
               Cursor = crHandPoint
@@ -11599,10 +11597,10 @@ object frmMain: TfrmMain
               TabOrder = 13
             end
             object Label7: TLabel
-              Left = 1422
-              Height = 96
+              Left = 1424
+              Height = 87
               Top = 40
-              Width = 63
+              Width = 65
               Anchors = [akTop, akRight]
               Caption = 'TG7'
               Font.Height = -53
@@ -11618,7 +11616,7 @@ object frmMain: TfrmMain
               Left = 0
               Height = 2
               Top = 0
-              Width = 1487
+              Width = 1491
               Align = alTop
               LineColor = clBlack
               ArrowColor = clBlack
@@ -11630,7 +11628,7 @@ object frmMain: TfrmMain
               AnchorSideTop.Side = asrCenter
               Left = 118
               Height = 20
-              Top = 19
+              Top = 15
               Width = 160
               BorderSpacing.Left = 10
               BevelColor = clBlack
@@ -11644,8 +11642,8 @@ object frmMain: TfrmMain
                 Top = 3
                 Width = 80
                 AutoSize = False
-                EditLabel.Height = 14
-                EditLabel.Width = 49
+                EditLabel.Height = 11
+                EditLabel.Width = 35
                 EditLabel.Caption = 'Slot 07'
                 EditLabel.ParentColor = False
                 LabelPosition = lpLeft
@@ -12174,11 +12172,11 @@ object frmMain: TfrmMain
               AnchorSideLeft.Control = slVolume7
               Cursor = crHandPoint
               Left = 8
-              Height = 27
+              Height = 19
               Top = 16
               Width = 100
               Color = clNone
-              ItemHeight = 0
+              ItemHeight = 11
               ItemIndex = 17
               Items.Strings = (
                 'OFF'
@@ -12209,13 +12207,13 @@ object frmMain: TfrmMain
     end
     object tsSDCard: TTabSheet
       Caption = 'SD Card'
-      ClientHeight = 831
-      ClientWidth = 1497
+      ClientHeight = 835
+      ClientWidth = 1499
       object pnSelSDCard: TPanel
         Left = 0
         Height = 25
         Top = 4
-        Width = 1497
+        Width = 1499
         Align = alTop
         Alignment = taLeftJustify
         BorderSpacing.Top = 4
@@ -12225,7 +12223,7 @@ object frmMain: TfrmMain
         ChildSizing.LeftRightSpacing = 4
         ChildSizing.TopBottomSpacing = 4
         ClientHeight = 25
-        ClientWidth = 1497
+        ClientWidth = 1499
         Font.Height = 11
         Font.Name = 'Consolas'
         ParentFont = False
@@ -12253,32 +12251,32 @@ object frmMain: TfrmMain
       end
       object pnMiniDexedFiles: TPanel
         Left = 0
-        Height = 798
+        Height = 802
         Top = 33
-        Width = 1497
+        Width = 1499
         Align = alClient
         BevelColor = clBlack
-        ClientHeight = 798
-        ClientWidth = 1497
+        ClientHeight = 802
+        ClientWidth = 1499
         TabOrder = 1
         object pcMiniDexedFiles: TPageControl
           Left = 1
-          Height = 796
+          Height = 800
           Top = 1
-          Width = 1495
+          Width = 1497
           ActivePage = tsIniFiles
           Align = alClient
           TabIndex = 0
           TabOrder = 0
           object tsIniFiles: TTabSheet
             Caption = 'INI Files'
-            ClientHeight = 768
-            ClientWidth = 1485
+            ClientHeight = 776
+            ClientWidth = 1489
             object tbINIFiles: TToolBar
               Left = 0
               Height = 28
               Top = 0
-              Width = 1485
+              Width = 1489
               ButtonHeight = 24
               ButtonWidth = 24
               Caption = 'tbIniFiles'
@@ -12310,10 +12308,10 @@ object frmMain: TfrmMain
               TabOrder = 1
               object rbSoundDevPWM: TRadioButton
                 Left = 6
-                Height = 23
+                Height = 19
                 Hint = 'Pi''s 3,5mm output jack'#13#10'Worst quality'
                 Top = 32
-                Width = 47
+                Width = 35
                 Caption = 'PWM'
                 Checked = True
                 OnChange = rbSoundDevPWMChange
@@ -12324,10 +12322,10 @@ object frmMain: TfrmMain
               end
               object rbSoundDevi2s: TRadioButton
                 Left = 6
-                Height = 23
+                Height = 19
                 Hint = 'For devices based on'#13#10'PCM5102A and PCM5122'
                 Top = 48
-                Width = 47
+                Width = 35
                 Caption = 'i2s'
                 OnChange = rbSoundDevi2sChange
                 ParentShowHint = False
@@ -12336,10 +12334,10 @@ object frmMain: TfrmMain
               end
               object rbSoundDevHDMI: TRadioButton
                 Left = 6
-                Height = 23
+                Height = 19
                 Hint = 'Use Pi''s HDMI output'#13#10'for sound output'
                 Top = 64
-                Width = 54
+                Width = 40
                 Caption = 'HDMI'
                 OnChange = rbSoundDevHDMIChange
                 ParentShowHint = False
@@ -12348,10 +12346,10 @@ object frmMain: TfrmMain
               end
               object rbSoundDevOther: TRadioButton
                 Left = 6
-                Height = 23
+                Height = 19
                 Hint = 'For future devices'
                 Top = 80
-                Width = 61
+                Width = 45
                 Caption = 'Other'
                 OnChange = rbSoundDevOtherChange
                 ParentShowHint = False
@@ -12360,9 +12358,9 @@ object frmMain: TfrmMain
               end
               object lbSoundDev: TLabel
                 Left = 8
-                Height = 14
+                Height = 11
                 Top = 8
-                Width = 91
+                Width = 65
                 Alignment = taCenter
                 Caption = 'Sound device:'
                 ParentColor = False
@@ -12371,10 +12369,10 @@ object frmMain: TfrmMain
                 AnchorSideTop.Control = cbSoundDevSampleRate
                 AnchorSideTop.Side = asrCenter
                 AnchorSideRight.Control = cbSoundDevSampleRate
-                Left = 106
-                Height = 14
-                Top = 98
-                Width = 84
+                Left = 130
+                Height = 11
+                Top = 96
+                Width = 60
                 Anchors = [akTop, akRight]
                 BorderSpacing.Right = 10
                 Caption = 'Sample rate:'
@@ -12385,10 +12383,10 @@ object frmMain: TfrmMain
                 AnchorSideTop.Side = asrCenter
                 AnchorSideRight.Control = lbSoundDevSampleRate
                 AnchorSideRight.Side = asrBottom
-                Left = 113
-                Height = 14
-                Top = 133
-                Width = 77
+                Left = 135
+                Height = 11
+                Top = 126
+                Width = 55
                 Anchors = [akTop, akRight]
                 Caption = 'Chunk size:'
                 ParentColor = False
@@ -12401,7 +12399,7 @@ object frmMain: TfrmMain
                 AnchorSideRight.Side = asrBottom
                 Left = 226
                 Height = 28
-                Top = 158
+                Top = 148
                 Width = 64
                 Anchors = [akTop, akRight]
                 BevelOuter = bvNone
@@ -12421,13 +12419,13 @@ object frmMain: TfrmMain
                 AnchorSideRight.Side = asrBottom
                 Cursor = crHandPoint
                 Left = 200
-                Height = 27
+                Height = 19
                 Top = 92
                 Width = 90
                 Anchors = [akTop, akRight]
                 BorderSpacing.Top = 10
                 Color = clNone
-                ItemHeight = 0
+                ItemHeight = 11
                 ItemIndex = 2
                 Items.Strings = (
                   '32000'
@@ -12444,13 +12442,13 @@ object frmMain: TfrmMain
                 AnchorSideRight.Side = asrBottom
                 Cursor = crHandPoint
                 Left = 200
-                Height = 27
-                Top = 127
+                Height = 19
+                Top = 122
                 Width = 90
                 Anchors = [akTop, akRight]
                 BorderSpacing.Top = 15
                 Color = clNone
-                ItemHeight = 0
+                ItemHeight = 11
                 ItemIndex = 0
                 Items.Strings = (
                   'Auto'
@@ -12470,8 +12468,8 @@ object frmMain: TfrmMain
                 Width = 90
                 Alignment = taCenter
                 AutoSize = False
-                EditLabel.Height = 14
-                EditLabel.Width = 56
+                EditLabel.Height = 11
+                EditLabel.Width = 40
                 EditLabel.Caption = 'Address:'
                 EditLabel.ParentColor = False
                 LabelPosition = lpLeft
@@ -12495,8 +12493,8 @@ object frmMain: TfrmMain
                 AutoSize = False
                 BorderSpacing.Top = 8
                 DragMode = dmAutomatic
-                EditLabel.Height = 14
-                EditLabel.Width = 42
+                EditLabel.Height = 11
+                EditLabel.Width = 30
                 EditLabel.Caption = 'Other:'
                 EditLabel.ParentColor = False
                 LabelPosition = lpLeft
@@ -12510,10 +12508,10 @@ object frmMain: TfrmMain
                 AnchorSideTop.Side = asrCenter
                 AnchorSideRight.Control = lbSoundDevSampleRate
                 AnchorSideRight.Side = asrBottom
-                Left = 92
-                Height = 14
-                Top = 165
-                Width = 98
+                Left = 120
+                Height = 11
+                Top = 157
+                Width = 70
                 Anchors = [akTop, akRight]
                 Caption = 'Swap channels:'
                 ParentColor = False
@@ -12534,9 +12532,9 @@ object frmMain: TfrmMain
               TabOrder = 2
               object lbMIDIDevice: TLabel
                 Left = 8
-                Height = 14
+                Height = 11
                 Top = 8
-                Width = 84
+                Width = 60
                 Alignment = taCenter
                 Caption = 'MIDI device:'
                 ParentColor = False
@@ -12545,10 +12543,10 @@ object frmMain: TfrmMain
                 AnchorSideTop.Control = cbMIDIThruFrom
                 AnchorSideTop.Side = asrCenter
                 AnchorSideRight.Control = cbMIDIThruFrom
-                Left = 155
-                Height = 14
-                Top = 105
-                Width = 35
+                Left = 165
+                Height = 11
+                Top = 103
+                Width = 25
                 Anchors = [akTop, akRight]
                 BorderSpacing.Right = 10
                 Caption = 'From:'
@@ -12559,10 +12557,10 @@ object frmMain: TfrmMain
                 AnchorSideTop.Side = asrCenter
                 AnchorSideRight.Control = lbMIDIThruFrom
                 AnchorSideRight.Side = asrBottom
-                Left = 169
-                Height = 14
-                Top = 147
-                Width = 21
+                Left = 175
+                Height = 11
+                Top = 137
+                Width = 15
                 Anchors = [akTop, akRight]
                 Caption = 'To:'
                 ParentColor = False
@@ -12597,7 +12595,7 @@ object frmMain: TfrmMain
                 AnchorSideRight.Side = asrBottom
                 Left = 226
                 Height = 28
-                Top = 176
+                Top = 160
                 Width = 64
                 Anchors = [akTop, akRight]
                 BevelOuter = bvNone
@@ -12617,13 +12615,13 @@ object frmMain: TfrmMain
                 AnchorSideRight.Side = asrBottom
                 Cursor = crHandPoint
                 Left = 200
-                Height = 27
+                Height = 19
                 Top = 99
                 Width = 90
                 Anchors = [akTop, akRight]
                 BorderSpacing.Top = 10
                 Color = clNone
-                ItemHeight = 0
+                ItemHeight = 11
                 ItemIndex = 0
                 Items.Strings = (
                   'umidi1'
@@ -12643,13 +12641,13 @@ object frmMain: TfrmMain
                 AnchorSideRight.Side = asrBottom
                 Cursor = crHandPoint
                 Left = 200
-                Height = 27
-                Top = 141
+                Height = 19
+                Top = 133
                 Width = 90
                 Anchors = [akTop, akRight]
                 BorderSpacing.Top = 15
                 Color = clNone
-                ItemHeight = 0
+                ItemHeight = 11
                 ItemIndex = 4
                 Items.Strings = (
                   'umidi1'
@@ -12670,8 +12668,8 @@ object frmMain: TfrmMain
                 Width = 90
                 Alignment = taCenter
                 AutoSize = False
-                EditLabel.Height = 14
-                EditLabel.Width = 77
+                EditLabel.Height = 11
+                EditLabel.Width = 55
                 EditLabel.Caption = 'Baud rate: '
                 EditLabel.ParentColor = False
                 LabelPosition = lpLeft
@@ -12683,10 +12681,10 @@ object frmMain: TfrmMain
                 AnchorSideTop.Side = asrCenter
                 AnchorSideRight.Control = lbMIDIThruFrom
                 AnchorSideRight.Side = asrBottom
-                Left = 71
-                Height = 14
-                Top = 68
-                Width = 119
+                Left = 105
+                Height = 11
+                Top = 70
+                Width = 85
                 Anchors = [akTop, akRight]
                 Caption = 'Enable MIDI Thru:'
                 ParentColor = False
@@ -12696,10 +12694,10 @@ object frmMain: TfrmMain
                 AnchorSideTop.Side = asrCenter
                 AnchorSideRight.Control = lbMIDIThruFrom
                 AnchorSideRight.Side = asrBottom
-                Left = 36
-                Height = 14
-                Top = 183
-                Width = 154
+                Left = 80
+                Height = 11
+                Top = 169
+                Width = 110
                 Anchors = [akTop, akRight]
                 Caption = 'Accept program change:'
                 ParentColor = False
@@ -12712,7 +12710,7 @@ object frmMain: TfrmMain
                 AnchorSideRight.Side = asrBottom
                 Left = 226
                 Height = 28
-                Top = 212
+                Top = 196
                 Width = 64
                 Anchors = [akTop, akRight]
                 BevelOuter = bvNone
@@ -12730,10 +12728,10 @@ object frmMain: TfrmMain
                 AnchorSideTop.Side = asrCenter
                 AnchorSideRight.Control = lbMIDIThruFrom
                 AnchorSideRight.Side = asrBottom
-                Left = 57
-                Height = 14
-                Top = 219
-                Width = 133
+                Left = 95
+                Height = 11
+                Top = 205
+                Width = 95
                 Anchors = [akTop, akRight]
                 Caption = 'Ignore AllNotesOff:'
                 ParentColor = False
@@ -12746,7 +12744,7 @@ object frmMain: TfrmMain
                 AnchorSideRight.Side = asrBottom
                 Left = 226
                 Height = 28
-                Top = 248
+                Top = 232
                 Width = 64
                 Anchors = [akTop, akRight]
                 BevelOuter = bvNone
@@ -12764,10 +12762,10 @@ object frmMain: TfrmMain
                 AnchorSideTop.Side = asrCenter
                 AnchorSideRight.Control = lbMIDIThruFrom
                 AnchorSideRight.Side = asrBottom
-                Left = 36
-                Height = 14
-                Top = 255
-                Width = 154
+                Left = 80
+                Height = 11
+                Top = 241
+                Width = 110
                 Anchors = [akTop, akRight]
                 Caption = 'Auto voice dump to PC:'
                 ParentColor = False
@@ -12785,9 +12783,9 @@ object frmMain: TfrmMain
               TabOrder = 3
               object rbDisplayNone: TRadioButton
                 Left = 6
-                Height = 23
+                Height = 19
                 Top = 32
-                Width = 54
+                Width = 40
                 Caption = 'None'
                 Checked = True
                 TabOrder = 2
@@ -12795,10 +12793,10 @@ object frmMain: TfrmMain
               end
               object rbDisplayi2cHD44780: TRadioButton
                 Left = 6
-                Height = 23
+                Height = 19
                 Hint = 'For devices based on'#13#10' HD44780'
                 Top = 48
-                Width = 103
+                Width = 75
                 Caption = 'i2c HD44780'
                 OnChange = rbDisplayi2cHD44780Change
                 ParentShowHint = False
@@ -12807,18 +12805,18 @@ object frmMain: TfrmMain
               end
               object rbDisplayDiscrete: TRadioButton
                 Left = 6
-                Height = 23
+                Height = 19
                 Top = 80
-                Width = 82
+                Width = 60
                 Caption = 'Discrete'
                 OnChange = rbDisplayDiscreteChange
                 TabOrder = 1
               end
               object lbDisplay: TLabel
                 Left = 8
-                Height = 14
+                Height = 11
                 Top = 8
-                Width = 56
+                Width = 40
                 Alignment = taCenter
                 Caption = 'Display:'
                 ParentColor = False
@@ -12827,10 +12825,10 @@ object frmMain: TfrmMain
                 AnchorSideTop.Control = cbDisplayPinRW
                 AnchorSideTop.Side = asrCenter
                 AnchorSideRight.Control = cbDisplayPinRW
-                Left = 141
-                Height = 14
-                Top = 98
-                Width = 49
+                Left = 155
+                Height = 11
+                Top = 96
+                Width = 35
                 Anchors = [akTop, akRight]
                 BorderSpacing.Right = 10
                 Caption = 'Pin RW:'
@@ -12840,10 +12838,10 @@ object frmMain: TfrmMain
                 AnchorSideTop.Control = cbDisplayPinRS
                 AnchorSideTop.Side = asrCenter
                 AnchorSideRight.Control = cbDisplayPinRS
-                Left = 141
-                Height = 14
-                Top = 139
-                Width = 49
+                Left = 155
+                Height = 11
+                Top = 129
+                Width = 35
                 Anchors = [akTop, akRight]
                 BorderSpacing.Right = 10
                 Caption = 'Pin RS:'
@@ -12853,10 +12851,10 @@ object frmMain: TfrmMain
                 AnchorSideTop.Control = cbDisplayPinD4
                 AnchorSideTop.Side = asrCenter
                 AnchorSideRight.Control = cbDisplayPinD4
-                Left = 141
-                Height = 14
-                Top = 221
-                Width = 49
+                Left = 155
+                Height = 11
+                Top = 195
+                Width = 35
                 Anchors = [akTop, akRight]
                 BorderSpacing.Right = 10
                 Caption = 'Pin D4:'
@@ -12866,10 +12864,10 @@ object frmMain: TfrmMain
                 AnchorSideTop.Control = cbDisplayPinD5
                 AnchorSideTop.Side = asrCenter
                 AnchorSideRight.Control = cbDisplayPinD5
-                Left = 141
-                Height = 14
-                Top = 262
-                Width = 49
+                Left = 155
+                Height = 11
+                Top = 228
+                Width = 35
                 Anchors = [akTop, akRight]
                 BorderSpacing.Right = 10
                 Caption = 'Pin D5:'
@@ -12879,10 +12877,10 @@ object frmMain: TfrmMain
                 AnchorSideTop.Control = cbDisplayPinD6
                 AnchorSideTop.Side = asrCenter
                 AnchorSideRight.Control = cbDisplayPinD6
-                Left = 141
-                Height = 14
-                Top = 303
-                Width = 49
+                Left = 155
+                Height = 11
+                Top = 261
+                Width = 35
                 Anchors = [akTop, akRight]
                 BorderSpacing.Right = 10
                 Caption = 'Pin D6:'
@@ -12892,10 +12890,10 @@ object frmMain: TfrmMain
                 AnchorSideTop.Control = cbDisplayPinD7
                 AnchorSideTop.Side = asrCenter
                 AnchorSideRight.Control = cbDisplayPinD7
-                Left = 141
-                Height = 14
-                Top = 344
-                Width = 49
+                Left = 155
+                Height = 11
+                Top = 294
+                Width = 35
                 Anchors = [akTop, akRight]
                 BorderSpacing.Right = 10
                 Caption = 'Pin D7:'
@@ -12905,10 +12903,10 @@ object frmMain: TfrmMain
                 AnchorSideTop.Control = cbDisplayPinEN
                 AnchorSideTop.Side = asrCenter
                 AnchorSideRight.Control = cbDisplayPinEN
-                Left = 141
-                Height = 14
-                Top = 180
-                Width = 49
+                Left = 155
+                Height = 11
+                Top = 162
+                Width = 35
                 Anchors = [akTop, akRight]
                 BorderSpacing.Right = 10
                 Caption = 'Pin EN:'
@@ -12916,10 +12914,10 @@ object frmMain: TfrmMain
               end
               object rbDisplayi2cSSD1306: TRadioButton
                 Left = 6
-                Height = 23
+                Height = 19
                 Hint = 'For devices based on SSD1306 OLED'
                 Top = 64
-                Width = 103
+                Width = 75
                 Caption = 'i2c SSD1306'
                 OnChange = rbDisplayi2cSSD1306Change
                 ParentShowHint = False
@@ -12932,10 +12930,10 @@ object frmMain: TfrmMain
                 AnchorSideTop.Control = cbDisplayResolution
                 AnchorSideTop.Side = asrCenter
                 AnchorSideRight.Control = cbDisplayResolution
-                Left = 162
-                Height = 14
-                Top = 441
-                Width = 28
+                Left = 170
+                Height = 11
+                Top = 383
+                Width = 20
                 Anchors = [akTop, akRight]
                 BorderSpacing.Left = 10
                 BorderSpacing.Right = 10
@@ -12950,13 +12948,13 @@ object frmMain: TfrmMain
                 AnchorSideRight.Side = asrBottom
                 Cursor = crHandPoint
                 Left = 200
-                Height = 27
-                Top = 435
+                Height = 19
+                Top = 379
                 Width = 90
                 Anchors = [akTop, akLeft, akRight]
                 BorderSpacing.Top = 12
                 Color = clNone
-                ItemHeight = 0
+                ItemHeight = 11
                 ItemIndex = 0
                 Items.Strings = (
                   '128x32'
@@ -12973,13 +12971,13 @@ object frmMain: TfrmMain
                 AnchorSideRight.Side = asrBottom
                 Cursor = crHandPoint
                 Left = 200
-                Height = 27
+                Height = 19
                 Top = 92
                 Width = 90
                 Anchors = [akTop, akRight]
                 BorderSpacing.Top = 10
                 Color = clNone
-                ItemHeight = 0
+                ItemHeight = 11
                 ItemIndex = 0
                 Items.Strings = (
                   '0'
@@ -13002,13 +13000,13 @@ object frmMain: TfrmMain
                 AnchorSideRight.Side = asrBottom
                 Cursor = crHandPoint
                 Left = 200
-                Height = 27
-                Top = 133
+                Height = 19
+                Top = 125
                 Width = 90
                 Anchors = [akTop, akLeft, akRight]
                 BorderSpacing.Top = 14
                 Color = clNone
-                ItemHeight = 0
+                ItemHeight = 11
                 ItemIndex = 0
                 Items.Strings = (
                   '0'
@@ -13031,7 +13029,7 @@ object frmMain: TfrmMain
                 Left = 200
                 Height = 21
                 Hint = 'Enter i2c address in decimal form.'#13#10'Usual addresses are:'#13#10'HD 44780: 39'#13#10'SSD 1306: 60'#13#10#13#10'It will be set to zero if no i2c'#13#10'device is used'
-                Top = 402
+                Top = 346
                 Width = 90
                 Alignment = taCenter
                 Anchors = [akTop, akLeft, akRight]
@@ -13039,8 +13037,8 @@ object frmMain: TfrmMain
                 BorderSpacing.Left = 10
                 BorderSpacing.Top = 24
                 DragMode = dmAutomatic
-                EditLabel.Height = 14
-                EditLabel.Width = 56
+                EditLabel.Height = 11
+                EditLabel.Width = 40
                 EditLabel.Caption = 'Address:'
                 EditLabel.ParentColor = False
                 LabelPosition = lpLeft
@@ -13062,8 +13060,8 @@ object frmMain: TfrmMain
                 AutoSize = False
                 BorderSpacing.Top = 8
                 DragMode = dmAutomatic
-                EditLabel.Height = 14
-                EditLabel.Width = 42
+                EditLabel.Height = 11
+                EditLabel.Width = 30
                 EditLabel.Caption = 'Cols: '
                 EditLabel.ParentColor = False
                 LabelPosition = lpLeft
@@ -13088,8 +13086,8 @@ object frmMain: TfrmMain
                 AutoSize = False
                 BorderSpacing.Top = 8
                 DragMode = dmAutomatic
-                EditLabel.Height = 14
-                EditLabel.Width = 42
+                EditLabel.Height = 11
+                EditLabel.Width = 30
                 EditLabel.Caption = 'Rows: '
                 EditLabel.ParentColor = False
                 LabelPosition = lpLeft
@@ -13106,13 +13104,13 @@ object frmMain: TfrmMain
                 AnchorSideRight.Side = asrBottom
                 Cursor = crHandPoint
                 Left = 200
-                Height = 27
-                Top = 174
+                Height = 19
+                Top = 158
                 Width = 90
                 Anchors = [akTop, akLeft, akRight]
                 BorderSpacing.Top = 14
                 Color = clNone
-                ItemHeight = 0
+                ItemHeight = 11
                 ItemIndex = 0
                 Items.Strings = (
                   '0'
@@ -13135,13 +13133,13 @@ object frmMain: TfrmMain
                 AnchorSideRight.Side = asrBottom
                 Cursor = crHandPoint
                 Left = 200
-                Height = 27
-                Top = 215
+                Height = 19
+                Top = 191
                 Width = 90
                 Anchors = [akTop, akLeft, akRight]
                 BorderSpacing.Top = 14
                 Color = clNone
-                ItemHeight = 0
+                ItemHeight = 11
                 ItemIndex = 0
                 Items.Strings = (
                   '0'
@@ -13164,12 +13162,12 @@ object frmMain: TfrmMain
                 AnchorSideRight.Side = asrBottom
                 Cursor = crHandPoint
                 Left = 200
-                Height = 27
-                Top = 256
+                Height = 19
+                Top = 224
                 Width = 90
                 BorderSpacing.Top = 14
                 Color = clNone
-                ItemHeight = 0
+                ItemHeight = 11
                 ItemIndex = 0
                 Items.Strings = (
                   '0'
@@ -13192,13 +13190,13 @@ object frmMain: TfrmMain
                 AnchorSideRight.Side = asrBottom
                 Cursor = crHandPoint
                 Left = 200
-                Height = 27
-                Top = 297
+                Height = 19
+                Top = 257
                 Width = 90
                 Anchors = [akTop, akLeft, akRight]
                 BorderSpacing.Top = 14
                 Color = clNone
-                ItemHeight = 0
+                ItemHeight = 11
                 ItemIndex = 0
                 Items.Strings = (
                   '0'
@@ -13221,13 +13219,13 @@ object frmMain: TfrmMain
                 AnchorSideRight.Side = asrBottom
                 Cursor = crHandPoint
                 Left = 200
-                Height = 27
-                Top = 338
+                Height = 19
+                Top = 290
                 Width = 90
                 Anchors = [akTop, akLeft, akRight]
                 BorderSpacing.Top = 14
                 Color = clNone
-                ItemHeight = 0
+                ItemHeight = 11
                 ItemIndex = 0
                 Items.Strings = (
                   '0'
@@ -13250,7 +13248,7 @@ object frmMain: TfrmMain
                 AnchorSideRight.Side = asrBottom
                 Left = 6
                 Height = 5
-                Top = 373
+                Top = 317
                 Width = 284
                 Anchors = [akTop, akLeft, akRight]
                 BorderSpacing.Top = 8
@@ -13266,7 +13264,7 @@ object frmMain: TfrmMain
                 AnchorSideRight.Side = asrBottom
                 Left = 6
                 Height = 28
-                Top = 398
+                Top = 342
                 Width = 64
                 BevelOuter = bvNone
                 BevelWidth = 0
@@ -13286,7 +13284,7 @@ object frmMain: TfrmMain
                 AnchorSideRight.Side = asrBottom
                 Left = 6
                 Height = 28
-                Top = 434
+                Top = 374
                 Width = 64
                 BevelOuter = bvNone
                 BevelWidth = 0
@@ -13304,9 +13302,9 @@ object frmMain: TfrmMain
                 AnchorSideTop.Side = asrCenter
                 AnchorSideRight.Control = cbMIDIThruFrom
                 Left = 80
-                Height = 14
-                Top = 405
-                Width = 42
+                Height = 11
+                Top = 351
+                Width = 30
                 BorderSpacing.Left = 10
                 Caption = 'Mirror'
                 ParentColor = False
@@ -13318,9 +13316,9 @@ object frmMain: TfrmMain
                 AnchorSideTop.Side = asrCenter
                 AnchorSideRight.Control = cbMIDIThruFrom
                 Left = 80
-                Height = 14
-                Top = 441
-                Width = 42
+                Height = 11
+                Top = 383
+                Width = 30
                 BorderSpacing.Left = 10
                 Caption = 'Rotate'
                 ParentColor = False
@@ -13331,9 +13329,9 @@ object frmMain: TfrmMain
                 AnchorSideRight.Control = cbMIDIThruFrom
                 AnchorSideBottom.Control = ShapeLine10
                 Left = 6
-                Height = 14
-                Top = 374
-                Width = 49
+                Height = 11
+                Top = 318
+                Width = 35
                 BorderSpacing.Top = 1
                 Caption = 'SSD1306'
                 ParentColor = False
@@ -13354,9 +13352,9 @@ object frmMain: TfrmMain
               TabOrder = 4
               object rbEncoderNone: TRadioButton
                 Left = 6
-                Height = 23
+                Height = 19
                 Top = 32
-                Width = 54
+                Width = 40
                 Caption = 'None'
                 Checked = True
                 ParentShowHint = False
@@ -13366,18 +13364,18 @@ object frmMain: TfrmMain
               end
               object rbEncoderDiscrete: TRadioButton
                 Left = 6
-                Height = 23
+                Height = 19
                 Top = 48
-                Width = 82
+                Width = 60
                 Caption = 'Discrete'
                 OnChange = rbEncoderDiscreteChange
                 TabOrder = 0
               end
               object lbRotaryEncoder: TLabel
                 Left = 8
-                Height = 14
+                Height = 11
                 Top = 8
-                Width = 105
+                Width = 75
                 Alignment = taCenter
                 Caption = 'Rotary encoder:'
                 ParentColor = False
@@ -13386,10 +13384,10 @@ object frmMain: TfrmMain
                 AnchorSideTop.Control = cbEncoderClockPin
                 AnchorSideTop.Side = asrCenter
                 AnchorSideRight.Control = cbEncoderClockPin
-                Left = 120
-                Height = 14
-                Top = 38
-                Width = 70
+                Left = 140
+                Height = 11
+                Top = 36
+                Width = 50
                 Anchors = [akTop, akRight]
                 BorderSpacing.Right = 10
                 Caption = 'Pin Clock:'
@@ -13400,10 +13398,10 @@ object frmMain: TfrmMain
                 AnchorSideTop.Side = asrCenter
                 AnchorSideRight.Control = lbEncoderClockPin
                 AnchorSideRight.Side = asrBottom
-                Left = 127
-                Height = 14
-                Top = 80
-                Width = 63
+                Left = 145
+                Height = 11
+                Top = 70
+                Width = 45
                 Anchors = [akTop, akRight]
                 Caption = 'Pin Data:'
                 ParentColor = False
@@ -13411,12 +13409,12 @@ object frmMain: TfrmMain
               object cbEncoderClockPin: TComboBox
                 Cursor = crHandPoint
                 Left = 200
-                Height = 27
+                Height = 19
                 Top = 32
                 Width = 90
                 Anchors = [akTop, akRight]
                 Color = clNone
-                ItemHeight = 0
+                ItemHeight = 11
                 ItemIndex = 0
                 Items.Strings = (
                   '0'
@@ -13435,13 +13433,13 @@ object frmMain: TfrmMain
                 AnchorSideRight.Side = asrBottom
                 Cursor = crHandPoint
                 Left = 200
-                Height = 27
-                Top = 74
+                Height = 19
+                Top = 66
                 Width = 90
                 Anchors = [akTop, akRight]
                 BorderSpacing.Top = 15
                 Color = clNone
-                ItemHeight = 0
+                ItemHeight = 11
                 ItemIndex = 0
                 Items.Strings = (
                   '0'
@@ -13469,9 +13467,9 @@ object frmMain: TfrmMain
               TabOrder = 5
               object lbDbgOptions: TLabel
                 Left = 8
-                Height = 14
+                Height = 11
                 Top = 8
-                Width = 98
+                Width = 70
                 Alignment = taCenter
                 Caption = 'Debug options:'
                 ParentColor = False
@@ -13518,10 +13516,10 @@ object frmMain: TfrmMain
                 AnchorSideTop.Control = swDbgMIDIDump
                 AnchorSideTop.Side = asrCenter
                 AnchorSideRight.Control = swDbgMIDIDump
-                Left = 126
-                Height = 14
-                Top = 39
-                Width = 70
+                Left = 146
+                Height = 11
+                Top = 41
+                Width = 50
                 Anchors = [akTop, akRight]
                 BorderSpacing.Right = 30
                 Caption = 'MIDI dump:'
@@ -13532,10 +13530,10 @@ object frmMain: TfrmMain
                 AnchorSideTop.Side = asrCenter
                 AnchorSideRight.Control = lbDbgMIDIDump
                 AnchorSideRight.Side = asrBottom
-                Left = 140
-                Height = 14
-                Top = 75
-                Width = 56
+                Left = 156
+                Height = 11
+                Top = 77
+                Width = 40
                 Anchors = [akTop, akRight]
                 Caption = 'Profile:'
                 ParentColor = False
@@ -13556,9 +13554,9 @@ object frmMain: TfrmMain
               TabOrder = 6
               object lbPerfOptions: TLabel
                 Left = 8
-                Height = 14
+                Height = 11
                 Top = 8
-                Width = 140
+                Width = 100
                 Alignment = taCenter
                 Caption = 'Performance options:'
                 ParentColor = False
@@ -13583,10 +13581,10 @@ object frmMain: TfrmMain
                 AnchorSideTop.Control = swPerfSelToLoad
                 AnchorSideTop.Side = asrCenter
                 AnchorSideRight.Control = swPerfSelToLoad
-                Left = 91
-                Height = 14
-                Top = 39
-                Width = 105
+                Left = 121
+                Height = 11
+                Top = 41
+                Width = 75
                 Anchors = [akTop, akRight]
                 BorderSpacing.Right = 30
                 Caption = 'Select to load:'
@@ -13595,8 +13593,8 @@ object frmMain: TfrmMain
             end
             object sgGPIO: TStringGrid
               Left = 960
-              Height = 384
-              Top = 72
+              Height = 440
+              Top = 48
               Width = 352
               AutoEdit = False
               AutoFillColumns = True
@@ -13605,7 +13603,7 @@ object frmMain: TfrmMain
                 item
                   ReadOnly = True
                   Title.Caption = 'Title'
-                  Width = 101
+                  Width = 100
                 end              
                 item
                   Alignment = taRightJustify
@@ -13640,7 +13638,7 @@ object frmMain: TfrmMain
                   Alignment = taRightJustify
                   ReadOnly = True
                   Title.Caption = 'Title'
-                  Width = 101
+                  Width = 100
                 end>
               FixedCols = 0
               FixedRows = 0
@@ -13654,12 +13652,12 @@ object frmMain: TfrmMain
               TabOrder = 7
               OnDrawCell = sgGPIODrawCell
               ColWidths = (
-                101
+                100
                 54
                 20
                 20
                 54
-                101
+                100
               )
               Cells = (
                 40
@@ -13800,9 +13798,9 @@ object frmMain: TfrmMain
               TabOrder = 8
               object lbComments: TLabel
                 Left = 8
-                Height = 14
+                Height = 11
                 Top = 8
-                Width = 168
+                Width = 120
                 Alignment = taCenter
                 Caption = 'Comments (max. 3 lines):'
                 ParentColor = False
@@ -13818,9 +13816,9 @@ object frmMain: TfrmMain
             end
             object lbGPIOPins: TLabel
               Left = 960
-              Height = 14
-              Top = 48
-              Width = 168
+              Height = 11
+              Top = 32
+              Width = 120
               Alignment = taCenter
               Caption = 'Overview Pi GPIO header:'
               Color = clDefault
@@ -13839,9 +13837,9 @@ object frmMain: TfrmMain
               TabOrder = 9
               object lbButtons: TLabel
                 Left = 8
-                Height = 14
+                Height = 11
                 Top = 8
-                Width = 56
+                Width = 40
                 Alignment = taCenter
                 Caption = 'Buttons:'
                 ParentColor = False
@@ -13850,10 +13848,10 @@ object frmMain: TfrmMain
                 AnchorSideTop.Control = cbBtnPrev
                 AnchorSideTop.Side = asrCenter
                 AnchorSideRight.Control = cbBtnPrev
-                Left = 155
-                Height = 14
-                Top = 38
-                Width = 35
+                Left = 165
+                Height = 11
+                Top = 36
+                Width = 25
                 Anchors = [akTop, akRight]
                 BorderSpacing.Right = 10
                 Caption = 'Prev:'
@@ -13864,10 +13862,10 @@ object frmMain: TfrmMain
                 AnchorSideTop.Side = asrCenter
                 AnchorSideRight.Control = lbBtnPrev
                 AnchorSideRight.Side = asrBottom
-                Left = 155
-                Height = 14
-                Top = 79
-                Width = 35
+                Left = 165
+                Height = 11
+                Top = 69
+                Width = 25
                 Anchors = [akTop, akRight]
                 Caption = 'Next:'
                 ParentColor = False
@@ -13877,10 +13875,10 @@ object frmMain: TfrmMain
                 AnchorSideTop.Side = asrCenter
                 AnchorSideRight.Control = lbBtnPrev
                 AnchorSideRight.Side = asrBottom
-                Left = 155
-                Height = 14
-                Top = 120
-                Width = 35
+                Left = 165
+                Height = 11
+                Top = 102
+                Width = 25
                 Anchors = [akTop, akRight]
                 Caption = 'Back:'
                 ParentColor = False
@@ -13890,10 +13888,10 @@ object frmMain: TfrmMain
                 AnchorSideTop.Side = asrCenter
                 AnchorSideRight.Control = lbBtnPrev
                 AnchorSideRight.Side = asrBottom
-                Left = 141
-                Height = 14
-                Top = 161
-                Width = 49
+                Left = 155
+                Height = 11
+                Top = 135
+                Width = 35
                 Anchors = [akTop, akRight]
                 Caption = 'Select:'
                 ParentColor = False
@@ -13903,10 +13901,10 @@ object frmMain: TfrmMain
                 AnchorSideTop.Side = asrCenter
                 AnchorSideRight.Control = lbBtnPrev
                 AnchorSideRight.Side = asrBottom
-                Left = 155
-                Height = 14
-                Top = 202
-                Width = 35
+                Left = 165
+                Height = 11
+                Top = 168
+                Width = 25
                 Anchors = [akTop, akRight]
                 Caption = 'Home:'
                 ParentColor = False
@@ -13916,10 +13914,10 @@ object frmMain: TfrmMain
                 AnchorSideTop.Side = asrCenter
                 AnchorSideRight.Control = lbBtnPrev
                 AnchorSideRight.Side = asrBottom
-                Left = 127
-                Height = 14
-                Top = 243
-                Width = 63
+                Left = 145
+                Height = 11
+                Top = 201
+                Width = 45
                 Anchors = [akTop, akRight]
                 Caption = 'Shortcut:'
                 ParentColor = False
@@ -13928,10 +13926,10 @@ object frmMain: TfrmMain
                 AnchorSideTop.Side = asrCenter
                 AnchorSideRight.Control = edBtnDblClickTOut
                 AnchorSideRight.Side = asrBottom
-                Left = 499
-                Height = 14
+                Left = 525
+                Height = 11
                 Top = 16
-                Width = 91
+                Width = 65
                 Anchors = [akTop, akRight]
                 BorderSpacing.Right = 10
                 Caption = 'Timeouts (ms)'
@@ -13943,13 +13941,13 @@ object frmMain: TfrmMain
                 Left = 510
                 Height = 21
                 Hint = 'Enter timeout in ms'
-                Top = 35
+                Top = 31
                 Width = 90
                 Alignment = taCenter
                 Anchors = [akTop, akRight]
                 AutoSize = False
-                EditLabel.Height = 14
-                EditLabel.Width = 63
+                EditLabel.Height = 11
+                EditLabel.Width = 45
                 EditLabel.Caption = 'DblClick:'
                 EditLabel.ParentColor = False
                 LabelPosition = lpLeft
@@ -13966,13 +13964,13 @@ object frmMain: TfrmMain
                 Left = 510
                 Height = 21
                 Hint = 'Enter timeout in ms'
-                Top = 76
+                Top = 64
                 Width = 90
                 Alignment = taCenter
                 Anchors = [akTop, akRight]
                 AutoSize = False
-                EditLabel.Height = 14
-                EditLabel.Width = 63
+                EditLabel.Height = 11
+                EditLabel.Width = 45
                 EditLabel.Caption = 'LngPress:'
                 EditLabel.ParentColor = False
                 LabelPosition = lpLeft
@@ -13985,12 +13983,12 @@ object frmMain: TfrmMain
                 AnchorSideRight.Side = asrBottom
                 Cursor = crHandPoint
                 Left = 200
-                Height = 27
+                Height = 19
                 Top = 32
                 Width = 90
                 Anchors = [akTop, akRight]
                 Color = clNone
-                ItemHeight = 0
+                ItemHeight = 11
                 ItemIndex = 0
                 Items.Strings = (
                   '0'
@@ -14009,13 +14007,13 @@ object frmMain: TfrmMain
                 AnchorSideRight.Side = asrBottom
                 Cursor = crHandPoint
                 Left = 200
-                Height = 27
-                Top = 73
+                Height = 19
+                Top = 65
                 Width = 90
                 Anchors = [akTop, akRight]
                 BorderSpacing.Top = 14
                 Color = clNone
-                ItemHeight = 0
+                ItemHeight = 11
                 ItemIndex = 0
                 Items.Strings = (
                   '0'
@@ -14034,13 +14032,13 @@ object frmMain: TfrmMain
                 AnchorSideRight.Side = asrBottom
                 Cursor = crHandPoint
                 Left = 200
-                Height = 27
-                Top = 114
+                Height = 19
+                Top = 98
                 Width = 90
                 Anchors = [akTop, akRight]
                 BorderSpacing.Top = 14
                 Color = clNone
-                ItemHeight = 0
+                ItemHeight = 11
                 ItemIndex = 0
                 Items.Strings = (
                   '0'
@@ -14059,13 +14057,13 @@ object frmMain: TfrmMain
                 AnchorSideRight.Side = asrBottom
                 Cursor = crHandPoint
                 Left = 200
-                Height = 27
-                Top = 155
+                Height = 19
+                Top = 131
                 Width = 90
                 Anchors = [akTop, akRight]
                 BorderSpacing.Top = 14
                 Color = clNone
-                ItemHeight = 0
+                ItemHeight = 11
                 ItemIndex = 0
                 Items.Strings = (
                   '0'
@@ -14084,13 +14082,13 @@ object frmMain: TfrmMain
                 AnchorSideRight.Side = asrBottom
                 Cursor = crHandPoint
                 Left = 200
-                Height = 27
-                Top = 196
+                Height = 19
+                Top = 164
                 Width = 90
                 Anchors = [akTop, akRight]
                 BorderSpacing.Top = 14
                 Color = clNone
-                ItemHeight = 0
+                ItemHeight = 11
                 ItemIndex = 0
                 Items.Strings = (
                   '0'
@@ -14109,13 +14107,13 @@ object frmMain: TfrmMain
                 AnchorSideRight.Side = asrBottom
                 Cursor = crHandPoint
                 Left = 200
-                Height = 27
-                Top = 237
+                Height = 19
+                Top = 197
                 Width = 90
                 Anchors = [akTop, akRight]
                 BorderSpacing.Top = 14
                 Color = clNone
-                ItemHeight = 0
+                ItemHeight = 11
                 ItemIndex = 0
                 Items.Strings = (
                   '0'
@@ -14134,12 +14132,12 @@ object frmMain: TfrmMain
                 AnchorSideTop.Side = asrCenter
                 Cursor = crHandPoint
                 Left = 305
-                Height = 27
+                Height = 19
                 Top = 32
                 Width = 100
                 BorderSpacing.Left = 15
                 Color = clNone
-                ItemHeight = 0
+                ItemHeight = 11
                 ItemIndex = 0
                 Items.Strings = (
                   'click'
@@ -14155,11 +14153,11 @@ object frmMain: TfrmMain
                 AnchorSideTop.Side = asrCenter
                 Cursor = crHandPoint
                 Left = 305
-                Height = 27
-                Top = 73
+                Height = 19
+                Top = 65
                 Width = 100
                 Color = clNone
-                ItemHeight = 0
+                ItemHeight = 11
                 ItemIndex = 0
                 Items.Strings = (
                   'click'
@@ -14175,11 +14173,11 @@ object frmMain: TfrmMain
                 AnchorSideTop.Side = asrCenter
                 Cursor = crHandPoint
                 Left = 305
-                Height = 27
-                Top = 114
+                Height = 19
+                Top = 98
                 Width = 100
                 Color = clNone
-                ItemHeight = 0
+                ItemHeight = 11
                 ItemIndex = 0
                 Items.Strings = (
                   'click'
@@ -14195,11 +14193,11 @@ object frmMain: TfrmMain
                 AnchorSideTop.Side = asrCenter
                 Cursor = crHandPoint
                 Left = 305
-                Height = 27
-                Top = 155
+                Height = 19
+                Top = 131
                 Width = 100
                 Color = clNone
-                ItemHeight = 0
+                ItemHeight = 11
                 ItemIndex = 0
                 Items.Strings = (
                   'click'
@@ -14215,11 +14213,11 @@ object frmMain: TfrmMain
                 AnchorSideTop.Side = asrCenter
                 Cursor = crHandPoint
                 Left = 305
-                Height = 27
-                Top = 196
+                Height = 19
+                Top = 164
                 Width = 100
                 Color = clNone
-                ItemHeight = 0
+                ItemHeight = 11
                 ItemIndex = 0
                 Items.Strings = (
                   'click'
@@ -14245,18 +14243,18 @@ object frmMain: TfrmMain
               TabOrder = 10
               object lbMIDIButtons: TLabel
                 Left = 8
-                Height = 14
+                Height = 11
                 Top = 8
-                Width = 84
+                Width = 60
                 Alignment = taCenter
                 Caption = 'MIDI Buttons'
                 ParentColor = False
               end
               object rbMIDIButOff: TRadioButton
                 Left = 6
-                Height = 23
+                Height = 19
                 Top = 32
-                Width = 47
+                Width = 35
                 Caption = 'Off'
                 Checked = True
                 TabOrder = 2
@@ -14264,9 +14262,9 @@ object frmMain: TfrmMain
               end
               object rbMIDIButOn: TRadioButton
                 Left = 6
-                Height = 23
+                Height = 19
                 Top = 48
-                Width = 40
+                Width = 30
                 Caption = 'On'
                 OnChange = rbMIDIButOnChange
                 TabOrder = 0
@@ -14278,14 +14276,14 @@ object frmMain: TfrmMain
                 AnchorSideRight.Side = asrBottom
                 Left = 200
                 Height = 21
-                Top = 69
+                Top = 61
                 Width = 90
                 Alignment = taCenter
                 AutoSize = False
                 BorderSpacing.Top = 10
                 DragMode = dmAutomatic
-                EditLabel.Height = 14
-                EditLabel.Width = 35
+                EditLabel.Height = 11
+                EditLabel.Width = 25
                 EditLabel.Caption = 'Prev:'
                 EditLabel.ParentColor = False
                 LabelPosition = lpLeft
@@ -14300,15 +14298,15 @@ object frmMain: TfrmMain
                 AnchorSideRight.Side = asrBottom
                 Left = 200
                 Height = 21
-                Top = 98
+                Top = 90
                 Width = 90
                 Alignment = taCenter
                 Anchors = [akTop, akLeft, akRight]
                 AutoSize = False
                 BorderSpacing.Top = 8
                 DragMode = dmAutomatic
-                EditLabel.Height = 14
-                EditLabel.Width = 35
+                EditLabel.Height = 11
+                EditLabel.Width = 25
                 EditLabel.Caption = 'Next:'
                 EditLabel.ParentColor = False
                 LabelPosition = lpLeft
@@ -14323,15 +14321,15 @@ object frmMain: TfrmMain
                 AnchorSideRight.Side = asrBottom
                 Left = 200
                 Height = 21
-                Top = 127
+                Top = 119
                 Width = 90
                 Alignment = taCenter
                 Anchors = [akTop, akLeft, akRight]
                 AutoSize = False
                 BorderSpacing.Top = 8
                 DragMode = dmAutomatic
-                EditLabel.Height = 14
-                EditLabel.Width = 35
+                EditLabel.Height = 11
+                EditLabel.Width = 25
                 EditLabel.Caption = 'Back:'
                 EditLabel.ParentColor = False
                 LabelPosition = lpLeft
@@ -14346,15 +14344,15 @@ object frmMain: TfrmMain
                 AnchorSideRight.Side = asrBottom
                 Left = 200
                 Height = 21
-                Top = 156
+                Top = 148
                 Width = 90
                 Alignment = taCenter
                 Anchors = [akTop, akLeft, akRight]
                 AutoSize = False
                 BorderSpacing.Top = 8
                 DragMode = dmAutomatic
-                EditLabel.Height = 14
-                EditLabel.Width = 49
+                EditLabel.Height = 11
+                EditLabel.Width = 35
                 EditLabel.Caption = 'Select:'
                 EditLabel.ParentColor = False
                 LabelPosition = lpLeft
@@ -14369,15 +14367,15 @@ object frmMain: TfrmMain
                 AnchorSideRight.Side = asrBottom
                 Left = 200
                 Height = 21
-                Top = 185
+                Top = 177
                 Width = 90
                 Alignment = taCenter
                 Anchors = [akTop, akLeft, akRight]
                 AutoSize = False
                 BorderSpacing.Top = 8
                 DragMode = dmAutomatic
-                EditLabel.Height = 14
-                EditLabel.Width = 35
+                EditLabel.Height = 11
+                EditLabel.Width = 25
                 EditLabel.Caption = 'Home:'
                 EditLabel.ParentColor = False
                 LabelPosition = lpLeft
@@ -14389,12 +14387,12 @@ object frmMain: TfrmMain
                 AnchorSideTop.Side = asrCenter
                 Cursor = crHandPoint
                 Left = 200
-                Height = 27
+                Height = 19
                 Top = 32
                 Width = 90
                 BorderSpacing.Left = 15
                 Color = clNone
-                ItemHeight = 0
+                ItemHeight = 11
                 ItemIndex = 1
                 Items.Strings = (
                   'OFF'
@@ -14423,10 +14421,10 @@ object frmMain: TfrmMain
                 AnchorSideTop.Control = cbMIDIBtnChannel
                 AnchorSideTop.Side = asrCenter
                 AnchorSideRight.Control = cbMIDIBtnChannel
-                Left = 94
-                Height = 14
-                Top = 38
-                Width = 91
+                Left = 120
+                Height = 11
+                Top = 36
+                Width = 65
                 Anchors = [akTop, akRight]
                 BorderSpacing.Right = 10
                 Caption = 'MIDI Channel:'
@@ -14436,8 +14434,8 @@ object frmMain: TfrmMain
           end
           object tsSyxFiles: TTabSheet
             Caption = 'Syx Files'
-            ClientHeight = 768
-            ClientWidth = 1485
+            ClientHeight = 776
+            ClientWidth = 1489
             object sgSDSysExFiles: TStringGrid
               Left = 8
               Height = 672
@@ -14466,7 +14464,7 @@ object frmMain: TfrmMain
                 item
                   ReadOnly = True
                   Title.Caption = 'Bank name'
-                  Width = 176
+                  Width = 159
                 end>
               ExtendedSelect = False
               FixedCols = 0
@@ -14482,7 +14480,7 @@ object frmMain: TfrmMain
               ColWidths = (
                 60
                 60
-                176
+                159
               )
             end
             object sgSDPerfFiles: TStringGrid
@@ -14513,7 +14511,7 @@ object frmMain: TfrmMain
                 item
                   ReadOnly = True
                   Title.Caption = 'Performance name'
-                  Width = 176
+                  Width = 159
                 end>
               ExtendedSelect = False
               FixedCols = 0
@@ -14528,7 +14526,7 @@ object frmMain: TfrmMain
               ColWidths = (
                 60
                 60
-                176
+                159
               )
             end
             object btSDCardRenameVoices: TButton
@@ -14569,15 +14567,15 @@ object frmMain: TfrmMain
     end
     object tsSettings: TTabSheet
       Caption = 'Settings'
-      ClientHeight = 831
-      ClientWidth = 1497
+      ClientHeight = 835
+      ClientWidth = 1499
       object lbMidiIn: TLabel
         AnchorSideLeft.Control = cbMidiIn
         AnchorSideBottom.Control = cbMidiIn
         Left = 40
-        Height = 14
-        Top = 32
-        Width = 56
+        Height = 11
+        Top = 35
+        Width = 40
         Anchors = [akLeft, akBottom]
         BorderSpacing.Bottom = 10
         Caption = 'MIDI In:'
@@ -14589,9 +14587,9 @@ object frmMain: TfrmMain
         AnchorSideLeft.Control = cbMidiIn
         AnchorSideBottom.Control = cbMidiOut
         Left = 40
-        Height = 14
-        Top = 104
-        Width = 63
+        Height = 11
+        Top = 107
+        Width = 45
         Anchors = [akLeft, akBottom]
         BorderSpacing.Bottom = 10
         Caption = 'MIDI Out:'
@@ -14602,8 +14600,8 @@ object frmMain: TfrmMain
       object mmLogSettings: TMemo
         Left = 0
         Height = 90
-        Top = 741
-        Width = 1497
+        Top = 745
+        Width = 1499
         Align = alBottom
         ReadOnly = True
         ScrollBars = ssAutoBoth
@@ -14612,11 +14610,11 @@ object frmMain: TfrmMain
       object cbMidiIn: TComboBox
         Cursor = crHandPoint
         Left = 40
-        Height = 27
+        Height = 19
         Top = 56
         Width = 320
         Color = clNone
-        ItemHeight = 0
+        ItemHeight = 11
         OnChange = cbMidiInChange
         TabOrder = 1
       end
@@ -14624,11 +14622,11 @@ object frmMain: TfrmMain
         AnchorSideLeft.Control = cbMidiIn
         Cursor = crHandPoint
         Left = 40
-        Height = 27
+        Height = 19
         Top = 128
         Width = 320
         Color = clNone
-        ItemHeight = 0
+        ItemHeight = 11
         OnChange = cbMidiOutChange
         TabOrder = 2
       end
@@ -14636,7 +14634,7 @@ object frmMain: TfrmMain
         AnchorSideRight.Control = cbMidiIn
         AnchorSideRight.Side = asrBottom
         Left = 310
-        Height = 25
+        Height = 19
         Top = 200
         Width = 50
         Anchors = [akTop, akRight]
@@ -14647,10 +14645,10 @@ object frmMain: TfrmMain
         AnchorSideTop.Control = seFontSize
         AnchorSideTop.Side = asrCenter
         AnchorSideRight.Control = seFontSize
-        Left = 230
-        Height = 14
-        Top = 205
-        Width = 70
+        Left = 250
+        Height = 11
+        Top = 204
+        Width = 50
         Anchors = [akTop, akRight]
         BorderSpacing.Right = 10
         Caption = 'Font Size:'
@@ -14667,19 +14665,19 @@ object frmMain: TfrmMain
         Columns = <        
           item
             Title.Caption = 'Category'
-            Width = 335
+            Width = 334
           end        
           item
             Title.Caption = 'Comment'
-            Width = 335
+            Width = 334
           end>
         FixedCols = 0
         Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goRangeSelect, goColSizing, goEditing, goAutoAddRows, goThumbTracking, goSmoothScroll, goHeaderHotTracking]
         TabOrder = 4
         OnDrawCell = sgCategoriesDrawCell
         ColWidths = (
-          335
-          335
+          334
+          334
         )
       end
       object btCatLoad: TButton
@@ -14708,7 +14706,7 @@ object frmMain: TfrmMain
         Left = 1152
         Height = 21
         Top = 56
-        Width = 147
+        Width = 121
         Anchors = [akTop, akLeft, akRight]
         Caption = 'Clear Voices DB'
         OnClick = btDeleteVoiceDBClick
@@ -14718,9 +14716,9 @@ object frmMain: TfrmMain
         AnchorSideTop.Control = btDeleteVoiceDB
         AnchorSideTop.Side = asrBottom
         Left = 1152
-        Height = 28
+        Height = 21
         Top = 87
-        Width = 147
+        Width = 121
         AutoSize = True
         BorderSpacing.Top = 10
         Caption = 'Clear Categories DB'
@@ -14738,10 +14736,10 @@ object frmMain: TfrmMain
         object lnkCredits1: TECLink
           AnchorSideLeft.Control = lbMidiIn
           Left = 16
-          Height = 14
+          Height = 11
           Hint = 'https://github.com/probonopd/MiniDexed'
           Top = 24
-          Width = 63
+          Width = 45
           Caption = 'MiniDexed'
           ColorHovered = clActiveCaption
           ParentShowHint = False
@@ -14750,19 +14748,19 @@ object frmMain: TfrmMain
         end
         object lbCredits1: TLabel
           Left = 148
-          Height = 14
+          Height = 11
           Top = 8
-          Width = 56
+          Width = 40
           Caption = 'Credits:'
           ParentColor = False
         end
         object lnkCredits2: TECLink
           AnchorSideLeft.Control = lbMidiIn
           Left = 16
-          Height = 14
+          Height = 11
           Hint = 'https://icons8.com/'
           Top = 40
-          Width = 42
+          Width = 30
           Caption = 'Icons8'
           ColorHovered = clActiveCaption
           ParentShowHint = False
@@ -14772,10 +14770,10 @@ object frmMain: TfrmMain
         object lnkCredits3: TECLink
           AnchorSideLeft.Control = lbMidiIn
           Left = 16
-          Height = 14
+          Height = 11
           Hint = 'https://www.lazarus-ide.org/'
           Top = 56
-          Width = 77
+          Width = 55
           Caption = 'Lazarus IDE'
           ColorHovered = clActiveCaption
           ParentShowHint = False
@@ -14787,7 +14785,7 @@ object frmMain: TfrmMain
         AnchorSideRight.Control = cbMidiIn
         AnchorSideRight.Side = asrBottom
         Left = 310
-        Height = 25
+        Height = 19
         Top = 228
         Width = 50
         Anchors = [akTop, akRight]
@@ -14799,10 +14797,10 @@ object frmMain: TfrmMain
         AnchorSideTop.Control = sePopUpDur
         AnchorSideTop.Side = asrCenter
         AnchorSideRight.Control = sePopUpDur
-        Left = 195
-        Height = 14
-        Top = 233
-        Width = 105
+        Left = 225
+        Height = 11
+        Top = 232
+        Width = 75
         Anchors = [akTop, akRight]
         BorderSpacing.Right = 10
         Caption = 'PopUp Duration:'
@@ -14827,8 +14825,8 @@ object frmMain: TfrmMain
         ChildSizing.ShrinkVertical = crsScaleChilds
         ChildSizing.Layout = cclLeftToRightThenTopToBottom
         ChildSizing.ControlsPerLine = 1
-        ClientHeight = 138
-        ClientWidth = 327
+        ClientHeight = 137
+        ClientWidth = 325
         Items.Strings = (
           'Trim whitespace'
           'Remove leading *°/\<>^?~#+-!$%&()[]`.,'
@@ -14893,10 +14891,10 @@ object frmMain: TfrmMain
           AnchorSideLeft.Control = pnTestbed
           AnchorSideLeft.Side = asrCenter
           AnchorSideTop.Control = pnTestbed
-          Left = 140
-          Height = 14
+          Left = 147
+          Height = 11
           Top = 5
-          Width = 49
+          Width = 35
           BorderSpacing.Top = 4
           Caption = 'Testbed'
           ParentColor = False
