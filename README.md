@@ -30,7 +30,7 @@ Linux Qt5:
 Windows 10:
 ![MDCC_Win](https://user-images.githubusercontent.com/68187526/206912420-94a95b11-3b01-4602-bca4-869dbca8e1cf.png)
 
-FreeBSD 13:
+FreeBSD 13:  
 ![MDCC_FreeBSD](https://user-images.githubusercontent.com/2480569/207942721-f913b43e-6b71-422f-b776-1a625e0ff62b.png)
 
 OSX (Darwin):
